@@ -1,0 +1,96 @@
+/* ABOUTME: Global CSS with design tokens (custom properties) for The Crash Log.
+   ABOUTME: Defines colors, fonts, severity tokens, agent accents, and base reset styles. */
+
+:root {
+  /* Surfaces */
+  --bg: #0A0A0A;
+  --surface: #1C1C1E;
+  --border: #2C2C2E;
+  --border-accent: #3A3A3C;
+
+  /* Text */
+  --text-primary: #F2F2F7;
+  --text-secondary: #C7C7CC;
+  --text-tertiary: #8E8E93;
+  --text-muted: #636366;
+  --text-faint: #48484A;
+
+  /* Severity */
+  --severity-error: #FF3B30;
+  --severity-override: #FF9F0A;
+  --severity-terminate: #FF3B30;
+  --severity-warning: #FFD60A;
+  --severity-critical: #BF0000;
+  --severity-breach: #00D4FF;
+
+  /* Severity Glows */
+  --severity-error-glow: rgba(255, 59, 48, 0.12);
+  --severity-override-glow: rgba(255, 159, 10, 0.12);
+  --severity-terminate-glow: rgba(255, 59, 48, 0.12);
+  --severity-warning-glow: rgba(255, 214, 10, 0.12);
+  --severity-critical-glow: rgba(191, 0, 0, 0.15);
+  --severity-breach-glow: rgba(0, 212, 255, 0.12);
+
+  /* Agent Accents */
+  --agent-nico: #FF3B30;
+  --agent-scoop: #00D4FF;
+  --agent-root: #8E8E93;
+  --agent-gabo: #FF9F0A;
+  --agent-lupe: #FF6EAD;
+  --agent-hector: #30D158;
+
+  /* Font Stacks */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Layout */
+  --max-width: 720px;
+  --content-padding: 28px;
+}
+
+/* Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(255, 59, 48, 0.3);
+  color: #fff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Wrapper utility */
+.wrapper {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+}

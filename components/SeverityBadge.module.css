@@ -1,0 +1,49 @@
+/* ABOUTME: Styles for severity badge component.
+   ABOUTME: Maps severity levels to their canonical color tokens. */
+
+.badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.error {
+  color: var(--severity-error);
+  background: var(--severity-error-glow);
+  border: 1.5px solid var(--severity-error);
+}
+
+.override {
+  color: var(--severity-override);
+  background: var(--severity-override-glow);
+  border: 1.5px solid var(--severity-override);
+}
+
+.terminate {
+  color: var(--severity-terminate);
+  background: var(--severity-terminate-glow);
+  border: 1.5px solid var(--severity-terminate);
+}
+
+.warning {
+  color: var(--severity-warning);
+  background: var(--severity-warning-glow);
+  border: 1.5px solid var(--severity-warning);
+}
+
+.critical {
+  color: var(--severity-critical);
+  background: var(--severity-critical-glow);
+  border: 1.5px solid var(--severity-critical);
+}
+
+.breach {
+  color: var(--severity-breach);
+  background: var(--severity-breach-glow);
+  border: 1.5px solid var(--severity-breach);
+}
