@@ -1,0 +1,45 @@
+/* ABOUTME: Styles for Nico's Transmission editorial intro card.
+   ABOUTME: Card with red left border, label with em-dash prefix, body text, and signature. */
+
+.transmission {
+  background: var(--surface);
+  border: 1px solid var(--border-accent);
+  border-left: 3px solid var(--severity-error);
+  border-radius: 4px;
+  padding: 40px 42px;
+  margin: 0 0 64px;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--severity-error);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.label::before {
+  content: '——';
+  color: var(--severity-error);
+}
+
+.body {
+  font-family: var(--font-body);
+  font-size: 17.5px;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--text-secondary);
+  line-height: 1.82;
+  margin-bottom: 24px;
+}
+
+.sig {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+}

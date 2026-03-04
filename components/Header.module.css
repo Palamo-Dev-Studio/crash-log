@@ -1,0 +1,59 @@
+/* ABOUTME: Styles for the site header/masthead.
+   ABOUTME: Wordmark, tagline, subscribe button layout with design tokens. */
+
+.header {
+  padding: 40px 0 0;
+  margin-bottom: 20px;
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 7px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.subscribe {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--severity-error);
+  border: 1.5px solid var(--severity-error);
+  background: transparent;
+  padding: 9px 22px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.subscribe:hover {
+  background: var(--severity-error);
+  color: var(--bg);
+}

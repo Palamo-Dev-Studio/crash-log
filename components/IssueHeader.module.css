@@ -1,0 +1,45 @@
+/* ABOUTME: Styles for the issue header section.
+   ABOUTME: Meta line with red dot, display title, and serif subtitle. */
+
+.header {
+  margin-bottom: 44px;
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  background: var(--severity-error);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 7vw, 48px);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.12;
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  line-height: 1.65;
+  max-width: 600px;
+}

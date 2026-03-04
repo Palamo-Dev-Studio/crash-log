@@ -2,24 +2,25 @@
 
 ## Current State
 
-- **Branch:** `main` (initial commit pending)
+- **Branch:** `main`
 - **Build:** `npm run build` passes cleanly (Next.js 16.1.6 Turbopack)
 - **Tests:** None yet (no test framework configured)
 - **Verification script:** Not yet created
+- **Components:** 12 total (SeverityBadge + 11 new in Phase 3)
 
 ## What's Done
 
-- **Phase 1 (Project Foundation):** Next.js 14+ app initialized with App Router. Sanity client configured (`lib/sanity.js`). Studio embedded at `/studio`. Global CSS with full design token system. Google Fonts wired (Space Grotesk, Source Serif 4, IBM Plex Mono). Middleware for locale detection (EN/ES). Root redirect to `/en`.
-- **Phase 2 (Sanity Schemas):** All schemas created — 6 object types (`blockContent`, `localizedString`, `localizedText`, `localizedBlockContent`, `stackTraceHit`, `sourceLink`) and 6 document types (`issue`, `story`, `category`, `agent`, `aboutPage`, `siteSettings`). Field groups for tabbed EN/ES/Meta editing. Registered in `sanity.config.js`.
-- **Phase 3 (React Components):** `SeverityBadge` component + CSS module created. Remaining components not yet built.
+- **Phase 1 (Project Foundation):** Next.js app with App Router, Sanity client, Studio at `/studio`, global CSS with design tokens, Google Fonts, locale middleware, root redirect.
+- **Phase 2 (Sanity Schemas):** All schemas — 6 object types, 6 document types. Field groups for EN/ES/Meta editing.
+- **Phase 3 (React Components):** All 12 components complete — SeverityBadge, Header, SiteNav, LanguageToggle, IssueHeader, CoverImage, NicosTransmission, StoryBlock, StackTrace, DonateCTA, Footer, FallbackBanner. All use CSS Modules with global design tokens. CodeRabbit review passed — accessibility fixes applied (global `:focus-visible`, `aria-hidden` on decorative elements, semantic HTML, `aria-label` on interactive elements).
 
 ## Immediate Next Step
 
-Continue Phase 3: Build all remaining React components (Header, SiteNav, StoryBlock, NicosTransmission, StackTrace, LanguageToggle, DonateCTA, Footer, IssueHeader, CoverImage, FallbackBanner). Each uses CSS Modules referencing global design tokens. Refer to `docs/reference/crash-log-site-design.jsx` and `docs/reference/crash-log-014.html` for exact styling specs.
+Phase 4: Issue Page + Locale Infrastructure — `lib/locale.js` (t() helper, hasFullTranslation()), `lib/queries.js` (GROQ queries for fetching issues/stories), `app/[locale]/page.js` (latest issue page wiring components together), `app/[locale]/issue/[slug]/page.js` (individual issue page).
 
 ## Known Issues / Deferred Items
 
-- Sanity project not yet provisioned — `.env.local` has placeholder values. Need to run `npx sanity@latest init --env` to create actual project + dataset.
-- Next.js 16 deprecation warning: middleware file convention deprecated in favor of "proxy". Functional for now, may need migration.
+- Sanity project not yet provisioned — `.env.local` has placeholder values.
+- Next.js 16 deprecation warning: middleware file convention deprecated in favor of "proxy".
 - No test framework, linter, or CI pipeline configured yet.
 - Beehiiv integration, RSS feeds, and content seeding are deferred to later phases.

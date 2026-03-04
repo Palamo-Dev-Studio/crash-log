@@ -1,0 +1,32 @@
+/* ABOUTME: Styles for the EN/ES language toggle button.
+   ABOUTME: Mono font, active/inactive states with color differentiation. */
+
+.toggle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: none;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.toggle:hover {
+  border-color: var(--border-accent);
+}
+
+.active {
+  color: var(--text-primary);
+}
+
+.inactive {
+  color: var(--text-faint);
+}
+
+.separator {
+  color: var(--text-faint);
+  margin: 0 2px;
+}

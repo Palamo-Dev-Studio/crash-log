@@ -26,17 +26,17 @@
 
 ## Phase 3: React Components
 - [x] SeverityBadge
-- [ ] Header (masthead wordmark, tagline, subscribe button, language toggle)
-- [ ] SiteNav (Latest, Archive, Beats, About links)
-- [ ] StoryBlock (full article section with severity-driven styling)
-- [ ] NicosTransmission (editorial intro card with red left border)
-- [ ] StackTrace (collapsible section with trace items)
-- [ ] LanguageToggle (EN/ES toggle button, client component)
-- [ ] DonateCTA (donate card with "Feed the Bots" button)
-- [ ] Footer (copyright, links)
-- [ ] IssueHeader (issue meta, title, subtitle)
-- [ ] CoverImage (cover image with Sanity image URL builder)
-- [ ] FallbackBanner ("Versión en español próximamente" banner)
+- [x] Header (masthead wordmark, tagline, subscribe button, language toggle)
+- [x] SiteNav (Latest, Archive, Beats, About links)
+- [x] StoryBlock (full article section with severity-driven styling)
+- [x] NicosTransmission (editorial intro card with red left border)
+- [x] StackTrace (collapsible section with trace items)
+- [x] LanguageToggle (EN/ES toggle button, client component)
+- [x] DonateCTA (donate card with "Feed the Bots" button)
+- [x] Footer (copyright, links)
+- [x] IssueHeader (issue meta, title, subtitle)
+- [x] CoverImage (cover image with Sanity image URL builder)
+- [x] FallbackBanner ("Versión en español próximamente" banner)
 
 ## Phase 4: Issue Page + Locale Infrastructure
 - [ ] `lib/locale.js` — t() helper and hasFullTranslation()

@@ -1,0 +1,21 @@
+/* ABOUTME: Styles for the Spanish fallback banner.
+   ABOUTME: Warning-style banner shown when Spanish translation is unavailable. */
+
+.banner {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--severity-warning);
+  background: var(--severity-warning-glow);
+  border: 1px solid rgba(255, 214, 10, 0.2);
+  border-radius: 4px;
+  padding: 14px 20px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  font-size: 16px;
+}

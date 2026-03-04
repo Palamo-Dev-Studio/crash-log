@@ -88,6 +88,11 @@ button {
   font: inherit;
 }
 
+:focus-visible {
+  outline: 2px solid var(--severity-error);
+  outline-offset: 2px;
+}
+
 /* Wrapper utility */
 .wrapper {
   max-width: var(--max-width);
