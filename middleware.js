@@ -21,8 +21,7 @@ export function middleware(request) {
 
   // Already has locale prefix
   const pathnameHasLocale = LOCALES.some(
-    (locale) =>
-      pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
   if (pathnameHasLocale) return NextResponse.next();
 

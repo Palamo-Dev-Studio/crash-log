@@ -13,7 +13,10 @@ function jsxInJsPlugin() {
     enforce: "pre",
     async transform(code, id) {
       if (id.endsWith(".js") && !id.includes("node_modules")) {
-        if (code.includes("<") && (code.includes("/>") || code.includes("</"))) {
+        if (
+          code.includes("<") &&
+          (code.includes("/>") || code.includes("</"))
+        ) {
           const { transformSync } = await import("esbuild");
           const result = transformSync(code, {
             loader: "jsx",

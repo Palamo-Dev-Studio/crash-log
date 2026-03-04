@@ -50,7 +50,9 @@
   background: transparent;
   padding: 9px 22px;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .subscribe:hover {

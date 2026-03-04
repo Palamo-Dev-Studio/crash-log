@@ -6,7 +6,9 @@ import { render, screen } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
-    <a href={href} {...props}>{children}</a>
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 

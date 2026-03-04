@@ -5,7 +5,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock next/server — NextResponse and NextRequest are not available in jsdom
 const mockNext = vi.fn(() => ({ type: "next" }));
-const mockRedirect = vi.fn((url) => ({ type: "redirect", url: url.toString() }));
+const mockRedirect = vi.fn((url) => ({
+  type: "redirect",
+  url: url.toString(),
+}));
 
 vi.mock("next/server", () => ({
   NextResponse: {

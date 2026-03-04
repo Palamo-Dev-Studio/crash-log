@@ -26,10 +26,7 @@ export default function AgentCard({
 
   return (
     <div className={styles.card}>
-      <div
-        className={styles.avatar}
-        style={{ borderColor: `${color}33` }}
-      >
+      <div className={styles.avatar} style={{ borderColor: `${color}33` }}>
         <div
           className={styles.dot}
           style={{
@@ -40,7 +37,9 @@ export default function AgentCard({
       </div>
       <div className={styles.info}>
         <h3 className={styles.name}>{name}</h3>
-        <p className={styles.role} style={{ color }}>{roleText}</p>
+        <p className={styles.role} style={{ color }}>
+          {roleText}
+        </p>
         <p className={styles.tag}>{tag}</p>
         {bioText && <p className={styles.bio}>{bioText}</p>}
       </div>

@@ -1,6 +1,7 @@
 # The Crash Log — Implementation TODO
 
 ## Phase 1: Project Foundation
+
 - [x] Initialize Next.js app with App Router
 - [x] Install Sanity dependencies
 - [x] Create project directory structure
@@ -13,6 +14,7 @@
 - [x] Create CLAUDE.md
 
 ## Phase 2: Sanity Schemas
+
 - [x] Localized field types (localizedString, localizedText, localizedBlockContent)
 - [x] Base blockContent type
 - [x] Object types (stackTraceHit, sourceLink)
@@ -25,6 +27,7 @@
 - [x] Register all schemas in sanity.config.js
 
 ## Phase 3: React Components
+
 - [x] SeverityBadge
 - [x] Header (masthead wordmark, tagline, subscribe button, language toggle)
 - [x] SiteNav (Latest, Archive, Beats, About links)
@@ -39,6 +42,7 @@
 - [x] FallbackBanner ("Versión en español próximamente" banner)
 
 ## Phase 4: Issue Pages + Locale Infrastructure
+
 - [x] Route group restructure — `(site)/[locale]` and `(studio)` with independent root layouts
 - [x] `lib/locale.js` — LOCALES, LOCALE_LABELS, LOCALE_OG, t(), hasFullTranslation()
 - [x] `lib/queries.js` — GROQ queries + null-safe fetch wrappers
@@ -49,6 +53,7 @@
 - [x] `app/(site)/[locale]/issue/[slug]/page.js` — individual issue page with JSON-LD
 
 ## Phase 4.5: SEO Foundation
+
 - [x] Dynamic `<html lang>` per locale via route groups
 - [x] `generateMetadata` with title template, OG, Twitter card, alternates
 - [x] JSON-LD WebSite schema on site layout
@@ -59,6 +64,7 @@
 - [x] `<Header>`, `<LanguageToggle>`, `<SiteNav>` in shared site layout chrome
 
 ## Phase 5: Archive, About, Beat Pages
+
 - [x] GROQ queries: `getAllIssuesForArchive`, `getAboutPage`, `getAllCategories`, `getCategoryWithStories`
 - [x] `components/ArchiveCard.js` — issue card for archive listing
 - [x] `components/AgentCard.js` — masthead card for about page
@@ -70,6 +76,7 @@
 - [x] `app/sitemap.js` — added `/beats` and dynamic beat entries
 
 ## Phase 6: Verification + Content Seeding
+
 - [x] Create `scripts/verify.sh`
 - [x] Deploy Sanity schema to cloud (`npx sanity schema deploy`)
 - [x] Seed 7 categories (Medical AI, Defense & Policy, Labor & Automation, Surveillance & Privacy, Foundation Models, Regulation & Governance, Robotics & Hardware)
@@ -85,6 +92,7 @@
 - [x] Update tracking docs
 
 ## Phase 7: Test Framework Setup
+
 - [x] Install Vitest + base config (`vitest.config.mjs`)
 - [x] Custom Vite plugin for JSX-in-`.js` files
 - [x] Install React Testing Library + jest-dom + user-event
@@ -102,14 +110,25 @@
 - [x] Update `scripts/verify.sh` to run tests before build
 - [x] Update tracking docs
 
+## Phase 8: Developer Tooling + Features
+
+- [x] ESLint 9 + Prettier setup (flat config, eslint-config-next, codebase formatted)
+- [x] CI pipeline (GitHub Actions: push/PR to main → lint + tests + build)
+- [x] RSS feeds (locale-specific at `/[locale]/feed.xml`, 8 integration tests)
+- [x] Dynamic OG images (site-level + per-issue, dark theme, Inter font, Twitter card re-exports)
+- [x] Social profile URLs in JSON-LD (sameAs with Twitter)
+- [x] RSS feed discovery link in site metadata
+- [x] Updated verify.sh (lint + format check + tests + build)
+
 ## Deferred
+
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)
-- [ ] Beehiiv integration (webhook + API)
-- [ ] RSS feeds
+- [ ] Beehiiv integration (pending: embed vs API decision, needs publication URL)
+- [x] RSS feeds
 - [x] Test framework setup (unit, integration, e2e)
-- [ ] CI pipeline
+- [x] CI pipeline
 - [x] Vercel deployment — deployed to `crashlog.ai`, CORS origin added, domain URLs updated
-- [ ] OG image assets (static or dynamic)
-- [ ] Twitter handle verification (@thecrashlog)
-- [ ] Social profile URLs in JSON-LD
-- [ ] Linter/formatter setup
+- [x] OG image assets (dynamic via next/og ImageResponse)
+- [ ] Twitter handle verification (@thecrashlog) — external action
+- [x] Social profile URLs in JSON-LD
+- [x] Linter/formatter setup

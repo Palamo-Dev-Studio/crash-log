@@ -15,8 +15,6 @@ const SEVERITY_MAP = {
 export default function SeverityBadge({ severity }) {
   const className = SEVERITY_MAP[severity] || "error";
   return (
-    <span className={`${styles.badge} ${styles[className]}`}>
-      {severity}
-    </span>
+    <span className={`${styles.badge} ${styles[className]}`}>{severity}</span>
   );
 }

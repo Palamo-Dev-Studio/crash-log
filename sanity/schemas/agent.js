@@ -42,7 +42,8 @@ export default {
       title: "Spawned By",
       type: "reference",
       to: [{ type: "agent" }],
-      description: "Which agent spins up this sub-agent (null for Nico and Hector)",
+      description:
+        "Which agent spins up this sub-agent (null for Nico and Hector)",
     },
     {
       name: "avatar",

@@ -10,9 +10,15 @@ vi.mock("next/image", () => ({
 
 vi.mock("@/lib/sanity", () => ({
   urlFor: () => ({
-    width: function () { return this; },
-    height: function () { return this; },
-    format: function () { return this; },
+    width: function () {
+      return this;
+    },
+    height: function () {
+      return this;
+    },
+    format: function () {
+      return this;
+    },
     url: () => "https://example.com/image.webp",
   }),
 }));
@@ -69,9 +75,7 @@ describe("mark renderers", () => {
   it("external link gets target=_blank and rel=noopener noreferrer", () => {
     const LinkMark = marks.link;
     render(
-      <LinkMark value={{ href: "https://example.com" }}>
-        External link
-      </LinkMark>
+      <LinkMark value={{ href: "https://example.com" }}>External link</LinkMark>
     );
     const a = screen.getByText("External link");
     expect(a.tagName).toBe("A");
@@ -82,9 +86,7 @@ describe("mark renderers", () => {
 
   it("internal link does not get target=_blank", () => {
     const LinkMark = marks.link;
-    render(
-      <LinkMark value={{ href: "/about" }}>Internal link</LinkMark>
-    );
+    render(<LinkMark value={{ href: "/about" }}>Internal link</LinkMark>);
     const a = screen.getByText("Internal link");
     expect(a).not.toHaveAttribute("target");
     expect(a).not.toHaveAttribute("rel");

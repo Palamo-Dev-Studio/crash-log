@@ -12,9 +12,7 @@ describe("NicosTransmission", () => {
         <p>Test content</p>
       </NicosTransmission>
     );
-    expect(
-      screen.getByLabelText("Nico's Transmission")
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Nico's Transmission")).toBeInTheDocument();
   });
 
   it("renders the label text", () => {

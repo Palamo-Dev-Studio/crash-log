@@ -24,9 +24,13 @@ export default function LanguageToggle({ locale }) {
       onClick={handleToggle}
       aria-label={locale === "en" ? "Cambiar a español" : "Switch to English"}
     >
-      <span className={locale === "en" ? styles.active : styles.inactive}>EN</span>
+      <span className={locale === "en" ? styles.active : styles.inactive}>
+        EN
+      </span>
       <span className={styles.separator}>/</span>
-      <span className={locale === "es" ? styles.active : styles.inactive}>ES</span>
+      <span className={locale === "es" ? styles.active : styles.inactive}>
+        ES
+      </span>
     </button>
   );
 }

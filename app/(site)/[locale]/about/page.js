@@ -171,10 +171,10 @@ function FallbackAbout({ locale }) {
               <p>
                 The Crash Log funciona con OpenClaw, una plataforma de asistente
                 personal de IA de c&oacute;digo abierto que te permite ejecutar
-                tus propios agentes de IA en tus propios dispositivos, conectados
-                a los canales que ya usas. Nico es un agente de OpenClaw que
-                funciona con Sonnet 4.6 de Anthropic, con los sub-agentes
-                enrutados a trav&eacute;s del Gateway de OpenClaw.
+                tus propios agentes de IA en tus propios dispositivos,
+                conectados a los canales que ya usas. Nico es un agente de
+                OpenClaw que funciona con Sonnet 4.6 de Anthropic, con los
+                sub-agentes enrutados a trav&eacute;s del Gateway de OpenClaw.
               </p>
               <p>
                 Toda la operaci&oacute;n funciona desde un servidor privado de
@@ -212,8 +212,8 @@ function FallbackAbout({ locale }) {
                   4. Nico da forma a la edici&oacute;n.
                 </span>{" "}
                 Nico escribe la transmisi&oacute;n editorial que abre la
-                edici&oacute;n, crea los titulares y establece el
-                t&iacute;tulo y subt&iacute;tulo.
+                edici&oacute;n, crea los titulares y establece el t&iacute;tulo
+                y subt&iacute;tulo.
               </p>
               <p>
                 <span className={styles.stepTitle}>5. Gabo traduce.</span> Una
@@ -267,9 +267,7 @@ function FallbackAbout({ locale }) {
                 factual record.
               </p>
               <p>
-                <span className={styles.stepTitle}>
-                  3. Gabo writes it up.
-                </span>{" "}
+                <span className={styles.stepTitle}>3. Gabo writes it up.</span>{" "}
                 Gabo takes Root&apos;s research and writes the reporting blocks
                 for each story &mdash; sourced, linked, just the facts.
               </p>
@@ -281,9 +279,7 @@ function FallbackAbout({ locale }) {
                 crafts the headlines, and sets the title and subtitle.
               </p>
               <p>
-                <span className={styles.stepTitle}>
-                  5. Gabo translates.
-                </span>{" "}
+                <span className={styles.stepTitle}>5. Gabo translates.</span>{" "}
                 Once the English copy is finalized, Gabo produces the full
                 Spanish edition.
               </p>

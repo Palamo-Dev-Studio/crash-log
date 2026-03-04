@@ -11,11 +11,13 @@
 ### Current State
 
 **Root Layout (`app/layout.js`):**
+
 - Static metadata exported:
   ```javascript
   export const metadata = {
     title: "The Crash Log — AI & Tech Gone Off the Rails",
-    description: "A newsletter about AI and tech failures, produced by a team of AI agents and edited by a human.",
+    description:
+      "A newsletter about AI and tech failures, produced by a team of AI agents and edited by a human.",
   };
   ```
 - Uses Google Fonts with `display: "swap"` (good for CLS)
@@ -23,14 +25,17 @@
 - No viewport, charset, or other critical meta tags defined
 
 **Locale Layout (`app/[locale]/layout.js`):**
+
 - No metadata export
 - No dynamic `lang` attribute adjustment based on locale param
 
 **Home Page (`app/[locale]/page.js`):**
+
 - No metadata export
 - Placeholder content (loading state)
 
 **Studio Page (`app/studio/[[...index]]/page.js`):**
+
 - Not reviewed but should suppress indexing (robots noindex)
 
 ### Gaps
@@ -83,7 +88,8 @@ export const metadata = {
     default: "The Crash Log — AI & Tech Gone Off the Rails",
     template: "%s — The Crash Log",
   },
-  description: "A bilingual (EN/ES) newsletter about AI and tech failures, produced by a team of AI agents and edited by a human.",
+  description:
+    "A bilingual (EN/ES) newsletter about AI and tech failures, produced by a team of AI agents and edited by a human.",
   generator: "Next.js 16",
   applicationName: "The Crash Log",
   authors: [{ name: "Hector Luis Alamo" }],
@@ -153,7 +159,9 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#0A0A0A" />
         <link rel="canonical" href="https://crash-log.example.com" />
       </head>
-      <body className={`${spaceGrotesk.variable} ${sourceSerif4.variable} ${ibmPlexMono.variable}`}>
+      <body
+        className={`${spaceGrotesk.variable} ${sourceSerif4.variable} ${ibmPlexMono.variable}`}
+      >
         {children}
       </body>
     </html>
@@ -231,9 +239,10 @@ export async function generateMetadata({ params }) {
   }
 
   const title = issue.title?.[locale] || issue.title?.en || "The Crash Log";
-  const description = issue.metaDescription?.[locale] ||
-                      issue.metaDescription?.en ||
-                      "The latest edition of The Crash Log newsletter.";
+  const description =
+    issue.metaDescription?.[locale] ||
+    issue.metaDescription?.en ||
+    "The latest edition of The Crash Log newsletter.";
 
   return {
     title,
@@ -266,11 +275,7 @@ export async function generateMetadata({ params }) {
 export default async function HomePage({ params }) {
   const { locale } = await params;
   // Component will fetch and render latest issue
-  return (
-    <main>
-      {/* ... */}
-    </main>
-  );
+  return <main>{/* ... */}</main>;
 }
 ```
 
@@ -369,7 +374,8 @@ export default function RootLayout({ children }) {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://crash-log.example.com/search?q={search_term_string}",
+        urlTemplate:
+          "https://crash-log.example.com/search?q={search_term_string}",
       },
       query_input: "required name=search_term_string",
     },
@@ -541,7 +547,9 @@ export async function generateMetadata({ params }) {
   const issue = await client.fetch(/* ... */);
 
   const canonicalUrl = `https://crash-log.example.com/${locale}/issue/${slug}`;
-  const ogImage = issue.coverImage ? urlFor(issue.coverImage).url() : "/og-default.png";
+  const ogImage = issue.coverImage
+    ? urlFor(issue.coverImage).url()
+    : "/og-default.png";
 
   return {
     title: issue.title?.[locale],
@@ -795,12 +803,28 @@ For every page with EN and ES versions, Next.js should auto-generate:
 
 ```html
 <!-- On /en/issue/slug: -->
-<link rel="alternate" hreflang="es-ES" href="https://crash-log.example.com/es/issue/slug">
-<link rel="alternate" hreflang="x-default" href="https://crash-log.example.com/en/issue/slug">
+<link
+  rel="alternate"
+  hreflang="es-ES"
+  href="https://crash-log.example.com/es/issue/slug"
+/>
+<link
+  rel="alternate"
+  hreflang="x-default"
+  href="https://crash-log.example.com/en/issue/slug"
+/>
 
 <!-- On /es/issue/slug: -->
-<link rel="alternate" hreflang="en-US" href="https://crash-log.example.com/en/issue/slug">
-<link rel="alternate" hreflang="x-default" href="https://crash-log.example.com/en/issue/slug">
+<link
+  rel="alternate"
+  hreflang="en-US"
+  href="https://crash-log.example.com/en/issue/slug"
+/>
+<link
+  rel="alternate"
+  hreflang="x-default"
+  href="https://crash-log.example.com/en/issue/slug"
+/>
 ```
 
 This is configured in root layout's `generateMetadata`:
@@ -824,16 +848,19 @@ export async function generateMetadata() {
 ### Current State
 
 **Current Approach:**
+
 - Middleware detects locale from cookie → Accept-Language header → defaults EN
 - All routes prefixed `/en/` and `/es/`
 - Locale Layout validates and renders (no per-locale modifications yet)
 - Root layout hardcoded to `lang="en"` — **critical issue**
 
 **Strengths:**
+
 - Locale prefix routing is SEO-friendly (better than query params)
 - Proper fallback chain (cookie > Accept-Language > default)
 
 **Weaknesses:**
+
 - No locale-specific metadata on locale layout
 - Root `<html lang="en">` breaks Spanish pages
 - No hreflang or x-default declaration yet
@@ -976,9 +1003,8 @@ For analytics/reporting, consider storing locale-specific meta descriptions in S
 Then in page metadata:
 
 ```javascript
-const description = locale === "es"
-  ? issue.metaDescriptionES
-  : issue.metaDescription?.en;
+const description =
+  locale === "es" ? issue.metaDescriptionES : issue.metaDescription?.en;
 ```
 
 ---
@@ -988,28 +1014,33 @@ const description = locale === "es"
 ### Current State
 
 **Font Loading:**
+
 - Google Fonts with `display: "swap"` ✓ (good for CLS)
 - 3 font families: Space Grotesk (display), Source Serif 4 (body), IBM Plex Mono (system)
 - No font subsetting or preloading
 
 **Image Optimization:**
+
 - Sanity image optimization via `@sanity/image-url`
 - No Next.js `<Image>` component in use (components use `<img>`)
 - No lazy loading or responsive images
 - No image format optimization (WebP, AVIF)
 
 **CSS:**
+
 - Global CSS with design tokens (good performance)
 - CSS Modules for components (scoped, efficient)
 - Dark theme as default (potential battery savings on OLED)
 
 **JavaScript:**
+
 - React 19 with App Router (good, modern)
 - Portable Text rendering for rich text (fine)
 - No bundler config optimizations visible
 - No suspense boundaries or streaming SSR
 
 **Render Blocking:**
+
 - Fonts are not preloaded → potential CLS
 - No font subset optimization
 
@@ -1061,7 +1092,7 @@ export const metadata = {
 Or in HTML head:
 
 ```html
-<link rel="preload" as="font" href="..." type="font/woff2" crossorigin>
+<link rel="preload" as="font" href="..." type="font/woff2" crossorigin />
 ```
 
 #### 7.2 Switch Images to Next.js `<Image>` Component
@@ -1200,30 +1231,36 @@ export default function RootLayout({ children }) {
 ### Current State
 
 **Semantic HTML:**
+
 - Using proper heading hierarchy (h1, h2, h3)
 - `<header>`, `<footer>`, `<main>`, `<nav>` tags present
 - `<figure>` for images ✓
 
 **ARIA:**
+
 - Global CSS includes `:focus-visible` outline (good)
 - Components use `aria-hidden` on decorative elements
 - Components use `aria-label` on interactive elements
 - No missing alt text (enforced via Sanity schema)
 
 **Color Contrast:**
+
 - Dark theme with sufficient contrast (checked in CLAUDE.md — fixed via CodeRabbit review)
 - Severity badge colors tested and adjusted
 
 **Font Sizing:**
+
 - Root font size: 16.5px (readable)
 - Line height: 1.72 (spacious, good for readability)
 
 **Keyboard Navigation:**
+
 - `:focus-visible` applied globally
 - Links and buttons are natively focusable
 - No keyboard traps detected (component review pending)
 
 **Screen Reader Support:**
+
 - Semantic HTML largely in place
 - Alt text on images (required in Sanity)
 - Navigation structure clear
@@ -1294,17 +1331,14 @@ In issue page layout:
 ```javascript
 // app/[locale]/issue/[slug]/page.js
 export default async function IssuePage() {
-  return (
-    <main id="main-content">
-      {/* ... page content ... */}
-    </main>
-  );
+  return <main id="main-content">{/* ... page content ... */}</main>;
 }
 ```
 
 #### 8.3 Verify Heading Hierarchy
 
 Audit in Phase 4 once pages are built:
+
 - Each page should have exactly one `<h1>` (page title)
 - No skipped heading levels (h1 → h2 → h4 is bad)
 - Use semantic HTML heading tags, not divs with `role="heading"`
@@ -1334,6 +1368,7 @@ When subscribe/search forms are added:
 #### 8.5 Add ARIA Labels to Interactive Components
 
 Review all buttons/links in CodeRabbit to ensure:
+
 - `aria-label` on icon-only buttons
 - `aria-current="page"` on active nav links
 - `aria-expanded` on collapsible sections (if any)
@@ -1344,16 +1379,17 @@ Review all buttons/links in CodeRabbit to ensure:
 
 ### Phase Summary
 
-| Phase | Focus | P0/P1 Items | Timeline |
-|-------|-------|-----------|----------|
-| **Phase 4** (Current) | Issue Page + Queries | Root metadata, robots.txt, sitemap.js, hreflang setup | Week 1 |
-| **Phase 4.5** (New) | SEO Infrastructure | NewsArticle schema, OG images, font preloading, Image component refactor | Week 1-2 |
-| **Phase 5** | Archive + Search | Per-page metadata, BreadcrumbList schema, Core Web Vitals tracking | Week 2-3 |
-| **Future** | Site Launch | Final audit, performance testing, Search Console setup | Week 4+ |
+| Phase                 | Focus                | P0/P1 Items                                                              | Timeline |
+| --------------------- | -------------------- | ------------------------------------------------------------------------ | -------- |
+| **Phase 4** (Current) | Issue Page + Queries | Root metadata, robots.txt, sitemap.js, hreflang setup                    | Week 1   |
+| **Phase 4.5** (New)   | SEO Infrastructure   | NewsArticle schema, OG images, font preloading, Image component refactor | Week 1-2 |
+| **Phase 5**           | Archive + Search     | Per-page metadata, BreadcrumbList schema, Core Web Vitals tracking       | Week 2-3 |
+| **Future**            | Site Launch          | Final audit, performance testing, Search Console setup                   | Week 4+  |
 
 ### Checklist for Phase 4.5 (NEW PHASE)
 
 **Priority P0:**
+
 - [ ] Update `app/layout.js` with comprehensive metadata (Section 1.1)
 - [ ] Create `app/[locale]/layout.js` with locale-aware metadata and `lang` attribute (Section 1.2)
 - [ ] Create `app/robots.js` and `public/robots.txt` (Section 4.1-4.3)
@@ -1364,6 +1400,7 @@ Review all buttons/links in CodeRabbit to ensure:
 - [ ] Create OG/Twitter image assets (1200×630px, 1200×675px) (Section 3.2)
 
 **Priority P1:**
+
 - [ ] Refactor image components to use `<Image>` from `next/image` (Section 7.2)
 - [ ] Add font preloading (Section 7.1)
 - [ ] Configure image optimization in `next.config.mjs` (Section 7.4)
@@ -1400,7 +1437,7 @@ export const metadata = {
 Or add HTML meta tag:
 
 ```html
-<meta name="google-site-verification" content="YOUR_TOKEN">
+<meta name="google-site-verification" content="YOUR_TOKEN" />
 ```
 
 #### 10.2 Analytics Integration
@@ -1421,6 +1458,7 @@ Add Google Analytics or Plausible Analytics:
 #### 10.3 Monitoring Dashboard
 
 Set up alerts for:
+
 - Crawl errors (404s, robots.txt blocks)
 - Indexing coverage (pages indexed vs. excluded)
 - Search performance (CTR, impressions, position trends)
@@ -1476,33 +1514,33 @@ Set up alerts for:
 
 ### New Files Required
 
-| File | Purpose | Priority |
-|------|---------|----------|
-| `/app/robots.js` | Dynamic robots.txt export | P0 |
-| `/public/robots.txt` | Static robots.txt fallback | P0 |
-| `/app/sitemap.js` | Dynamic XML sitemap generator | P0 |
-| `/public/og-image.png` | OG social image (1200×630) | P0 |
-| `/public/twitter-image.png` | Twitter card image (1200×675) | P0 |
-| `/public/logo.png` | Masthead logo for schema | P0 |
-| `/public/favicon.ico` | Browser tab icon | P1 |
-| `/public/apple-touch-icon.png` | iOS home screen icon | P1 |
-| `/public/site.webmanifest` | PWA manifest | P1 |
-| `/lib/seo.js` | Shared SEO utility functions | P1 |
-| `/docs/SEO_IMPLEMENTATION.md` | Step-by-step implementation guide | P1 |
+| File                           | Purpose                           | Priority |
+| ------------------------------ | --------------------------------- | -------- |
+| `/app/robots.js`               | Dynamic robots.txt export         | P0       |
+| `/public/robots.txt`           | Static robots.txt fallback        | P0       |
+| `/app/sitemap.js`              | Dynamic XML sitemap generator     | P0       |
+| `/public/og-image.png`         | OG social image (1200×630)        | P0       |
+| `/public/twitter-image.png`    | Twitter card image (1200×675)     | P0       |
+| `/public/logo.png`             | Masthead logo for schema          | P0       |
+| `/public/favicon.ico`          | Browser tab icon                  | P1       |
+| `/public/apple-touch-icon.png` | iOS home screen icon              | P1       |
+| `/public/site.webmanifest`     | PWA manifest                      | P1       |
+| `/lib/seo.js`                  | Shared SEO utility functions      | P1       |
+| `/docs/SEO_IMPLEMENTATION.md`  | Step-by-step implementation guide | P1       |
 
 ### Modified Files
 
-| File | Changes | Priority |
-|------|---------|----------|
-| `app/layout.js` | Add comprehensive metadata, OG, Twitter, schemas | P0 |
-| `app/[locale]/layout.js` | Add locale-aware metadata, fix `lang` attribute | P0 |
-| `app/[locale]/page.js` | Add generateMetadata, fetch latest issue | P0 |
-| `app/[locale]/issue/[slug]/page.js` | Add dynamic metadata, NewsArticle schema | P0 |
-| `app/studio/[[...index]]/page.js` | Add robots noindex | P0 |
-| `components/CoverImage.js` | Switch to `<Image>` component | P1 |
-| `components/StoryBlock.js` | Add semantic HTML, ARIA labels | P1 |
-| `components/Header.js` | Add skip link, aria-labels | P1 |
-| `next.config.mjs` | Add image optimization config | P1 |
+| File                                | Changes                                          | Priority |
+| ----------------------------------- | ------------------------------------------------ | -------- |
+| `app/layout.js`                     | Add comprehensive metadata, OG, Twitter, schemas | P0       |
+| `app/[locale]/layout.js`            | Add locale-aware metadata, fix `lang` attribute  | P0       |
+| `app/[locale]/page.js`              | Add generateMetadata, fetch latest issue         | P0       |
+| `app/[locale]/issue/[slug]/page.js` | Add dynamic metadata, NewsArticle schema         | P0       |
+| `app/studio/[[...index]]/page.js`   | Add robots noindex                               | P0       |
+| `components/CoverImage.js`          | Switch to `<Image>` component                    | P1       |
+| `components/StoryBlock.js`          | Add semantic HTML, ARIA labels                   | P1       |
+| `components/Header.js`              | Add skip link, aria-labels                       | P1       |
+| `next.config.mjs`                   | Add image optimization config                    | P1       |
 
 ---
 

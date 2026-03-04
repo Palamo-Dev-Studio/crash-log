@@ -35,7 +35,10 @@ export default {
                 name: "href",
                 type: "url",
                 validation: (Rule) =>
-                  Rule.uri({ allowRelative: true, scheme: ["http", "https", "mailto"] }),
+                  Rule.uri({
+                    allowRelative: true,
+                    scheme: ["http", "https", "mailto"],
+                  }),
               },
               {
                 title: "Open in new tab",

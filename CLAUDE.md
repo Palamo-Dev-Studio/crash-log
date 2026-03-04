@@ -61,12 +61,14 @@ Schemas live in `sanity/schemas/`. Object types in `sanity/schemas/objects/`.
 ## Environment Variables
 
 Required in `.env.local`:
+
 - `NEXT_PUBLIC_SANITY_PROJECT_ID` — Sanity project ID
 - `NEXT_PUBLIC_SANITY_DATASET` — Sanity dataset name (defaults to `production`)
 
 ## Reference Documentation
 
 Detailed design and content specs live in `docs/reference/`:
+
 - `crash-log-content-model-revised.md` — Full schema field definitions
 - `crash-log-i18n-guide-revised.md` — Localization strategy and patterns
 - `crash-log-design-system.jsx` — Color palette, typography, severity tokens
@@ -85,7 +87,7 @@ Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` 
 
 ## Current State
 
-Phases 1–7 complete. Sanity schemas, Studio, 16 React components, issue pages, locale infrastructure, SEO foundation, content seeding, and test framework are all in place. `scripts/verify.sh` passes (185 tests + 29 static pages). Deployed to Vercel at `crashlog.ai`. No linter or CI pipeline yet.
+Phases 1–8 complete. Sanity schemas, Studio, 16 React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, and dynamic OG images are all in place. `scripts/verify.sh` passes (195 tests + 29 static pages). Deployed to Vercel at `crashlog.ai`.
 
 ## Testing
 
@@ -97,7 +99,7 @@ Phases 1–7 complete. Sanity schemas, Studio, 16 React components, issue pages,
 - Mocks: `__tests__/mocks/` — next/image, next/link, next/navigation stubs
 - Unit tests: `__tests__/unit/lib/` — locale, sanity, queries, portableText
 - Component tests: `__tests__/unit/components/` — all 16 components
-- Integration tests: `__tests__/integration/` — middleware, robots
+- Integration tests: `__tests__/integration/` — middleware, robots, rss-feed
 - E2E tests: `e2e/` — home, navigation, locale-switching, empty-state
 
 **JSX in .js files:** The project uses JSX in `.js` files (Next.js convention). A custom Vite plugin in `vitest.config.mjs` (`jsxInJsPlugin`) transforms these via esbuild before Vite's import analysis.

@@ -20,20 +20,20 @@ Define a reusable object type for any field that needs EN + ES.
 // sanity/schemas/objects/localizedString.js
 
 export default {
-  name: 'localizedString',
-  title: 'Localized String',
-  type: 'object',
+  name: "localizedString",
+  title: "Localized String",
+  type: "object",
   fields: [
     {
-      name: 'en',
-      title: '🇺🇸 English',
-      type: 'string',
+      name: "en",
+      title: "🇺🇸 English",
+      type: "string",
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'es',
-      title: '🇲🇽 Español',
-      type: 'string',
+      name: "es",
+      title: "🇲🇽 Español",
+      type: "string",
     },
   ],
 };
@@ -43,20 +43,20 @@ export default {
 // sanity/schemas/objects/localizedText.js
 
 export default {
-  name: 'localizedText',
-  title: 'Localized Text',
-  type: 'object',
+  name: "localizedText",
+  title: "Localized Text",
+  type: "object",
   fields: [
     {
-      name: 'en',
-      title: '🇺🇸 English',
-      type: 'text',
+      name: "en",
+      title: "🇺🇸 English",
+      type: "text",
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'es',
-      title: '🇲🇽 Español',
-      type: 'text',
+      name: "es",
+      title: "🇲🇽 Español",
+      type: "text",
     },
   ],
 };
@@ -66,20 +66,20 @@ export default {
 // sanity/schemas/objects/localizedBlockContent.js
 
 export default {
-  name: 'localizedBlockContent',
-  title: 'Localized Block Content',
-  type: 'object',
+  name: "localizedBlockContent",
+  title: "Localized Block Content",
+  type: "object",
   fields: [
     {
-      name: 'en',
-      title: '🇺🇸 English',
-      type: 'blockContent',
+      name: "en",
+      title: "🇺🇸 English",
+      type: "blockContent",
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'es',
-      title: '🇲🇽 Español',
-      type: 'blockContent',
+      name: "es",
+      title: "🇲🇽 Español",
+      type: "blockContent",
     },
   ],
 };
@@ -98,114 +98,117 @@ publish state, one validation surface.
 // sanity/schemas/issue.js
 
 export default {
-  name: 'issue',
-  title: 'Issue',
-  type: 'document',
+  name: "issue",
+  title: "Issue",
+  type: "document",
   groups: [
-    { name: 'english', title: '🇺🇸 English', default: true },
-    { name: 'spanish', title: '🇲🇽 Español' },
-    { name: 'meta', title: 'Meta' },
+    { name: "english", title: "🇺🇸 English", default: true },
+    { name: "spanish", title: "🇲🇽 Español" },
+    { name: "meta", title: "Meta" },
   ],
   fields: [
     // ── Shared (language-independent) ──
     {
-      name: 'issueNumber',
-      title: 'Issue Number',
-      type: 'number',
-      group: 'meta',
+      name: "issueNumber",
+      title: "Issue Number",
+      type: "number",
+      group: "meta",
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      group: 'meta',
-      options: { source: (doc) => `crash-log-${String(doc.issueNumber).padStart(3, '0')}` },
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      group: "meta",
+      options: {
+        source: (doc) =>
+          `crash-log-${String(doc.issueNumber).padStart(3, "0")}`,
+      },
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'publishDate',
-      title: 'Publish Date',
-      type: 'datetime',
-      group: 'meta',
+      name: "publishDate",
+      title: "Publish Date",
+      type: "datetime",
+      group: "meta",
     },
     {
-      name: 'status',
-      title: 'Status',
-      type: 'string',
-      group: 'meta',
-      options: { list: ['draft', 'review', 'scheduled', 'published'] },
-      initialValue: 'draft',
+      name: "status",
+      title: "Status",
+      type: "string",
+      group: "meta",
+      options: { list: ["draft", "review", "scheduled", "published"] },
+      initialValue: "draft",
     },
     {
-      name: 'coverImage',
-      title: 'Cover Image',
-      type: 'image',
-      group: 'meta',
-      description: 'Shared across both languages',
+      name: "coverImage",
+      title: "Cover Image",
+      type: "image",
+      group: "meta",
+      description: "Shared across both languages",
     },
     {
-      name: 'coverImageAlt',
-      title: 'Cover Image Alt',
-      type: 'localizedString',
-      group: 'meta',
+      name: "coverImageAlt",
+      title: "Cover Image Alt",
+      type: "localizedString",
+      group: "meta",
     },
     {
-      name: 'coverImagePrompt',
-      title: 'Cover Image Prompt',
-      type: 'text',
-      group: 'meta',
+      name: "coverImagePrompt",
+      title: "Cover Image Prompt",
+      type: "text",
+      group: "meta",
     },
 
     // ── Localized content ──
     {
-      name: 'title',
-      title: 'Issue Title',
-      type: 'localizedString',
-      group: 'english',
+      name: "title",
+      title: "Issue Title",
+      type: "localizedString",
+      group: "english",
     },
     {
-      name: 'nicosTransmission',
+      name: "nicosTransmission",
       title: "Nico's Transmission",
-      type: 'localizedBlockContent',
-      group: 'english',
+      type: "localizedBlockContent",
+      group: "english",
     },
     {
-      name: 'stories',
-      title: 'Stories',
-      type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'story' }] }],
-      group: 'english',
+      name: "stories",
+      title: "Stories",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "story" }] }],
+      group: "english",
     },
     {
-      name: 'stackTrace',
-      title: 'Stack Trace',
-      type: 'array',
-      of: [{ type: 'stackTraceHit' }],
+      name: "stackTrace",
+      title: "Stack Trace",
+      type: "array",
+      of: [{ type: "stackTraceHit" }],
       validation: (Rule) => Rule.max(3),
-      group: 'english',
+      group: "english",
     },
     {
-      name: 'metaDescription',
-      title: 'Meta Description',
-      type: 'localizedText',
-      group: 'meta',
+      name: "metaDescription",
+      title: "Meta Description",
+      type: "localizedText",
+      group: "meta",
     },
     {
-      name: 'beehiivStatus',
-      title: 'Beehiiv Status',
-      type: 'string',
-      group: 'meta',
-      options: { list: ['not_sent', 'queued', 'sent'] },
-      initialValue: 'not_sent',
+      name: "beehiivStatus",
+      title: "Beehiiv Status",
+      type: "string",
+      group: "meta",
+      options: { list: ["not_sent", "queued", "sent"] },
+      initialValue: "not_sent",
     },
   ],
   preview: {
-    select: { title: 'title.en', number: 'issueNumber', hasEs: 'title.es' },
+    select: { title: "title.en", number: "issueNumber", hasEs: "title.es" },
     prepare({ title, number, hasEs }) {
       return {
         title: `#${number} — ${title}`,
-        subtitle: hasEs ? '🇺🇸 + 🇲🇽' : '🇺🇸 only',
+        subtitle: hasEs ? "🇺🇸 + 🇲🇽" : "🇺🇸 only",
       };
     },
   },
@@ -225,70 +228,82 @@ syntax) with a localized description slug.
 // sanity/schemas/story.js
 
 export default {
-  name: 'story',
-  title: 'Story',
-  type: 'document',
+  name: "story",
+  title: "Story",
+  type: "document",
   groups: [
-    { name: 'english', title: '🇺🇸 English', default: true },
-    { name: 'spanish', title: '🇲🇽 Español' },
-    { name: 'meta', title: 'Meta' },
+    { name: "english", title: "🇺🇸 English", default: true },
+    { name: "spanish", title: "🇲🇽 Español" },
+    { name: "meta", title: "Meta" },
   ],
   fields: [
     // ── Shared ──
     {
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      group: 'meta',
-      options: { source: 'headline.en' },
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      group: "meta",
+      options: { source: "headline.en" },
     },
     {
-      name: 'severity',
-      title: 'Severity',
-      type: 'string',
-      group: 'meta',
+      name: "severity",
+      title: "Severity",
+      type: "string",
+      group: "meta",
       options: {
-        list: ['ERROR', 'OVERRIDE', 'TERMINATE', 'WARNING', 'CRITICAL', 'BREACH'],
+        list: [
+          "ERROR",
+          "OVERRIDE",
+          "TERMINATE",
+          "WARNING",
+          "CRITICAL",
+          "BREACH",
+        ],
       },
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'category',
-      title: 'Category',
-      type: 'reference',
-      to: [{ type: 'category' }],
-      group: 'meta',
+      name: "category",
+      title: "Category",
+      type: "reference",
+      to: [{ type: "category" }],
+      group: "meta",
     },
     {
-      name: 'sources',
-      title: 'Sources',
-      type: 'array',
-      of: [{ type: 'sourceLink' }],
-      group: 'meta',
-      description: 'Shared — source links stay in their original language',
+      name: "sources",
+      title: "Sources",
+      type: "array",
+      of: [{ type: "sourceLink" }],
+      group: "meta",
+      description: "Shared — source links stay in their original language",
     },
 
     // ── Localized ──
     {
-      name: 'headline',
-      title: 'Headline',
-      type: 'localizedString',
-      group: 'english',
-      description: 'EN: ERROR: OpRoom.med // Patch_Not_Safe · ES: ERROR: OpRoom.med // Parche_Inseguro',
+      name: "headline",
+      title: "Headline",
+      type: "localizedString",
+      group: "english",
+      description:
+        "EN: ERROR: OpRoom.med // Patch_Not_Safe · ES: ERROR: OpRoom.med // Parche_Inseguro",
     },
     {
-      name: 'body',
-      title: 'Body',
-      type: 'localizedBlockContent',
-      group: 'english',
+      name: "body",
+      title: "Body",
+      type: "localizedBlockContent",
+      group: "english",
     },
   ],
   preview: {
-    select: { headline: 'headline.en', severity: 'severity', hasEs: 'headline.es' },
+    select: {
+      headline: "headline.en",
+      severity: "severity",
+      hasEs: "headline.es",
+    },
     prepare({ headline, severity, hasEs }) {
       return {
         title: headline,
-        subtitle: `${severity} · ${hasEs ? '🇺🇸 + 🇲🇽' : '🇺🇸 only'}`,
+        subtitle: `${severity} · ${hasEs ? "🇺🇸 + 🇲🇽" : "🇺🇸 only"}`,
       };
     },
   },
@@ -301,17 +316,17 @@ export default {
 // sanity/schemas/objects/stackTraceHit.js
 
 export default {
-  name: 'stackTraceHit',
-  title: 'Stack Trace Hit',
-  type: 'object',
+  name: "stackTraceHit",
+  title: "Stack Trace Hit",
+  type: "object",
   fields: [
     {
-      name: 'text',
-      title: 'Text',
-      type: 'localizedText',
+      name: "text",
+      title: "Text",
+      type: "localizedText",
     },
-    { name: 'sourceUrl', title: 'Source URL', type: 'url' },
-    { name: 'sourceOutlet', title: 'Source Outlet', type: 'string' },
+    { name: "sourceUrl", title: "Source URL", type: "url" },
+    { name: "sourceOutlet", title: "Source Outlet", type: "string" },
   ],
 };
 ```
@@ -409,20 +424,20 @@ app/
 ```js
 // middleware.js
 
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-const LOCALES = ['en', 'es'];
-const DEFAULT_LOCALE = 'en';
+const LOCALES = ["en", "es"];
+const DEFAULT_LOCALE = "en";
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
   // Skip static files, API routes, Sanity Studio
   if (
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/studio') ||
-    pathname.includes('.')
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/studio") ||
+    pathname.includes(".")
   ) {
     return NextResponse.next();
   }
@@ -434,13 +449,14 @@ export function middleware(request) {
   if (pathnameHasLocale) return NextResponse.next();
 
   // Cookie override (set by language toggle) > Accept-Language > default
-  const cookieLocale = request.cookies.get('CRASH_LOG_LOCALE')?.value;
-  const acceptLang = request.headers.get('accept-language') || '';
-  const detectedLocale = acceptLang.includes('es') ? 'es' : DEFAULT_LOCALE;
+  const cookieLocale = request.cookies.get("CRASH_LOG_LOCALE")?.value;
+  const acceptLang = request.headers.get("accept-language") || "";
+  const detectedLocale = acceptLang.includes("es") ? "es" : DEFAULT_LOCALE;
 
-  const locale = cookieLocale && LOCALES.includes(cookieLocale)
-    ? cookieLocale
-    : detectedLocale;
+  const locale =
+    cookieLocale && LOCALES.includes(cookieLocale)
+      ? cookieLocale
+      : detectedLocale;
 
   const url = request.nextUrl.clone();
   url.pathname = `/${locale}${pathname}`;
@@ -448,7 +464,7 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|studio|favicon.ico).*)'],
+  matcher: ["/((?!_next|api|studio|favicon.ico).*)"],
 };
 ```
 
@@ -457,9 +473,9 @@ export const config = {
 ```jsx
 // app/[locale]/layout.js
 
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
-const LOCALES = ['en', 'es'];
+const LOCALES = ["en", "es"];
 
 export async function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -573,16 +589,16 @@ export const archiveQuery = `
 ```jsx
 // components/LanguageToggle.jsx
 
-'use client';
+"use client";
 
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from "next/navigation";
 
 export default function LanguageToggle({ locale }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const targetLocale = locale === 'en' ? 'es' : 'en';
-  const label = locale === 'en' ? 'ES' : 'EN';
+  const targetLocale = locale === "en" ? "es" : "en";
+  const label = locale === "en" ? "ES" : "EN";
 
   function handleToggle() {
     // Remember preference
@@ -598,19 +614,19 @@ export default function LanguageToggle({ locale }) {
       onClick={handleToggle}
       style={{
         fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: '11px',
+        fontSize: "11px",
         fontWeight: 600,
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        color: '#8E8E93',
-        background: 'transparent',
-        border: '1px solid #2C2C2E',
-        padding: '6px 14px',
-        borderRadius: '2px',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        color: "#8E8E93",
+        background: "transparent",
+        border: "1px solid #2C2C2E",
+        padding: "6px 14px",
+        borderRadius: "2px",
+        cursor: "pointer",
+        transition: "all 0.2s",
       }}
-      aria-label={`Switch to ${targetLocale === 'es' ? 'Spanish' : 'English'}`}
+      aria-label={`Switch to ${targetLocale === "es" ? "Spanish" : "English"}`}
     >
       {label}
     </button>
@@ -629,10 +645,10 @@ prefix and the page re-renders with the other language's fields.
 ```jsx
 // app/[locale]/issue/[slug]/page.js
 
-import { client } from '@/lib/sanity';
-import { issueBySlugQuery, siteSettingsQuery } from '@/lib/queries';
-import { t, hasFullTranslation } from '@/lib/locale';
-import LanguageToggle from '@/components/LanguageToggle';
+import { client } from "@/lib/sanity";
+import { issueBySlugQuery, siteSettingsQuery } from "@/lib/queries";
+import { t, hasFullTranslation } from "@/lib/locale";
+import LanguageToggle from "@/components/LanguageToggle";
 
 export default async function IssuePage({ params }) {
   const { locale, slug } = params;
@@ -644,13 +660,13 @@ export default async function IssuePage({ params }) {
 
   if (!issue) notFound();
 
-  const showFallbackBanner = locale === 'es' && !hasFullTranslation(issue);
+  const showFallbackBanner = locale === "es" && !hasFullTranslation(issue);
 
   return (
     <>
       {/* Header */}
       <header>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <LanguageToggle locale={locale} />
           <button>{t(settings.ui.subscribeCTA, locale)}</button>
         </div>
@@ -658,23 +674,25 @@ export default async function IssuePage({ params }) {
 
       {/* Fallback banner if ES content missing */}
       {showFallbackBanner && (
-        <div style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '12px',
-          color: '#FFB020',
-          background: 'rgba(255,176,32,0.08)',
-          border: '1px solid rgba(255,176,32,0.2)',
-          padding: '10px 16px',
-          borderRadius: '2px',
-          marginBottom: '24px',
-          textAlign: 'center',
-        }}>
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: "12px",
+            color: "#FFB020",
+            background: "rgba(255,176,32,0.08)",
+            border: "1px solid rgba(255,176,32,0.2)",
+            padding: "10px 16px",
+            borderRadius: "2px",
+            marginBottom: "24px",
+            textAlign: "center",
+          }}
+        >
           Versión en español próximamente — showing English
         </div>
       )}
 
       {/* Issue title */}
-      <h1>{t(issue.title, showFallbackBanner ? 'en' : locale)}</h1>
+      <h1>{t(issue.title, showFallbackBanner ? "en" : locale)}</h1>
 
       {/* Nico's Transmission */}
       <div>
@@ -686,7 +704,7 @@ export default async function IssuePage({ params }) {
       {issue.stories.map((story) => (
         <article key={story._id}>
           <span>{story.severity}</span>
-          <h2>{t(story.headline, showFallbackBanner ? 'en' : locale)}</h2>
+          <h2>{t(story.headline, showFallbackBanner ? "en" : locale)}</h2>
           {/* Render t(story.body, locale) through Portable Text */}
         </article>
       ))}
@@ -694,8 +712,9 @@ export default async function IssuePage({ params }) {
       {/* Stack Trace */}
       {issue.stackTrace?.map((hit, i) => (
         <div key={i}>
-          {t(hit.text, showFallbackBanner ? 'en' : locale)}
-          {' — '}{hit.sourceOutlet}
+          {t(hit.text, showFallbackBanner ? "en" : locale)}
+          {" — "}
+          {hit.sourceOutlet}
         </div>
       ))}
 
@@ -726,17 +745,17 @@ AFTER (one doc, two fields):
 
 ### What Gabo fills in per issue:
 
-| Field | EN | ES | Notes |
-|---|---|---|---|
-| `issue.title` | ✅ | ✅ | e.g. "Las Máquinas Están Contratando (y Despidiendo)" |
-| `issue.nicosTransmission` | ✅ | ✅ | Full LatAm rewrite, not word-for-word |
-| `story.headline` | ✅ | ✅ | Keep system-error syntax, localize the slug |
-| `story.body` | ✅ | ✅ | Full reporting block in LatAm Spanish |
-| `stackTrace[].text` | ✅ | ✅ | Quick-hit translations |
-| `issue.metaDescription` | ✅ | ✅ | SEO in both languages |
-| `issue.coverImage` | ✅ | — | Shared, not localized |
-| `story.severity` | ✅ | — | Enum, not localized |
-| `story.sources` | ✅ | — | Source links stay in original language |
+| Field                     | EN  | ES  | Notes                                                 |
+| ------------------------- | --- | --- | ----------------------------------------------------- |
+| `issue.title`             | ✅  | ✅  | e.g. "Las Máquinas Están Contratando (y Despidiendo)" |
+| `issue.nicosTransmission` | ✅  | ✅  | Full LatAm rewrite, not word-for-word                 |
+| `story.headline`          | ✅  | ✅  | Keep system-error syntax, localize the slug           |
+| `story.body`              | ✅  | ✅  | Full reporting block in LatAm Spanish                 |
+| `stackTrace[].text`       | ✅  | ✅  | Quick-hit translations                                |
+| `issue.metaDescription`   | ✅  | ✅  | SEO in both languages                                 |
+| `issue.coverImage`        | ✅  | —   | Shared, not localized                                 |
+| `story.severity`          | ✅  | —   | Enum, not localized                                   |
+| `story.sources`           | ✅  | —   | Source links stay in original language                |
 
 ### LatAm Spanish style notes for Gabo's system prompt:
 

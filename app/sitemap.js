@@ -35,7 +35,8 @@ export default async function sitemap() {
   const issueEntries = issues.flatMap((issue) =>
     LOCALES.map((locale) => ({
       url: `${BASE_URL}/${locale}/issue/${issue.slug}`,
-      lastModified: issue._updatedAt || issue.publishDate || new Date().toISOString(),
+      lastModified:
+        issue._updatedAt || issue.publishDate || new Date().toISOString(),
       changeFrequency: "monthly",
       priority: 0.8,
       alternates: {

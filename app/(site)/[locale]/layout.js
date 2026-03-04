@@ -77,6 +77,9 @@ export async function generateMetadata({ params }) {
         "es-ES": "/es",
         "x-default": "/en",
       },
+      types: {
+        "application/rss+xml": `/${locale}/feed.xml`,
+      },
     },
   };
 }
@@ -98,7 +101,8 @@ function WebSiteJsonLd() {
       "@type": "Organization",
       name: "The Crash Log",
       url: "https://crashlog.ai",
-      // TODO: Add logo and sameAs social profile URLs before launch
+      sameAs: ["https://twitter.com/thecrashlog"],
+      // TODO: Add logo property when OG image assets are ready
     },
     inLanguage: ["en-US", "es-ES"],
   };

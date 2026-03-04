@@ -27,7 +27,11 @@ export default {
     select: { text: "text.en", outlet: "sourceOutlet" },
     prepare({ text, outlet }) {
       return {
-        title: text ? (text.length > 60 ? text.slice(0, 60) + "..." : text) : "Untitled",
+        title: text
+          ? text.length > 60
+            ? text.slice(0, 60) + "..."
+            : text
+          : "Untitled",
         subtitle: outlet || "",
       };
     },

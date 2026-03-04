@@ -14,9 +14,10 @@ export async function generateMetadata({ params }) {
 
   if (!issue) {
     return {
-      title: locale === "es"
-        ? "El Crash Log — IA y tecnología descarriladas"
-        : "The Crash Log — AI & Tech Gone Off the Rails",
+      title:
+        locale === "es"
+          ? "El Crash Log — IA y tecnología descarriladas"
+          : "The Crash Log — AI & Tech Gone Off the Rails",
     };
   }
 

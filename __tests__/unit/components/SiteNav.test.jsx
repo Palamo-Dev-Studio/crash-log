@@ -6,7 +6,9 @@ import { render, screen } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
-    <a href={href} {...props}>{children}</a>
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 
@@ -29,16 +31,34 @@ describe("SiteNav", () => {
 
   it("prefixes links with en locale", () => {
     render(<SiteNav locale="en" />);
-    expect(screen.getByText("Latest").closest("a")).toHaveAttribute("href", "/en");
-    expect(screen.getByText("Archive").closest("a")).toHaveAttribute("href", "/en/archive");
-    expect(screen.getByText("Beats").closest("a")).toHaveAttribute("href", "/en/beats");
-    expect(screen.getByText("About").closest("a")).toHaveAttribute("href", "/en/about");
+    expect(screen.getByText("Latest").closest("a")).toHaveAttribute(
+      "href",
+      "/en"
+    );
+    expect(screen.getByText("Archive").closest("a")).toHaveAttribute(
+      "href",
+      "/en/archive"
+    );
+    expect(screen.getByText("Beats").closest("a")).toHaveAttribute(
+      "href",
+      "/en/beats"
+    );
+    expect(screen.getByText("About").closest("a")).toHaveAttribute(
+      "href",
+      "/en/about"
+    );
   });
 
   it("prefixes links with es locale", () => {
     render(<SiteNav locale="es" />);
-    expect(screen.getByText("Latest").closest("a")).toHaveAttribute("href", "/es");
-    expect(screen.getByText("Archive").closest("a")).toHaveAttribute("href", "/es/archive");
+    expect(screen.getByText("Latest").closest("a")).toHaveAttribute(
+      "href",
+      "/es"
+    );
+    expect(screen.getByText("Archive").closest("a")).toHaveAttribute(
+      "href",
+      "/es/archive"
+    );
   });
 
   it("applies active class to Latest when no activeSegment", () => {

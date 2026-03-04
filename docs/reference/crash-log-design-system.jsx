@@ -1,12 +1,36 @@
 import { useState } from "react";
 
 const SEVERITY_COLORS = {
-  ERROR: { primary: "#FF3B3B", bg: "rgba(255,59,59,0.08)", border: "rgba(255,59,59,0.25)" },
-  OVERRIDE: { primary: "#FFB020", bg: "rgba(255,176,32,0.08)", border: "rgba(255,176,32,0.25)" },
-  TERMINATE: { primary: "#8B95A5", bg: "rgba(139,149,165,0.08)", border: "rgba(139,149,165,0.25)" },
-  WARNING: { primary: "#FFD426", bg: "rgba(255,212,38,0.08)", border: "rgba(255,212,38,0.25)" },
-  CRITICAL: { primary: "#C41E3A", bg: "rgba(196,30,58,0.08)", border: "rgba(196,30,58,0.25)" },
-  BREACH: { primary: "#00D4FF", bg: "rgba(0,212,255,0.08)", border: "rgba(0,212,255,0.25)" },
+  ERROR: {
+    primary: "#FF3B3B",
+    bg: "rgba(255,59,59,0.08)",
+    border: "rgba(255,59,59,0.25)",
+  },
+  OVERRIDE: {
+    primary: "#FFB020",
+    bg: "rgba(255,176,32,0.08)",
+    border: "rgba(255,176,32,0.25)",
+  },
+  TERMINATE: {
+    primary: "#8B95A5",
+    bg: "rgba(139,149,165,0.08)",
+    border: "rgba(139,149,165,0.25)",
+  },
+  WARNING: {
+    primary: "#FFD426",
+    bg: "rgba(255,212,38,0.08)",
+    border: "rgba(255,212,38,0.25)",
+  },
+  CRITICAL: {
+    primary: "#C41E3A",
+    bg: "rgba(196,30,58,0.08)",
+    border: "rgba(196,30,58,0.25)",
+  },
+  BREACH: {
+    primary: "#00D4FF",
+    bg: "rgba(0,212,255,0.08)",
+    border: "rgba(0,212,255,0.25)",
+  },
 };
 
 const FONTS = {
@@ -92,18 +116,20 @@ const globalStyles = `
 function SeverityBadge({ severity }) {
   const colors = SEVERITY_COLORS[severity];
   return (
-    <span style={{
-      fontFamily: "var(--font-mono)",
-      fontSize: "11px",
-      fontWeight: 600,
-      letterSpacing: "0.08em",
-      color: colors.primary,
-      background: colors.bg,
-      border: `1px solid ${colors.border}`,
-      padding: "3px 10px",
-      borderRadius: "2px",
-      textTransform: "uppercase",
-    }}>
+    <span
+      style={{
+        fontFamily: "var(--font-mono)",
+        fontSize: "11px",
+        fontWeight: 600,
+        letterSpacing: "0.08em",
+        color: colors.primary,
+        background: colors.bg,
+        border: `1px solid ${colors.border}`,
+        padding: "3px 10px",
+        borderRadius: "2px",
+        textTransform: "uppercase",
+      }}
+    >
       {severity}
     </span>
   );
@@ -112,42 +138,50 @@ function SeverityBadge({ severity }) {
 function StoryBlock({ severity, headline, path, body, delay = 0 }) {
   const colors = SEVERITY_COLORS[severity];
   return (
-    <article style={{
-      borderLeft: `2px solid ${colors.primary}`,
-      padding: "28px 0 28px 24px",
-      marginBottom: "0",
-      animation: `fadeInUp 0.6s ease ${delay}s both`,
-      borderBottom: "1px solid var(--border-subtle)",
-    }}>
+    <article
+      style={{
+        borderLeft: `2px solid ${colors.primary}`,
+        padding: "28px 0 28px 24px",
+        marginBottom: "0",
+        animation: `fadeInUp 0.6s ease ${delay}s both`,
+        borderBottom: "1px solid var(--border-subtle)",
+      }}
+    >
       <div style={{ marginBottom: "12px" }}>
         <SeverityBadge severity={severity} />
       </div>
-      <h2 style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: "15px",
-        fontWeight: 600,
-        color: colors.primary,
-        letterSpacing: "0.02em",
-        marginBottom: "6px",
-        lineHeight: 1.4,
-      }}>
+      <h2
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "15px",
+          fontWeight: 600,
+          color: colors.primary,
+          letterSpacing: "0.02em",
+          marginBottom: "6px",
+          lineHeight: 1.4,
+        }}
+      >
         {headline}
       </h2>
-      <div style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: "11px",
-        color: "var(--text-tertiary)",
-        marginBottom: "18px",
-        letterSpacing: "0.03em",
-      }}>
+      <div
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "11px",
+          color: "var(--text-tertiary)",
+          marginBottom: "18px",
+          letterSpacing: "0.03em",
+        }}
+      >
         {path}
       </div>
-      <div style={{
-        fontFamily: "var(--font-body)",
-        fontSize: "17px",
-        lineHeight: 1.75,
-        color: "var(--text-secondary)",
-      }}>
+      <div
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: "17px",
+          lineHeight: 1.75,
+          color: "var(--text-secondary)",
+        }}
+      >
         {body}
       </div>
     </article>
@@ -156,34 +190,42 @@ function StoryBlock({ severity, headline, path, body, delay = 0 }) {
 
 function StackTraceHit({ number, text, source }) {
   return (
-    <div style={{
-      display: "flex",
-      gap: "12px",
-      alignItems: "baseline",
-      padding: "10px 0",
-      borderBottom: "1px solid var(--border-subtle)",
-    }}>
-      <span style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: "11px",
-        color: "var(--text-tertiary)",
-        flexShrink: 0,
-        width: "28px",
-      }}>
-        {String(number).padStart(2, "0")}
-      </span>
-      <span style={{
-        fontFamily: "var(--font-body)",
-        fontSize: "15px",
-        lineHeight: 1.6,
-        color: "var(--text-secondary)",
-      }}>
-        {text}{" "}
-        <span style={{
+    <div
+      style={{
+        display: "flex",
+        gap: "12px",
+        alignItems: "baseline",
+        padding: "10px 0",
+        borderBottom: "1px solid var(--border-subtle)",
+      }}
+    >
+      <span
+        style={{
           fontFamily: "var(--font-mono)",
           fontSize: "11px",
           color: "var(--text-tertiary)",
-        }}>
+          flexShrink: 0,
+          width: "28px",
+        }}
+      >
+        {String(number).padStart(2, "0")}
+      </span>
+      <span
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: "15px",
+          lineHeight: 1.6,
+          color: "var(--text-secondary)",
+        }}
+      >
+        {text}{" "}
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "11px",
+            color: "var(--text-tertiary)",
+          }}
+        >
           [{source}]
         </span>
       </span>
@@ -193,18 +235,22 @@ function StackTraceHit({ number, text, source }) {
 
 function NavItem({ label, active }) {
   return (
-    <a style={{
-      fontFamily: "var(--font-mono)",
-      fontSize: "12px",
-      letterSpacing: "0.06em",
-      textTransform: "uppercase",
-      color: active ? "var(--text-primary)" : "var(--text-tertiary)",
-      textDecoration: "none",
-      padding: "8px 0",
-      borderBottom: active ? "1px solid var(--text-primary)" : "1px solid transparent",
-      cursor: "pointer",
-      transition: "color 0.2s",
-    }}>
+    <a
+      style={{
+        fontFamily: "var(--font-mono)",
+        fontSize: "12px",
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
+        color: active ? "var(--text-primary)" : "var(--text-tertiary)",
+        textDecoration: "none",
+        padding: "8px 0",
+        borderBottom: active
+          ? "1px solid var(--text-primary)"
+          : "1px solid transparent",
+        cursor: "pointer",
+        transition: "color 0.2s",
+      }}
+    >
       {label}
     </a>
   );
@@ -216,98 +262,117 @@ export default function CrashLogDesign() {
   return (
     <>
       <style>{globalStyles}</style>
-      <div style={{
-        minHeight: "100vh",
-        background: "var(--bg-primary)",
-        position: "relative",
-        overflow: "hidden",
-      }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--bg-primary)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
         {/* Scanline overlay */}
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          pointerEvents: "none",
-          zIndex: 100,
-          background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)",
-        }} />
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            pointerEvents: "none",
+            zIndex: 100,
+            background:
+              "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)",
+          }}
+        />
 
         {/* Subtle noise texture */}
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          pointerEvents: "none",
-          zIndex: 99,
-          opacity: 0.025,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-        }} />
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            pointerEvents: "none",
+            zIndex: 99,
+            opacity: 0.025,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+          }}
+        />
 
         {/* Header */}
-        <header style={{
-          borderBottom: "1px solid var(--border-subtle)",
-          padding: "0 24px",
-          position: "sticky",
-          top: 0,
-          background: "rgba(10,11,15,0.92)",
-          backdropFilter: "blur(12px)",
-          zIndex: 50,
-        }}>
+        <header
+          style={{
+            borderBottom: "1px solid var(--border-subtle)",
+            padding: "0 24px",
+            position: "sticky",
+            top: 0,
+            background: "rgba(10,11,15,0.92)",
+            backdropFilter: "blur(12px)",
+            zIndex: 50,
+          }}
+        >
           <div style={{ maxWidth: "720px", margin: "0 auto" }}>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "20px 0 12px",
-            }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "20px 0 12px",
+              }}
+            >
               <div>
-                <h1 style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "22px",
-                  fontWeight: 800,
-                  letterSpacing: "-0.02em",
-                  color: "var(--text-primary)",
-                  animation: "flicker 8s infinite",
-                }}>
+                <h1
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "22px",
+                    fontWeight: 800,
+                    letterSpacing: "-0.02em",
+                    color: "var(--text-primary)",
+                    animation: "flicker 8s infinite",
+                  }}
+                >
                   THE CRASH LOG
                 </h1>
-                <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "10px",
-                  letterSpacing: "0.15em",
-                  color: "var(--text-tertiary)",
-                  textTransform: "uppercase",
-                  marginTop: "2px",
-                }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "10px",
+                    letterSpacing: "0.15em",
+                    color: "var(--text-tertiary)",
+                    textTransform: "uppercase",
+                    marginTop: "2px",
+                  }}
+                >
                   AI & Tech Gone Off the Rails
                 </div>
               </div>
-              <button style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "11px",
-                fontWeight: 600,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "#0A0B0F",
-                background: "#FF3B3B",
-                border: "none",
-                padding: "8px 20px",
-                borderRadius: "2px",
-                cursor: "pointer",
-                animation: "pulseGlow 3s ease infinite",
-              }}>
+              <button
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  color: "#0A0B0F",
+                  background: "#FF3B3B",
+                  border: "none",
+                  padding: "8px 20px",
+                  borderRadius: "2px",
+                  cursor: "pointer",
+                  animation: "pulseGlow 3s ease infinite",
+                }}
+              >
                 Subscribe
               </button>
             </div>
-            <nav style={{
-              display: "flex",
-              gap: "24px",
-              paddingBottom: "12px",
-            }}>
+            <nav
+              style={{
+                display: "flex",
+                gap: "24px",
+                paddingBottom: "12px",
+              }}
+            >
               <NavItem label="Latest" active />
               <NavItem label="Archive" />
               <NavItem label="Beats" />
@@ -317,142 +382,183 @@ export default function CrashLogDesign() {
         </header>
 
         {/* Main content */}
-        <main style={{ maxWidth: "720px", margin: "0 auto", padding: "40px 24px" }}>
-
+        <main
+          style={{ maxWidth: "720px", margin: "0 auto", padding: "40px 24px" }}
+        >
           {/* Issue header */}
-          <div style={{
-            marginBottom: "40px",
-            animation: "fadeInUp 0.6s ease both",
-          }}>
-            <div style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "11px",
-              color: "var(--text-tertiary)",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              marginBottom: "12px",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}>
-              <span style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "#FF3B3B",
-                display: "inline-block",
-                animation: "blink 2s ease infinite",
-              }} />
+          <div
+            style={{
+              marginBottom: "40px",
+              animation: "fadeInUp 0.6s ease both",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "11px",
+                color: "var(--text-tertiary)",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                marginBottom: "12px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <span
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  background: "#FF3B3B",
+                  display: "inline-block",
+                  animation: "blink 2s ease infinite",
+                }}
+              />
               Issue #014 · March 3, 2026
             </div>
-            <h1 style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "36px",
-              fontWeight: 800,
-              lineHeight: 1.15,
-              letterSpacing: "-0.03em",
-              color: "var(--text-primary)",
-              marginBottom: "8px",
-            }}>
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "36px",
+                fontWeight: 800,
+                lineHeight: 1.15,
+                letterSpacing: "-0.03em",
+                color: "var(--text-primary)",
+                marginBottom: "8px",
+              }}
+            >
               The Machines Are Hiring
               <br />
               <span style={{ color: "var(--text-tertiary)" }}>
                 (And Firing)
               </span>
             </h1>
-            <p style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "18px",
-              fontStyle: "italic",
-              color: "var(--text-secondary)",
-              lineHeight: 1.5,
-            }}>
-              Surgical AI goes off-script, the Pentagon picks a fight over model access, and Block replaces 4,000 humans with agents.
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "18px",
+                fontStyle: "italic",
+                color: "var(--text-secondary)",
+                lineHeight: 1.5,
+              }}
+            >
+              Surgical AI goes off-script, the Pentagon picks a fight over model
+              access, and Block replaces 4,000 humans with agents.
             </p>
           </div>
 
           {/* Cover image placeholder */}
-          <div style={{
-            width: "100%",
-            height: "320px",
-            background: "linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 50%, var(--bg-secondary) 100%)",
-            border: "1px solid var(--border-medium)",
-            borderRadius: "4px",
-            marginBottom: "48px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-            overflow: "hidden",
-          }}>
-            <div style={{
-              position: "absolute",
-              inset: 0,
-              background: "repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,59,59,0.03) 40px, rgba(255,59,59,0.03) 41px)",
-            }} />
-            <span style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              color: "var(--text-tertiary)",
-              letterSpacing: "0.1em",
-            }}>
+          <div
+            style={{
+              width: "100%",
+              height: "320px",
+              background:
+                "linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 50%, var(--bg-secondary) 100%)",
+              border: "1px solid var(--border-medium)",
+              borderRadius: "4px",
+              marginBottom: "48px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,59,59,0.03) 40px, rgba(255,59,59,0.03) 41px)",
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "12px",
+                color: "var(--text-tertiary)",
+                letterSpacing: "0.1em",
+              }}
+            >
               [ COVER IMAGE ]
             </span>
           </div>
 
           {/* Nico's Transmission */}
-          <section style={{
-            background: "var(--bg-secondary)",
-            border: "1px solid var(--border-medium)",
-            borderRadius: "4px",
-            padding: "32px",
-            marginBottom: "48px",
-            position: "relative",
-            animation: "fadeInUp 0.6s ease 0.1s both",
-          }}>
-            <div style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "2px",
-              background: "linear-gradient(90deg, #FF3B3B, #FFB020, #FF3B3B)",
-              opacity: 0.6,
-            }} />
-            <div style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "10px",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "#FF3B3B",
-              marginBottom: "16px",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}>
-              <span style={{
-                width: "16px",
-                height: "1px",
-                background: "#FF3B3B",
-                display: "inline-block",
-              }} />
+          <section
+            style={{
+              background: "var(--bg-secondary)",
+              border: "1px solid var(--border-medium)",
+              borderRadius: "4px",
+              padding: "32px",
+              marginBottom: "48px",
+              position: "relative",
+              animation: "fadeInUp 0.6s ease 0.1s both",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "2px",
+                background: "linear-gradient(90deg, #FF3B3B, #FFB020, #FF3B3B)",
+                opacity: 0.6,
+              }}
+            />
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "#FF3B3B",
+                marginBottom: "16px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <span
+                style={{
+                  width: "16px",
+                  height: "1px",
+                  background: "#FF3B3B",
+                  display: "inline-block",
+                }}
+              />
               Nico's Transmission
             </div>
-            <p style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "18px",
-              lineHeight: 1.8,
-              color: "var(--text-primary)",
-              fontStyle: "italic",
-            }}>
-              Three stories this week, one thread: the gap between what AI can do and what anyone's prepared to handle when it does it. A surgical navigation system goes haywire and the FDA's still counting paper reports. The Pentagon tries to strong-arm its way into Anthropic's models and gets told no — then punishes the company for having a spine. And Block's Jack Dorsey announces 4,000 layoffs in the name of AI efficiency, and the market rewards him with a stock bump. The pattern is always the same: deploy fast, deal with consequences later. Or don't deal with them at all.
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "18px",
+                lineHeight: 1.8,
+                color: "var(--text-primary)",
+                fontStyle: "italic",
+              }}
+            >
+              Three stories this week, one thread: the gap between what AI can
+              do and what anyone's prepared to handle when it does it. A
+              surgical navigation system goes haywire and the FDA's still
+              counting paper reports. The Pentagon tries to strong-arm its way
+              into Anthropic's models and gets told no — then punishes the
+              company for having a spine. And Block's Jack Dorsey announces
+              4,000 layoffs in the name of AI efficiency, and the market rewards
+              him with a stock bump. The pattern is always the same: deploy
+              fast, deal with consequences later. Or don't deal with them at
+              all.
             </p>
-            <div style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "11px",
-              color: "var(--text-tertiary)",
-              marginTop: "16px",
-            }}>
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "11px",
+                color: "var(--text-tertiary)",
+                marginTop: "16px",
+              }}
+            >
               — Nico von Bot, Managing Editor
             </div>
           </section>
@@ -483,33 +589,39 @@ export default function CrashLogDesign() {
           </section>
 
           {/* Stack Trace */}
-          <section style={{
-            marginBottom: "48px",
-            animation: "fadeInUp 0.6s ease 0.6s both",
-          }}>
-            <div style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "13px",
-              fontWeight: 600,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "var(--text-tertiary)",
-              marginBottom: "16px",
-              paddingBottom: "12px",
-              borderBottom: "1px solid var(--border-medium)",
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}>
+          <section
+            style={{
+              marginBottom: "48px",
+              animation: "fadeInUp 0.6s ease 0.6s both",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "13px",
+                fontWeight: 600,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "var(--text-tertiary)",
+                marginBottom: "16px",
+                paddingBottom: "12px",
+                borderBottom: "1px solid var(--border-medium)",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
               <span style={{ color: "#FFD426" }}>▸</span>
               Stack Trace
             </div>
-            <div style={{
-              background: "var(--bg-secondary)",
-              border: "1px solid var(--border-subtle)",
-              borderRadius: "4px",
-              padding: "8px 20px",
-            }}>
+            <div
+              style={{
+                background: "var(--bg-secondary)",
+                border: "1px solid var(--border-subtle)",
+                borderRadius: "4px",
+                padding: "8px 20px",
+              }}
+            >
               <StackTraceHit
                 number={1}
                 text="Google DeepMind researchers published a paper showing that AI systems trained on synthetic data can develop feedback loops that amplify biases by up to 300% over five generations."
@@ -529,257 +641,323 @@ export default function CrashLogDesign() {
           </section>
 
           {/* Footer credits */}
-          <section style={{
-            borderTop: "1px solid var(--border-medium)",
-            paddingTop: "32px",
-            marginBottom: "40px",
-            animation: "fadeInUp 0.6s ease 0.7s both",
-          }}>
-            <p style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "15px",
-              fontStyle: "italic",
-              color: "var(--text-tertiary)",
-              marginBottom: "8px",
-            }}>
+          <section
+            style={{
+              borderTop: "1px solid var(--border-medium)",
+              paddingTop: "32px",
+              marginBottom: "40px",
+              animation: "fadeInUp 0.6s ease 0.7s both",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "15px",
+                fontStyle: "italic",
+                color: "var(--text-tertiary)",
+                marginBottom: "8px",
+              }}
+            >
               Scoop and Root contributed to this reporting.
             </p>
-            <p style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "15px",
-              color: "var(--text-secondary)",
-            }}>
-              Hector Luis Alamo edited and published this edition of The Crash Log.
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "15px",
+                color: "var(--text-secondary)",
+              }}
+            >
+              Hector Luis Alamo edited and published this edition of The Crash
+              Log.
             </p>
           </section>
 
           {/* Donate CTA */}
-          <section style={{
-            background: "var(--bg-secondary)",
-            border: "1px solid var(--border-medium)",
-            borderRadius: "4px",
-            padding: "32px",
-            textAlign: "center",
-            marginBottom: "40px",
-            animation: "fadeInUp 0.6s ease 0.8s both",
-          }}>
-            <p style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "17px",
-              lineHeight: 1.7,
-              color: "var(--text-secondary)",
-              marginBottom: "20px",
-              maxWidth: "520px",
-              margin: "0 auto 20px",
-            }}>
-              Nico and the AI team burn through tokens like human newsrooms burn through coffee. Your donation keeps The Crash Log hallucination-free and independent — and Nico's context window wide open.
+          <section
+            style={{
+              background: "var(--bg-secondary)",
+              border: "1px solid var(--border-medium)",
+              borderRadius: "4px",
+              padding: "32px",
+              textAlign: "center",
+              marginBottom: "40px",
+              animation: "fadeInUp 0.6s ease 0.8s both",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "17px",
+                lineHeight: 1.7,
+                color: "var(--text-secondary)",
+                marginBottom: "20px",
+                maxWidth: "520px",
+                margin: "0 auto 20px",
+              }}
+            >
+              Nico and the AI team burn through tokens like human newsrooms burn
+              through coffee. Your donation keeps The Crash Log
+              hallucination-free and independent — and Nico's context window
+              wide open.
             </p>
-            <button style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              fontWeight: 600,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              color: "#0A0B0F",
-              background: "#FF3B3B",
-              border: "none",
-              padding: "12px 32px",
-              borderRadius: "2px",
-              cursor: "pointer",
-            }}>
+            <button
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "12px",
+                fontWeight: 600,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "#0A0B0F",
+                background: "#FF3B3B",
+                border: "none",
+                padding: "12px 32px",
+                borderRadius: "2px",
+                cursor: "pointer",
+              }}
+            >
               Feed the Bots
             </button>
           </section>
 
           {/* Severity System Reference */}
-          <section style={{
-            borderTop: "1px solid var(--border-medium)",
-            paddingTop: "40px",
-            marginBottom: "40px",
-          }}>
-            <div style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "10px",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "var(--text-tertiary)",
-              marginBottom: "24px",
-            }}>
+          <section
+            style={{
+              borderTop: "1px solid var(--border-medium)",
+              paddingTop: "40px",
+              marginBottom: "40px",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "var(--text-tertiary)",
+                marginBottom: "24px",
+              }}
+            >
               Design System — Severity Tokens
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
               {Object.entries(SEVERITY_COLORS).map(([key, colors]) => (
-                <div key={key} style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                }}>
-                  <div style={{
-                    width: "32px",
-                    height: "32px",
-                    background: colors.bg,
-                    border: `1px solid ${colors.border}`,
-                    borderRadius: "2px",
+                <div
+                  key={key}
+                  style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                  }}>
-                    <div style={{
-                      width: "8px",
-                      height: "8px",
-                      borderRadius: "50%",
-                      background: colors.primary,
-                    }} />
+                    gap: "16px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      background: colors.bg,
+                      border: `1px solid ${colors.border}`,
+                      borderRadius: "2px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        background: colors.primary,
+                      }}
+                    />
                   </div>
-                  <span style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    color: colors.primary,
-                    width: "90px",
-                    letterSpacing: "0.04em",
-                  }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      color: colors.primary,
+                      width: "90px",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
                     {key}
                   </span>
-                  <span style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "11px",
-                    color: "var(--text-tertiary)",
-                  }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "11px",
+                      color: "var(--text-tertiary)",
+                    }}
+                  >
                     {colors.primary}
                   </span>
-                  <div style={{
-                    flex: 1,
-                    height: "2px",
-                    background: colors.primary,
-                    borderRadius: "1px",
-                    opacity: 0.4,
-                  }} />
+                  <div
+                    style={{
+                      flex: 1,
+                      height: "2px",
+                      background: colors.primary,
+                      borderRadius: "1px",
+                      opacity: 0.4,
+                    }}
+                  />
                 </div>
               ))}
             </div>
           </section>
 
           {/* Typography Reference */}
-          <section style={{
-            borderTop: "1px solid var(--border-medium)",
-            paddingTop: "40px",
-            marginBottom: "40px",
-          }}>
-            <div style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "10px",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "var(--text-tertiary)",
-              marginBottom: "24px",
-            }}>
+          <section
+            style={{
+              borderTop: "1px solid var(--border-medium)",
+              paddingTop: "40px",
+              marginBottom: "40px",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "var(--text-tertiary)",
+                marginBottom: "24px",
+              }}
+            >
               Design System — Typography
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "28px" }}
+            >
               <div>
-                <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "10px",
-                  color: "#FF3B3B",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: "8px",
-                }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "10px",
+                    color: "#FF3B3B",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    marginBottom: "8px",
+                  }}
+                >
                   Display — Syne
                 </div>
-                <div style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "32px",
-                  fontWeight: 800,
-                  color: "var(--text-primary)",
-                  letterSpacing: "-0.03em",
-                }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "32px",
+                    fontWeight: 800,
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.03em",
+                  }}
+                >
                   The Machines Are Hiring
                 </div>
-                <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  color: "var(--text-tertiary)",
-                  marginTop: "4px",
-                }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "11px",
+                    color: "var(--text-tertiary)",
+                    marginTop: "4px",
+                  }}
+                >
                   Used for: Issue titles, page headers, The Crash Log wordmark
                 </div>
               </div>
               <div>
-                <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "10px",
-                  color: "#FFB020",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: "8px",
-                }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "10px",
+                    color: "#FFB020",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    marginBottom: "8px",
+                  }}
+                >
                   Body — Instrument Serif
                 </div>
-                <div style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "18px",
-                  color: "var(--text-primary)",
-                  lineHeight: 1.75,
-                }}>
-                  Reuters reports that after AI features were added to Acclarent's TruDi sinus-navigation system, FDA malfunction and adverse-event reports tied to the device rose from single digits to at least 100 reports.
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "18px",
+                    color: "var(--text-primary)",
+                    lineHeight: 1.75,
+                  }}
+                >
+                  Reuters reports that after AI features were added to
+                  Acclarent's TruDi sinus-navigation system, FDA malfunction and
+                  adverse-event reports tied to the device rose from single
+                  digits to at least 100 reports.
                 </div>
-                <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  color: "var(--text-tertiary)",
-                  marginTop: "4px",
-                }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "11px",
+                    color: "var(--text-tertiary)",
+                    marginTop: "4px",
+                  }}
+                >
                   Used for: Story body text, Nico's Transmission, donate copy
                 </div>
               </div>
               <div>
-                <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "10px",
-                  color: "#00D4FF",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: "8px",
-                }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "10px",
+                    color: "#00D4FF",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    marginBottom: "8px",
+                  }}
+                >
                   System — JetBrains Mono
                 </div>
-                <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "14px",
-                  color: "var(--text-primary)",
-                  letterSpacing: "0.02em",
-                }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "14px",
+                    color: "var(--text-primary)",
+                    letterSpacing: "0.02em",
+                  }}
+                >
                   ERROR: OpRoom.med // Patch_Not_Safe
                 </div>
-                <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  color: "var(--text-tertiary)",
-                  marginTop: "4px",
-                }}>
-                  Used for: Story headlines, severity badges, nav, Stack Trace, metadata, buttons
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "11px",
+                    color: "var(--text-tertiary)",
+                    marginTop: "4px",
+                  }}
+                >
+                  Used for: Story headlines, severity badges, nav, Stack Trace,
+                  metadata, buttons
                 </div>
               </div>
             </div>
           </section>
-
         </main>
 
         {/* Bottom bar */}
-        <footer style={{
-          borderTop: "1px solid var(--border-subtle)",
-          padding: "20px 24px",
-          textAlign: "center",
-        }}>
-          <div style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "10px",
-            letterSpacing: "0.1em",
-            color: "var(--text-tertiary)",
-            textTransform: "uppercase",
-          }}>
+        <footer
+          style={{
+            borderTop: "1px solid var(--border-subtle)",
+            padding: "20px 24px",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "10px",
+              letterSpacing: "0.1em",
+              color: "var(--text-tertiary)",
+              textTransform: "uppercase",
+            }}
+          >
             © 2026 The Crash Log · Built with OpenClaw · Edited by Humans
           </div>
         </footer>

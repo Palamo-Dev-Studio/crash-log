@@ -10,15 +10,23 @@ vi.mock("next/image", () => ({
 
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
-    <a href={href} {...props}>{children}</a>
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 
 vi.mock("@/lib/sanity", () => ({
   urlFor: () => ({
-    width: function () { return this; },
-    height: function () { return this; },
-    format: function () { return this; },
+    width: function () {
+      return this;
+    },
+    height: function () {
+      return this;
+    },
+    format: function () {
+      return this;
+    },
     url: () => "https://cdn.sanity.io/test.webp",
   }),
 }));
@@ -28,12 +36,20 @@ import IssueContent from "@/components/IssueContent";
 const makeIssue = (overrides = {}) => ({
   issueNumber: 14,
   publishDate: "2026-03-03",
-  title: { en: "The Machines Are Hiring", es: "Las Máquinas Están Contratando" },
+  title: {
+    en: "The Machines Are Hiring",
+    es: "Las Máquinas Están Contratando",
+  },
   subtitle: { en: "And Firing", es: "Y Despidiendo" },
   coverImage: { _ref: "img-123" },
   coverImageAlt: { en: "Cover alt" },
   nicosTransmission: {
-    en: [{ _type: "block", children: [{ _type: "span", text: "Nico says hello" }] }],
+    en: [
+      {
+        _type: "block",
+        children: [{ _type: "span", text: "Nico says hello" }],
+      },
+    ],
     es: [],
   },
   stories: [
@@ -43,13 +59,13 @@ const makeIssue = (overrides = {}) => ({
       headline: { en: "Robot Fails", es: "Robot Falla" },
       tags: { en: "AI / Automation" },
       body: {
-        en: [{ _type: "block", children: [{ _type: "span", text: "Story body" }] }],
+        en: [
+          { _type: "block", children: [{ _type: "span", text: "Story body" }] },
+        ],
       },
     },
   ],
-  stackTrace: [
-    { sourceOutlet: "TechCrunch", text: { en: "AI hiring surge" } },
-  ],
+  stackTrace: [{ sourceOutlet: "TechCrunch", text: { en: "AI hiring surge" } }],
   ...overrides,
 });
 
@@ -57,9 +73,7 @@ describe("IssueContent", () => {
   describe("empty state", () => {
     it("renders English empty text when issue is null", () => {
       render(<IssueContent issue={null} locale="en" />);
-      expect(
-        screen.getByText("No issues published yet.")
-      ).toBeInTheDocument();
+      expect(screen.getByText("No issues published yet.")).toBeInTheDocument();
     });
 
     it("renders Spanish empty text when locale is es", () => {
@@ -73,9 +87,7 @@ describe("IssueContent", () => {
   describe("with issue data", () => {
     it("renders the issue title", () => {
       render(<IssueContent issue={makeIssue()} locale="en" />);
-      expect(
-        screen.getByText("The Machines Are Hiring")
-      ).toBeInTheDocument();
+      expect(screen.getByText("The Machines Are Hiring")).toBeInTheDocument();
     });
 
     it("renders the issue title in Spanish", () => {

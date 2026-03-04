@@ -47,7 +47,10 @@ export default function IssueContent({ issue, locale }) {
 
   return (
     <main>
-      <CoverImage image={issue.coverImage} alt={t(issue.coverImageAlt, locale)} />
+      <CoverImage
+        image={issue.coverImage}
+        alt={t(issue.coverImageAlt, locale)}
+      />
 
       <IssueHeader
         issueNumber={issue.issueNumber}
@@ -62,7 +65,10 @@ export default function IssueContent({ issue, locale }) {
 
       {transmission && (
         <NicosTransmission>
-          <PortableText value={transmission} components={portableTextComponents} />
+          <PortableText
+            value={transmission}
+            components={portableTextComponents}
+          />
         </NicosTransmission>
       )}
 
@@ -76,10 +82,7 @@ export default function IssueContent({ issue, locale }) {
             tags={t(story.tags, locale)?.split(" / ")}
           >
             {body && (
-              <PortableText
-                value={body}
-                components={portableTextComponents}
-              />
+              <PortableText value={body} components={portableTextComponents} />
             )}
           </StoryBlock>
         );

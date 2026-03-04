@@ -16,7 +16,8 @@ export default {
       name: "workflowSection",
       title: "How It Works",
       type: "localizedBlockContent",
-      description: "How the AI newsroom works — the OpenClaw platform, editorial pipeline",
+      description:
+        "How the AI newsroom works — the OpenClaw platform, editorial pipeline",
     },
     {
       name: "contactCTA",

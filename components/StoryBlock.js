@@ -22,9 +22,7 @@ export default function StoryBlock({ severity, headline, tags, children }) {
       style={{ "--severity-color": severityColor }}
     >
       <SeverityBadge severity={severity} />
-      <h2 className={styles.title}>
-        {headline}
-      </h2>
+      <h2 className={styles.title}>{headline}</h2>
       {tags && (
         <div className={styles.tags}>
           {tags.map((tag, i) => (

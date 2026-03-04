@@ -6,7 +6,9 @@ import { render, screen } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
-    <a href={href} {...props}>{children}</a>
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 
@@ -20,7 +22,9 @@ describe("Header", () => {
 
   it("renders the tagline", () => {
     render(<Header locale="en" />);
-    expect(screen.getByText(/AI & Tech Gone Off the Rails/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/AI & Tech Gone Off the Rails/)
+    ).toBeInTheDocument();
   });
 
   it("renders Subscribe button", () => {

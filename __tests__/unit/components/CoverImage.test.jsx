@@ -10,9 +10,15 @@ vi.mock("next/image", () => ({
 
 vi.mock("@/lib/sanity", () => ({
   urlFor: () => ({
-    width: function () { return this; },
-    height: function () { return this; },
-    format: function () { return this; },
+    width: function () {
+      return this;
+    },
+    height: function () {
+      return this;
+    },
+    format: function () {
+      return this;
+    },
     url: () => "https://cdn.sanity.io/test.webp",
   }),
 }));

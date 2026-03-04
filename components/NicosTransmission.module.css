@@ -24,7 +24,7 @@
 }
 
 .label::before {
-  content: '——';
+  content: "——";
   color: var(--severity-error);
 }
 

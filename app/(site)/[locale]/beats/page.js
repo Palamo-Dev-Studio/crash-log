@@ -72,8 +72,12 @@ export default async function BeatsPage({ params }) {
               <span className={styles.count}>
                 {cat.storyCount || 0}{" "}
                 {locale === "es"
-                  ? cat.storyCount === 1 ? "historia" : "historias"
-                  : cat.storyCount === 1 ? "story" : "stories"}
+                  ? cat.storyCount === 1
+                    ? "historia"
+                    : "historias"
+                  : cat.storyCount === 1
+                    ? "story"
+                    : "stories"}
               </span>
             </Link>
           ))}

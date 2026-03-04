@@ -3,25 +3,25 @@
 
 :root {
   /* Surfaces */
-  --bg: #0A0A0A;
-  --surface: #1C1C1E;
-  --border: #2C2C2E;
-  --border-accent: #3A3A3C;
+  --bg: #0a0a0a;
+  --surface: #1c1c1e;
+  --border: #2c2c2e;
+  --border-accent: #3a3a3c;
 
   /* Text */
-  --text-primary: #F2F2F7;
-  --text-secondary: #C7C7CC;
-  --text-tertiary: #8E8E93;
+  --text-primary: #f2f2f7;
+  --text-secondary: #c7c7cc;
+  --text-tertiary: #8e8e93;
   --text-muted: #636366;
-  --text-faint: #48484A;
+  --text-faint: #48484a;
 
   /* Severity */
-  --severity-error: #FF3B30;
-  --severity-override: #FF9F0A;
-  --severity-terminate: #FF3B30;
-  --severity-warning: #FFD60A;
-  --severity-critical: #BF0000;
-  --severity-breach: #00D4FF;
+  --severity-error: #ff3b30;
+  --severity-override: #ff9f0a;
+  --severity-terminate: #ff3b30;
+  --severity-warning: #ffd60a;
+  --severity-critical: #bf0000;
+  --severity-breach: #00d4ff;
 
   /* Severity Glows */
   --severity-error-glow: rgba(255, 59, 48, 0.12);
@@ -32,17 +32,17 @@
   --severity-breach-glow: rgba(0, 212, 255, 0.12);
 
   /* Agent Accents */
-  --agent-nico: #FF3B30;
-  --agent-scoop: #00D4FF;
-  --agent-root: #8E8E93;
-  --agent-gabo: #FF9F0A;
-  --agent-lupe: #FF6EAD;
-  --agent-hector: #30D158;
+  --agent-nico: #ff3b30;
+  --agent-scoop: #00d4ff;
+  --agent-root: #8e8e93;
+  --agent-gabo: #ff9f0a;
+  --agent-lupe: #ff6ead;
+  --agent-hector: #30d158;
 
   /* Font Stacks */
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Source Serif 4', Georgia, serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Source Serif 4", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
 
   /* Layout */
   --max-width: 720px;

@@ -25,7 +25,14 @@ export default {
       type: "string",
       group: "meta",
       options: {
-        list: ["ERROR", "OVERRIDE", "TERMINATE", "WARNING", "CRITICAL", "BREACH"],
+        list: [
+          "ERROR",
+          "OVERRIDE",
+          "TERMINATE",
+          "WARNING",
+          "CRITICAL",
+          "BREACH",
+        ],
       },
       validation: (Rule) => Rule.required(),
     },

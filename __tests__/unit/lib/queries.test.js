@@ -1,4 +1,4 @@
-// ABOUTME: Unit tests for lib/queries.js — all 8 fetch wrappers.
+// ABOUTME: Unit tests for lib/queries.js — all 9 fetch wrappers.
 // ABOUTME: Validates null-client fallback, successful fetch, and error handling for each wrapper.
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -34,8 +34,12 @@ const nullFallbackWrappers = [
 const arrayFallbackWrappers = [
   { name: "getAllIssueSlugs", fn: () => queries.getAllIssueSlugs() },
   { name: "getAllIssuesSummary", fn: () => queries.getAllIssuesSummary() },
-  { name: "getAllIssuesForArchive", fn: () => queries.getAllIssuesForArchive() },
+  {
+    name: "getAllIssuesForArchive",
+    fn: () => queries.getAllIssuesForArchive(),
+  },
   { name: "getAllCategories", fn: () => queries.getAllCategories() },
+  { name: "getIssuesForFeed", fn: () => queries.getIssuesForFeed() },
 ];
 
 describe("null-fallback wrappers", () => {
@@ -76,19 +80,17 @@ describe("parameter passing", () => {
   it("getIssueBySlug passes slug param to client.fetch", async () => {
     mockFetch.mockResolvedValueOnce(null);
     await queries.getIssueBySlug("my-slug");
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.any(String),
-      { slug: "my-slug" }
-    );
+    expect(mockFetch).toHaveBeenCalledWith(expect.any(String), {
+      slug: "my-slug",
+    });
   });
 
   it("getCategoryWithStories passes slug param to client.fetch", async () => {
     mockFetch.mockResolvedValueOnce(null);
     await queries.getCategoryWithStories("tech-slug");
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.any(String),
-      { slug: "tech-slug" }
-    );
+    expect(mockFetch).toHaveBeenCalledWith(expect.any(String), {
+      slug: "tech-slug",
+    });
   });
 });
 
@@ -106,6 +108,7 @@ describe("null client fallback", () => {
     expect(await q.getAllIssuesSummary()).toEqual([]);
     expect(await q.getAllIssuesForArchive()).toEqual([]);
     expect(await q.getAllCategories()).toEqual([]);
+    expect(await q.getIssuesForFeed()).toEqual([]);
   });
 });
 
@@ -119,5 +122,6 @@ describe("query string exports", () => {
     expect(queries.ABOUT_PAGE_QUERY).toContain("aboutPage");
     expect(queries.ALL_CATEGORIES_QUERY).toContain("category");
     expect(queries.CATEGORY_WITH_STORIES_QUERY).toContain("$slug");
+    expect(queries.ISSUES_FOR_FEED_QUERY).toContain("publishDate");
   });
 });

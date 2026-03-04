@@ -16,18 +16,21 @@ function formatDate(dateString, locale) {
   });
 }
 
-export default function BeatStoryCard({ severity, headline, issueMeta, locale }) {
-  const headlineText = typeof headline === "object" ? t(headline, locale) : headline;
+export default function BeatStoryCard({
+  severity,
+  headline,
+  issueMeta,
+  locale,
+}) {
+  const headlineText =
+    typeof headline === "object" ? t(headline, locale) : headline;
 
   if (!issueMeta?.slug) return null;
 
   const issueNum = String(issueMeta.number).padStart(3, "0");
 
   return (
-    <Link
-      href={`/${locale}/issue/${issueMeta.slug}`}
-      className={styles.card}
-    >
+    <Link href={`/${locale}/issue/${issueMeta.slug}`} className={styles.card}>
       <div className={styles.top}>
         <SeverityBadge severity={severity} />
         <span className={styles.issueMeta}>
