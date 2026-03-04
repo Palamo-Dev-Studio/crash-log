@@ -3,30 +3,40 @@
 ## Current State
 
 - **Branch:** `main`
-- **Build:** `npm run build` passes cleanly (Next.js 16.1.6 Turbopack)
+- **Build:** `scripts/verify.sh` passes cleanly (29 static pages, Next.js 16.1.6 Turbopack)
 - **Tests:** None yet (no test framework configured)
-- **Verification script:** Not yet created
+- **Verification script:** `scripts/verify.sh` — runs `npm run build`, exits non-zero on failure
 - **Components:** 16 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard)
 - **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/studio`, `/robots.txt`, `/sitemap.xml`
+- **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 19 published documents: 7 categories, 6 agents, 3 stories, 1 issue, 1 aboutPage, 1 siteSettings.
 
 ## What's Done
 
 - **Phase 1 (Project Foundation):** Next.js app with App Router, Sanity client, Studio at `/studio`, global CSS with design tokens, Google Fonts, locale middleware, root redirect.
 - **Phase 2 (Sanity Schemas):** All schemas — 6 object types, 6 document types. Field groups for EN/ES/Meta editing.
 - **Phase 3 (React Components):** All 12 components complete with CSS Modules. UI design review applied.
-- **Phase 4 (Issue Pages + Locale Infrastructure):** Route group restructure splits app into `(site)` and `(studio)` groups — each with its own root layout and `<html>` tag. Dynamic `lang` attribute per locale. Locale utilities (`lib/locale.js`), GROQ queries (`lib/queries.js`), Portable Text config (`lib/portableText.js`). `IssueContent` component composes all Phase 3 components. Latest issue page and individual issue page with dynamic `generateMetadata`. Sanity client made null-safe for pre-provisioning.
-- **Phase 4.5 (SEO Foundation):** JSON-LD schemas (WebSite, NewsArticle, BreadcrumbList). `robots.js` with crawl-delay for AI bots. `sitemap.js` with hreflang alternates and x-default. Studio layout with noindex. Shared site chrome (Header, LanguageToggle, SiteNav) in root layout.
-- **Phase 5 (Archive, About, Beat Pages):** Archive page with ArchiveCard component. About page with hardcoded fallback content (from approved draft) + Sanity override path. Beats index with category cards. Beat detail with BeatStoryCard component. 4 new GROQ queries in `lib/queries.js`. Sitemap updated with `/beats` and dynamic beat entries. All SiteNav links now resolve.
+- **Phase 4 (Issue Pages + Locale Infrastructure):** Route group restructure splits app into `(site)` and `(studio)` groups. Dynamic `lang` attribute per locale. Locale utilities, GROQ queries, Portable Text config. `IssueContent` component. Latest issue page and individual issue page with dynamic `generateMetadata`. Sanity client null-safe.
+- **Phase 4.5 (SEO Foundation):** JSON-LD schemas. `robots.js` with crawl-delay for AI bots. `sitemap.js` with hreflang alternates. Studio layout with noindex. Shared site chrome in root layout.
+- **Phase 5 (Archive, About, Beat Pages):** Archive, about, beats index, beat detail pages. 4 GROQ queries. Sitemap updated. CodeRabbit review addressed.
+- **Phase 6 (Verification + Content Seeding):** `scripts/verify.sh` created. Issue #014 seeded with 3 stories (ERROR/OVERRIDE/TERMINATE), Nico's Transmission, 3 stack trace hits. 7 categories, 6 agents, siteSettings, aboutPage all seeded and published. All pages render correctly with real data. ES fallback banner works. Build passes.
 
 ## Immediate Next Step
 
-**Priority: Create `scripts/verify.sh`** — this is the verification gate for all future work. Without it, there is no automated way to confirm the build is clean. After that: seed content, test rendering, and provision Sanity project for real data.
+**Phase 7 or beyond.** All core phases complete. Possible next priorities:
+1. Test framework setup (unit, integration, e2e)
+2. Vercel deployment config
+3. Beehiiv integration
+4. OG image generation
+5. Linter/formatter setup
+6. CI pipeline
 
 ## Known Issues / Deferred Items
 
-- Sanity project not yet provisioned — `.env.local` has placeholder values. Client handles this gracefully (null-safe).
-- Next.js 16 deprecation warning: middleware file convention deprecated in favor of "proxy".
+- `@sanity/image-url` deprecation warning: default export deprecated, use named `createImageUrlBuilder` instead. Non-blocking.
+- Next.js 16 deprecation warning: middleware file convention deprecated in favor of "proxy". Functional, monitor.
 - No test framework, linter, or CI pipeline configured yet.
-- Beehiiv integration, RSS feeds, and content seeding are deferred.
+- Beehiiv integration, RSS feeds deferred.
 - OG image assets not yet created. Twitter handle (@thecrashlog) not verified.
 - `metadataBase` URL set to `https://thecrashlog.com` — update if domain changes.
+- Sanity MCP `patch_document_from_markdown` uses AI to expand content — use `patch_document_from_json` with manual Portable Text blocks for exact content control.
+- Sanity workspace name is `the-crash-log` (not `default`) — must pass `workspaceName` to MCP tools.

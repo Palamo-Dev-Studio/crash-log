@@ -69,17 +69,23 @@
 - [x] `app/(site)/[locale]/beat/[slug]/page.js` — beat detail with stories
 - [x] `app/sitemap.js` — added `/beats` and dynamic beat entries
 
-## Phase 6: Verification + Docs
-- [ ] Create `scripts/verify.sh`
-- [ ] Seed issue #014 content (or create migration script)
-- [ ] Seed categories, agents, siteSettings
-- [ ] Test EN rendering
-- [ ] Test ES fallback banner
-- [ ] Test language toggle
-- [ ] Update tracking docs
+## Phase 6: Verification + Content Seeding
+- [x] Create `scripts/verify.sh`
+- [x] Deploy Sanity schema to cloud (`npx sanity schema deploy`)
+- [x] Seed 7 categories (Medical AI, Defense & Policy, Labor & Automation, Surveillance & Privacy, Foundation Models, Regulation & Governance, Robotics & Hardware)
+- [x] Seed 6 agents (Nico, Scoop, Root, Gabo, Lupe, Hector) with bios and spawnedBy refs
+- [x] Seed siteSettings (name, tagline, editor, UI strings EN+ES)
+- [x] Seed 3 stories for Issue #014 (ERROR, OVERRIDE, TERMINATE) with body, categories, sources
+- [x] Seed Issue #014 (title, subtitle, stack trace, story refs, Nico's Transmission)
+- [x] Seed aboutPage (intro, workflow, contactCTA, masthead refs)
+- [x] Publish all 19 documents
+- [x] Test EN rendering — all pages return 200 with correct content
+- [x] Test ES fallback banner — visible on ES home
+- [x] Build gate passes (`scripts/verify.sh`)
+- [x] Update tracking docs
 
 ## Deferred
-- [ ] Provision Sanity project (replace .env.local placeholders)
+- [x] Provision Sanity project (project `msr24cg4`, dataset `production`)
 - [ ] Beehiiv integration (webhook + API)
 - [ ] RSS feeds
 - [ ] Test framework setup (unit, integration, e2e)
@@ -88,3 +94,4 @@
 - [ ] OG image assets (static or dynamic)
 - [ ] Twitter handle verification (@thecrashlog)
 - [ ] Social profile URLs in JSON-LD
+- [ ] Linter/formatter setup
