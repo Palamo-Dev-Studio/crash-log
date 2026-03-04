@@ -1,0 +1,83 @@
+/* ABOUTME: Styles for the about page layout and sections.
+   ABOUTME: Section headers (mono, uppercase, bordered), body text, contact, donate CTA. */
+
+.intro {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin-bottom: 56px;
+}
+
+.intro p {
+  margin-bottom: 16px;
+}
+
+.intro p:last-child {
+  margin-bottom: 0;
+}
+
+.sectionHeading {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--surface);
+}
+
+.workflow {
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  line-height: 1.72;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin-bottom: 56px;
+}
+
+.workflow p {
+  margin-bottom: 16px;
+}
+
+.workflow p:last-child {
+  margin-bottom: 0;
+}
+
+.stepTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.contact {
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  line-height: 1.72;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin-bottom: 56px;
+}
+
+.contact p {
+  margin-bottom: 16px;
+}
+
+.emailLink {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--severity-error);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.emailLink:hover {
+  border-bottom-color: var(--severity-error);
+}
+
+.mastheadSection {
+  margin-bottom: 56px;
+}

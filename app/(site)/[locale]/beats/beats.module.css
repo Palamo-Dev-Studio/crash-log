@@ -1,0 +1,67 @@
+/* ABOUTME: Styles for the beats index page.
+   ABOUTME: Section heading, category card grid with accent border and story count. */
+
+.heading {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--surface);
+}
+
+.empty {
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--text-tertiary);
+  padding: 48px 0;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.card {
+  display: block;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid;
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  border-color: var(--border-accent);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.description {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}

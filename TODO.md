@@ -59,9 +59,15 @@
 - [x] `<Header>`, `<LanguageToggle>`, `<SiteNav>` in shared site layout chrome
 
 ## Phase 5: Archive, About, Beat Pages
-- [ ] `app/(site)/[locale]/archive/page.js`
-- [ ] `app/(site)/[locale]/about/page.js`
-- [ ] `app/(site)/[locale]/beat/[slug]/page.js`
+- [x] GROQ queries: `getAllIssuesForArchive`, `getAboutPage`, `getAllCategories`, `getCategoryWithStories`
+- [x] `components/ArchiveCard.js` — issue card for archive listing
+- [x] `components/AgentCard.js` — masthead card for about page
+- [x] `components/BeatStoryCard.js` — story card for beat pages
+- [x] `app/(site)/[locale]/archive/page.js` — archive listing with empty state
+- [x] `app/(site)/[locale]/about/page.js` — about page with hardcoded fallback + Sanity path
+- [x] `app/(site)/[locale]/beats/page.js` — beats index with category cards
+- [x] `app/(site)/[locale]/beat/[slug]/page.js` — beat detail with stories
+- [x] `app/sitemap.js` — added `/beats` and dynamic beat entries
 
 ## Phase 6: Verification + Docs
 - [ ] Create `scripts/verify.sh`

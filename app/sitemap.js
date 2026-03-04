@@ -1,7 +1,7 @@
 // ABOUTME: Dynamic sitemap generator for search engine indexing.
 // ABOUTME: Lists all locale variants of home, about, archive, and individual issue pages.
 
-import { getAllIssuesSummary } from "@/lib/queries";
+import { getAllIssuesSummary, getAllCategories } from "@/lib/queries";
 import { LOCALES } from "@/lib/locale";
 
 const BASE_URL = "https://thecrashlog.com";
@@ -10,9 +10,12 @@ const BASE_URL = "https://thecrashlog.com";
 const STATIC_PAGE_DATE = "2026-03-04T00:00:00.000Z";
 
 export default async function sitemap() {
-  const issues = await getAllIssuesSummary();
+  const [issues, categories] = await Promise.all([
+    getAllIssuesSummary(),
+    getAllCategories(),
+  ]);
 
-  const staticPages = ["", "/about", "/archive"];
+  const staticPages = ["", "/about", "/archive", "/beats"];
   const staticEntries = staticPages.flatMap((path) =>
     LOCALES.map((locale) => ({
       url: `${BASE_URL}/${locale}${path}`,
@@ -45,5 +48,21 @@ export default async function sitemap() {
     }))
   );
 
-  return [...staticEntries, ...issueEntries];
+  const beatEntries = categories.flatMap((cat) =>
+    LOCALES.map((locale) => ({
+      url: `${BASE_URL}/${locale}/beat/${cat.slug}`,
+      lastModified: STATIC_PAGE_DATE,
+      changeFrequency: "weekly",
+      priority: 0.6,
+      alternates: {
+        languages: {
+          "en-US": `${BASE_URL}/en/beat/${cat.slug}`,
+          "es-ES": `${BASE_URL}/es/beat/${cat.slug}`,
+          "x-default": `${BASE_URL}/en/beat/${cat.slug}`,
+        },
+      },
+    }))
+  );
+
+  return [...staticEntries, ...issueEntries, ...beatEntries];
 }

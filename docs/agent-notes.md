@@ -6,8 +6,8 @@
 - **Build:** `npm run build` passes cleanly (Next.js 16.1.6 Turbopack)
 - **Tests:** None yet (no test framework configured)
 - **Verification script:** Not yet created
-- **Components:** 13 total (12 Phase 3 + IssueContent)
-- **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/studio`, `/robots.txt`, `/sitemap.xml`
+- **Components:** 16 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard)
+- **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/studio`, `/robots.txt`, `/sitemap.xml`
 
 ## What's Done
 
@@ -16,15 +16,11 @@
 - **Phase 3 (React Components):** All 12 components complete with CSS Modules. UI design review applied.
 - **Phase 4 (Issue Pages + Locale Infrastructure):** Route group restructure splits app into `(site)` and `(studio)` groups — each with its own root layout and `<html>` tag. Dynamic `lang` attribute per locale. Locale utilities (`lib/locale.js`), GROQ queries (`lib/queries.js`), Portable Text config (`lib/portableText.js`). `IssueContent` component composes all Phase 3 components. Latest issue page and individual issue page with dynamic `generateMetadata`. Sanity client made null-safe for pre-provisioning.
 - **Phase 4.5 (SEO Foundation):** JSON-LD schemas (WebSite, NewsArticle, BreadcrumbList). `robots.js` with crawl-delay for AI bots. `sitemap.js` with hreflang alternates and x-default. Studio layout with noindex. Shared site chrome (Header, LanguageToggle, SiteNav) in root layout.
+- **Phase 5 (Archive, About, Beat Pages):** Archive page with ArchiveCard component. About page with hardcoded fallback content (from approved draft) + Sanity override path. Beats index with category cards. Beat detail with BeatStoryCard component. 4 new GROQ queries in `lib/queries.js`. Sitemap updated with `/beats` and dynamic beat entries. All SiteNav links now resolve.
 
 ## Immediate Next Step
 
-Phase 5: Archive, About, and Beat pages. Key files to create:
-- `app/(site)/[locale]/archive/page.js` — paginated issue listing
-- `app/(site)/[locale]/about/page.js` — about page with static content
-- `app/(site)/[locale]/beat/[slug]/page.js` — category/beat filtered view
-
-Sanity project provisioning is also needed to test with real data.
+Phase 6: Verification + Docs — create `scripts/verify.sh`, seed content, test rendering. Alternatively, provision Sanity project to test with real data.
 
 ## Known Issues / Deferred Items
 
