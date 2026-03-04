@@ -26,8 +26,8 @@ export default function ArchiveCard({
 }) {
   const num = String(issueNumber).padStart(3, "0");
 
-  return (
-    <Link href={`/${locale}/issue/${slug}`} className={styles.card}>
+  const content = (
+    <>
       <div className={styles.meta}>
         <span>#{num}</span>
         <span>{formatDate(date, locale)}</span>
@@ -41,6 +41,16 @@ export default function ArchiveCard({
           ))}
         </div>
       )}
+    </>
+  );
+
+  if (!slug) {
+    return <div className={styles.card}>{content}</div>;
+  }
+
+  return (
+    <Link href={`/${locale}/issue/${slug}`} className={styles.card}>
+      {content}
     </Link>
   );
 }

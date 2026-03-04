@@ -20,7 +20,7 @@
 
 ## Immediate Next Step
 
-Phase 6: Verification + Docs — create `scripts/verify.sh`, seed content, test rendering. Alternatively, provision Sanity project to test with real data.
+**Priority: Create `scripts/verify.sh`** — this is the verification gate for all future work. Without it, there is no automated way to confirm the build is clean. After that: seed content, test rendering, and provision Sanity project for real data.
 
 ## Known Issues / Deferred Items
 
