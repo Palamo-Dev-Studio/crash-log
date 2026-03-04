@@ -25,10 +25,10 @@ export async function generateMetadata({ params }) {
       title: `${title} — The Crash Log`,
       description,
       locale: LOCALE_OG[locale],
-      url: `https://thecrashlog.com/${locale}/beats`,
+      url: `https://crashlog.ai/${locale}/beats`,
     },
     alternates: {
-      canonical: `https://thecrashlog.com/${locale}/beats`,
+      canonical: `https://crashlog.ai/${locale}/beats`,
       languages: {
         "en-US": "/en/beats",
         "es-ES": "/es/beats",

@@ -18,6 +18,6 @@ export default function robots() {
         crawlDelay: 10,
       },
     ],
-    sitemap: "https://thecrashlog.com/sitemap.xml",
+    sitemap: "https://crashlog.ai/sitemap.xml",
   };
 }

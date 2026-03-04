@@ -34,7 +34,7 @@ export async function generateMetadata({ params }) {
       title: `${title} — The Crash Log`,
       description,
       locale: LOCALE_OG[locale],
-      url: `https://thecrashlog.com/${locale}`,
+      url: `https://crashlog.ai/${locale}`,
     },
   };
 }

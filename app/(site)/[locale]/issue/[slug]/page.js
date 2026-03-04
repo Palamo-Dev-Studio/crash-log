@@ -30,11 +30,11 @@ export async function generateMetadata({ params }) {
       description,
       type: "article",
       locale: LOCALE_OG[locale],
-      url: `https://thecrashlog.com/${locale}/issue/${slug}`,
+      url: `https://crashlog.ai/${locale}/issue/${slug}`,
       publishedTime: issue.publishDate,
     },
     alternates: {
-      canonical: `https://thecrashlog.com/${locale}/issue/${slug}`,
+      canonical: `https://crashlog.ai/${locale}/issue/${slug}`,
       languages: {
         "en-US": `/en/issue/${slug}`,
         "es-ES": `/es/issue/${slug}`,
@@ -58,12 +58,12 @@ function NewsArticleJsonLd({ issue, locale, slug }) {
     headline: t(issue.title, locale),
     description: t(issue.metaDescription, locale),
     datePublished: issue.publishDate,
-    url: `https://thecrashlog.com/${locale}/issue/${slug}`,
+    url: `https://crashlog.ai/${locale}/issue/${slug}`,
     inLanguage: locale === "es" ? "es-ES" : "en-US",
     publisher: {
       "@type": "Organization",
       name: "The Crash Log",
-      url: "https://thecrashlog.com",
+      url: "https://crashlog.ai",
     },
     author: {
       "@type": "Organization",
@@ -88,13 +88,13 @@ function BreadcrumbJsonLd({ issue, locale, slug }) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: `https://thecrashlog.com/${locale}`,
+        item: `https://crashlog.ai/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: t(issue.title, locale) || `Issue #${issue.issueNumber}`,
-        item: `https://thecrashlog.com/${locale}/issue/${slug}`,
+        item: `https://crashlog.ai/${locale}/issue/${slug}`,
       },
     ],
   };

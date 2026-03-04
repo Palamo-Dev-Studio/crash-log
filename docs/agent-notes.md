@@ -37,6 +37,6 @@
 - No test framework, linter, or CI pipeline configured yet.
 - Beehiiv integration, RSS feeds deferred.
 - OG image assets not yet created. Twitter handle (@thecrashlog) not verified.
-- `metadataBase` URL set to `https://thecrashlog.com` — update if domain changes.
+- `metadataBase` URL set to `https://crashlog.ai` — update if domain changes.
 - Sanity MCP `patch_document_from_markdown` uses AI to expand content — use `patch_document_from_json` with manual Portable Text blocks for exact content control.
 - Sanity workspace name is `the-crash-log` (not `default`) — must pass `workspaceName` to MCP tools.

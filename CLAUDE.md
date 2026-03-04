@@ -12,7 +12,9 @@ The Crash Log is a bilingual (EN/ES) newsletter website about AI and tech failur
 - `npm run build` — Production build
 - `npm run start` — Start production server
 
-No linter, formatter, or test framework is configured yet. No `scripts/verify.sh` exists yet.
+- `scripts/verify.sh` — Build-gate verification (runs `npm run build`, exits non-zero on failure)
+
+No linter, formatter, or test framework is configured yet.
 
 ## Architecture
 
@@ -78,4 +80,4 @@ Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` 
 
 ## Current State
 
-Phases 1–4.5 complete. Sanity schemas, Studio, 13 React components, issue pages, locale infrastructure, and SEO foundation are all in place. Pages render empty state gracefully (Sanity not yet provisioned). No tests, no linter, no CI pipeline.
+Phases 1–6 complete. Sanity schemas, Studio, 16 React components, issue pages, locale infrastructure, SEO foundation, and content seeding are all in place. `scripts/verify.sh` passes (29 static pages). Deployed to Vercel at `crashlog.ai`. No tests, no linter, no CI pipeline.

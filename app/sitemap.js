@@ -4,7 +4,7 @@
 import { getAllIssuesSummary, getAllCategories } from "@/lib/queries";
 import { LOCALES } from "@/lib/locale";
 
-const BASE_URL = "https://thecrashlog.com";
+const BASE_URL = "https://crashlog.ai";
 
 // Stable timestamp for static pages to avoid search engines seeing constant changes
 const STATIC_PAGE_DATE = "2026-03-04T00:00:00.000Z";

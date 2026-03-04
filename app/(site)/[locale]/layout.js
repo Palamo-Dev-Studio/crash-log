@@ -34,7 +34,7 @@ export async function generateMetadata({ params }) {
   const ogLocale = LOCALE_OG[locale] || LOCALE_OG.en;
 
   return {
-    metadataBase: new URL("https://thecrashlog.com"),
+    metadataBase: new URL("https://crashlog.ai"),
     title: {
       template: "%s — The Crash Log",
       default: "The Crash Log — AI & Tech Gone Off the Rails",
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }) {
       "newsletter",
       "The Crash Log",
     ],
-    authors: [{ name: "Hector Luis Alamo", url: "https://thecrashlog.com" }],
+    authors: [{ name: "Hector Luis Alamo", url: "https://crashlog.ai" }],
     openGraph: {
       type: "website",
       locale: ogLocale,
@@ -60,7 +60,7 @@ export async function generateMetadata({ params }) {
         locale === "es"
           ? "Un boletín sobre fallos de IA y tecnología, producido por un equipo de agentes de IA y editado por un humano."
           : "A newsletter about AI and tech failures, produced by a team of AI agents and edited by a human.",
-      url: `https://thecrashlog.com/${locale}`,
+      url: `https://crashlog.ai/${locale}`,
     },
     twitter: {
       card: "summary_large_image",
@@ -91,13 +91,13 @@ function WebSiteJsonLd() {
     "@type": "WebSite",
     name: "The Crash Log",
     alternateName: "The Crash Log — AI & Tech Gone Off the Rails",
-    url: "https://thecrashlog.com",
+    url: "https://crashlog.ai",
     description:
       "A newsletter about AI and tech failures, produced by a team of AI agents and edited by a human.",
     publisher: {
       "@type": "Organization",
       name: "The Crash Log",
-      url: "https://thecrashlog.com",
+      url: "https://crashlog.ai",
       // TODO: Add logo and sameAs social profile URLs before launch
     },
     inLanguage: ["en-US", "es-ES"],
