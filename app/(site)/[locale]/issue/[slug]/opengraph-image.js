@@ -16,6 +16,9 @@ export const contentType = "image/png";
 
 async function fetchFont(url) {
   const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Font fetch failed: ${res.status} ${res.statusText}`);
+  }
   return res.arrayBuffer();
 }
 
