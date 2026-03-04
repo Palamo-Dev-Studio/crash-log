@@ -18,11 +18,17 @@ No linter, formatter, or test framework is configured yet. No `scripts/verify.sh
 
 **Stack:** Next.js 16.1.6 (React 19, App Router) · Sanity 5.13.0 · Plain CSS (design tokens + CSS modules)
 
-**Routing:** App Router with locale prefix. Root `/` redirects to `/en`. All pages live under `app/[locale]/`. Sanity Studio is embedded at `app/studio/[[...index]]/`.
+**Routing:** App Router with route groups. Site pages live in `app/(site)/[locale]/`. Sanity Studio lives in `app/(studio)/studio/[[...index]]/`. Each group has its own root layout with `<html>` tag — enabling dynamic `lang` attribute per locale. Root `/` redirects to `/en` via middleware.
 
 **Locale detection** (`middleware.js`): Cookie (`CRASH_LOG_LOCALE`) → Accept-Language header → defaults to `en`. Supported locales: `en`, `es`.
 
-**Sanity client** (`lib/sanity.js`): Exports `client` (configured with CDN) and `urlFor()` image URL builder. API version: `2024-03-01`.
+**Locale utilities** (`lib/locale.js`): `t(field, locale)` resolves localized fields with EN fallback. `hasFullTranslation()` checks if an issue has complete Spanish content. Exports `LOCALES`, `DEFAULT_LOCALE`, `LOCALE_LABELS`, `LOCALE_OG`.
+
+**Sanity client** (`lib/sanity.js`): Exports `client` (null-safe — returns `null` when `projectId` is invalid/placeholder) and `urlFor()` chainable image URL builder. API version: `2024-03-01`.
+
+**Data fetching** (`lib/queries.js`): GROQ queries with try/catch fetch wrappers. `getLatestIssue()`, `getIssueBySlug()`, `getAllIssueSlugs()`, `getAllIssuesSummary()`. All return `null`/`[]` on failure.
+
+**Portable Text** (`lib/portableText.js`): Component config for `@portabletext/react` — blocks, marks (with safe external links), and image types.
 
 **Sanity Studio config** (`sanity.config.js`): Registers all schemas, uses `structureTool` + `visionTool` plugins.
 
@@ -62,6 +68,14 @@ Detailed design and content specs live in `docs/reference/`:
 
 Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` (done).
 
+## SEO
+
+- Dynamic `generateMetadata` on all pages with locale-aware OG, Twitter cards, and hreflang alternates
+- JSON-LD schemas: `WebSite` (site layout), `NewsArticle` + `BreadcrumbList` (issue pages)
+- `robots.js` disallows `/studio/`, adds crawl-delay for AI bots
+- `sitemap.js` generates entries for all pages × locales with hreflang alternates and `x-default`
+- Studio layout has `noindex`/`nofollow` robots meta
+
 ## Current State
 
-Early development. Sanity schemas and Studio are fully configured. Frontend pages are skeleton/loading state. No tests, no linter, no CI pipeline.
+Phases 1–4.5 complete. Sanity schemas, Studio, 13 React components, issue pages, locale infrastructure, and SEO foundation are all in place. Pages render empty state gracefully (Sanity not yet provisioned). No tests, no linter, no CI pipeline.
