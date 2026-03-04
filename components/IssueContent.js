@@ -66,19 +66,24 @@ export default function IssueContent({ issue, locale }) {
         </NicosTransmission>
       )}
 
-      {issue.stories?.map((story) => (
-        <StoryBlock
-          key={story._id}
-          severity={story.severity}
-          headline={t(story.headline, locale)}
-          tags={t(story.tags, locale)?.split(" / ")}
-        >
-          <PortableText
-            value={t(story.body, locale)}
-            components={portableTextComponents}
-          />
-        </StoryBlock>
-      ))}
+      {issue.stories?.map((story) => {
+        const body = t(story.body, locale);
+        return (
+          <StoryBlock
+            key={story._id}
+            severity={story.severity}
+            headline={t(story.headline, locale)}
+            tags={t(story.tags, locale)?.split(" / ")}
+          >
+            {body && (
+              <PortableText
+                value={body}
+                components={portableTextComponents}
+              />
+            )}
+          </StoryBlock>
+        );
+      })}
 
       <StackTrace items={stackTraceItems} />
 
