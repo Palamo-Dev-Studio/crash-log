@@ -19,7 +19,7 @@ export default function StackTrace({ items }) {
         aria-expanded={open}
       >
         <span className={`${styles.triangle} ${open ? styles.open : ""}`}>
-          &#9660;
+          &#9654;
         </span>
         <span className={styles.label}>Stack Trace</span>
       </button>

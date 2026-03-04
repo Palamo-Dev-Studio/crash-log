@@ -43,3 +43,9 @@
   font-size: 12px;
   color: var(--text-faint);
 }
+
+@media (max-width: 480px) {
+  .transmission {
+    padding: 24px 20px;
+  }
+}

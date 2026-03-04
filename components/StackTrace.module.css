@@ -23,11 +23,11 @@
   color: var(--severity-error);
   font-size: 12px;
   transition: transform 0.2s;
-  transform: rotate(-90deg);
+  transform: rotate(0deg);
 }
 
 .open {
-  transform: rotate(0deg);
+  transform: rotate(90deg);
 }
 
 .label {
@@ -61,6 +61,6 @@
 .itemDesc {
   font-family: var(--font-body);
   font-size: 15px;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   line-height: 1.6;
 }

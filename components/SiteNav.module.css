@@ -20,7 +20,10 @@
   transition: color 0.2s;
 }
 
-.link:hover,
-.active {
+.link:hover {
   color: var(--text-primary);
+}
+
+.active {
+  color: var(--severity-error);
 }

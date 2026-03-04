@@ -33,10 +33,16 @@
   padding: 12px 32px;
   border-radius: 2px;
   cursor: pointer;
-  transition: opacity 0.2s, box-shadow 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
 .button:hover {
-  opacity: 0.9;
+  background: #FF6961;
   box-shadow: 0 0 20px rgba(255, 59, 48, 0.3);
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 24px 20px;
+  }
 }

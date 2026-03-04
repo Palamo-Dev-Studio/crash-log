@@ -1,15 +1,17 @@
 /* ABOUTME: Styles for the StoryBlock article section.
-   ABOUTME: Severity badge, mono headline, tags, and serif body text. */
+   ABOUTME: Severity-colored left border, mono headline, tags, and serif body text. */
 
 .section {
   margin-bottom: 56px;
+  border-left: 3px solid var(--severity-color, var(--severity-error));
+  padding-left: 24px;
 }
 
 .title {
   font-family: var(--font-mono);
   font-size: 17px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--severity-color, var(--severity-error));
   margin-top: 12px;
   margin-bottom: 8px;
   line-height: 1.4;

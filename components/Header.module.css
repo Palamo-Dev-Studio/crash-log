@@ -16,7 +16,7 @@
   font-family: var(--font-display);
   font-size: 28px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--severity-error);
   letter-spacing: -0.02em;
   line-height: 1;
   text-transform: uppercase;
@@ -56,4 +56,11 @@
 .subscribe:hover {
   background: var(--severity-error);
   color: var(--bg);
+}
+
+@media (max-width: 480px) {
+  .inner {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
 }

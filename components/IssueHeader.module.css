@@ -39,7 +39,9 @@
   font-family: var(--font-body);
   font-size: 18px;
   font-weight: 400;
-  color: var(--text-tertiary);
+  font-style: normal;
+  color: var(--text-secondary);
   line-height: 1.65;
   max-width: 600px;
+  opacity: 0.85;
 }
