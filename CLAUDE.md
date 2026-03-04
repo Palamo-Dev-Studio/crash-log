@@ -12,9 +12,14 @@ The Crash Log is a bilingual (EN/ES) newsletter website about AI and tech failur
 - `npm run build` — Production build
 - `npm run start` — Start production server
 
-- `scripts/verify.sh` — Build-gate verification (runs `npm run build`, exits non-zero on failure)
+- `npm test` — Run Vitest unit/component/integration tests
+- `npm run test:watch` — Run Vitest in watch mode
+- `npm run test:coverage` — Run tests with coverage report
+- `npm run test:e2e` — Run Playwright e2e tests (auto-starts dev server)
 
-No linter, formatter, or test framework is configured yet.
+- `scripts/verify.sh` — Build-gate verification (runs `npm test` then `npm run build`, exits non-zero on failure)
+
+No linter or CI pipeline configured yet.
 
 ## Architecture
 
@@ -80,4 +85,19 @@ Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` 
 
 ## Current State
 
-Phases 1–6 complete. Sanity schemas, Studio, 16 React components, issue pages, locale infrastructure, SEO foundation, and content seeding are all in place. `scripts/verify.sh` passes (29 static pages). Deployed to Vercel at `crashlog.ai`. No tests, no linter, no CI pipeline.
+Phases 1–7 complete. Sanity schemas, Studio, 16 React components, issue pages, locale infrastructure, SEO foundation, content seeding, and test framework are all in place. `scripts/verify.sh` passes (185 tests + 29 static pages). Deployed to Vercel at `crashlog.ai`. No linter or CI pipeline yet.
+
+## Testing
+
+**Vitest** for unit, component, and integration tests. **Playwright** for e2e.
+
+- Config: `vitest.config.mjs` — jsdom environment, `@` path alias, CSS module proxy, custom JSX-in-`.js` plugin
+- Config: `playwright.config.mjs` — Chromium, auto-starts dev server on port 3000
+- Setup: `__tests__/setup.js` — jest-dom matchers, DOM cleanup
+- Mocks: `__tests__/mocks/` — next/image, next/link, next/navigation stubs
+- Unit tests: `__tests__/unit/lib/` — locale, sanity, queries, portableText
+- Component tests: `__tests__/unit/components/` — all 16 components
+- Integration tests: `__tests__/integration/` — middleware, robots
+- E2E tests: `e2e/` — home, navigation, locale-switching, empty-state
+
+**JSX in .js files:** The project uses JSX in `.js` files (Next.js convention). A custom Vite plugin in `vitest.config.mjs` (`jsxInJsPlugin`) transforms these via esbuild before Vite's import analysis.

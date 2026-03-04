@@ -84,13 +84,31 @@
 - [x] Build gate passes (`scripts/verify.sh`)
 - [x] Update tracking docs
 
+## Phase 7: Test Framework Setup
+- [x] Install Vitest + base config (`vitest.config.mjs`)
+- [x] Custom Vite plugin for JSX-in-`.js` files
+- [x] Install React Testing Library + jest-dom + user-event
+- [x] Shared mocks for next/image, next/link, next/navigation
+- [x] Unit tests: `lib/locale.js` (16 tests)
+- [x] Unit tests: `lib/sanity.js` (7 tests)
+- [x] Unit tests: `lib/queries.js` (20 tests)
+- [x] Unit tests: `lib/portableText.js` (12 tests)
+- [x] Component tests: SeverityBadge, Footer, FallbackBanner, DonateCTA, IssueHeader, NicosTransmission (27 tests)
+- [x] Component tests: AgentCard, Header, SiteNav, StoryBlock, ArchiveCard, BeatStoryCard, CoverImage (54 tests)
+- [x] Component tests: StackTrace, LanguageToggle, IssueContent (29 tests)
+- [x] Integration tests: middleware (12 tests), robots.js (8 tests)
+- [x] Install Playwright + Chromium
+- [x] E2E tests: home, navigation, locale-switching, empty-state (14 tests)
+- [x] Update `scripts/verify.sh` to run tests before build
+- [x] Update tracking docs
+
 ## Deferred
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)
 - [ ] Beehiiv integration (webhook + API)
 - [ ] RSS feeds
-- [ ] Test framework setup (unit, integration, e2e)
+- [x] Test framework setup (unit, integration, e2e)
 - [ ] CI pipeline
-- [ ] Vercel deployment config
+- [x] Vercel deployment — deployed to `crashlog.ai`, CORS origin added, domain URLs updated
 - [ ] OG image assets (static or dynamic)
 - [ ] Twitter handle verification (@thecrashlog)
 - [ ] Social profile URLs in JSON-LD

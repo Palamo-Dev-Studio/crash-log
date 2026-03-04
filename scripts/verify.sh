@@ -7,6 +7,10 @@ set -euo pipefail
 echo "=== verify.sh ==="
 echo ""
 
+echo "▸ Running tests..."
+npm test
+
+echo ""
 echo "▸ Running production build..."
 npm run build
 
