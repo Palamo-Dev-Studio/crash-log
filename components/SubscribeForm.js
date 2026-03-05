@@ -15,6 +15,7 @@ const LABELS = {
     success: "You\u2019re in!",
     alreadySubscribed: "Already subscribed!",
     error: "Something went wrong. Try again.",
+    emailLabel: "Email",
     close: "Close subscribe form",
   },
   es: {
@@ -25,6 +26,7 @@ const LABELS = {
     success: "\u00A1Listo!",
     alreadySubscribed: "\u00A1Ya est\u00E1s suscrito!",
     error: "Algo sali\u00F3 mal. Int\u00E9ntalo de nuevo.",
+    emailLabel: "Correo electr\u00F3nico",
     close: "Cerrar formulario de suscripci\u00F3n",
   },
 };
@@ -87,7 +89,7 @@ export default function SubscribeForm({ locale = "en" }) {
         onChange={(e) => setEmail(e.target.value)}
         disabled={status === "loading"}
         required
-        aria-label="Email"
+        aria-label={l.emailLabel}
       />
       <button
         type="submit"

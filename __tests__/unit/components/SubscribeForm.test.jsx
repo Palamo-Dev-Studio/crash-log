@@ -37,13 +37,16 @@ describe("SubscribeForm", () => {
     expect(screen.getByText("Go")).toBeInTheDocument();
   });
 
-  it("shows Spanish placeholder when expanded in es locale", async () => {
+  it("shows Spanish placeholder and labels when expanded in es locale", async () => {
     const user = userEvent.setup();
     render(<SubscribeForm locale="es" />);
 
     await user.click(screen.getByText("Suscribirse"));
 
     expect(screen.getByPlaceholderText("tu@correo.com")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Correo electr\u00F3nico")
+    ).toBeInTheDocument();
     expect(screen.getByText("Ir")).toBeInTheDocument();
   });
 

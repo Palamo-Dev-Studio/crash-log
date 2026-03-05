@@ -22,7 +22,7 @@ export async function POST(request) {
     );
   }
 
-  const { email } = body;
+  const email = typeof body.email === "string" ? body.email.trim() : body.email;
 
   if (!email || typeof email !== "string") {
     return Response.json(
