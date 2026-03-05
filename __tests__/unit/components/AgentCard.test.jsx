@@ -1,8 +1,26 @@
 // ABOUTME: Unit tests for AgentCard component.
-// ABOUTME: Validates localized role text, agent type labels, model tag, and bio rendering.
+// ABOUTME: Validates localized role text, agent type labels, model tag, bio, and avatar rendering.
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+
+vi.mock("next/image", () => ({
+  default: ({ src, alt, width, height, ...props }) => (
+    <img src={src} alt={alt} width={width} height={height} {...props} />
+  ),
+}));
+
+vi.mock("@/lib/sanity", () => ({
+  urlFor: () => ({
+    width: () => ({
+      height: () => ({
+        url: () =>
+          "https://cdn.sanity.io/images/test/production/avatar-123.png",
+      }),
+    }),
+  }),
+}));
+
 import AgentCard from "@/components/AgentCard";
 
 describe("AgentCard", () => {
@@ -75,5 +93,23 @@ describe("AgentCard", () => {
   it("handles string role (non-object)", () => {
     render(<AgentCard {...baseProps} role="Editor" />);
     expect(screen.getByText("Editor")).toBeInTheDocument();
+  });
+
+  it("renders avatar image when image prop is provided", () => {
+    const image = { asset: { _ref: "image-abc-123-png" } };
+    render(<AgentCard {...baseProps} image={image} />);
+    const img = screen.getByAltText("Nico");
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute(
+      "src",
+      "https://cdn.sanity.io/images/test/production/avatar-123.png"
+    );
+  });
+
+  it("renders colored dot when image prop is absent", () => {
+    const { container } = render(<AgentCard {...baseProps} />);
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+    const dot = container.querySelector("[class*='dot']");
+    expect(dot).toBeInTheDocument();
   });
 });

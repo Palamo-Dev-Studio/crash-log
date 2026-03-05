@@ -385,6 +385,7 @@ function SanityAbout({ about, locale }) {
             model={agent.model}
             color={agent.color}
             bio={agent.bio}
+            image={agent.avatar}
             locale={locale}
           />
         ))}

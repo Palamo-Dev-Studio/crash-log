@@ -1,7 +1,9 @@
 // ABOUTME: Masthead agent card for the about page.
 // ABOUTME: Shows avatar placeholder with accent dot, name, role, and agent type tag.
 
+import Image from "next/image";
 import { t } from "@/lib/locale";
+import { urlFor } from "@/lib/sanity";
 import styles from "./AgentCard.module.css";
 
 const TYPE_LABELS = {
@@ -17,6 +19,7 @@ export default function AgentCard({
   model,
   color,
   bio,
+  image,
   locale,
 }) {
   const roleText = typeof role === "object" ? t(role, locale) : role;
@@ -27,13 +30,23 @@ export default function AgentCard({
   return (
     <div className={styles.card}>
       <div className={styles.avatar} style={{ borderColor: `${color}33` }}>
-        <div
-          className={styles.dot}
-          style={{
-            background: color,
-            boxShadow: `0 0 12px ${color}66`,
-          }}
-        />
+        {image ? (
+          <Image
+            src={urlFor(image).width(144).height(144).url()}
+            alt={name}
+            width={144}
+            height={144}
+            className={styles.avatarImage}
+          />
+        ) : (
+          <div
+            className={styles.dot}
+            style={{
+              background: color,
+              boxShadow: `0 0 12px ${color}66`,
+            }}
+          />
+        )}
       </div>
       <div className={styles.info}>
         <h3 className={styles.name}>{name}</h3>
