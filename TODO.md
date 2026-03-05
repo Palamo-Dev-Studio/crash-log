@@ -120,15 +120,28 @@
 - [x] RSS feed discovery link in site metadata
 - [x] Updated verify.sh (lint + format check + tests + build)
 
+## Phase 9: Beehiiv Integration + Social Media
+
+- [x] Fix Twitter handle: `@thecrashlog` → `@crashLogNews` in metadata + JSON-LD
+- [x] Add Instagram to `sameAs` array in JSON-LD
+- [x] Add X and Instagram text links to Footer (2 tests)
+- [x] Create `POST /api/subscribe` route (Beehiiv proxy, 9 integration tests)
+- [x] Create `SubscribeForm` client component with inline expansion UX (16 tests)
+- [x] Replace Header placeholder subscribe button with `SubscribeForm`
+- [x] Add Beehiiv credentials to `.env.local`
+- [x] Live-test Beehiiv integration (confirmed working)
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)
-- [ ] Beehiiv integration (pending: embed vs API decision, needs publication URL)
+- [x] Beehiiv integration
 - [x] RSS feeds
 - [x] Test framework setup (unit, integration, e2e)
 - [x] CI pipeline
 - [x] Vercel deployment — deployed to `crashlog.ai`, CORS origin added, domain URLs updated
 - [x] OG image assets (dynamic via next/og ImageResponse)
-- [ ] Twitter handle verification (@thecrashlog) — external action
+- [ ] Twitter handle verification (@crashLogNews) — external action
 - [x] Social profile URLs in JSON-LD
 - [x] Linter/formatter setup
+- [ ] Add Beehiiv env vars to Vercel for production
+- [ ] Beehiiv recommendation modal redirect (post-subscribe thank-you page)
