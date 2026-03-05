@@ -33,8 +33,8 @@ describe("SiteNav", () => {
     render(<SiteNav locale="es" />);
     expect(screen.getByText("Último")).toBeInTheDocument();
     expect(screen.getByText("Archivo")).toBeInTheDocument();
-    expect(screen.getByText("Beats")).toBeInTheDocument();
-    expect(screen.getByText("Info")).toBeInTheDocument();
+    expect(screen.getByText("Temas")).toBeInTheDocument();
+    expect(screen.getByText("Sobre")).toBeInTheDocument();
   });
 
   it("prefixes links with en locale", () => {

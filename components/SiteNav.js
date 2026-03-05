@@ -13,7 +13,7 @@ const NAV_ITEMS = [
 
 const LABELS = {
   en: { latest: "Latest", archive: "Archive", beats: "Beats", about: "About" },
-  es: { latest: "Último", archive: "Archivo", beats: "Beats", about: "Info" },
+  es: { latest: "Último", archive: "Archivo", beats: "Temas", about: "Sobre" },
 };
 
 export default function SiteNav({ locale, activeSegment }) {
