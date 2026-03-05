@@ -24,3 +24,15 @@
 .link:hover {
   color: var(--text-primary);
 }
+
+.social {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.separator {
+  margin: 0 6px;
+  color: var(--text-muted);
+}

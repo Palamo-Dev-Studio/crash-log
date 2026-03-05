@@ -20,4 +20,23 @@ describe("Footer", () => {
     render(<Footer />);
     expect(screen.getByText(/The Crash Log/)).toBeInTheDocument();
   });
+
+  it("renders X link pointing to @crashLogNews", () => {
+    render(<Footer />);
+    const link = screen.getByText("X");
+    expect(link).toHaveAttribute("href", "https://x.com/crashLogNews");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("renders Instagram link pointing to @crashlognews", () => {
+    render(<Footer />);
+    const link = screen.getByText("Instagram");
+    expect(link).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/crashlognews"
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
 });
