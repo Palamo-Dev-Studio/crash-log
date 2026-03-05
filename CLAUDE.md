@@ -64,6 +64,10 @@ Required in `.env.local`:
 
 - `NEXT_PUBLIC_SANITY_PROJECT_ID` — Sanity project ID
 - `NEXT_PUBLIC_SANITY_DATASET` — Sanity dataset name (defaults to `production`)
+- `BEEHIIV_API_KEY` — Beehiiv API key (server-only)
+- `BEEHIIV_PUBLICATION_ID` — Beehiiv publication ID (server-only)
+- `STRIPE_SECRET_KEY` — Stripe secret key for Checkout Sessions (server-only)
+- `NEXT_PUBLIC_DONATIONS_ENABLED` — Set to `"true"` to show the DonateCTA component
 
 ## Reference Documentation
 

@@ -16,6 +16,8 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+vi.mock("next/navigation", () => import("../../mocks/next-navigation"));
+
 vi.mock("@/lib/sanity", () => ({
   urlFor: () => ({
     width: function () {
@@ -117,9 +119,11 @@ describe("IssueContent", () => {
       expect(screen.getByText("TechCrunch")).toBeInTheDocument();
     });
 
-    it("renders DonateCTA", () => {
+    it("renders DonateCTA when donations are enabled", () => {
+      process.env.NEXT_PUBLIC_DONATIONS_ENABLED = "true";
       render(<IssueContent issue={makeIssue()} locale="en" />);
       expect(screen.getByText("Feed the Bots")).toBeInTheDocument();
+      delete process.env.NEXT_PUBLIC_DONATIONS_ENABLED;
     });
 
     it("renders Footer", () => {

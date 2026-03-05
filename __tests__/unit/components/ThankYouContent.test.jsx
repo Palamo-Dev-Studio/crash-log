@@ -1,5 +1,5 @@
 // ABOUTME: Unit tests for the ThankYouContent server component.
-// ABOUTME: Validates bilingual labels, heading structure, CTA links, and BeehiivRecommendations slot.
+// ABOUTME: Validates bilingual labels, heading structure, CTA links, social buttons, and BeehiivRecommendations slot.
 
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
@@ -25,10 +25,10 @@ describe("ThankYouContent", () => {
       ).toBeInTheDocument();
     });
 
-    it("renders the description", () => {
+    it("renders the description with gratitude", () => {
       render(<ThankYouContent locale="en" />);
       expect(
-        screen.getByText(/You just subscribed to The Crash Log/)
+        screen.getByText(/Thanks for subscribing to The Crash Log/)
       ).toBeInTheDocument();
     });
 
@@ -36,6 +36,30 @@ describe("ThankYouContent", () => {
       render(<ThankYouContent locale="en" />);
       const link = screen.getByRole("link", { name: "Read the Latest Issue" });
       expect(link).toHaveAttribute("href", "/en");
+    });
+
+    it("renders the follow label", () => {
+      render(<ThankYouContent locale="en" />);
+      expect(screen.getByText("Follow the Fallout")).toBeInTheDocument();
+    });
+
+    it("renders X social button linking to the correct URL", () => {
+      render(<ThankYouContent locale="en" />);
+      const xLink = screen.getByRole("link", { name: "X" });
+      expect(xLink).toHaveAttribute("href", "https://x.com/crashLogNews");
+      expect(xLink).toHaveAttribute("target", "_blank");
+      expect(xLink).toHaveAttribute("rel", "noopener noreferrer");
+    });
+
+    it("renders Instagram social button linking to the correct URL", () => {
+      render(<ThankYouContent locale="en" />);
+      const igLink = screen.getByRole("link", { name: "Instagram" });
+      expect(igLink).toHaveAttribute(
+        "href",
+        "https://instagram.com/crashlognews"
+      );
+      expect(igLink).toHaveAttribute("target", "_blank");
+      expect(igLink).toHaveAttribute("rel", "noopener noreferrer");
     });
   });
 
@@ -54,10 +78,10 @@ describe("ThankYouContent", () => {
       ).toBeInTheDocument();
     });
 
-    it("renders the Spanish description", () => {
+    it("renders the Spanish description with gratitude", () => {
       render(<ThankYouContent locale="es" />);
       expect(
-        screen.getByText(/Te suscribiste a The Crash Log/)
+        screen.getByText(/Gracias por suscribirte a The Crash Log/)
       ).toBeInTheDocument();
     });
 
@@ -68,12 +92,19 @@ describe("ThankYouContent", () => {
       });
       expect(link).toHaveAttribute("href", "/es");
     });
+
+    it("renders the Spanish follow label", () => {
+      render(<ThankYouContent locale="es" />);
+      expect(screen.getByText("Sigue el Desastre")).toBeInTheDocument();
+    });
   });
 
   it("defaults to English when locale is not provided", () => {
     render(<ThankYouContent />);
     expect(screen.getByText("SUBSCRIPTION CONFIRMED")).toBeInTheDocument();
-    expect(screen.getByRole("link")).toHaveAttribute("href", "/en");
+    expect(
+      screen.getByRole("link", { name: "Read the Latest Issue" })
+    ).toHaveAttribute("href", "/en");
   });
 
   it("has a single h1 element", () => {

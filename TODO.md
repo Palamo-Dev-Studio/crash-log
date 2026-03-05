@@ -158,6 +158,26 @@
 - [x] verify.sh passes (253 tests + 32 static pages)
 - [ ] Activate Beehiiv Recommendations widget when available (set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`)
 
+## Stripe Checkout Donation ("Feed the Bots")
+
+- [x] Install `stripe` dependency
+- [x] Create `POST /api/donate` route (Stripe Checkout Sessions, amount validation, return URL sanitization)
+- [x] Convert `DonateCTA` to client component (amount form, loading/error/thank-you states, Suspense boundary)
+- [x] Update `DonateCTA.module.css` (form, input, disclaimer, error, thanks styles)
+- [x] Add tax disclaimer (EN/ES)
+- [x] Update `next/navigation` mock with `useSearchParams`
+- [x] Donate API integration tests (16 tests)
+- [x] DonateCTA component tests (22 tests)
+- [x] Update IssueContent test for new env var
+- [x] Update `.env.local` and `CLAUDE.md` with new env vars
+- [x] Thank-you toast: fixed-position overlay, auto-dismiss after 10s, covers featured image
+- [x] Base URL derived from request.url (works in dev and production)
+- [x] verify.sh passes (291 tests + 33 static pages)
+- [x] Set `STRIPE_SECRET_KEY` in Vercel env vars (test key for preview, live key for production)
+- [x] Set `NEXT_PUBLIC_DONATIONS_ENABLED=true` in Vercel env vars
+- [x] Manual end-to-end test with real Stripe Checkout
+- [ ] Switch to live Stripe key in Vercel production env when ready for real donations
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)
