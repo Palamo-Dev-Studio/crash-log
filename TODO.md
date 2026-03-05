@@ -202,6 +202,35 @@
 - [x] Fix loadEnv: ENOENT handling + quote stripping (CodeRabbit review)
 - [x] verify.sh passes (296 tests + 33 static pages)
 
+## UI Polish & Layout Fixes
+
+- [x] Header 50% bigger (logo 36→54px, wordmark 28→42px)
+- [x] Agent headshots 50% bigger (avatars 120→180px, mobile 88→132px)
+- [x] Layout widened (`--max-width` 720→960px)
+- [x] SiteNav active state fix (client component with `useSelectedLayoutSegment`)
+- [x] Email link visible in English About page (CSS + Sanity content fix)
+- [x] Spanish formality: "Suscribirse" → "Suscríbete"
+- [x] Beats page: hide categories with 0 stories
+
+## Severity System Refactor
+
+- [x] Change severity from enum to free-text in Sanity schema
+- [x] Create `lib/storyColors.js` color cycle utility
+- [x] Update SeverityBadge/StoryBlock to accept `colorKey` prop
+- [x] Update IssueContent, ArchiveCard, BeatStoryCard, beat detail page
+- [x] Deploy updated schema to Sanity cloud
+- [x] Update tests (295 tests passing)
+
+## Issue #015 — "Trust Is the Product Now"
+
+- [x] Seed 3 story drafts (OVERRIDE, PATCH_FAILED, DEPRECATED) with EN/ES body + sources
+- [x] Set category references (Foundation Models, Labor & Automation, Regulation & Governance)
+- [x] Seed issue draft with Nico's Transmission (EN/ES), Stack Trace (3 hits), title/subtitle
+- [x] Wire story references to issue
+- [ ] Hector reviews + edits in Sanity Studio
+- [ ] Publish stories first, then issue
+- [ ] Optional: add cover image
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)

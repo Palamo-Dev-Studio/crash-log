@@ -2,40 +2,26 @@
 
 ## Current State
 
-- **Branch:** `main`
-- **Build:** `scripts/verify.sh` passes cleanly (296 tests + 33 static pages, Next.js 16.1.6 Turbopack)
-- **Tests:** 296 unit/component/integration tests (Vitest, 29 files) + 14 e2e tests (Playwright) = 310 total
+- **Branch:** `main` (uncommitted changes from this session)
+- **Build:** `npm test` passes (295 tests), `npm run build` passes
+- **Tests:** 295 unit/component/integration tests (Vitest, 29 files) + 14 e2e tests (Playwright) = 309 total
 - **Verification script:** `scripts/verify.sh` — runs lint, format check, tests, then build; exits non-zero on failure
 - **Components:** 19 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard + SubscribeForm + ThankYouContent + BeehiivRecommendations)
+- **Layout:** `--max-width: 960px` (widened from 720px), `--content-padding: 28px`
 - **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/[locale]/subscribe/thank-you`, `/[locale]/feed.xml`, `/api/subscribe`, `/api/donate`, `/studio`, `/robots.txt`, `/sitemap.xml`
-- **Dynamic routes:** `/[locale]/opengraph-image`, `/[locale]/twitter-image`, `/[locale]/issue/[slug]/opengraph-image`, `/[locale]/issue/[slug]/twitter-image`
-- **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 19 published documents. All 6 agents have avatar images.
+- **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 19 published documents + 4 drafts (Issue #015 + 3 stories).
 
-## What's Done
+## This Session's Changes (uncommitted)
 
-- **Phases 1–8:** See TODO.md for full details. All core phases complete.
-- **Phase 9 (Beehiiv + Social Media):**
-  - Social handles fixed, Footer social links, Subscribe API route, SubscribeForm component, Header updated.
-  - Live-tested Beehiiv integration. Credentials in `.env.local` and Vercel env vars.
-- **Phase 10 (Spanish Locale UI Chrome):**
-  - 7 components localized with inline LABELS constants. Locale prop threaded through callers.
-  - SiteNav Spanish labels: Último, Archivo, Temas, Sobre.
-- **Post-Subscribe Thank-You Page:**
-  - `ThankYouContent` + `BeehiivRecommendations` components, thank-you route, SubscribeForm redirect.
-- **Stripe Checkout Donation ("Feed the Bots"):**
-  - `POST /api/donate` route, `DonateCTA` client component, thank-you toast, tax disclaimer, env gating.
-  - Stripe credentials in `.env.local` and Vercel. Live key active in production.
-- **Logo & Agent Headshot Integration:**
-  - Favicon: `app/icon.png` (180×180) + `app/apple-icon.png`. Old `favicon.ico` deleted.
-  - Header: logo image (36×36, 28px mobile) alongside wordmark text in flex layout.
-  - Agent headshots: 6 PNGs uploaded to Sanity via `scripts/upload-avatars.mjs`. All 6 agents have avatars.
-  - AgentCard: avatar 120×120 (88px mobile), conditional rendering (Sanity image or colored dot fallback).
-  - AgentCard typography: name 22px, role 16px, tag 11px `--text-tertiary`.
-  - `next.config.mjs`: `images.remotePatterns` for `cdn.sanity.io`.
-  - About page: Spanish locale uses `FallbackAbout` with hardcoded bilingual content + Sanity avatars.
-  - Fallback masthead bios and roles fully localized (EN/ES).
-  - Contact email updated to `info@palamostudio.com` (code + Sanity).
-  - Duplicate email in SanityAbout contact section removed.
+- **Header 50% bigger:** Logo 36→54px, wordmark 28→42px
+- **Agent headshots 50% bigger:** Avatars 120→180px (mobile 88→132px)
+- **Layout widened:** `--max-width` 720→960px (was too narrow, felt like a thin stream)
+- **SiteNav active state fix:** Converted to client component using `useSelectedLayoutSegment()` — previously always highlighted "Latest" because `activeSegment` prop was never passed
+- **Email link fix (English About):** Added `.contact a` styles so Portable Text links are visible; patched Sanity `contactCTA.en` to wrap email in `mailto:` link
+- **Spanish formality fix:** "Suscribirse" → "Suscríbete" (informal imperative) in SubscribeForm
+- **Severity system refactored:** Removed fixed enum (ERROR, OVERRIDE, etc.), severity is now free-text. Colors cycle by story position through palette: error→breach→override→warning→critical. New `lib/storyColors.js` utility. SeverityBadge/StoryBlock accept `colorKey` prop.
+- **Beats page filter:** Categories with 0 stories hidden from beats index
+- **Issue #015 seeded in Sanity (drafts):** "Trust Is the Product Now" — 3 stories (OVERRIDE, PATCH_FAILED, DEPRECATED) + Nico's Transmission + 3 Stack Trace hits, full EN/ES bilingual content
 
 ## Deployment
 
@@ -45,20 +31,19 @@
 - **Beehiiv:** Credentials in `.env.local` and Vercel env vars
 - **Stripe:** `STRIPE_SECRET_KEY` and `NEXT_PUBLIC_DONATIONS_ENABLED=true` set in `.env.local` and Vercel env vars. Live key active in production.
 
-## Immediate Next Step
+## Immediate Next Steps
 
-- **Push to deploy** logo, headshots, and about page fixes to Vercel.
-- **Spanish Sanity content:** Gabo needs to populate `.es` fields for Issue #014 in Sanity Studio.
-- **Activate Beehiiv Recommendations:** When available, set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`.
+1. **Hector reviews Issue #015 in Studio** — edit stories, Nico's Transmission, Stack Trace, then publish (stories first, then issue)
+2. **Commit + deploy** this session's code changes to Vercel
+3. **Populate Spanish content** in Sanity for Issue #014 (editorial task for Gabo)
+4. **Activate Beehiiv Recommendations:** When available, set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`
 
 ## Known Issues / Deferred Items
 
 - `@sanity/image-url` deprecation warning: default export deprecated, use named `createImageUrlBuilder` instead. Non-blocking.
 - Next.js 16 deprecation warning: middleware file convention deprecated in favor of "proxy". Functional, monitor.
-- Twitter handle (@crashLogNews) verified on X.
-- `metadataBase` URL set to `https://crashlog.ai` — update if domain changes.
 - Sanity workspace name is `the-crash-log` (not `default`) — must pass `workspaceName` to MCP tools.
-- React DOM `priority` attribute warning in CoverImage mock — cosmetic, only appears in test output.
 - OG images use Inter font instead of Space Grotesk — ImageResponse edge runtime limits font loading.
-- No rate limiting on `/api/subscribe` or `/api/donate` — Vercel baseline DDoS protection covers it. Add throttling if abuse occurs.
+- No rate limiting on `/api/subscribe` or `/api/donate` — Vercel baseline DDoS protection covers it.
 - No bot protection (honeypot/CAPTCHA) on forms — add if spam becomes an issue.
+- React DOM `priority` attribute warning in CoverImage mock — cosmetic, test output only.

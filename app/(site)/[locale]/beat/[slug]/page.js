@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { getCategoryWithStories, getAllCategories } from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG } from "@/lib/locale";
 import BeatStoryCard from "@/components/BeatStoryCard";
+import { getStoryColorKey } from "@/lib/storyColors";
 import Footer from "@/components/Footer";
 import styles from "./beat.module.css";
 
@@ -82,10 +83,11 @@ export default async function BeatPage({ params }) {
             : "No stories in this beat yet."}
         </p>
       ) : (
-        stories.map((story) => (
+        stories.map((story, index) => (
           <BeatStoryCard
             key={story._id}
             severity={story.severity}
+            colorKey={getStoryColorKey(index)}
             headline={story.headline}
             issueMeta={{
               number: story.issue?.issueNumber,

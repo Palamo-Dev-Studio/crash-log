@@ -1,5 +1,5 @@
 // ABOUTME: Unit tests for SeverityBadge component.
-// ABOUTME: Validates severity-to-CSS-class mapping and fallback behavior.
+// ABOUTME: Validates colorKey-to-CSS-class mapping and fallback behavior.
 
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
@@ -7,48 +7,38 @@ import SeverityBadge from "@/components/SeverityBadge";
 
 describe("SeverityBadge", () => {
   it("renders the severity text", () => {
-    render(<SeverityBadge severity="ERROR" />);
-    expect(screen.getByText("ERROR")).toBeInTheDocument();
+    render(<SeverityBadge severity="OVERRIDE" />);
+    expect(screen.getByText("OVERRIDE")).toBeInTheDocument();
   });
 
   it("applies badge base class", () => {
-    render(<SeverityBadge severity="ERROR" />);
-    const badge = screen.getByText("ERROR");
+    render(<SeverityBadge severity="OVERRIDE" />);
+    const badge = screen.getByText("OVERRIDE");
     expect(badge.className).toContain("badge");
   });
 
-  it("applies error class for ERROR severity", () => {
-    render(<SeverityBadge severity="ERROR" />);
-    expect(screen.getByText("ERROR").className).toContain("error");
+  it("renders any free-text severity label", () => {
+    render(<SeverityBadge severity="PATCH_FAILED" />);
+    expect(screen.getByText("PATCH_FAILED")).toBeInTheDocument();
   });
 
-  it("applies override class for OVERRIDE severity", () => {
-    render(<SeverityBadge severity="OVERRIDE" />);
-    expect(screen.getByText("OVERRIDE").className).toContain("override");
+  it("applies the colorKey class", () => {
+    render(<SeverityBadge severity="PATCH_FAILED" colorKey="breach" />);
+    expect(screen.getByText("PATCH_FAILED").className).toContain("breach");
   });
 
-  it("applies terminate class for TERMINATE severity", () => {
-    render(<SeverityBadge severity="TERMINATE" />);
-    expect(screen.getByText("TERMINATE").className).toContain("terminate");
+  it("applies error class as default colorKey", () => {
+    render(<SeverityBadge severity="DEPRECATED" />);
+    expect(screen.getByText("DEPRECATED").className).toContain("error");
   });
 
-  it("applies warning class for WARNING severity", () => {
-    render(<SeverityBadge severity="WARNING" />);
-    expect(screen.getByText("WARNING").className).toContain("warning");
+  it("applies override class when colorKey is override", () => {
+    render(<SeverityBadge severity="SOMETHING" colorKey="override" />);
+    expect(screen.getByText("SOMETHING").className).toContain("override");
   });
 
-  it("applies critical class for CRITICAL severity", () => {
-    render(<SeverityBadge severity="CRITICAL" />);
-    expect(screen.getByText("CRITICAL").className).toContain("critical");
-  });
-
-  it("applies breach class for BREACH severity", () => {
-    render(<SeverityBadge severity="BREACH" />);
-    expect(screen.getByText("BREACH").className).toContain("breach");
-  });
-
-  it("falls back to error class for unknown severity", () => {
-    render(<SeverityBadge severity="UNKNOWN" />);
-    expect(screen.getByText("UNKNOWN").className).toContain("error");
+  it("falls back to error class when no colorKey provided", () => {
+    render(<SeverityBadge severity="TEST" />);
+    expect(screen.getByText("TEST").className).toContain("error");
   });
 });

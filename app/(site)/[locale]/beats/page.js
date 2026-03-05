@@ -40,7 +40,8 @@ export async function generateMetadata({ params }) {
 
 export default async function BeatsPage({ params }) {
   const { locale } = await params;
-  const categories = await getCachedCategories();
+  const allCategories = await getCachedCategories();
+  const categories = allCategories.filter((cat) => (cat.storyCount || 0) > 0);
 
   return (
     <main>

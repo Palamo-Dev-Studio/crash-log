@@ -65,7 +65,8 @@
   margin-bottom: 16px;
 }
 
-.emailLink {
+.emailLink,
+.contact a {
   font-family: var(--font-mono);
   font-size: 14px;
   color: var(--severity-error);
@@ -74,7 +75,8 @@
   transition: border-color 0.2s;
 }
 
-.emailLink:hover {
+.emailLink:hover,
+.contact a:hover {
   border-bottom-color: var(--severity-error);
 }
 

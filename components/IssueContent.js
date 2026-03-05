@@ -9,6 +9,7 @@ import IssueHeader from "@/components/IssueHeader";
 import FallbackBanner from "@/components/FallbackBanner";
 import NicosTransmission from "@/components/NicosTransmission";
 import StoryBlock from "@/components/StoryBlock";
+import { getStoryColorKey } from "@/lib/storyColors";
 import StackTrace from "@/components/StackTrace";
 import DonateCTA from "@/components/DonateCTA";
 import Footer from "@/components/Footer";
@@ -73,12 +74,13 @@ export default function IssueContent({ issue, locale }) {
         </NicosTransmission>
       )}
 
-      {issue.stories?.map((story) => {
+      {issue.stories?.map((story, index) => {
         const body = t(story.body, locale);
         return (
           <StoryBlock
             key={story._id}
             severity={story.severity}
+            colorKey={getStoryColorKey(index)}
             headline={t(story.headline, locale)}
             tags={t(story.tags, locale)?.split(" / ")}
           >

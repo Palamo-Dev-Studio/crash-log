@@ -1,27 +1,24 @@
 // ABOUTME: Article section component with severity badge, headline, tags, and body text.
-// ABOUTME: Renders a single story from a Crash Log issue with severity-driven styling.
+// ABOUTME: Color is driven by a colorKey prop that maps to CSS severity tokens.
 
 import SeverityBadge from "./SeverityBadge";
 import styles from "./StoryBlock.module.css";
 
-const SEVERITY_TOKENS = {
-  ERROR: "var(--severity-error)",
-  OVERRIDE: "var(--severity-override)",
-  TERMINATE: "var(--severity-terminate)",
-  WARNING: "var(--severity-warning)",
-  CRITICAL: "var(--severity-critical)",
-  BREACH: "var(--severity-breach)",
-};
-
-export default function StoryBlock({ severity, headline, tags, children }) {
-  const severityColor = SEVERITY_TOKENS[severity] || SEVERITY_TOKENS.ERROR;
+export default function StoryBlock({
+  severity,
+  headline,
+  tags,
+  colorKey = "error",
+  children,
+}) {
+  const severityColor = `var(--severity-${colorKey})`;
 
   return (
     <article
       className={styles.section}
       style={{ "--severity-color": severityColor }}
     >
-      <SeverityBadge severity={severity} />
+      <SeverityBadge severity={severity} colorKey={colorKey} />
       <h2 className={styles.title}>{headline}</h2>
       {tags && (
         <div className={styles.tags}>

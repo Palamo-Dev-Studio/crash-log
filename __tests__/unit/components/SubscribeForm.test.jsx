@@ -38,7 +38,7 @@ describe("SubscribeForm", () => {
 
   it("renders Spanish label for es locale", () => {
     render(<SubscribeForm locale="es" />);
-    expect(screen.getByText("Suscribirse")).toBeInTheDocument();
+    expect(screen.getByText("Suscríbete")).toBeInTheDocument();
   });
 
   it("expands to show email input on click", async () => {
@@ -55,7 +55,7 @@ describe("SubscribeForm", () => {
     const user = userEvent.setup();
     render(<SubscribeForm locale="es" />);
 
-    await user.click(screen.getByText("Suscribirse"));
+    await user.click(screen.getByText("Suscríbete"));
 
     expect(screen.getByPlaceholderText("tu@correo.com")).toBeInTheDocument();
     expect(
@@ -197,7 +197,7 @@ describe("SubscribeForm", () => {
     const user = userEvent.setup();
     render(<SubscribeForm locale="es" />);
 
-    await user.click(screen.getByText("Suscribirse"));
+    await user.click(screen.getByText("Suscríbete"));
 
     expect(
       screen.getByLabelText("Cerrar formulario de suscripción")
@@ -276,7 +276,7 @@ describe("SubscribeForm", () => {
 
       render(<SubscribeForm locale="es" />);
 
-      fireEvent.click(screen.getByText("Suscribirse"));
+      fireEvent.click(screen.getByText("Suscríbete"));
       fireEvent.change(screen.getByLabelText("Correo electr\u00F3nico"), {
         target: { value: "test@example.com" },
       });

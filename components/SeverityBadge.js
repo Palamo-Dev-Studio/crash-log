@@ -1,20 +1,9 @@
-// ABOUTME: Severity badge component that renders a styled label based on severity level.
-// ABOUTME: Maps severity enum values to design tokens for color, background, and border.
+// ABOUTME: Severity badge component that renders a styled label for a story section.
+// ABOUTME: Color is driven by a colorKey prop (mapped to CSS tokens), not the label text.
 
 import styles from "./SeverityBadge.module.css";
 
-const SEVERITY_MAP = {
-  ERROR: "error",
-  OVERRIDE: "override",
-  TERMINATE: "terminate",
-  WARNING: "warning",
-  CRITICAL: "critical",
-  BREACH: "breach",
-};
-
-export default function SeverityBadge({ severity }) {
-  const className = SEVERITY_MAP[severity] || "error";
-  return (
-    <span className={`${styles.badge} ${styles[className]}`}>{severity}</span>
-  );
+export default function SeverityBadge({ severity, colorKey = "error" }) {
+  const className = styles[colorKey] || styles.error;
+  return <span className={`${styles.badge} ${className}`}>{severity}</span>;
 }

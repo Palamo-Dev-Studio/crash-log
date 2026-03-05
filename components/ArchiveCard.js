@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import SeverityBadge from "@/components/SeverityBadge";
+import { getStoryColorKey } from "@/lib/storyColors";
 import styles from "./ArchiveCard.module.css";
 
 function formatDate(dateString, locale) {
@@ -36,8 +37,12 @@ export default function ArchiveCard({
       {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
       {severities?.length > 0 && (
         <div className={styles.severities}>
-          {[...new Set(severities)].map((s) => (
-            <SeverityBadge key={s} severity={s} />
+          {severities.map((s, i) => (
+            <SeverityBadge
+              key={i}
+              severity={s}
+              colorKey={getStoryColorKey(i)}
+            />
           ))}
         </div>
       )}

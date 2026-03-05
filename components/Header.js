@@ -22,8 +22,8 @@ export default function Header({ locale, children }) {
             <Image
               src="/logo-circle.webp"
               alt=""
-              width={36}
-              height={36}
+              width={54}
+              height={54}
               className={styles.logo}
             />
             <span className={styles.wordmarkText}>The Crash Log</span>

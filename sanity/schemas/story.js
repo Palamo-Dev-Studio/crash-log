@@ -24,16 +24,8 @@ export default {
       title: "Severity",
       type: "string",
       group: "meta",
-      options: {
-        list: [
-          "ERROR",
-          "OVERRIDE",
-          "TERMINATE",
-          "WARNING",
-          "CRITICAL",
-          "BREACH",
-        ],
-      },
+      description:
+        "Free-text label shown as a badge, e.g. OVERRIDE, PATCH_FAILED, DEPRECATED",
       validation: (Rule) => Rule.required(),
     },
     {

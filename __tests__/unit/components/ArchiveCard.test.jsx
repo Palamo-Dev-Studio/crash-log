@@ -62,9 +62,9 @@ describe("ArchiveCard", () => {
     expect(screen.getByText("OVERRIDE")).toBeInTheDocument();
   });
 
-  it("deduplicates severity badges", () => {
+  it("shows one badge per story even with duplicate labels", () => {
     render(<ArchiveCard {...baseProps} severities={["ERROR", "ERROR"]} />);
-    expect(screen.getAllByText("ERROR")).toHaveLength(1);
+    expect(screen.getAllByText("ERROR")).toHaveLength(2);
   });
 
   it("uses es locale for link path", () => {

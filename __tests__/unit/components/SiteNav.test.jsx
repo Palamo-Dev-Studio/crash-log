@@ -4,12 +4,18 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
+let mockSegment = null;
+
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
     <a href={href} {...props}>
       {children}
     </a>
   ),
+}));
+
+vi.mock("next/navigation", () => ({
+  useSelectedLayoutSegment: () => mockSegment,
 }));
 
 import SiteNav from "@/components/SiteNav";
@@ -69,20 +75,32 @@ describe("SiteNav", () => {
     );
   });
 
-  it("applies active class to Latest when no activeSegment", () => {
-    render(<SiteNav locale="en" activeSegment={undefined} />);
+  it("applies active class to Latest when no segment", () => {
+    mockSegment = null;
+    render(<SiteNav locale="en" />);
     const latest = screen.getByText("Latest").closest("a");
     expect(latest.className).toContain("active");
   });
 
-  it("applies active class to Archive when activeSegment is archive", () => {
-    render(<SiteNav locale="en" activeSegment="archive" />);
+  it("applies active class to Archive when segment is archive", () => {
+    mockSegment = "archive";
+    render(<SiteNav locale="en" />);
     const archive = screen.getByText("Archive").closest("a");
     expect(archive.className).toContain("active");
   });
 
   it("does not apply active class to non-active links", () => {
-    render(<SiteNav locale="en" activeSegment="archive" />);
+    mockSegment = "archive";
+    render(<SiteNav locale="en" />);
+    const latest = screen.getByText("Latest").closest("a");
+    expect(latest.className).not.toContain("active");
+  });
+
+  it("applies active class to About when segment is about", () => {
+    mockSegment = "about";
+    render(<SiteNav locale="en" />);
+    const about = screen.getByText("About").closest("a");
+    expect(about.className).toContain("active");
     const latest = screen.getByText("Latest").closest("a");
     expect(latest.className).not.toContain("active");
   });

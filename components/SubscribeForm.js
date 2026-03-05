@@ -20,15 +20,15 @@ const LABELS = {
     close: "Close subscribe form",
   },
   es: {
-    subscribe: "Suscribirse",
+    subscribe: "Suscríbete",
     placeholder: "tu@correo.com",
     submit: "Ir",
     sending: "Enviando\u2026",
     success: "\u00A1Listo!",
-    alreadySubscribed: "\u00A1Ya est\u00E1s suscrito!",
-    error: "Algo sali\u00F3 mal. Int\u00E9ntalo de nuevo.",
-    emailLabel: "Correo electr\u00F3nico",
-    close: "Cerrar formulario de suscripci\u00F3n",
+    alreadySubscribed: "\u00A1Ya estás suscrito!",
+    error: "Algo salió mal. Inténtalo de nuevo.",
+    emailLabel: "Correo electrónico",
+    close: "Cerrar formulario de suscripción",
   },
 };
 

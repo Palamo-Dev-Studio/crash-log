@@ -1,7 +1,10 @@
 // ABOUTME: Site navigation bar with links to Latest, Archive, Beats, and About.
 // ABOUTME: Highlights the active link based on the current path segment.
 
+"use client";
+
 import Link from "next/link";
+import { useSelectedLayoutSegment } from "next/navigation";
 import styles from "./SiteNav.module.css";
 
 const NAV_ITEMS = [
@@ -16,15 +19,16 @@ const LABELS = {
   es: { latest: "Último", archive: "Archivo", beats: "Temas", about: "Sobre" },
 };
 
-export default function SiteNav({ locale, activeSegment }) {
+export default function SiteNav({ locale }) {
+  const segment = useSelectedLayoutSegment();
   const labels = LABELS[locale] || LABELS.en;
 
   return (
     <nav className={styles.nav}>
       {NAV_ITEMS.map((item) => {
         const isActive =
-          (item.href === "" && !activeSegment) ||
-          (item.href !== "" && activeSegment === item.href.slice(1));
+          (item.href === "" && !segment) ||
+          (item.href !== "" && segment === item.href.slice(1));
         return (
           <Link
             key={item.key}
