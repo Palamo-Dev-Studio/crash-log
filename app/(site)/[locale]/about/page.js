@@ -87,7 +87,7 @@ const FALLBACK_MASTHEAD = [
   },
 ];
 
-function FallbackAbout({ locale }) {
+function FallbackAbout({ locale, about }) {
   const isEs = locale === "es";
 
   return (
@@ -147,18 +147,24 @@ function FallbackAbout({ locale }) {
         <h2 className={styles.sectionHeading}>
           {isEs ? "── LA REDACCIÓN ──" : "── THE MASTHEAD ──"}
         </h2>
-        {FALLBACK_MASTHEAD.map((agent) => (
-          <AgentCard
-            key={agent.name}
-            name={agent.name}
-            role={agent.role}
-            agentType={agent.agentType}
-            model={agent.model}
-            color={agent.color}
-            bio={agent.bio}
-            locale={locale}
-          />
-        ))}
+        {FALLBACK_MASTHEAD.map((agent) => {
+          const sanityAgent = about?.masthead?.find(
+            (a) => a.name === agent.name
+          );
+          return (
+            <AgentCard
+              key={agent.name}
+              name={agent.name}
+              role={agent.role}
+              agentType={agent.agentType}
+              model={agent.model}
+              color={agent.color}
+              bio={agent.bio}
+              image={sanityAgent?.avatar}
+              locale={locale}
+            />
+          );
+        })}
       </section>
 
       <section>
@@ -441,7 +447,7 @@ export default async function AboutPage({ params }) {
 
   const hasSpanish = about?.introParagraph?.es;
   if (!about || (locale === "es" && !hasSpanish)) {
-    return <FallbackAbout locale={locale} />;
+    return <FallbackAbout locale={locale} about={about} />;
   }
 
   return <SanityAbout about={about} locale={locale} />;
