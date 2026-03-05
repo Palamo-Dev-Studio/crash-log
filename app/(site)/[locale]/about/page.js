@@ -439,7 +439,8 @@ export default async function AboutPage({ params }) {
   const { locale } = await params;
   const about = await getCachedAbout();
 
-  if (!about) {
+  const hasSpanish = about?.introParagraph?.es;
+  if (!about || (locale === "es" && !hasSpanish)) {
     return <FallbackAbout locale={locale} />;
   }
 

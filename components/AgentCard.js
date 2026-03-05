@@ -32,10 +32,10 @@ export default function AgentCard({
       <div className={styles.avatar} style={{ borderColor: `${color}33` }}>
         {image ? (
           <Image
-            src={urlFor(image).width(144).height(144).url()}
+            src={urlFor(image).width(192).height(192).url()}
             alt={name}
-            width={144}
-            height={144}
+            width={192}
+            height={192}
             className={styles.avatarImage}
           />
         ) : (
