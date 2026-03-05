@@ -3,11 +3,11 @@
 ## Current State
 
 - **Branch:** `main`
-- **Build:** `scripts/verify.sh` passes cleanly (230 tests + 30 static pages, Next.js 16.1.6 Turbopack)
-- **Tests:** 230 unit/component/integration tests (Vitest, 25 files) + 14 e2e tests (Playwright) = 244 total
+- **Build:** `scripts/verify.sh` passes cleanly (253 tests + 32 static pages, Next.js 16.1.6 Turbopack)
+- **Tests:** 253 unit/component/integration tests (Vitest, 28 files) + 14 e2e tests (Playwright) = 267 total
 - **Verification script:** `scripts/verify.sh` — runs lint, format check, tests, then build; exits non-zero on failure
-- **Components:** 17 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard + SubscribeForm)
-- **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/[locale]/feed.xml`, `/api/subscribe`, `/studio`, `/robots.txt`, `/sitemap.xml`
+- **Components:** 19 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard + SubscribeForm + ThankYouContent + BeehiivRecommendations)
+- **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/[locale]/subscribe/thank-you`, `/[locale]/feed.xml`, `/api/subscribe`, `/studio`, `/robots.txt`, `/sitemap.xml`
 - **Dynamic routes:** `/[locale]/opengraph-image`, `/[locale]/twitter-image`, `/[locale]/issue/[slug]/opengraph-image`, `/[locale]/issue/[slug]/twitter-image`
 - **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 19 published documents.
 
@@ -15,13 +15,16 @@
 
 - **Phases 1–8:** See TODO.md for full details. All core phases complete.
 - **Phase 9 (Beehiiv + Social Media):**
-  - **Social handles fixed:** Twitter `@thecrashlog` → `@crashLogNews` in metadata and JSON-LD. Instagram added to `sameAs`.
-  - **Footer social links:** X and Instagram text links (middot-separated) in Footer component. 2 new tests.
-  - **Subscribe API route:** `POST /api/subscribe` proxies to Beehiiv Subscriptions API. Email validation, 409 dedup handling, error normalization. 9 integration tests.
-  - **SubscribeForm component:** Client component with inline expansion UX (idle → expanded → loading → success/error). Bilingual labels (EN/ES). 16 unit tests.
-  - **Header updated:** Placeholder `<button>Subscribe</button>` replaced with `<SubscribeForm>`. Subscribe styles moved to SubscribeForm.module.css.
-  - **Review fixes:** Server-side email `trim()` before validation. Email input `aria-label` localized for Spanish.
-  - **Live tested:** Beehiiv integration confirmed working with real credentials. Two test subscribers created.
+  - Social handles fixed, Footer social links, Subscribe API route, SubscribeForm component, Header updated.
+  - Live-tested Beehiiv integration. Credentials in `.env.local` and Vercel env vars.
+- **Phase 10 (Spanish Locale UI Chrome):**
+  - 7 components localized with inline LABELS constants. Locale prop threaded through callers.
+- **Post-Subscribe Thank-You Page:**
+  - `ThankYouContent` component: bilingual confirmation page (badge, heading, description, CTA link to home).
+  - `BeehiivRecommendations` component: env-gated widget slot (renders nothing until `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL` is set).
+  - `app/(site)/[locale]/subscribe/thank-you/page.js`: noindex transactional page.
+  - `SubscribeForm` modified: redirects to thank-you page after 1.5s on new-subscriber success. Already-subscribed users see inline message only (no redirect).
+  - 23 new tests: ThankYouContent (12), BeehiivRecommendations (6), SubscribeForm redirect (3), thank-you-page metadata (2).
 
 ## Deployment
 
@@ -30,15 +33,11 @@
 - All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
 - **Beehiiv:** Credentials in `.env.local` and Vercel env vars
 
-## What's Done (Latest)
-
-- **Spanish locale UI chrome:** 7 components localized with inline LABELS constants (Header tagline, SiteNav labels, NicosTransmission, StackTrace, IssueHeader prefix, DonateCTA, Footer credit). Locale prop threaded through 4 caller files. 10 new tests added.
-
 ## Immediate Next Step
 
-- **Deploy to Vercel:** Add `BEEHIIV_API_KEY` and `BEEHIIV_PUBLICATION_ID` to Vercel environment variables, then push to deploy.
+- **Push to deploy** the thank-you page to Vercel.
 - **Spanish Sanity content:** Gabo needs to populate `.es` fields for Issue #014 stories, titles, and Nico's Transmission in Sanity Studio.
-- **Run Prettier autofix on docs/reference JSX files** if needed (currently in ESLint ignore).
+- **Activate Beehiiv Recommendations:** When Beehiiv makes the widget available, set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL` and add the embed `<Script>` to `BeehiivRecommendations.js`.
 
 ## Known Issues / Deferred Items
 
@@ -52,4 +51,3 @@
 - Beehiiv returns 200 (not 409) for duplicate subscriptions — users see "You're in!" instead of "Already subscribed!" for re-subs. Acceptable UX.
 - No rate limiting on `/api/subscribe` — Vercel baseline DDoS protection covers it. Add IP-based throttling if abuse occurs.
 - No bot protection (honeypot/CAPTCHA) on subscribe form — add if spam becomes an issue.
-- Beehiiv recommendation modal redirect (post-subscribe "thank you" page) deferred for future iteration.

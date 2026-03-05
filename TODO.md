@@ -145,6 +145,19 @@
 - [x] verify.sh passes (230 tests + 30 static pages)
 - [ ] Populate Spanish content in Sanity for Issue #014 (editorial task for Gabo)
 
+## Post-Subscribe Thank-You Page
+
+- [x] Create `BeehiivRecommendations` env-gated widget slot component
+- [x] Create `ThankYouContent` bilingual page content component + CSS module
+- [x] Create `app/(site)/[locale]/subscribe/thank-you/page.js` with noindex metadata
+- [x] Modify `SubscribeForm` to redirect after 1.5s on new-subscriber success
+- [x] ThankYouContent tests (12 tests)
+- [x] BeehiivRecommendations tests (6 tests)
+- [x] SubscribeForm redirect tests (3 tests)
+- [x] Thank-you page metadata integration tests (2 tests)
+- [x] verify.sh passes (253 tests + 32 static pages)
+- [ ] Activate Beehiiv Recommendations widget when available (set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`)
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)
@@ -158,4 +171,4 @@
 - [x] Social profile URLs in JSON-LD
 - [x] Linter/formatter setup
 - [x] Add Beehiiv env vars to Vercel for production
-- [ ] Beehiiv recommendation modal redirect (post-subscribe thank-you page)
+- [x] Beehiiv recommendation modal redirect (post-subscribe thank-you page)

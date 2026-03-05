@@ -2,14 +2,28 @@
 // ABOUTME: Validates idle/expanded/loading/success/error states and bilingual labels.
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  act,
+  fireEvent,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
+const mockPush = vi.fn();
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: mockPush }),
+}));
+
 import SubscribeForm from "@/components/SubscribeForm";
 
 const originalFetch = global.fetch;
 
 beforeEach(() => {
   global.fetch = vi.fn();
+  mockPush.mockReset();
 });
 
 afterEach(() => {
@@ -213,5 +227,106 @@ describe("SubscribeForm", () => {
   it("defaults to en when locale is not provided", () => {
     render(<SubscribeForm />);
     expect(screen.getByText("Subscribe")).toBeInTheDocument();
+  });
+
+  describe("redirect behavior", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("redirects to /en/subscribe/thank-you after 1.5s on new subscription", async () => {
+      global.fetch.mockResolvedValueOnce({
+        json: () => Promise.resolve({ success: true }),
+      });
+
+      render(<SubscribeForm locale="en" />);
+
+      // Use fireEvent instead of userEvent to avoid timer conflicts
+      fireEvent.click(screen.getByText("Subscribe"));
+      fireEvent.change(screen.getByLabelText("Email"), {
+        target: { value: "test@example.com" },
+      });
+      await act(async () => {
+        fireEvent.submit(screen.getByLabelText("Email").closest("form"));
+      });
+
+      // Flush microtasks so fetch resolves and state updates
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(0);
+      });
+
+      expect(screen.getByRole("status")).toHaveTextContent("You\u2019re in!");
+      expect(mockPush).not.toHaveBeenCalled();
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1500);
+      });
+
+      expect(mockPush).toHaveBeenCalledWith("/en/subscribe/thank-you");
+    });
+
+    it("redirects to /es/subscribe/thank-you for Spanish locale", async () => {
+      global.fetch.mockResolvedValueOnce({
+        json: () => Promise.resolve({ success: true }),
+      });
+
+      render(<SubscribeForm locale="es" />);
+
+      fireEvent.click(screen.getByText("Suscribirse"));
+      fireEvent.change(screen.getByLabelText("Correo electr\u00F3nico"), {
+        target: { value: "test@example.com" },
+      });
+      await act(async () => {
+        fireEvent.submit(
+          screen.getByLabelText("Correo electr\u00F3nico").closest("form")
+        );
+      });
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(0);
+      });
+
+      expect(screen.getByRole("status")).toHaveTextContent("\u00A1Listo!");
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1500);
+      });
+
+      expect(mockPush).toHaveBeenCalledWith("/es/subscribe/thank-you");
+    });
+
+    it("does NOT redirect for already-subscribed users", async () => {
+      global.fetch.mockResolvedValueOnce({
+        json: () => Promise.resolve({ success: true, alreadySubscribed: true }),
+      });
+
+      render(<SubscribeForm locale="en" />);
+
+      fireEvent.click(screen.getByText("Subscribe"));
+      fireEvent.change(screen.getByLabelText("Email"), {
+        target: { value: "test@example.com" },
+      });
+      await act(async () => {
+        fireEvent.submit(screen.getByLabelText("Email").closest("form"));
+      });
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(0);
+      });
+
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "Already subscribed!"
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(3000);
+      });
+
+      expect(mockPush).not.toHaveBeenCalled();
+    });
   });
 });

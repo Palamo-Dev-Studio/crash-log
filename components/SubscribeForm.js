@@ -3,7 +3,8 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./SubscribeForm.module.css";
 
 const LABELS = {
@@ -36,6 +37,19 @@ export default function SubscribeForm({ locale = "en" }) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle");
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
+  const router = useRouter();
+  const redirectTimerRef = useRef(null);
+
+  useEffect(() => {
+    if (status === "success" && !alreadySubscribed) {
+      redirectTimerRef.current = setTimeout(() => {
+        router.push(`/${locale}/subscribe/thank-you`);
+      }, 1500);
+    }
+    return () => {
+      if (redirectTimerRef.current) clearTimeout(redirectTimerRef.current);
+    };
+  }, [status, alreadySubscribed, locale, router]);
 
   const l = LABELS[locale] || LABELS.en;
 
