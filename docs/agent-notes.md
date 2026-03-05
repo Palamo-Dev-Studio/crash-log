@@ -3,8 +3,8 @@
 ## Current State
 
 - **Branch:** `main`
-- **Build:** `scripts/verify.sh` passes cleanly (292 tests + 33 static pages, Next.js 16.1.6 Turbopack)
-- **Tests:** 292 unit/component/integration tests (Vitest, 29 files) + 14 e2e tests (Playwright) = 306 total
+- **Build:** `scripts/verify.sh` passes cleanly (296 tests + 33 static pages, Next.js 16.1.6 Turbopack)
+- **Tests:** 296 unit/component/integration tests (Vitest, 29 files) + 14 e2e tests (Playwright) = 310 total
 - **Verification script:** `scripts/verify.sh` — runs lint, format check, tests, then build; exits non-zero on failure
 - **Components:** 19 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard + SubscribeForm + ThankYouContent + BeehiivRecommendations)
 - **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/[locale]/subscribe/thank-you`, `/[locale]/feed.xml`, `/api/subscribe`, `/api/donate`, `/studio`, `/robots.txt`, `/sitemap.xml`
@@ -39,8 +39,20 @@
 - **Beehiiv:** Credentials in `.env.local` and Vercel env vars
 - **Stripe:** `STRIPE_SECRET_KEY` and `NEXT_PUBLIC_DONATIONS_ENABLED=true` set in `.env.local` and Vercel env vars. Live key active in production.
 
+## What's Done (continued)
+
+- **Logo & Agent Headshot Integration:**
+  - Favicon: `app/icon.png` (180×180) + `app/apple-icon.png` from circle logo. Old `favicon.ico` deleted.
+  - Header: logo image alongside wordmark text in flex layout (responsive 36→28px on mobile).
+  - Agent headshots: 6 PNG files in `assets/headshots/`, upload script at `scripts/upload-avatars.mjs`.
+  - AgentCard: conditional avatar rendering (Sanity image → `next/image`, fallback to colored dot).
+  - `next.config.mjs`: `images.remotePatterns` for `cdn.sanity.io` (required for Sanity-hosted images).
+  - About page passes `image={agent.avatar}` to AgentCard in SanityAbout section.
+  - **Headshots NOT YET uploaded to Sanity** — requires `SANITY_API_TOKEN` in `.env.local`. Run `node scripts/upload-avatars.mjs` once token is available.
+
 ## Immediate Next Step
 
+- **Upload agent headshots:** Generate a Sanity write token from manage.sanity.io, add as `SANITY_API_TOKEN` to `.env.local`, run `node scripts/upload-avatars.mjs`.
 - **Spanish Sanity content:** Gabo needs to populate `.es` fields for Issue #014 in Sanity Studio.
 - **Activate Beehiiv Recommendations:** When available, set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`.
 

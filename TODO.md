@@ -178,6 +178,24 @@
 - [x] Manual end-to-end test with real Stripe Checkout
 - [x] Switch to live Stripe key in Vercel production env
 
+## Logo & Agent Headshot Integration
+
+- [x] Convert circle logo to `app/icon.png` (180×180 PNG) and `app/apple-icon.png`
+- [x] Copy logo webp to `public/logo-circle.webp` for Header
+- [x] Delete old `app/favicon.ico`
+- [x] Update Header component: logo image + wordmark text in flex layout
+- [x] Update Header CSS: `.wordmark` flex container, `.logo`, `.wordmarkText`, mobile responsive
+- [x] Add Header logo tests (2 new tests)
+- [x] Rename `heashot.png` → `me.png`
+- [x] Create `scripts/upload-avatars.mjs` upload script
+- [x] Add `images.remotePatterns` for `cdn.sanity.io` in `next.config.mjs`
+- [x] Update AgentCard: `image` prop with conditional avatar/dot rendering
+- [x] Update AgentCard CSS: `overflow: hidden`, `.avatarImage`
+- [x] Pass `image={agent.avatar}` in About page SanityAbout section
+- [x] Add AgentCard avatar tests (2 new tests)
+- [x] verify.sh passes (296 tests + 33 static pages)
+- [ ] Upload headshots to Sanity (requires `SANITY_API_TOKEN` — run `node scripts/upload-avatars.mjs`)
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)
