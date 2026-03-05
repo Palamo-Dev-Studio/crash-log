@@ -64,8 +64,7 @@ export async function generateMetadata({ params }) {
     },
     twitter: {
       card: "summary_large_image",
-      // TODO: Update with actual Twitter handle before launch
-      site: "@thecrashlog",
+      site: "@crashLogNews",
     },
     robots: {
       index: true,
@@ -101,8 +100,10 @@ function WebSiteJsonLd() {
       "@type": "Organization",
       name: "The Crash Log",
       url: "https://crashlog.ai",
-      sameAs: ["https://twitter.com/thecrashlog"],
-      // TODO: Add logo property when OG image assets are ready
+      sameAs: [
+        "https://x.com/crashLogNews",
+        "https://www.instagram.com/crashlognews",
+      ],
     },
     inLanguage: ["en-US", "es-ES"],
   };
