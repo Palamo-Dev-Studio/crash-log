@@ -154,8 +154,8 @@
 - [x] CI pipeline
 - [x] Vercel deployment — deployed to `crashlog.ai`, CORS origin added, domain URLs updated
 - [x] OG image assets (dynamic via next/og ImageResponse)
-- [ ] Twitter handle verification (@crashLogNews) — external action
+- [x] Twitter handle verification (@crashLogNews) — verified
 - [x] Social profile URLs in JSON-LD
 - [x] Linter/formatter setup
-- [ ] Add Beehiiv env vars to Vercel for production
+- [x] Add Beehiiv env vars to Vercel for production
 - [ ] Beehiiv recommendation modal redirect (post-subscribe thank-you page)

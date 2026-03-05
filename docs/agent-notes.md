@@ -28,7 +28,7 @@
 - **Domain:** `crashlog.ai` (Vercel)
 - **Sanity CORS:** `https://crashlog.ai` added with credentials
 - All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
-- **Beehiiv:** Credentials in `.env.local` (must be added to Vercel env vars for production)
+- **Beehiiv:** Credentials in `.env.local` and Vercel env vars
 
 ## What's Done (Latest)
 
@@ -44,7 +44,7 @@
 
 - `@sanity/image-url` deprecation warning: default export deprecated, use named `createImageUrlBuilder` instead. Non-blocking.
 - Next.js 16 deprecation warning: middleware file convention deprecated in favor of "proxy". Functional, monitor.
-- Twitter handle (@crashLogNews) not yet verified on X — external action for Hector.
+- Twitter handle (@crashLogNews) verified on X.
 - `metadataBase` URL set to `https://crashlog.ai` — update if domain changes.
 - Sanity workspace name is `the-crash-log` (not `default`) — must pass `workspaceName` to MCP tools.
 - React DOM `priority` attribute warning in CoverImage mock — cosmetic, only appears in test output.
