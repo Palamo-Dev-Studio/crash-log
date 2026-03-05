@@ -5,10 +5,23 @@ import { createClient } from "@sanity/client";
 import { readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
-import { config } from "dotenv";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-config({ path: resolve(__dirname, "../.env.local") });
+
+function loadEnv(filePath) {
+  const content = readFileSync(filePath, "utf-8");
+  for (const line of content.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eqIndex = trimmed.indexOf("=");
+    if (eqIndex === -1) continue;
+    const key = trimmed.slice(0, eqIndex).trim();
+    const val = trimmed.slice(eqIndex + 1).trim();
+    if (!process.env[key]) process.env[key] = val;
+  }
+}
+
+loadEnv(resolve(__dirname, "../.env.local"));
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
