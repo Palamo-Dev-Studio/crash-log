@@ -95,6 +95,12 @@ function DonateCTAInner({ locale }) {
         }),
       });
 
+      if (!response.ok) {
+        setErrorMessage(labels.error);
+        setStatus("error");
+        return;
+      }
+
       const data = await response.json();
 
       if (data.success && data.url) {

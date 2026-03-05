@@ -118,6 +118,7 @@ describe("DonateCTA", () => {
   describe("form submission", () => {
     it("sends correct payload to /api/donate", async () => {
       global.fetch.mockResolvedValueOnce({
+        ok: true,
         json: () =>
           Promise.resolve({
             success: true,
@@ -126,6 +127,7 @@ describe("DonateCTA", () => {
       });
 
       // Prevent actual redirect
+      const originalLocation = window.location;
       delete window.location;
       window.location = { href: "" };
 
@@ -145,7 +147,7 @@ describe("DonateCTA", () => {
       });
 
       // Restore
-      window.location = location;
+      window.location = originalLocation;
     });
 
     it("shows loading state on submit", async () => {
@@ -168,12 +170,14 @@ describe("DonateCTA", () => {
 
       // Cleanup: resolve the pending fetch
       resolvePromise({
+        ok: true,
         json: () => Promise.resolve({ success: false, error: "test" }),
       });
     });
 
     it("redirects to Stripe URL on success", async () => {
       global.fetch.mockResolvedValueOnce({
+        ok: true,
         json: () =>
           Promise.resolve({
             success: true,
@@ -181,6 +185,7 @@ describe("DonateCTA", () => {
           }),
       });
 
+      const originalLocation = window.location;
       delete window.location;
       window.location = { href: "" };
 
@@ -195,11 +200,12 @@ describe("DonateCTA", () => {
         );
       });
 
-      window.location = location;
+      window.location = originalLocation;
     });
 
     it("shows error on API failure", async () => {
       global.fetch.mockResolvedValueOnce({
+        ok: true,
         json: () =>
           Promise.resolve({ success: false, error: "Payment service error" }),
       });
@@ -214,6 +220,26 @@ describe("DonateCTA", () => {
           "Payment service error"
         );
       });
+    });
+
+    it("shows error on non-ok HTTP response", async () => {
+      global.fetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: () => Promise.resolve({ error: "Internal Server Error" }),
+      });
+
+      const user = userEvent.setup();
+      render(<DonateCTA locale="en" />);
+
+      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+
+      await waitFor(() => {
+        expect(screen.getByRole("alert")).toHaveTextContent(
+          "Something went wrong. Try again."
+        );
+      });
+      expect(global.fetch).toHaveBeenCalledTimes(1);
     });
 
     it("shows error on network failure", async () => {

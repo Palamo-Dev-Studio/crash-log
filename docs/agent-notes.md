@@ -3,8 +3,8 @@
 ## Current State
 
 - **Branch:** `main`
-- **Build:** `scripts/verify.sh` passes cleanly (291 tests + 33 static pages, Next.js 16.1.6 Turbopack)
-- **Tests:** 291 unit/component/integration tests (Vitest, 29 files) + 14 e2e tests (Playwright) = 305 total
+- **Build:** `scripts/verify.sh` passes cleanly (292 tests + 33 static pages, Next.js 16.1.6 Turbopack)
+- **Tests:** 292 unit/component/integration tests (Vitest, 29 files) + 14 e2e tests (Playwright) = 306 total
 - **Verification script:** `scripts/verify.sh` — runs lint, format check, tests, then build; exits non-zero on failure
 - **Components:** 19 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard + SubscribeForm + ThankYouContent + BeehiivRecommendations)
 - **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/[locale]/subscribe/thank-you`, `/[locale]/feed.xml`, `/api/subscribe`, `/api/donate`, `/studio`, `/robots.txt`, `/sitemap.xml`
@@ -27,7 +27,7 @@
   - Thank-you toast: fixed-position overlay that slides in from top, covers the featured image area, auto-dismisses after 10 seconds (or manual close). Cleans `?donated=true` from URL via `router.replace`.
   - Tax disclaimer (EN/ES): "Contributions are not tax-deductible."
   - Env gating: `NEXT_PUBLIC_DONATIONS_ENABLED` (replaces old `NEXT_PUBLIC_STRIPE_DONATE_URL`).
-  - 40 new tests: 16 donate API integration + 24 DonateCTA component.
+  - 41 new tests: 16 donate API integration + 25 DonateCTA component.
   - `next/navigation` mock updated with `useSearchParams` + `setMockSearchParams`.
   - Stripe credentials set in `.env.local` and Vercel. Live-tested end-to-end with Stripe test key.
 
