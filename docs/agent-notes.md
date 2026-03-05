@@ -3,8 +3,8 @@
 ## Current State
 
 - **Branch:** `main`
-- **Build:** `scripts/verify.sh` passes cleanly (220 tests + 29 static pages, Next.js 16.1.6 Turbopack)
-- **Tests:** 220 unit/component/integration tests (Vitest, 26 files) + 14 e2e tests (Playwright) = 234 total
+- **Build:** `scripts/verify.sh` passes cleanly (230 tests + 30 static pages, Next.js 16.1.6 Turbopack)
+- **Tests:** 230 unit/component/integration tests (Vitest, 25 files) + 14 e2e tests (Playwright) = 244 total
 - **Verification script:** `scripts/verify.sh` — runs lint, format check, tests, then build; exits non-zero on failure
 - **Components:** 17 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard + SubscribeForm)
 - **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/[locale]/feed.xml`, `/api/subscribe`, `/studio`, `/robots.txt`, `/sitemap.xml`
@@ -30,9 +30,14 @@
 - All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
 - **Beehiiv:** Credentials in `.env.local` (must be added to Vercel env vars for production)
 
+## What's Done (Latest)
+
+- **Spanish locale UI chrome:** 7 components localized with inline LABELS constants (Header tagline, SiteNav labels, NicosTransmission, StackTrace, IssueHeader prefix, DonateCTA, Footer credit). Locale prop threaded through 4 caller files. 10 new tests added.
+
 ## Immediate Next Step
 
 - **Deploy to Vercel:** Add `BEEHIIV_API_KEY` and `BEEHIIV_PUBLICATION_ID` to Vercel environment variables, then push to deploy.
+- **Spanish Sanity content:** Gabo needs to populate `.es` fields for Issue #014 stories, titles, and Nico's Transmission in Sanity Studio.
 - **Run Prettier autofix on docs/reference JSX files** if needed (currently in ESLint ignore).
 
 ## Known Issues / Deferred Items

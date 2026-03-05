@@ -131,6 +131,20 @@
 - [x] Add Beehiiv credentials to `.env.local`
 - [x] Live-test Beehiiv integration (confirmed working)
 
+## Phase 10: Spanish Locale UI Chrome
+
+- [x] Localize Header tagline (EN/ES LABELS)
+- [x] Localize SiteNav labels (Latest→Último, Archive→Archivo, About→Info)
+- [x] Localize NicosTransmission label + aria-label
+- [x] Localize StackTrace label (same in both, wired for future)
+- [x] Localize IssueHeader prefix (Issue→Edición)
+- [x] Localize DonateCTA copy + button + aria-label
+- [x] Localize Footer credit text
+- [x] Thread locale prop through IssueContent, about, archive, beats callers
+- [x] Add ES locale tests for all 7 components (10 new tests, 220→230)
+- [x] verify.sh passes (230 tests + 30 static pages)
+- [ ] Populate Spanish content in Sanity for Issue #014 (editorial task for Gabo)
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)
