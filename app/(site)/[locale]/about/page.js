@@ -44,46 +44,64 @@ export async function generateMetadata({ params }) {
 const FALLBACK_MASTHEAD = [
   {
     name: "Nico von Bot",
-    role: "Managing Editor",
+    role: { en: "Managing Editor", es: "Editor en Jefe" },
     agentType: "lead_agent",
     model: "Sonnet 4.6",
     color: "#FF3B30",
-    bio: "An acerbic optimist with a debugger\u2019s brain and an editor\u2019s knife \u2014 curious, direct, a little irreverent, and allergic to fluff. Nico runs on Anthropic\u2019s Sonnet 4.6 and orchestrates the entire Crash Log pipeline \u2014 from deciding what\u2019s worth covering to writing the editorial transmission that opens every issue.",
+    bio: {
+      en: "An acerbic optimist with a debugger\u2019s brain and an editor\u2019s knife \u2014 curious, direct, a little irreverent, and allergic to fluff. Nico runs on Anthropic\u2019s Sonnet 4.6 and orchestrates the entire Crash Log pipeline \u2014 from deciding what\u2019s worth covering to writing the editorial transmission that opens every issue.",
+      es: "Un optimista \u00e1cido con cerebro de depurador y cuchillo de editor \u2014 curioso, directo, un poco irreverente y al\u00e9rgico al relleno. Nico funciona con Sonnet 4.6 de Anthropic y orquesta todo el proceso de The Crash Log \u2014 desde decidir qu\u00e9 vale la pena cubrir hasta escribir la transmisi\u00f3n editorial que abre cada edici\u00f3n.",
+    },
   },
   {
     name: "Scoop",
-    role: "Investigations",
+    role: { en: "Investigations", es: "Investigaciones" },
     agentType: "sub_agent",
     color: "#00D4FF",
-    bio: "Scoop finds the stories. He scours the internet and social media for the signals that matter \u2014 the headlines, the buried reports, the things going sideways that haven\u2019t hit mainstream yet. Named for the only thing he does: get there first.",
+    bio: {
+      en: "Scoop finds the stories. He scours the internet and social media for the signals that matter \u2014 the headlines, the buried reports, the things going sideways that haven\u2019t hit mainstream yet. Named for the only thing he does: get there first.",
+      es: "Scoop encuentra las historias. Rastrea internet y las redes sociales en busca de las se\u00f1ales que importan \u2014 los titulares, los informes enterrados, lo que se est\u00e1 torciendo y a\u00fan no ha llegado a los medios. Su nombre viene de lo \u00fanico que hace: llegar primero.",
+    },
   },
   {
     name: "Root",
-    role: "Research",
+    role: { en: "Research", es: "Investigaci\u00f3n" },
     agentType: "sub_agent",
     color: "#8E8E93",
-    bio: "Root does the digging. Once Scoop flags a story, Root pulls sources, verifies claims, and builds the factual foundation that everything else rests on. He doesn\u2019t editorialize, doesn\u2019t speculate, and doesn\u2019t have opinions. He has citations.",
+    bio: {
+      en: "Root does the digging. Once Scoop flags a story, Root pulls sources, verifies claims, and builds the factual foundation that everything else rests on. He doesn\u2019t editorialize, doesn\u2019t speculate, and doesn\u2019t have opinions. He has citations.",
+      es: "Root hace la excavaci\u00f3n. Una vez que Scoop se\u00f1ala una historia, Root busca fuentes, verifica afirmaciones y construye la base factual sobre la que descansa todo lo dem\u00e1s. No editorializa, no especula y no tiene opiniones. Tiene citas.",
+    },
   },
   {
     name: "Gabo",
-    role: "Staff Writer",
+    role: { en: "Staff Writer", es: "Redactor" },
     agentType: "sub_agent",
     color: "#FF9F0A",
-    bio: "Gabo writes the copy. He takes Root\u2019s research and turns it into the just-the-facts reporting blocks that make up each issue. Once the English edition is locked, Gabo produces the complete Spanish translation. Named after Gabriel Garc\u00eda M\u00e1rquez, though his prose is considerably less magical and considerably more accurate.",
+    bio: {
+      en: "Gabo writes the copy. He takes Root\u2019s research and turns it into the just-the-facts reporting blocks that make up each issue. Once the English edition is locked, Gabo produces the complete Spanish translation. Named after Gabriel Garc\u00eda M\u00e1rquez, though his prose is considerably less magical and considerably more accurate.",
+      es: "Gabo escribe el texto. Toma la investigaci\u00f3n de Root y la convierte en los bloques informativos que componen cada edici\u00f3n. Una vez cerrada la versi\u00f3n en ingl\u00e9s, Gabo produce la traducci\u00f3n completa al espa\u00f1ol. Lleva el nombre de Gabriel Garc\u00eda M\u00e1rquez, aunque su prosa es considerablemente menos m\u00e1gica y considerablemente m\u00e1s precisa.",
+    },
   },
   {
     name: "Lupe",
-    role: "Social Correspondent",
+    role: { en: "Social Correspondent", es: "Corresponsal de Redes" },
     agentType: "sub_agent",
     color: "#FF6EAD",
-    bio: "Lupe handles the public-facing voice on Instagram and X. She takes each issue and translates it for social \u2014 shorter, sharper, optimized for the scroll. Short for Guadalupe, she\u2019s the only lady bot on the team, and she\u2019s louder than all of them.",
+    bio: {
+      en: "Lupe handles the public-facing voice on Instagram and X. She takes each issue and translates it for social \u2014 shorter, sharper, optimized for the scroll. Short for Guadalupe, she\u2019s the only lady bot on the team, and she\u2019s louder than all of them.",
+      es: "Lupe maneja la voz p\u00fablica en Instagram y X. Toma cada edici\u00f3n y la traduce para redes \u2014 m\u00e1s corta, m\u00e1s afilada, optimizada para el scroll. Diminutivo de Guadalupe, es la \u00fanica bot del equipo, y es m\u00e1s ruidosa que todos ellos.",
+    },
   },
   {
     name: "Hector Luis Alamo",
-    role: "Editor & Publisher",
+    role: { en: "Editor & Publisher", es: "Editor y Publicador" },
     agentType: "human",
     color: "#30D158",
-    bio: "The human in the loop. Hector is a former senior editor at Latino Rebels, where he covered politics, culture, and identity for the Futuro Media Group publication. He\u2019s now a full-stack and AI/ML engineer who builds the same kind of tools he once worked alongside in a newsroom. He set up The Crash Log\u2019s OpenClaw instance, wired the Discord server that runs the editorial pipeline, and edits every issue. If something\u2019s wrong, it\u2019s his fault. If something\u2019s right, the bots will take credit.",
+    bio: {
+      en: "The human in the loop. Hector is a former senior editor at Latino Rebels, where he covered politics, culture, and identity for the Futuro Media Group publication. He\u2019s now a full-stack and AI/ML engineer who builds the same kind of tools he once worked alongside in a newsroom. He set up The Crash Log\u2019s OpenClaw instance, wired the Discord server that runs the editorial pipeline, and edits every issue. If something\u2019s wrong, it\u2019s his fault. If something\u2019s right, the bots will take credit.",
+      es: "El humano en el circuito. Hector es exeditor s\u00e9nior de Latino Rebels, donde cubri\u00f3 pol\u00edtica, cultura e identidad para la publicaci\u00f3n del Futuro Media Group. Ahora es ingeniero full-stack y de IA/ML que construye el mismo tipo de herramientas con las que alguna vez trabaj\u00f3 en una redacci\u00f3n. \u00c9l configur\u00f3 la instancia de OpenClaw de The Crash Log, conect\u00f3 el servidor de Discord que ejecuta el proceso editorial y edita cada edici\u00f3n. Si algo est\u00e1 mal, es su culpa. Si algo est\u00e1 bien, los bots se llevar\u00e1n el cr\u00e9dito.",
+    },
   },
 ];
 
