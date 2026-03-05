@@ -134,7 +134,7 @@
 ## Phase 10: Spanish Locale UI Chrome
 
 - [x] Localize Header tagline (EN/ES LABELS)
-- [x] Localize SiteNav labels (Latest→Último, Archive→Archivo, About→Info)
+- [x] Localize SiteNav labels (Latest→Último, Archive→Archivo, Beats→Temas, About→Sobre)
 - [x] Localize NicosTransmission label + aria-label
 - [x] Localize StackTrace label (same in both, wired for future)
 - [x] Localize IssueHeader prefix (Issue→Edición)
@@ -194,7 +194,13 @@
 - [x] Pass `image={agent.avatar}` in About page SanityAbout section
 - [x] Add AgentCard avatar tests (2 new tests)
 - [x] verify.sh passes (296 tests + 33 static pages)
-- [ ] Upload headshots to Sanity (requires `SANITY_API_TOKEN` — run `node scripts/upload-avatars.mjs`)
+- [x] Upload headshots to Sanity (all 6 agents have avatars)
+- [x] Enlarge avatars to 120×120 (88px mobile), improve typography hierarchy
+- [x] Spanish About page: fall back to FallbackAbout with Sanity avatars when no ES Sanity content
+- [x] Localize fallback masthead bios and roles (EN/ES)
+- [x] Update contact email to `info@palamostudio.com` (code + Sanity), remove duplicate email
+- [x] Fix loadEnv: ENOENT handling + quote stripping (CodeRabbit review)
+- [x] verify.sh passes (296 tests + 33 static pages)
 
 ## Deferred
 

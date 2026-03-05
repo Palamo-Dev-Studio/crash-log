@@ -9,7 +9,7 @@
 - **Components:** 19 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard + SubscribeForm + ThankYouContent + BeehiivRecommendations)
 - **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/[locale]/subscribe/thank-you`, `/[locale]/feed.xml`, `/api/subscribe`, `/api/donate`, `/studio`, `/robots.txt`, `/sitemap.xml`
 - **Dynamic routes:** `/[locale]/opengraph-image`, `/[locale]/twitter-image`, `/[locale]/issue/[slug]/opengraph-image`, `/[locale]/issue/[slug]/twitter-image`
-- **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 19 published documents.
+- **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 19 published documents. All 6 agents have avatar images.
 
 ## What's Done
 
@@ -19,17 +19,23 @@
   - Live-tested Beehiiv integration. Credentials in `.env.local` and Vercel env vars.
 - **Phase 10 (Spanish Locale UI Chrome):**
   - 7 components localized with inline LABELS constants. Locale prop threaded through callers.
+  - SiteNav Spanish labels: Último, Archivo, Temas, Sobre.
 - **Post-Subscribe Thank-You Page:**
   - `ThankYouContent` + `BeehiivRecommendations` components, thank-you route, SubscribeForm redirect.
 - **Stripe Checkout Donation ("Feed the Bots"):**
-  - `POST /api/donate` route: creates Stripe Checkout Sessions with inline `price_data`, validates amount (min $3 / max $999). Base URL derived from `request.url` (works in dev and production).
-  - `DonateCTA` converted to client component: amount input ($5 default), loading/error states, `Suspense` boundary for `useSearchParams()`.
-  - Thank-you toast: fixed-position overlay that slides in from top, covers the featured image area, auto-dismisses after 10 seconds (or manual close). Cleans `?donated=true` from URL via `router.replace`.
-  - Tax disclaimer (EN/ES): "Contributions are not tax-deductible."
-  - Env gating: `NEXT_PUBLIC_DONATIONS_ENABLED` (replaces old `NEXT_PUBLIC_STRIPE_DONATE_URL`).
-  - 41 new tests: 16 donate API integration + 25 DonateCTA component.
-  - `next/navigation` mock updated with `useSearchParams` + `setMockSearchParams`.
-  - Stripe credentials set in `.env.local` and Vercel. Live-tested end-to-end with Stripe test key.
+  - `POST /api/donate` route, `DonateCTA` client component, thank-you toast, tax disclaimer, env gating.
+  - Stripe credentials in `.env.local` and Vercel. Live key active in production.
+- **Logo & Agent Headshot Integration:**
+  - Favicon: `app/icon.png` (180×180) + `app/apple-icon.png`. Old `favicon.ico` deleted.
+  - Header: logo image (36×36, 28px mobile) alongside wordmark text in flex layout.
+  - Agent headshots: 6 PNGs uploaded to Sanity via `scripts/upload-avatars.mjs`. All 6 agents have avatars.
+  - AgentCard: avatar 120×120 (88px mobile), conditional rendering (Sanity image or colored dot fallback).
+  - AgentCard typography: name 22px, role 16px, tag 11px `--text-tertiary`.
+  - `next.config.mjs`: `images.remotePatterns` for `cdn.sanity.io`.
+  - About page: Spanish locale uses `FallbackAbout` with hardcoded bilingual content + Sanity avatars.
+  - Fallback masthead bios and roles fully localized (EN/ES).
+  - Contact email updated to `info@palamostudio.com` (code + Sanity).
+  - Duplicate email in SanityAbout contact section removed.
 
 ## Deployment
 
@@ -39,20 +45,9 @@
 - **Beehiiv:** Credentials in `.env.local` and Vercel env vars
 - **Stripe:** `STRIPE_SECRET_KEY` and `NEXT_PUBLIC_DONATIONS_ENABLED=true` set in `.env.local` and Vercel env vars. Live key active in production.
 
-## What's Done (continued)
-
-- **Logo & Agent Headshot Integration:**
-  - Favicon: `app/icon.png` (180×180) + `app/apple-icon.png` from circle logo. Old `favicon.ico` deleted.
-  - Header: logo image alongside wordmark text in flex layout (responsive 36→28px on mobile).
-  - Agent headshots: 6 PNG files in `assets/headshots/`, upload script at `scripts/upload-avatars.mjs`.
-  - AgentCard: conditional avatar rendering (Sanity image → `next/image`, fallback to colored dot).
-  - `next.config.mjs`: `images.remotePatterns` for `cdn.sanity.io` (required for Sanity-hosted images).
-  - About page passes `image={agent.avatar}` to AgentCard in SanityAbout section.
-  - **Headshots NOT YET uploaded to Sanity** — requires `SANITY_API_TOKEN` in `.env.local`. Run `node scripts/upload-avatars.mjs` once token is available.
-
 ## Immediate Next Step
 
-- **Upload agent headshots:** Generate a Sanity write token from manage.sanity.io, add as `SANITY_API_TOKEN` to `.env.local`, run `node scripts/upload-avatars.mjs`.
+- **Push to deploy** logo, headshots, and about page fixes to Vercel.
 - **Spanish Sanity content:** Gabo needs to populate `.es` fields for Issue #014 in Sanity Studio.
 - **Activate Beehiiv Recommendations:** When available, set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`.
 
