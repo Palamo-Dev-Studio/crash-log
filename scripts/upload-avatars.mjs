@@ -9,14 +9,28 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function loadEnv(filePath) {
-  const content = readFileSync(filePath, "utf-8");
+  let content;
+  try {
+    content = readFileSync(filePath, "utf-8");
+  } catch (err) {
+    if (err.code === "ENOENT") {
+      console.error(
+        `Missing ${filePath} — copy .env.example and fill in values.`
+      );
+      process.exit(1);
+    }
+    throw err;
+  }
   for (const line of content.split("\n")) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
     const eqIndex = trimmed.indexOf("=");
     if (eqIndex === -1) continue;
     const key = trimmed.slice(0, eqIndex).trim();
-    const val = trimmed.slice(eqIndex + 1).trim();
+    const val = trimmed
+      .slice(eqIndex + 1)
+      .trim()
+      .replace(/^(['"])(.*)\1$/, "$2");
     if (!process.env[key]) process.env[key] = val;
   }
 }
