@@ -2,6 +2,7 @@
 // ABOUTME: Accepts a children slot for LanguageToggle or other header actions.
 
 import Link from "next/link";
+import Image from "next/image";
 import SubscribeForm from "./SubscribeForm";
 import styles from "./Header.module.css";
 
@@ -18,7 +19,14 @@ export default function Header({ locale, children }) {
       <div className={styles.inner}>
         <div>
           <Link href={`/${locale}`} className={styles.wordmark}>
-            The Crash Log
+            <Image
+              src="/logo-circle.webp"
+              alt=""
+              width={36}
+              height={36}
+              className={styles.logo}
+            />
+            <span className={styles.wordmarkText}>The Crash Log</span>
           </Link>
           <div className={styles.tagline}>{labels.tagline}</div>
         </div>

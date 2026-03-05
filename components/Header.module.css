@@ -13,6 +13,18 @@
 }
 
 .wordmark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logo {
+  border-radius: 50%;
+  display: block;
+}
+
+.wordmarkText {
   font-family: var(--font-display);
   font-size: 28px;
   font-weight: 700;
@@ -20,7 +32,6 @@
   letter-spacing: -0.02em;
   line-height: 1;
   text-transform: uppercase;
-  text-decoration: none;
 }
 
 .tagline {
@@ -43,5 +54,10 @@
   .inner {
     flex-wrap: wrap;
     gap: 16px;
+  }
+
+  .logo {
+    width: 28px;
+    height: 28px;
   }
 }

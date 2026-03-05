@@ -12,6 +12,12 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+vi.mock("next/image", () => ({
+  default: ({ src, alt, width, height, ...props }) => (
+    <img src={src} alt={alt} width={width} height={height} {...props} />
+  ),
+}));
+
 vi.mock("@/components/SubscribeForm", () => ({
   default: ({ locale }) => (
     <div data-testid="subscribe-form" data-locale={locale} />
@@ -66,5 +72,20 @@ describe("Header", () => {
       </Header>
     );
     expect(screen.getByText("Toggle")).toBeInTheDocument();
+  });
+
+  it("renders logo image in header", () => {
+    render(<Header locale="en" />);
+    const logo = document.querySelector('img[src="/logo-circle.webp"]');
+    expect(logo).toBeInTheDocument();
+    expect(logo).toHaveAttribute("alt", "");
+  });
+
+  it("logo and wordmark text are within the same link", () => {
+    render(<Header locale="en" />);
+    const link = screen.getByText("The Crash Log").closest("a");
+    const logo = link.querySelector('img[src="/logo-circle.webp"]');
+    expect(logo).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/en");
   });
 });

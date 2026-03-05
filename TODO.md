@@ -176,7 +176,7 @@
 - [x] Set `STRIPE_SECRET_KEY` in Vercel env vars (test key for preview, live key for production)
 - [x] Set `NEXT_PUBLIC_DONATIONS_ENABLED=true` in Vercel env vars
 - [x] Manual end-to-end test with real Stripe Checkout
-- [ ] Switch to live Stripe key in Vercel production env when ready for real donations
+- [x] Switch to live Stripe key in Vercel production env
 
 ## Deferred
 

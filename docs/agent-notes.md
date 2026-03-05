@@ -37,12 +37,10 @@
 - **Sanity CORS:** `https://crashlog.ai` added with credentials
 - All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
 - **Beehiiv:** Credentials in `.env.local` and Vercel env vars
-- **Stripe:** `STRIPE_SECRET_KEY` and `NEXT_PUBLIC_DONATIONS_ENABLED=true` set in `.env.local` and Vercel env vars. Use test key for preview, live key for production.
+- **Stripe:** `STRIPE_SECRET_KEY` and `NEXT_PUBLIC_DONATIONS_ENABLED=true` set in `.env.local` and Vercel env vars. Live key active in production.
 
 ## Immediate Next Step
 
-- **Push to deploy** the Stripe donation integration to Vercel.
-- **Switch to live Stripe key** in Vercel production env vars when ready to accept real donations.
 - **Spanish Sanity content:** Gabo needs to populate `.es` fields for Issue #014 in Sanity Studio.
 - **Activate Beehiiv Recommendations:** When available, set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`.
 
