@@ -1,7 +1,8 @@
-// ABOUTME: Site header with masthead wordmark, tagline, and subscribe button.
+// ABOUTME: Site header with masthead wordmark, tagline, and subscribe form.
 // ABOUTME: Accepts a children slot for LanguageToggle or other header actions.
 
 import Link from "next/link";
+import SubscribeForm from "./SubscribeForm";
 import styles from "./Header.module.css";
 
 export default function Header({ locale, children }) {
@@ -16,7 +17,7 @@ export default function Header({ locale, children }) {
         </div>
         <div className={styles.actions}>
           {children}
-          <button className={styles.subscribe}>Subscribe</button>
+          <SubscribeForm locale={locale} />
         </div>
       </div>
     </header>

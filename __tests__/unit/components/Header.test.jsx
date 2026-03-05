@@ -1,5 +1,5 @@
 // ABOUTME: Unit tests for Header component.
-// ABOUTME: Validates wordmark, tagline, subscribe button, children slot, and locale link.
+// ABOUTME: Validates wordmark, tagline, subscribe form, children slot, and locale link.
 
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
@@ -9,6 +9,12 @@ vi.mock("next/link", () => ({
     <a href={href} {...props}>
       {children}
     </a>
+  ),
+}));
+
+vi.mock("@/components/SubscribeForm", () => ({
+  default: ({ locale }) => (
+    <div data-testid="subscribe-form" data-locale={locale} />
   ),
 }));
 
@@ -27,9 +33,11 @@ describe("Header", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders Subscribe button", () => {
+  it("renders SubscribeForm with locale", () => {
     render(<Header locale="en" />);
-    expect(screen.getByText("Subscribe")).toBeInTheDocument();
+    const form = screen.getByTestId("subscribe-form");
+    expect(form).toBeInTheDocument();
+    expect(form).toHaveAttribute("data-locale", "en");
   });
 
   it("wordmark links to locale home", () => {
