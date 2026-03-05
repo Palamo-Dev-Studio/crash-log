@@ -34,7 +34,12 @@ describe("StackTrace", () => {
   });
 
   it("renders Stack Trace label", () => {
-    render(<StackTrace items={items} />);
+    render(<StackTrace locale="en" items={items} />);
+    expect(screen.getByText("Stack Trace")).toBeInTheDocument();
+  });
+
+  it("renders Stack Trace label for es locale", () => {
+    render(<StackTrace locale="es" items={items} />);
     expect(screen.getByText("Stack Trace")).toBeInTheDocument();
   });
 

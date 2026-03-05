@@ -3,12 +3,26 @@
 
 import styles from "./IssueHeader.module.css";
 
-export default function IssueHeader({ issueNumber, date, title, subtitle }) {
+const LABELS = {
+  en: { issuePrefix: "Issue #" },
+  es: { issuePrefix: "Edición #" },
+};
+
+export default function IssueHeader({
+  locale,
+  issueNumber,
+  date,
+  title,
+  subtitle,
+}) {
+  const labels = LABELS[locale] || LABELS.en;
+
   return (
     <section className={styles.header}>
       <div className={styles.meta}>
         <span className={styles.dot} aria-hidden="true" />
-        Issue #{String(issueNumber).padStart(3, "0")} &middot; {date}
+        {labels.issuePrefix}
+        {String(issueNumber).padStart(3, "0")} &middot; {date}
       </div>
       <h1 className={styles.title}>{title}</h1>
       {subtitle && <p className={styles.subtitle}>{subtitle}</p>}

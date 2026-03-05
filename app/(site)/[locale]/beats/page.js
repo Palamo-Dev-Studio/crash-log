@@ -84,7 +84,7 @@ export default async function BeatsPage({ params }) {
         </div>
       )}
 
-      <Footer />
+      <Footer locale={locale} />
     </main>
   );
 }

@@ -69,7 +69,7 @@ export default async function ArchivePage({ params }) {
         ))
       )}
 
-      <Footer />
+      <Footer locale={locale} />
     </main>
   );
 }

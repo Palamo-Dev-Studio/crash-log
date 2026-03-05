@@ -3,10 +3,17 @@
 
 import styles from "./NicosTransmission.module.css";
 
-export default function NicosTransmission({ children, signature }) {
+const LABELS = {
+  en: { title: "Nico\u2019s Transmission" },
+  es: { title: "La Transmisión de Nico" },
+};
+
+export default function NicosTransmission({ locale, children, signature }) {
+  const labels = LABELS[locale] || LABELS.en;
+
   return (
-    <aside className={styles.transmission} aria-label="Nico's Transmission">
-      <div className={styles.label}>Nico&apos;s Transmission</div>
+    <aside className={styles.transmission} aria-label={labels.title}>
+      <div className={styles.label}>{labels.title}</div>
       <div className={styles.body}>{children}</div>
       {signature && <div className={styles.sig}>{signature}</div>}
     </aside>

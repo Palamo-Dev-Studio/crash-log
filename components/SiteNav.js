@@ -5,13 +5,20 @@ import Link from "next/link";
 import styles from "./SiteNav.module.css";
 
 const NAV_ITEMS = [
-  { label: "Latest", href: "" },
-  { label: "Archive", href: "/archive" },
-  { label: "Beats", href: "/beats" },
-  { label: "About", href: "/about" },
+  { key: "latest", href: "" },
+  { key: "archive", href: "/archive" },
+  { key: "beats", href: "/beats" },
+  { key: "about", href: "/about" },
 ];
 
+const LABELS = {
+  en: { latest: "Latest", archive: "Archive", beats: "Beats", about: "About" },
+  es: { latest: "Último", archive: "Archivo", beats: "Beats", about: "Info" },
+};
+
 export default function SiteNav({ locale, activeSegment }) {
+  const labels = LABELS[locale] || LABELS.en;
+
   return (
     <nav className={styles.nav}>
       {NAV_ITEMS.map((item) => {
@@ -20,11 +27,11 @@ export default function SiteNav({ locale, activeSegment }) {
           (item.href !== "" && activeSegment === item.href.slice(1));
         return (
           <Link
-            key={item.label}
+            key={item.key}
             href={`/${locale}${item.href}`}
             className={`${styles.link} ${isActive ? styles.active : ""}`}
           >
-            {item.label}
+            {labels[item.key]}
           </Link>
         );
       })}

@@ -20,6 +20,7 @@
   - **Subscribe API route:** `POST /api/subscribe` proxies to Beehiiv Subscriptions API. Email validation, 409 dedup handling, error normalization. 9 integration tests.
   - **SubscribeForm component:** Client component with inline expansion UX (idle → expanded → loading → success/error). Bilingual labels (EN/ES). 16 unit tests.
   - **Header updated:** Placeholder `<button>Subscribe</button>` replaced with `<SubscribeForm>`. Subscribe styles moved to SubscribeForm.module.css.
+  - **Review fixes:** Server-side email `trim()` before validation. Email input `aria-label` localized for Spanish.
   - **Live tested:** Beehiiv integration confirmed working with real credentials. Two test subscribers created.
 
 ## Deployment

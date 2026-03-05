@@ -6,8 +6,14 @@
 import { useState } from "react";
 import styles from "./StackTrace.module.css";
 
-export default function StackTrace({ items }) {
+const LABELS = {
+  en: { title: "Stack Trace" },
+  es: { title: "Stack Trace" },
+};
+
+export default function StackTrace({ locale, items }) {
   const [open, setOpen] = useState(true);
+  const labels = LABELS[locale] || LABELS.en;
 
   if (!items || items.length === 0) return null;
 
@@ -21,7 +27,7 @@ export default function StackTrace({ items }) {
         <span className={`${styles.triangle} ${open ? styles.open : ""}`}>
           &#9654;
         </span>
-        <span className={styles.label}>Stack Trace</span>
+        <span className={styles.label}>{labels.title}</span>
       </button>
       {open && (
         <div className={styles.items}>

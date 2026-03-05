@@ -7,6 +7,7 @@ import IssueHeader from "@/components/IssueHeader";
 
 describe("IssueHeader", () => {
   const defaultProps = {
+    locale: "en",
     issueNumber: 14,
     date: "March 3, 2026",
     title: "The Machines Are Hiring",
@@ -16,6 +17,11 @@ describe("IssueHeader", () => {
   it("zero-pads issue number to 3 digits", () => {
     render(<IssueHeader {...defaultProps} />);
     expect(screen.getByText(/Issue #014/)).toBeInTheDocument();
+  });
+
+  it("renders Edición prefix for es locale", () => {
+    render(<IssueHeader {...defaultProps} locale="es" />);
+    expect(screen.getByText(/Edición #014/)).toBeInTheDocument();
   });
 
   it("renders title in an h1", () => {

@@ -6,27 +6,39 @@ import { render, screen } from "@testing-library/react";
 import NicosTransmission from "@/components/NicosTransmission";
 
 describe("NicosTransmission", () => {
-  it("renders as an aside with aria-label", () => {
+  it("renders as an aside with English aria-label", () => {
     render(
-      <NicosTransmission>
+      <NicosTransmission locale="en">
         <p>Test content</p>
       </NicosTransmission>
     );
-    expect(screen.getByLabelText("Nico's Transmission")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Nico\u2019s Transmission")
+    ).toBeInTheDocument();
   });
 
-  it("renders the label text", () => {
+  it("renders the English label text", () => {
     render(
-      <NicosTransmission>
+      <NicosTransmission locale="en">
         <p>Content</p>
       </NicosTransmission>
     );
-    expect(screen.getByText("Nico's Transmission")).toBeInTheDocument();
+    expect(screen.getByText("Nico\u2019s Transmission")).toBeInTheDocument();
+  });
+
+  it("renders Spanish label and aria-label for es locale", () => {
+    render(
+      <NicosTransmission locale="es">
+        <p>Content</p>
+      </NicosTransmission>
+    );
+    expect(screen.getByText("La Transmisión de Nico")).toBeInTheDocument();
+    expect(screen.getByLabelText("La Transmisión de Nico")).toBeInTheDocument();
   });
 
   it("renders children content", () => {
     render(
-      <NicosTransmission>
+      <NicosTransmission locale="en">
         <p>Editorial intro</p>
       </NicosTransmission>
     );
@@ -35,7 +47,7 @@ describe("NicosTransmission", () => {
 
   it("renders signature when provided", () => {
     render(
-      <NicosTransmission signature="— Nico">
+      <NicosTransmission locale="en" signature="— Nico">
         <p>Content</p>
       </NicosTransmission>
     );
@@ -44,7 +56,7 @@ describe("NicosTransmission", () => {
 
   it("omits signature when not provided", () => {
     render(
-      <NicosTransmission>
+      <NicosTransmission locale="en">
         <p>Content</p>
       </NicosTransmission>
     );

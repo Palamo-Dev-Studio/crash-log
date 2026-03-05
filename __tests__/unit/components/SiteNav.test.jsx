@@ -29,6 +29,14 @@ describe("SiteNav", () => {
     expect(screen.getByText("About")).toBeInTheDocument();
   });
 
+  it("renders Spanish nav labels for es locale", () => {
+    render(<SiteNav locale="es" />);
+    expect(screen.getByText("Último")).toBeInTheDocument();
+    expect(screen.getByText("Archivo")).toBeInTheDocument();
+    expect(screen.getByText("Beats")).toBeInTheDocument();
+    expect(screen.getByText("Info")).toBeInTheDocument();
+  });
+
   it("prefixes links with en locale", () => {
     render(<SiteNav locale="en" />);
     expect(screen.getByText("Latest").closest("a")).toHaveAttribute(
@@ -51,11 +59,11 @@ describe("SiteNav", () => {
 
   it("prefixes links with es locale", () => {
     render(<SiteNav locale="es" />);
-    expect(screen.getByText("Latest").closest("a")).toHaveAttribute(
+    expect(screen.getByText("Último").closest("a")).toHaveAttribute(
       "href",
       "/es"
     );
-    expect(screen.getByText("Archive").closest("a")).toHaveAttribute(
+    expect(screen.getByText("Archivo").closest("a")).toHaveAttribute(
       "href",
       "/es/archive"
     );

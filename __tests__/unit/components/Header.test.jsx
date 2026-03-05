@@ -26,10 +26,17 @@ describe("Header", () => {
     expect(screen.getByText("The Crash Log")).toBeInTheDocument();
   });
 
-  it("renders the tagline", () => {
+  it("renders the English tagline", () => {
     render(<Header locale="en" />);
     expect(
       screen.getByText(/AI & Tech Gone Off the Rails/)
+    ).toBeInTheDocument();
+  });
+
+  it("renders the Spanish tagline for es locale", () => {
+    render(<Header locale="es" />);
+    expect(
+      screen.getByText(/IA y Tecnología Descarriladas/)
     ).toBeInTheDocument();
   });
 

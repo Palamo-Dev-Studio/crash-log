@@ -353,8 +353,8 @@ function FallbackAbout({ locale }) {
         </div>
       </section>
 
-      <DonateCTA />
-      <Footer />
+      <DonateCTA locale={locale} />
+      <Footer locale={locale} />
     </main>
   );
 }
@@ -428,8 +428,8 @@ function SanityAbout({ about, locale }) {
         </section>
       )}
 
-      <DonateCTA />
-      <Footer />
+      <DonateCTA locale={locale} />
+      <Footer locale={locale} />
     </main>
   );
 }

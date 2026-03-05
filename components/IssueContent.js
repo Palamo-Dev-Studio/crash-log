@@ -53,6 +53,7 @@ export default function IssueContent({ issue, locale }) {
       />
 
       <IssueHeader
+        locale={locale}
         issueNumber={issue.issueNumber}
         date={formatDate(issue.publishDate, locale)}
         title={t(issue.title, locale)}
@@ -64,7 +65,7 @@ export default function IssueContent({ issue, locale }) {
       )}
 
       {transmission && (
-        <NicosTransmission>
+        <NicosTransmission locale={locale}>
           <PortableText
             value={transmission}
             components={portableTextComponents}
@@ -88,10 +89,10 @@ export default function IssueContent({ issue, locale }) {
         );
       })}
 
-      <StackTrace items={stackTraceItems} />
+      <StackTrace locale={locale} items={stackTraceItems} />
 
-      <DonateCTA />
-      <Footer />
+      <DonateCTA locale={locale} />
+      <Footer locale={locale} />
     </main>
   );
 }
