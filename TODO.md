@@ -98,8 +98,8 @@
 - [x] Install React Testing Library + jest-dom + user-event
 - [x] Shared mocks for next/image, next/link, next/navigation
 - [x] Unit tests: `lib/locale.js` (16 tests)
-- [x] Unit tests: `lib/sanity.js` (7 tests)
-- [x] Unit tests: `lib/queries.js` (20 tests)
+- [x] Unit tests: `lib/sanity.js` (11 tests)
+- [x] Unit tests: `lib/queries.js` (27 tests)
 - [x] Unit tests: `lib/portableText.js` (12 tests)
 - [x] Component tests: SeverityBadge, Footer, FallbackBanner, DonateCTA, IssueHeader, NicosTransmission (27 tests)
 - [x] Component tests: AgentCard, Header, SiteNav, StoryBlock, ArchiveCard, BeatStoryCard, CoverImage (54 tests)
@@ -242,10 +242,24 @@
 - [x] Create 4 story documents (EXPLOIT, OVERRIDE, ACCESS_DENIED, RUNTIME_ERROR) with full EN/ES Portable Text bodies, link annotations, structured sources
 - [x] Patch category references (Surveillance & Privacy, Foundation Models ×2, Regulation & Governance)
 - [x] Create issue document with issueNumber, slug, publishDate, title/subtitle, nicosTransmission (EN/ES), stackTrace (3 hits), metaDescription, beehiivStatus
-- [x] Patch story references onto issue (weak refs with _strengthenOnPublish)
+- [x] Patch story references onto issue (weak refs with \_strengthenOnPublish)
 - [ ] OpenClaw diffs gold-standard against its failed draft
 - [ ] OpenClaw refactors `sanity-upsert-draft.mjs` to match real schema
 - [ ] Discard OpenClaw's failed draft (`drafts.crashlog-2026-03-06`) after training
+
+## Build Fix + Revalidation
+
+- [x] Fix dotted document IDs — re-create 3 stories with UUID-based IDs, update issue #001 refs, delete old docs
+- [x] Add `.filter(Boolean)` to IssueContent.js stories array (defensive null filtering)
+- [x] Add `sanityFetch` wrapper in `lib/sanity.js` with `{ next: { revalidate: 3600 } }`
+- [x] Migrate all 9 fetchers in `lib/queries.js` to use `sanityFetch`
+- [x] Create `POST /api/revalidate` webhook endpoint with HMAC signature validation
+- [x] Add `SANITY_REVALIDATE_SECRET` to `.env.local`
+- [x] Tests: sanityFetch (4), null story handling (1), revalidate API (8), updated queries (5 new)
+- [x] verify.sh passes (313 tests + 21 static pages)
+- [ ] Add `SANITY_REVALIDATE_SECRET` to Vercel env vars
+- [ ] Configure Sanity webhook in manage.sanity.io (POST to /api/revalidate on CRUD)
+- [ ] Deploy to Vercel and verify revalidation works
 
 ## Deferred
 

@@ -31,9 +31,11 @@ No linter or CI pipeline configured yet.
 
 **Locale utilities** (`lib/locale.js`): `t(field, locale)` resolves localized fields with EN fallback. `hasFullTranslation()` checks if an issue has complete Spanish content. Exports `LOCALES`, `DEFAULT_LOCALE`, `LOCALE_LABELS`, `LOCALE_OG`.
 
-**Sanity client** (`lib/sanity.js`): Exports `client` (null-safe — returns `null` when `projectId` is invalid/placeholder) and `urlFor()` chainable image URL builder. API version: `2024-03-01`.
+**Sanity client** (`lib/sanity.js`): Exports `client` (null-safe — returns `null` when `projectId` is invalid/placeholder), `sanityFetch()` wrapper with Next.js cache revalidation (default 1h), and `urlFor()` chainable image URL builder. API version: `2024-03-01`.
 
-**Data fetching** (`lib/queries.js`): GROQ queries with try/catch fetch wrappers. `getLatestIssue()`, `getIssueBySlug()`, `getAllIssueSlugs()`, `getAllIssuesSummary()`. All return `null`/`[]` on failure.
+**Data fetching** (`lib/queries.js`): GROQ queries with try/catch fetch wrappers using `sanityFetch()`. `getLatestIssue()`, `getIssueBySlug()`, `getAllIssueSlugs()`, `getAllIssuesSummary()`. All return `null`/`[]` on failure.
+
+**Revalidation** (`app/api/revalidate/route.js`): Sanity webhook endpoint. Validates HMAC signature via `next-sanity/webhook`, calls `revalidatePath('/', 'layout')` on valid webhook. Time-based revalidation (1h) via `sanityFetch` provides a safety net.
 
 **Portable Text** (`lib/portableText.js`): Component config for `@portabletext/react` — blocks, marks (with safe external links), and image types.
 
@@ -68,6 +70,7 @@ Required in `.env.local`:
 - `BEEHIIV_PUBLICATION_ID` — Beehiiv publication ID (server-only)
 - `STRIPE_SECRET_KEY` — Stripe secret key for Checkout Sessions (server-only)
 - `NEXT_PUBLIC_DONATIONS_ENABLED` — Set to `"true"` to show the DonateCTA component
+- `SANITY_REVALIDATE_SECRET` — HMAC secret for Sanity webhook revalidation (server-only)
 
 ## Reference Documentation
 
@@ -91,7 +94,7 @@ Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` 
 
 ## Current State
 
-Phases 1–8 complete. Sanity schemas, Studio, 16 React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, and dynamic OG images are all in place. `scripts/verify.sh` passes (195 tests + 29 static pages). Deployed to Vercel at `crashlog.ai`.
+Phases 1–8 complete. Sanity schemas, Studio, 19 React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, dynamic OG images, Beehiiv subscription, Stripe donations, and on-demand revalidation are all in place. `scripts/verify.sh` passes (313 tests + 21 static pages). Deployed to Vercel at `crashlog.ai`.
 
 ## Testing
 

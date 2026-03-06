@@ -132,6 +132,33 @@ describe("IssueContent", () => {
     });
   });
 
+  describe("null story handling", () => {
+    it("does not crash when stories array contains null entries", () => {
+      const issue = makeIssue({
+        stories: [
+          null,
+          {
+            _id: "story-1",
+            severity: "ERROR",
+            headline: { en: "Robot Fails" },
+            tags: { en: "AI / Automation" },
+            body: {
+              en: [
+                {
+                  _type: "block",
+                  children: [{ _type: "span", text: "Story body" }],
+                },
+              ],
+            },
+          },
+          null,
+        ],
+      });
+      render(<IssueContent issue={issue} locale="en" />);
+      expect(screen.getByText("Robot Fails")).toBeInTheDocument();
+    });
+  });
+
   describe("FallbackBanner", () => {
     it("does not show FallbackBanner for en locale", () => {
       render(<IssueContent issue={makeIssue()} locale="en" />);

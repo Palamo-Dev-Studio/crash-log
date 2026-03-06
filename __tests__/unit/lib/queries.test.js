@@ -3,17 +3,17 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const mockFetch = vi.fn();
+const mockSanityFetch = vi.fn();
 
 vi.mock("@/lib/sanity", () => ({
-  client: { fetch: (...args) => mockFetch(...args) },
+  sanityFetch: (...args) => mockSanityFetch(...args),
 }));
 
 let queries;
 
 beforeEach(async () => {
   vi.resetModules();
-  mockFetch.mockReset();
+  mockSanityFetch.mockReset();
   queries = await import("@/lib/queries");
 });
 
@@ -45,14 +45,14 @@ const arrayFallbackWrappers = [
 describe("null-fallback wrappers", () => {
   for (const { name, fn } of nullFallbackWrappers) {
     describe(name, () => {
-      it("returns data when client.fetch resolves", async () => {
+      it("returns data when sanityFetch resolves", async () => {
         const data = { _id: "test" };
-        mockFetch.mockResolvedValueOnce(data);
+        mockSanityFetch.mockResolvedValueOnce(data);
         expect(await fn()).toEqual(data);
       });
 
-      it("returns null when client.fetch throws", async () => {
-        mockFetch.mockRejectedValueOnce(new Error("Network error"));
+      it("returns null when sanityFetch throws", async () => {
+        mockSanityFetch.mockRejectedValueOnce(new Error("Network error"));
         expect(await fn()).toBeNull();
       });
     });
@@ -62,14 +62,19 @@ describe("null-fallback wrappers", () => {
 describe("array-fallback wrappers", () => {
   for (const { name, fn } of arrayFallbackWrappers) {
     describe(name, () => {
-      it("returns data when client.fetch resolves", async () => {
+      it("returns data when sanityFetch resolves", async () => {
         const data = [{ _id: "test" }];
-        mockFetch.mockResolvedValueOnce(data);
+        mockSanityFetch.mockResolvedValueOnce(data);
         expect(await fn()).toEqual(data);
       });
 
-      it("returns [] when client.fetch throws", async () => {
-        mockFetch.mockRejectedValueOnce(new Error("Network error"));
+      it("returns [] when sanityFetch throws", async () => {
+        mockSanityFetch.mockRejectedValueOnce(new Error("Network error"));
+        expect(await fn()).toEqual([]);
+      });
+
+      it("returns [] when sanityFetch returns null", async () => {
+        mockSanityFetch.mockResolvedValueOnce(null);
         expect(await fn()).toEqual([]);
       });
     });
@@ -77,38 +82,36 @@ describe("array-fallback wrappers", () => {
 });
 
 describe("parameter passing", () => {
-  it("getIssueBySlug passes slug param to client.fetch", async () => {
-    mockFetch.mockResolvedValueOnce(null);
+  it("getIssueBySlug passes slug param via sanityFetch", async () => {
+    mockSanityFetch.mockResolvedValueOnce(null);
     await queries.getIssueBySlug("my-slug");
-    expect(mockFetch).toHaveBeenCalledWith(expect.any(String), {
-      slug: "my-slug",
-    });
+    expect(mockSanityFetch).toHaveBeenCalledWith(
+      expect.objectContaining({ params: { slug: "my-slug" } })
+    );
   });
 
-  it("getCategoryWithStories passes slug param to client.fetch", async () => {
-    mockFetch.mockResolvedValueOnce(null);
+  it("getCategoryWithStories passes slug param via sanityFetch", async () => {
+    mockSanityFetch.mockResolvedValueOnce(null);
     await queries.getCategoryWithStories("tech-slug");
-    expect(mockFetch).toHaveBeenCalledWith(expect.any(String), {
-      slug: "tech-slug",
-    });
+    expect(mockSanityFetch).toHaveBeenCalledWith(
+      expect.objectContaining({ params: { slug: "tech-slug" } })
+    );
   });
 });
 
 describe("null client fallback", () => {
-  it("returns null/[] when client is null", async () => {
-    vi.resetModules();
-    vi.doMock("@/lib/sanity", () => ({ client: null }));
-    const q = await import("@/lib/queries");
+  it("returns null/[] when sanityFetch returns null", async () => {
+    mockSanityFetch.mockResolvedValue(null);
 
-    expect(await q.getLatestIssue()).toBeNull();
-    expect(await q.getIssueBySlug("x")).toBeNull();
-    expect(await q.getAboutPage()).toBeNull();
-    expect(await q.getCategoryWithStories("x")).toBeNull();
-    expect(await q.getAllIssueSlugs()).toEqual([]);
-    expect(await q.getAllIssuesSummary()).toEqual([]);
-    expect(await q.getAllIssuesForArchive()).toEqual([]);
-    expect(await q.getAllCategories()).toEqual([]);
-    expect(await q.getIssuesForFeed()).toEqual([]);
+    expect(await queries.getLatestIssue()).toBeNull();
+    expect(await queries.getIssueBySlug("x")).toBeNull();
+    expect(await queries.getAboutPage()).toBeNull();
+    expect(await queries.getCategoryWithStories("x")).toBeNull();
+    expect(await queries.getAllIssueSlugs()).toEqual([]);
+    expect(await queries.getAllIssuesSummary()).toEqual([]);
+    expect(await queries.getAllIssuesForArchive()).toEqual([]);
+    expect(await queries.getAllCategories()).toEqual([]);
+    expect(await queries.getIssuesForFeed()).toEqual([]);
   });
 });
 

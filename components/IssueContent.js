@@ -74,7 +74,7 @@ export default function IssueContent({ issue, locale }) {
         </NicosTransmission>
       )}
 
-      {issue.stories?.map((story, index) => {
+      {issue.stories?.filter(Boolean).map((story, index) => {
         const body = t(story.body, locale);
         return (
           <StoryBlock
