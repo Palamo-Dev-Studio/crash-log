@@ -237,6 +237,16 @@
 - [x] Add CORS origin `http://localhost:3001` for local Studio development
 - [x] Remove unused `getStoryColorKey` import from BeatStoryCard (CodeRabbit review)
 
+## Issue #001 — Gold-Standard Training Upload
+
+- [x] Create 4 story documents (EXPLOIT, OVERRIDE, ACCESS_DENIED, RUNTIME_ERROR) with full EN/ES Portable Text bodies, link annotations, structured sources
+- [x] Patch category references (Surveillance & Privacy, Foundation Models ×2, Regulation & Governance)
+- [x] Create issue document with issueNumber, slug, publishDate, title/subtitle, nicosTransmission (EN/ES), stackTrace (3 hits), metaDescription, beehiivStatus
+- [x] Patch story references onto issue (weak refs with _strengthenOnPublish)
+- [ ] OpenClaw diffs gold-standard against its failed draft
+- [ ] OpenClaw refactors `sanity-upsert-draft.mjs` to match real schema
+- [ ] Discard OpenClaw's failed draft (`drafts.crashlog-2026-03-06`) after training
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)

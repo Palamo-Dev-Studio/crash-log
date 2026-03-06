@@ -3,27 +3,22 @@
 ## Current State
 
 - **Branch:** `main`
-- **Last commit:** `08bdb07` — feat: UI polish, severity refactor, and Issue #015 prep
+- **Last commit:** `00f0432` — fix: add Studio basePath, remove unused import, update tracking docs
 - **Build:** `verify.sh` passes (295 tests + 34 static pages)
 - **Tests:** 295 unit/component/integration tests (Vitest, 29 files) + 14 e2e tests (Playwright) = 309 total
 - **Verification script:** `scripts/verify.sh` — runs lint, format check, tests, then build; exits non-zero on failure
 - **Components:** 19 total (12 Phase 3 + IssueContent + ArchiveCard + AgentCard + BeatStoryCard + SubscribeForm + ThankYouContent + BeehiivRecommendations)
 - **Layout:** `--max-width: 960px`, `--content-padding: 28px`
 - **Routes:** `/[locale]` (home), `/[locale]/issue/[slug]`, `/[locale]/archive`, `/[locale]/about`, `/[locale]/beats`, `/[locale]/beat/[slug]`, `/[locale]/subscribe/thank-you`, `/[locale]/feed.xml`, `/api/subscribe`, `/api/donate`, `/studio`, `/robots.txt`, `/sitemap.xml`
-- **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 19 published documents + 4 drafts (Issue #015 + 3 stories).
+- **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 19 published documents + 10 drafts (Issue #015 + 3 stories, Issue #001 gold-standard + 4 stories, OpenClaw failed draft).
 
 ## Recent Completed Work
 
-- UI polish: Header/headshots enlarged 50%, layout widened to 960px
-- SiteNav active state fix (client component with `useSelectedLayoutSegment`)
-- Email link fix in English About page (CSS + Sanity content)
-- Spanish formality fix ("Suscríbete")
-- Beats page hides empty categories
+- Issue #001 gold-standard upload for OpenClaw training (4 story docs + 1 issue doc, full EN/ES, Portable Text with link annotations, category refs, structured sources)
+- Identified 10 structural errors in OpenClaw's draft upload (inline stories, invented fields, wrong field names, plain-text bodies, etc.)
+- Studio basePath fix, CORS origin for localhost, unused import cleanup
 - Severity system refactored to free-text with position-based color cycling
 - Issue #015 seeded as drafts in Sanity (3 stories + issue, full EN/ES)
-- Sanity Studio: added `basePath: "/studio"` to sanity.config.js (fixes "Tool not found: studio" error)
-- Sanity CORS: added `http://localhost:3001` for local Studio development
-- Removed unused `getStoryColorKey` import from BeatStoryCard (CodeRabbit review)
 
 ## Deployment
 
@@ -35,10 +30,11 @@
 
 ## Immediate Next Steps
 
-1. **Push to deploy** latest commits to Vercel
-2. **Hector reviews Issue #015 in Studio** — edit stories, Nico's Transmission, Stack Trace, then publish (stories first, then issue)
-3. **Populate Spanish content** in Sanity for Issue #014 (editorial task for Gabo)
-4. **Activate Beehiiv Recommendations:** When available, set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`
+1. **OpenClaw MCP integration** — wire Sanity MCP into OpenClaw runtime so it can introspect schema before uploads
+2. **OpenClaw refactors uploader** — diff gold-standard Issue #001 against its failed draft, fix `sanity-upsert-draft.mjs`
+3. **Hector reviews Issue #015 in Studio** — edit stories, Nico's Transmission, Stack Trace, then publish (stories first, then issue)
+4. **Clean up OpenClaw's failed draft** — `drafts.crashlog-2026-03-06` can be discarded once training is done
+5. **Populate Spanish content** in Sanity for Issue #014 (editorial task for Gabo)
 
 ## Known Issues / Deferred Items
 
