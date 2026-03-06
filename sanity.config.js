@@ -31,6 +31,7 @@ export default defineConfig({
   title: "The Crash Log",
   projectId,
   dataset,
+  basePath: "/studio",
   plugins: [structureTool(), visionTool()],
   schema: {
     types: [

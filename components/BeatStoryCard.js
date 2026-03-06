@@ -4,7 +4,6 @@
 import Link from "next/link";
 import { t } from "@/lib/locale";
 import SeverityBadge from "@/components/SeverityBadge";
-import { getStoryColorKey } from "@/lib/storyColors";
 import styles from "./BeatStoryCard.module.css";
 
 function formatDate(dateString, locale) {

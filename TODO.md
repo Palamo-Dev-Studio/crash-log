@@ -231,6 +231,12 @@
 - [ ] Publish stories first, then issue
 - [ ] Optional: add cover image
 
+## Studio & Infrastructure Fixes
+
+- [x] Add `basePath: "/studio"` to sanity.config.js (fixes "Tool not found: studio" error)
+- [x] Add CORS origin `http://localhost:3001` for local Studio development
+- [x] Remove unused `getStoryColorKey` import from BeatStoryCard (CodeRabbit review)
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)
