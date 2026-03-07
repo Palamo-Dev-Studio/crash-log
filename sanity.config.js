@@ -24,7 +24,7 @@ import aboutPage from "./sanity/schemas/aboutPage";
 import siteSettings from "./sanity/schemas/siteSettings";
 
 // Actions
-import { SendNewsletterAction } from "./sanity/actions/sendNewsletterAction";
+import { SendNewsletterAction } from "./sanity/actions/sendNewsletterAction.jsx";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
