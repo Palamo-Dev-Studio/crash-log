@@ -20,7 +20,7 @@ export default function CoverImage({ image, alt }) {
     <div className={styles.container}>
       <Image
         src={imageUrl}
-        alt={alt || "Cover image"}
+        alt={alt || "Cover image for The Crash Log newsletter"}
         width={1440}
         height={810}
         className={styles.image}

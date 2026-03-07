@@ -43,6 +43,7 @@ export default function IssueContent({ issue, locale }) {
     ?.map((item) => ({
       title: item.sourceOutlet,
       description: t(item.text, locale),
+      url: item.sourceUrl,
     }))
     .filter((item) => item.description);
 

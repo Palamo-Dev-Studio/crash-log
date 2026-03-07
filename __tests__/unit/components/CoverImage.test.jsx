@@ -49,8 +49,11 @@ describe("CoverImage", () => {
     expect(img).toHaveAttribute("src", "https://cdn.sanity.io/test.webp");
   });
 
-  it("defaults alt to 'Cover image' when not provided", () => {
+  it("defaults alt to descriptive text when not provided", () => {
     render(<CoverImage image={{ _ref: "img-123" }} />);
-    expect(screen.getByRole("img")).toHaveAttribute("alt", "Cover image");
+    expect(screen.getByRole("img")).toHaveAttribute(
+      "alt",
+      "Cover image for The Crash Log newsletter"
+    );
   });
 });

@@ -45,9 +45,9 @@ export default async function BeatsPage({ params }) {
 
   return (
     <main>
-      <h2 className={styles.heading}>
+      <h1 className={styles.heading}>
         {locale === "es" ? "── SECCIONES ──" : "── BEATS ──"}
-      </h2>
+      </h1>
 
       {categories.length === 0 ? (
         <p className={styles.empty}>

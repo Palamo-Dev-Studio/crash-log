@@ -37,6 +37,14 @@ export async function generateMetadata({ params }) {
       locale: LOCALE_OG[locale],
       url: `https://crashlog.ai/${locale}`,
     },
+    alternates: {
+      canonical: `https://crashlog.ai/${locale}`,
+      languages: {
+        "en-US": "/en",
+        "es-ES": "/es",
+        "x-default": "/en",
+      },
+    },
   };
 }
 

@@ -72,7 +72,7 @@ export default async function BeatPage({ params }) {
         className={styles.header}
         style={{ borderLeftColor: category.color || "var(--severity-error)" }}
       >
-        <h2 className={styles.name}>{name}</h2>
+        <h1 className={styles.name}>{name}</h1>
         {description && <p className={styles.description}>{description}</p>}
       </header>
 

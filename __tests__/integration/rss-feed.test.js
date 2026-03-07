@@ -69,7 +69,7 @@ describe("RSS feed route handler", () => {
     const response = await GET(request, { params });
     const xml = await response.text();
 
-    expect(xml).toContain("<language>es-ES</language>");
+    expect(xml).toContain("<language>es-es</language>");
     expect(xml).toContain("<title>Título en Español</title>");
     expect(xml).toContain("/es/issue/test-issue");
   });
@@ -158,6 +158,6 @@ describe("RSS feed route handler", () => {
     const response = await GET(request, { params });
     const xml = await response.text();
 
-    expect(xml).toContain("<language>en-US</language>");
+    expect(xml).toContain("<language>en-us</language>");
   });
 });

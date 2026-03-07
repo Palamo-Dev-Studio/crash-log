@@ -1,9 +1,8 @@
-// ABOUTME: Unit tests for StackTrace client component.
-// ABOUTME: Validates null guard, toggle behavior, aria attributes, and item rendering.
+// ABOUTME: Unit tests for StackTrace component.
+// ABOUTME: Validates null guard, label rendering, and item rendering.
 
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import StackTrace from "@/components/StackTrace";
 
 describe("StackTrace", () => {
@@ -43,34 +42,40 @@ describe("StackTrace", () => {
     expect(screen.getByText("Stack Trace")).toBeInTheDocument();
   });
 
-  it("starts expanded (aria-expanded=true)", () => {
+  it("always shows all items", () => {
     render(<StackTrace items={items} />);
-    const button = screen.getByRole("button");
-    expect(button).toHaveAttribute("aria-expanded", "true");
-  });
-
-  it("collapses on click (aria-expanded=false)", async () => {
-    const user = userEvent.setup();
-    render(<StackTrace items={items} />);
-    const button = screen.getByRole("button");
-    await user.click(button);
-    expect(button).toHaveAttribute("aria-expanded", "false");
-  });
-
-  it("hides items when collapsed", async () => {
-    const user = userEvent.setup();
-    render(<StackTrace items={items} />);
-    await user.click(screen.getByRole("button"));
-    expect(screen.queryByText("TechCrunch")).not.toBeInTheDocument();
-  });
-
-  it("re-expands on second click", async () => {
-    const user = userEvent.setup();
-    render(<StackTrace items={items} />);
-    const button = screen.getByRole("button");
-    await user.click(button);
-    await user.click(button);
-    expect(button).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText("TechCrunch")).toBeInTheDocument();
+    expect(screen.getByText("Wired")).toBeInTheDocument();
+    expect(
+      screen.getByText("Robots replace warehouse workers")
+    ).toBeInTheDocument();
+  });
+
+  it("does not render a toggle button", () => {
+    render(<StackTrace items={items} />);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  it("renders item title as link when url is provided", () => {
+    const itemsWithUrl = [
+      {
+        title: "TechCrunch",
+        description: "AI hiring is up 40%",
+        url: "https://techcrunch.com/article",
+      },
+    ];
+    render(<StackTrace items={itemsWithUrl} />);
+    const link = screen.getByRole("link", { name: "TechCrunch" });
+    expect(link).toHaveAttribute("href", "https://techcrunch.com/article");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("renders item title as plain text when url is not provided", () => {
+    render(<StackTrace items={items} />);
+    expect(screen.getByText("TechCrunch")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "TechCrunch" })
+    ).not.toBeInTheDocument();
   });
 });

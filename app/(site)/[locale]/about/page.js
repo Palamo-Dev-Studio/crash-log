@@ -110,6 +110,9 @@ function FallbackAbout({ locale, about }) {
 
   return (
     <main>
+      <h1 className={styles.sectionHeading}>
+        {isEs ? "── ACERCA DE ──" : "── ABOUT ──"}
+      </h1>
       <section className={styles.intro}>
         {isEs ? (
           <>
@@ -390,6 +393,9 @@ function SanityAbout({ about, locale }) {
 
   return (
     <main>
+      <h1 className={styles.sectionHeading}>
+        {locale === "es" ? "── ACERCA DE ──" : "── ABOUT ──"}
+      </h1>
       {intro && (
         <section className={styles.intro}>
           <PortableText value={intro} components={portableTextComponents} />

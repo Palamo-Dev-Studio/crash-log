@@ -5,6 +5,7 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import { getIssueBySlug, getAllIssueSlugs } from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG } from "@/lib/locale";
+import { urlFor } from "@/lib/sanity";
 import IssueContent from "@/components/IssueContent";
 
 const getCachedIssueBySlug = cache(getIssueBySlug);
@@ -52,13 +53,21 @@ export async function generateStaticParams() {
 }
 
 function NewsArticleJsonLd({ issue, locale, slug }) {
+  const canonicalUrl = `https://crashlog.ai/${locale}/issue/${slug}`;
+  const imageUrl = issue.coverImage
+    ? urlFor(issue.coverImage).width(1200).height(675).format("webp").url()
+    : undefined;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     headline: t(issue.title, locale),
     description: t(issue.metaDescription, locale),
     datePublished: issue.publishDate,
-    url: `https://crashlog.ai/${locale}/issue/${slug}`,
+    ...(issue._updatedAt && { dateModified: issue._updatedAt }),
+    ...(imageUrl && { image: imageUrl }),
+    url: canonicalUrl,
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
     inLanguage: locale === "es" ? "es-ES" : "en-US",
     publisher: {
       "@type": "Organization",

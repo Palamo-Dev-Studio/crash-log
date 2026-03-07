@@ -2,7 +2,12 @@
 // ABOUTME: Returns a valid RSS feed of published issues with localized titles and descriptions.
 
 import { getIssuesForFeed } from "@/lib/queries";
-import { t, LOCALE_LABELS } from "@/lib/locale";
+import { t } from "@/lib/locale";
+
+const RSS_LANG = {
+  en: "en-us",
+  es: "es-es",
+};
 
 const SITE_URL = "https://crashlog.ai";
 
@@ -46,7 +51,7 @@ function escapeXml(str) {
  */
 function buildEmptyFeed(locale) {
   const meta = CHANNEL_META[locale] ?? CHANNEL_META.en;
-  const langCode = LOCALE_LABELS[locale] ?? "en-US";
+  const langCode = RSS_LANG[locale] ?? "en-us";
   const feedUrl = `${SITE_URL}/${locale}/feed.xml`;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -76,7 +81,7 @@ export async function GET(request, { params }) {
   }
 
   const meta = CHANNEL_META[resolvedLocale] ?? CHANNEL_META.en;
-  const langCode = LOCALE_LABELS[resolvedLocale] ?? "en-US";
+  const langCode = RSS_LANG[resolvedLocale] ?? "en-us";
   const feedUrl = `${SITE_URL}/${resolvedLocale}/feed.xml`;
 
   const items = issues

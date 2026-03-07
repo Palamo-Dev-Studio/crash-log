@@ -2,14 +2,14 @@
    ABOUTME: Severity-colored left border, mono headline, tags, and serif body text. */
 
 .section {
-  margin-bottom: 56px;
+  margin-bottom: 72px;
   border-left: 3px solid var(--severity-color, var(--severity-error));
   padding-left: 24px;
 }
 
 .title {
   font-family: var(--font-mono);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--severity-color, var(--severity-error));
   margin-top: 12px;
@@ -32,9 +32,23 @@
 
 .body {
   font-family: var(--font-body);
-  font-size: 16.5px;
+  font-size: 17.5px;
   font-weight: 400;
   font-style: normal;
   color: var(--text-secondary);
-  line-height: 1.78;
+  line-height: 1.82;
+}
+
+.body p + p {
+  margin-top: 1em;
+}
+
+.body a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.body a:hover {
+  color: var(--severity-error);
 }

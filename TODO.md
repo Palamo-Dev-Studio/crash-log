@@ -261,6 +261,32 @@
 - [ ] Configure Sanity webhook in manage.sanity.io (POST to /api/revalidate on CRUD)
 - [ ] Deploy to Vercel and verify revalidation works
 
+## UI Comfort + SEO Fixes
+
+- [x] Brighten text color scale (secondary, tertiary, muted, faint)
+- [x] Desaturate severity colors ~15-20% (error, override, warning, critical, breach)
+- [x] Update severity glows and agent accents to match
+- [x] Improve surface/border contrast
+- [x] Remove font smoothing override (`-webkit-font-smoothing`, `-moz-osx-font-smoothing`)
+- [x] Soften selection highlight and focus ring
+- [x] Remove subtitle opacity on IssueHeader
+- [x] Bump section heading sizes (11→12px) and color (faint→muted) on archive/beats/about
+- [x] Bump nav link size (12→13px)
+- [x] Bump Stack Trace description text (15→16px, line-height 1.6→1.7)
+- [x] Increase story block spacing (56→72px) and Stack Trace item gap (20→28px)
+- [x] Add Stack Trace link styles
+- [x] Homepage canonical + hreflang alternates
+- [x] Branded locale-aware 404 page with noindex
+- [x] Stack Trace source URLs rendered as clickable external links
+- [x] RSS language codes: `en-US`/`es-ES` → lowercase `en-us`/`es-es` per RSS spec
+- [x] Heading hierarchy: h2→h1 on archive, beats, beat detail pages; h1 added to about page
+- [x] JSON-LD: dateModified, image, mainEntityOfPage on NewsArticle
+- [x] `_updatedAt` added to GROQ issue projection
+- [x] CoverImage alt fallback: "Cover image" → "Cover image for The Crash Log newsletter"
+- [x] Portable Text image alt fallback: "" → "Article image"
+- [x] Tests: NotFound (6), StackTrace URL (2), updated CoverImage alt + RSS lang tests
+- [x] verify.sh passes (319 tests + 21 static pages)
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)

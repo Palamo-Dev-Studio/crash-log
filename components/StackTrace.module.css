@@ -1,5 +1,5 @@
-/* ABOUTME: Styles for the collapsible Stack Trace section.
-   ABOUTME: Toggle header, trace items with left border and mono/serif text. */
+/* ABOUTME: Styles for the Stack Trace section.
+   ABOUTME: Section header, trace items with left border and mono/serif text. */
 
 .section {
   margin: 64px 0 48px;
@@ -9,30 +9,21 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 100%;
-  background: none;
-  border: none;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 16px 0;
   margin-bottom: 32px;
-  cursor: pointer;
 }
 
 .triangle {
   color: var(--severity-error);
-  font-size: 12px;
-  transition: transform 0.2s;
-  transform: rotate(0deg);
-}
-
-.open {
+  font-size: 14px;
   transform: rotate(90deg);
 }
 
 .label {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: 2.5px;
   text-transform: uppercase;
@@ -42,7 +33,7 @@
 .items {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 28px;
 }
 
 .item {
@@ -60,7 +51,19 @@
 
 .itemDesc {
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--text-tertiary);
-  line-height: 1.6;
+  line-height: 1.7;
+}
+
+.itemTitle a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--border-accent);
+  transition: text-decoration-color 0.2s;
+}
+
+.itemTitle a:hover {
+  text-decoration-color: var(--text-primary);
 }

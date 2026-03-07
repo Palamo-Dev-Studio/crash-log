@@ -4,38 +4,38 @@
 :root {
   /* Surfaces */
   --bg: #0a0a0a;
-  --surface: #1c1c1e;
-  --border: #2c2c2e;
-  --border-accent: #3a3a3c;
+  --surface: #1e1e22;
+  --border: #333338;
+  --border-accent: #44444a;
 
   /* Text */
   --text-primary: #f2f2f7;
-  --text-secondary: #c7c7cc;
-  --text-tertiary: #8e8e93;
-  --text-muted: #636366;
-  --text-faint: #48484a;
+  --text-secondary: #d1d1d6;
+  --text-tertiary: #a1a1a6;
+  --text-muted: #7c7c80;
+  --text-faint: #5a5a5e;
 
   /* Severity */
-  --severity-error: #ff3b30;
-  --severity-override: #ff9f0a;
-  --severity-terminate: #ff3b30;
-  --severity-warning: #ffd60a;
-  --severity-critical: #bf0000;
-  --severity-breach: #00d4ff;
+  --severity-error: #e8453e;
+  --severity-override: #e8a030;
+  --severity-terminate: #e8453e;
+  --severity-warning: #e8c832;
+  --severity-critical: #c43030;
+  --severity-breach: #30c8e8;
 
   /* Severity Glows */
-  --severity-error-glow: rgba(255, 59, 48, 0.12);
-  --severity-override-glow: rgba(255, 159, 10, 0.12);
-  --severity-terminate-glow: rgba(255, 59, 48, 0.12);
-  --severity-warning-glow: rgba(255, 214, 10, 0.12);
-  --severity-critical-glow: rgba(191, 0, 0, 0.15);
-  --severity-breach-glow: rgba(0, 212, 255, 0.12);
+  --severity-error-glow: rgba(232, 69, 62, 0.12);
+  --severity-override-glow: rgba(232, 160, 48, 0.12);
+  --severity-terminate-glow: rgba(232, 69, 62, 0.12);
+  --severity-warning-glow: rgba(232, 200, 50, 0.12);
+  --severity-critical-glow: rgba(196, 48, 48, 0.15);
+  --severity-breach-glow: rgba(48, 200, 232, 0.12);
 
   /* Agent Accents */
-  --agent-nico: #ff3b30;
-  --agent-scoop: #00d4ff;
+  --agent-nico: #e8453e;
+  --agent-scoop: #30c8e8;
   --agent-root: #8e8e93;
-  --agent-gabo: #ff9f0a;
+  --agent-gabo: #e8a030;
   --agent-lupe: #ff6ead;
   --agent-hector: #30d158;
 
@@ -64,13 +64,10 @@ body {
   font-family: var(--font-body);
   font-size: 16.5px;
   line-height: 1.72;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: rgba(255, 59, 48, 0.3);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 a {
@@ -89,7 +86,7 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--severity-error);
+  outline: 2px solid var(--text-tertiary);
   outline-offset: 2px;
 }
 
