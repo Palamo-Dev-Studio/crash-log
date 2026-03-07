@@ -295,6 +295,43 @@
 - [x] Deploy to Vercel
 - [ ] Manual end-to-end test: Studio action → Beehiiv draft creation
 
+## Nico's Notes — Weekly Column
+
+ExecPlan: `docs/plans/active/nicos-notes-column.md`
+
+### Phase 1: Schema & Data Layer
+- [ ] Create `sanity/schemas/column.js` (columnNumber, slug, publishDate, status, coverImage, title, subtitle, body, metaDescription, beehiivStatus, beehiivPostIds)
+- [ ] Register column schema in `sanity.config.js`
+- [ ] Attach SendNewsletterAction to column documents
+- [ ] Add GROQ queries + fetch wrappers to `lib/queries.js` (getColumnBySlug, getAllColumnSlugs, getAllColumnsForArchive, getColumnsForFeed, getLatestColumn)
+
+### Phase 2: Routes & Pages
+- [ ] Column detail page: `app/(site)/[locale]/nico/[slug]/page.js` (generateStaticParams, generateMetadata, JSON-LD, render)
+- [ ] Column archive page: `app/(site)/[locale]/nico/page.js`
+- [ ] `ColumnContent.js` component (detail view)
+- [ ] `ColumnCard.js` component (archive card)
+
+### Phase 3: SEO & Distribution
+- [ ] Add column entries to `app/sitemap.js`
+- [ ] Create `app/(site)/[locale]/nico/feed.xml/route.js` (separate column RSS feed)
+- [ ] Add "Nico's Notes" link to `SiteNav`
+
+### Phase 4: Newsletter Integration
+- [ ] Column email template (`buildColumnEmailHtml`, `buildColumnEmailSubject`)
+- [ ] Extend `/api/send-newsletter` for `type: "column"` (or separate endpoint)
+- [ ] Verify Studio sending action works for column documents
+
+### Phase 5: Tests
+- [ ] Unit tests: column queries, column email template
+- [ ] Component tests: ColumnContent, ColumnCard, NicosNotesWidget
+- [ ] Integration tests: column pages, column RSS, column newsletter API
+- [ ] E2E: column page loads, archive lists columns
+
+### Phase 6: Home Page Widget
+- [ ] `NicosNotesWidget.js` component (latest column teaser, red accent)
+- [ ] Integrate widget into home page layout
+- [ ] Widget component tests
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)

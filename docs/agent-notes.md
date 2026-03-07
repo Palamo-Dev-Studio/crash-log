@@ -9,20 +9,30 @@
 - **Components:** 19 total + branded 404 page
 - **Routes:** All previous routes + `/api/send-newsletter` (Beehiiv draft creation endpoint)
 - **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 20 published documents, 0 drafts.
+- **Sanity MCP server:** Available at `https://mcp.sanity.io` (added via `claude mcp add Sanity -t http https://mcp.sanity.io --scope user`). Auth token at `~/.config/sanity/config.json`.
+
+## In Progress: Nico's Notes — Weekly Column
+
+**ExecPlan:** `docs/plans/active/nicos-notes-column.md`
+
+New `column` document type for a weekly Sunday column by Nico (~600 words reflecting on the past week and looking ahead). First column: 2026-03-07. Plan approved, implementation not yet started.
+
+Key decisions:
+- Route: `/[locale]/nico/[slug]` (detail), `/[locale]/nico` (archive)
+- Slug: auto-generated from publish date (YYYY-MM-DD)
+- Sequential numbering (Column #001, #002, etc.)
+- Separate RSS feed at `/[locale]/nico/feed.xml`
+- Beehiiv integration for email distribution
+- Home page widget featuring latest column with "Read" and "See all" links
+- Cover image per column (same as issues)
+
+Phases: Schema & Data → Routes & Pages → SEO & Distribution → Newsletter Integration → Tests → Home Page Widget
 
 ## Recent Completed Work
 
-- **Sanity schema deployed** — `beehiivPostIds` field live (required `.jsx` rename for CLI compatibility)
-- **Revalidation pipeline live** — Sanity webhook → `/api/revalidate` → `revalidatePath` → edge cache purge. Tested and confirmed working on production.
-- **Beehiiv newsletter sending system** (6 phases):
-  - Phase 1: Subscribe flow passes `locale` as custom field to Beehiiv (for audience segmentation)
-  - Phase 2: `lib/portableTextToHtml.js` — Portable Text to HTML converter for email templates
-  - Phase 3: `lib/emailTemplate.js` — Full email template builder with inline CSS, severity colors, bilingual labels
-  - Phase 4: `POST /api/send-newsletter` — Creates Beehiiv draft posts from published Sanity issues (EN always, ES if translated)
-  - Phase 5: `sanity/actions/sendNewsletterAction.js` — Studio document action with confirm/result dialogs, patches `beehiivStatus` + `beehiivPostIds`
-  - Phase 6: Added `beehiivPostIds` (readOnly) to issue schema for idempotency tracking
-- **Security hardening:** `escapeHtml`/`sanitizeHref` utilities in `lib/htmlUtils.js`, auth via `SEND_NEWSLETTER_SECRET` on the send-newsletter endpoint
-- **New dependency:** `@portabletext/to-html`
+- **Beehiiv newsletter sending system** — 6 phases complete (subscribe locale, PT-to-HTML, email template, send API, Studio action, idempotency tracking)
+- **Revalidation pipeline** — Sanity webhook → `/api/revalidate` → edge cache purge (live in production)
+- **Security hardening** — `escapeHtml`/`sanitizeHref` in `lib/htmlUtils.js`, auth on send-newsletter endpoint
 
 ## Deployment
 
@@ -33,9 +43,10 @@
 - **Beehiiv:** `locale` custom field created, EN/ES audience segments created (Dynamic type, OR logic for EN with "is unknown" fallback)
 - **Sanity schema:** All fields deployed (including `beehiivPostIds` on issue)
 
-## Immediate Next Steps
+## Pending (pre-column)
 
-1. **Manual end-to-end test** — `/studio` → open Issue #001 → "Send Newsletter" action → verify Beehiiv draft(s) created
+- [ ] Manual end-to-end test: Studio action → Beehiiv draft creation (Issue #001)
+- [ ] Activate Beehiiv Recommendations widget when available
 
 ## Known Issues / Deferred Items
 
