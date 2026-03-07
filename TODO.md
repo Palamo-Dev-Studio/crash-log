@@ -143,7 +143,7 @@
 - [x] Thread locale prop through IssueContent, about, archive, beats callers
 - [x] Add ES locale tests for all 7 components (10 new tests, 220→230)
 - [x] verify.sh passes (230 tests + 30 static pages)
-- [ ] Populate Spanish content in Sanity for Issue #014 (editorial task for Gabo)
+- [x] ~~Populate Spanish content in Sanity for Issue #014~~ (Issue #014 removed; only Issue #001 exists)
 
 ## Post-Subscribe Thank-You Page
 
@@ -221,15 +221,9 @@
 - [x] Deploy updated schema to Sanity cloud
 - [x] Update tests (295 tests passing)
 
-## Issue #015 — "Trust Is the Product Now"
+## ~~Issue #015 — "Trust Is the Product Now"~~ (removed)
 
-- [x] Seed 3 story drafts (OVERRIDE, PATCH_FAILED, DEPRECATED) with EN/ES body + sources
-- [x] Set category references (Foundation Models, Labor & Automation, Regulation & Governance)
-- [x] Seed issue draft with Nico's Transmission (EN/ES), Stack Trace (3 hits), title/subtitle
-- [x] Wire story references to issue
-- [ ] Hector reviews + edits in Sanity Studio
-- [ ] Publish stories first, then issue
-- [ ] Optional: add cover image
+- [x] ~~Seeded and wired but content was removed; only Issue #001 exists~~
 
 ## Studio & Infrastructure Fixes
 
@@ -243,9 +237,7 @@
 - [x] Patch category references (Surveillance & Privacy, Foundation Models ×2, Regulation & Governance)
 - [x] Create issue document with issueNumber, slug, publishDate, title/subtitle, nicosTransmission (EN/ES), stackTrace (3 hits), metaDescription, beehiivStatus
 - [x] Patch story references onto issue (weak refs with \_strengthenOnPublish)
-- [ ] OpenClaw diffs gold-standard against its failed draft
-- [ ] OpenClaw refactors `sanity-upsert-draft.mjs` to match real schema
-- [ ] Discard OpenClaw's failed draft (`drafts.crashlog-2026-03-06`) after training
+- [x] ~~OpenClaw tasks~~ (failed draft already discarded, no drafts remain in Sanity)
 
 ## Build Fix + Revalidation
 

@@ -8,7 +8,7 @@
 - **Verification script:** `scripts/verify.sh` — runs lint, format check, tests, then build; exits non-zero on failure
 - **Components:** 19 total + branded 404 page
 - **Routes:** All previous routes + `/api/send-newsletter` (Beehiiv draft creation endpoint)
-- **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 24 published documents + 5 drafts.
+- **Sanity:** Project `msr24cg4`, dataset `production`. Schema deployed (workspace: `the-crash-log`). 20 published documents, 0 drafts.
 
 ## Recent Completed Work
 
@@ -37,8 +37,6 @@
 3. **Beehiiv setup** — Create `locale` custom field on Beehiiv publication, create EN/ES segments
 4. **Manual test** — `npm run dev` → `/studio` → open published issue → "Send Newsletter" action
 5. **Deploy to Vercel** and verify the newsletter flow end-to-end
-6. **Review/publish Issue #015** in Studio
-7. **Discard OpenClaw's failed draft** (`drafts.crashlog-2026-03-06`)
 
 ## Known Issues / Deferred Items
 
