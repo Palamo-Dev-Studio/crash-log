@@ -12,6 +12,8 @@
 
 ## Recent Completed Work
 
+- **Sanity schema deployed** — `beehiivPostIds` field live (required `.jsx` rename for CLI compatibility)
+- **Revalidation pipeline live** — Sanity webhook → `/api/revalidate` → `revalidatePath` → edge cache purge. Tested and confirmed working on production.
 - **Beehiiv newsletter sending system** (6 phases):
   - Phase 1: Subscribe flow passes `locale` as custom field to Beehiiv (for audience segmentation)
   - Phase 2: `lib/portableTextToHtml.js` — Portable Text to HTML converter for email templates
@@ -29,13 +31,11 @@
 - All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
 - **Env vars on Vercel:** `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` — set (same value for both)
 - **Beehiiv:** `locale` custom field created, EN/ES audience segments created (Dynamic type, OR logic for EN with "is unknown" fallback)
-- **Sanity schema:** `beehiivPostIds` field added to issue — NOT YET DEPLOYED, run `npx sanity@latest schema deploy`
+- **Sanity schema:** All fields deployed (including `beehiivPostIds` on issue)
 
 ## Immediate Next Steps
 
-1. **Deploy Sanity schema** — run `npx sanity@latest schema deploy` to push `beehiivPostIds` field
-2. **Deploy to Vercel** — push to trigger a build with the new env vars
-3. **Manual end-to-end test** — `npm run dev` → `/studio` → open Issue #001 → "Send Newsletter" action → verify Beehiiv draft(s) created
+1. **Manual end-to-end test** — `/studio` → open Issue #001 → "Send Newsletter" action → verify Beehiiv draft(s) created
 
 ## Known Issues / Deferred Items
 

@@ -249,9 +249,9 @@
 - [x] Add `SANITY_REVALIDATE_SECRET` to `.env.local`
 - [x] Tests: sanityFetch (4), null story handling (1), revalidate API (8), updated queries (5 new)
 - [x] verify.sh passes (313 tests + 21 static pages)
-- [ ] Add `SANITY_REVALIDATE_SECRET` to Vercel env vars
-- [ ] Configure Sanity webhook in manage.sanity.io (POST to /api/revalidate on CRUD)
-- [ ] Deploy to Vercel and verify revalidation works
+- [x] Add `SANITY_REVALIDATE_SECRET` to Vercel env vars
+- [x] Configure Sanity webhook in manage.sanity.io (POST to /api/revalidate on CRUD)
+- [x] Deploy to Vercel and verify revalidation works
 
 ## UI Comfort + SEO Fixes
 
@@ -289,10 +289,10 @@
 - [x] Phase 6: `beehiivPostIds` schema field for idempotency tracking
 - [x] Security: `escapeHtml`/`sanitizeHref` in `lib/htmlUtils.js`, auth on send-newsletter endpoint
 - [x] Tests: 89 new tests (319→408), verify.sh passes
-- [ ] Deploy Sanity schema (`npx sanity@latest schema deploy`)
+- [x] Deploy Sanity schema (`npx sanity@latest schema deploy`) — required .jsx rename for CLI compatibility
 - [x] Set `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` in `.env.local` and Vercel (same value)
 - [x] Beehiiv setup: `locale` custom field created, EN/ES audience segments created (Dynamic, OR for EN)
-- [ ] Deploy to Vercel
+- [x] Deploy to Vercel
 - [ ] Manual end-to-end test: Studio action → Beehiiv draft creation
 
 ## Deferred
