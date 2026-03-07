@@ -24,6 +24,12 @@ export async function POST(request) {
 
   const email = typeof body.email === "string" ? body.email.trim() : body.email;
 
+  const VALID_LOCALES = ["en", "es"];
+  const locale =
+    typeof body.locale === "string" && VALID_LOCALES.includes(body.locale)
+      ? body.locale
+      : "en";
+
   if (!email || typeof email !== "string") {
     return Response.json(
       { success: false, error: "Email is required" },
@@ -53,6 +59,7 @@ export async function POST(request) {
           email,
           utm_source: "crashlog.ai",
           utm_medium: "website",
+          custom_fields: [{ name: "locale", value: locale }],
         }),
       }
     );

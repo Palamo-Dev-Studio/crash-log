@@ -188,7 +188,31 @@ describe("SubscribeForm", () => {
       expect(global.fetch).toHaveBeenCalledWith("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "hello@crashlog.ai" }),
+        body: JSON.stringify({ email: "hello@crashlog.ai", locale: "en" }),
+      });
+    });
+  });
+
+  it("includes locale in request body for Spanish", async () => {
+    global.fetch.mockResolvedValueOnce({
+      json: () => Promise.resolve({ success: true }),
+    });
+
+    const user = userEvent.setup();
+    render(<SubscribeForm locale="es" />);
+
+    await user.click(screen.getByText("Suscríbete"));
+    await user.type(
+      screen.getByLabelText("Correo electr\u00F3nico"),
+      "hello@crashlog.ai"
+    );
+    await user.click(screen.getByText("Ir"));
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: "hello@crashlog.ai", locale: "es" }),
       });
     });
   });

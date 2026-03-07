@@ -111,6 +111,34 @@ describe("POST /api/subscribe", () => {
     expect(callBody.email).toBe("test@example.com");
     expect(callBody.utm_source).toBe("crashlog.ai");
     expect(callBody.utm_medium).toBe("website");
+    expect(callBody.custom_fields).toEqual([{ name: "locale", value: "en" }]);
+  });
+
+  it("sends locale custom field to Beehiiv when provided", async () => {
+    global.fetch.mockResolvedValueOnce({ ok: true, status: 200 });
+
+    await POST(makeRequest({ email: "test@example.com", locale: "es" }));
+
+    const callBody = JSON.parse(global.fetch.mock.calls[0][1].body);
+    expect(callBody.custom_fields).toEqual([{ name: "locale", value: "es" }]);
+  });
+
+  it("defaults locale to en when not provided", async () => {
+    global.fetch.mockResolvedValueOnce({ ok: true, status: 200 });
+
+    await POST(makeRequest({ email: "test@example.com" }));
+
+    const callBody = JSON.parse(global.fetch.mock.calls[0][1].body);
+    expect(callBody.custom_fields).toEqual([{ name: "locale", value: "en" }]);
+  });
+
+  it("normalizes invalid locale to en", async () => {
+    global.fetch.mockResolvedValueOnce({ ok: true, status: 200 });
+
+    await POST(makeRequest({ email: "test@example.com", locale: "fr" }));
+
+    const callBody = JSON.parse(global.fetch.mock.calls[0][1].body);
+    expect(callBody.custom_fields).toEqual([{ name: "locale", value: "en" }]);
   });
 
   it("treats 409 (already subscribed) as success", async () => {

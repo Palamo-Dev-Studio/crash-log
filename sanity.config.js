@@ -23,6 +23,9 @@ import agent from "./sanity/schemas/agent";
 import aboutPage from "./sanity/schemas/aboutPage";
 import siteSettings from "./sanity/schemas/siteSettings";
 
+// Actions
+import { SendNewsletterAction } from "./sanity/actions/sendNewsletterAction";
+
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 
@@ -33,6 +36,14 @@ export default defineConfig({
   dataset,
   basePath: "/studio",
   plugins: [structureTool(), visionTool()],
+  document: {
+    actions: (prev, context) => {
+      if (context.schemaType === "issue") {
+        return [...prev, SendNewsletterAction];
+      }
+      return prev;
+    },
+  },
   schema: {
     types: [
       // Objects

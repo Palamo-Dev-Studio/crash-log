@@ -114,6 +114,18 @@ export default {
       options: { list: ["not_sent", "queued", "sent"] },
       initialValue: "not_sent",
     },
+    {
+      name: "beehiivPostIds",
+      title: "Beehiiv Post IDs",
+      type: "object",
+      group: "meta",
+      readOnly: true,
+      description: "Tracks Beehiiv draft post IDs for idempotency",
+      fields: [
+        { name: "en", title: "EN Post ID", type: "string" },
+        { name: "es", title: "ES Post ID", type: "string" },
+      ],
+    },
   ],
   preview: {
     select: { title: "title.en", number: "issueNumber", hasEs: "title.es" },

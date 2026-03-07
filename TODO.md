@@ -287,6 +287,22 @@
 - [x] Tests: NotFound (6), StackTrace URL (2), updated CoverImage alt + RSS lang tests
 - [x] verify.sh passes (319 tests + 21 static pages)
 
+## Beehiiv Newsletter Sending
+
+- [x] Phase 1: Subscribe flow passes locale to Beehiiv as custom_fields
+- [x] Phase 2: Portable Text to HTML converter (`lib/portableTextToHtml.js`)
+- [x] Phase 3: Email template builder (`lib/emailTemplate.js`) with inline CSS, bilingual labels
+- [x] Phase 4: `POST /api/send-newsletter` route with auth, EN+ES draft creation
+- [x] Phase 5: Sanity Studio document action (`sanity/actions/sendNewsletterAction.js`)
+- [x] Phase 6: `beehiivPostIds` schema field for idempotency tracking
+- [x] Security: `escapeHtml`/`sanitizeHref` in `lib/htmlUtils.js`, auth on send-newsletter endpoint
+- [x] Tests: 89 new tests (319→408), verify.sh passes
+- [ ] Deploy Sanity schema (`npx sanity@latest schema deploy`)
+- [ ] Set `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` in `.env.local` and Vercel
+- [ ] Beehiiv setup: create `locale` custom field, create EN/ES audience segments
+- [ ] Manual end-to-end test: Studio action → Beehiiv draft creation
+- [ ] Deploy to Vercel
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)

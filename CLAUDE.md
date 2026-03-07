@@ -71,6 +71,7 @@ Required in `.env.local`:
 - `STRIPE_SECRET_KEY` — Stripe secret key for Checkout Sessions (server-only)
 - `NEXT_PUBLIC_DONATIONS_ENABLED` — Set to `"true"` to show the DonateCTA component
 - `SANITY_REVALIDATE_SECRET` — HMAC secret for Sanity webhook revalidation (server-only)
+- `SEND_NEWSLETTER_SECRET` — Shared secret for send-newsletter API auth (server-only; or use `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` for Studio action access)
 
 ## Reference Documentation
 
@@ -94,7 +95,7 @@ Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` 
 
 ## Current State
 
-Phases 1–8 complete. Sanity schemas, Studio, 19 React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, dynamic OG images, Beehiiv subscription, Stripe donations, and on-demand revalidation are all in place. `scripts/verify.sh` passes (313 tests + 21 static pages). Deployed to Vercel at `crashlog.ai`.
+Phases 1–8 complete plus Beehiiv newsletter sending. Sanity schemas, Studio, 19 React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, dynamic OG images, Beehiiv subscription, Stripe donations, on-demand revalidation, and Beehiiv newsletter draft creation (via Studio action) are all in place. `scripts/verify.sh` passes (408 tests + 21 static pages). Deployed to Vercel at `crashlog.ai`.
 
 ## Testing
 
