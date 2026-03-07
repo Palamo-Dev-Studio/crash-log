@@ -27,16 +27,15 @@
 - **Domain:** `crashlog.ai` (Vercel)
 - **Sanity CORS:** `https://crashlog.ai` and `http://localhost:3001` with credentials
 - All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
-- **Env vars needed on Vercel:** `SEND_NEWSLETTER_SECRET` (server-only API auth) + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` (client-side for Studio action) — same value for both
-- **Sanity schema:** `beehiivPostIds` field added to issue — deploy schema with `npx sanity@latest schema deploy`
+- **Env vars on Vercel:** `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` — set (same value for both)
+- **Beehiiv:** `locale` custom field created, EN/ES audience segments created (Dynamic type, OR logic for EN with "is unknown" fallback)
+- **Sanity schema:** `beehiivPostIds` field added to issue — NOT YET DEPLOYED, run `npx sanity@latest schema deploy`
 
 ## Immediate Next Steps
 
 1. **Deploy Sanity schema** — run `npx sanity@latest schema deploy` to push `beehiivPostIds` field
-2. **Set env vars** — add `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` to `.env.local` and Vercel (same value)
-3. **Beehiiv setup** — Create `locale` custom field on Beehiiv publication, create EN/ES segments
-4. **Manual test** — `npm run dev` → `/studio` → open published issue → "Send Newsletter" action
-5. **Deploy to Vercel** and verify the newsletter flow end-to-end
+2. **Deploy to Vercel** — push to trigger a build with the new env vars
+3. **Manual end-to-end test** — `npm run dev` → `/studio` → open Issue #001 → "Send Newsletter" action → verify Beehiiv draft(s) created
 
 ## Known Issues / Deferred Items
 
