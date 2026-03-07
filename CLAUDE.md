@@ -71,7 +71,8 @@ Required in `.env.local`:
 - `STRIPE_SECRET_KEY` — Stripe secret key for Checkout Sessions (server-only)
 - `NEXT_PUBLIC_DONATIONS_ENABLED` — Set to `"true"` to show the DonateCTA component
 - `SANITY_REVALIDATE_SECRET` — HMAC secret for Sanity webhook revalidation (server-only)
-- `SEND_NEWSLETTER_SECRET` — Shared secret for send-newsletter API auth (server-only; or use `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` for Studio action access)
+- `SEND_NEWSLETTER_SECRET` — Server-only secret for send-newsletter API auth
+- `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` — Same secret, exposed to client for Sanity Studio action
 
 ## Reference Documentation
 

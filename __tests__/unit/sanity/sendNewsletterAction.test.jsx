@@ -3,6 +3,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
 const mockPatch = { execute: vi.fn(), disabled: false };
 
@@ -142,8 +143,14 @@ describe("SendNewsletterAction", () => {
       result.current.onHandle();
     });
 
-    // The dialog content component should have the warning message
     expect(result.current.dialog).toBeTruthy();
     expect(result.current.dialog.header).toBe("Send Newsletter");
+
+    // Render the dialog content and verify warning message appears
+    render(result.current.dialog.content);
+    expect(
+      screen.getByText(/Warning: Beehiiv drafts were already created/)
+    ).toBeTruthy();
+    expect(screen.getByText(/existing-post-id/)).toBeTruthy();
   });
 });

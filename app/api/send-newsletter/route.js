@@ -10,9 +10,7 @@ import { t } from "@/lib/locale";
 export async function POST(request) {
   const apiKey = process.env.BEEHIIV_API_KEY;
   const publicationId = process.env.BEEHIIV_PUBLICATION_ID;
-  const sendSecret =
-    process.env.SEND_NEWSLETTER_SECRET ||
-    process.env.NEXT_PUBLIC_SEND_NEWSLETTER_SECRET;
+  const sendSecret = process.env.SEND_NEWSLETTER_SECRET;
 
   if (!apiKey || !publicationId || !sendSecret) {
     return Response.json(

@@ -171,8 +171,9 @@ describe("buildEmailHtml", () => {
 
   it("renders Stack Trace section", () => {
     const html = buildEmailHtml(makeIssue(), "en");
-    expect(html).toContain("Stack Trace");
-    expect(html).toContain("Mock portable text content");
+    expect(html).toContain("A quick hit");
+    expect(html).toContain("Example");
+    expect(html).toContain('href="https://example.com"');
   });
 
   it("renders Stack Trace source links", () => {

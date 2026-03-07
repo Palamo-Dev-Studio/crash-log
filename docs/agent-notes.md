@@ -27,13 +27,13 @@
 - **Domain:** `crashlog.ai` (Vercel)
 - **Sanity CORS:** `https://crashlog.ai` and `http://localhost:3001` with credentials
 - All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
-- **Env vars needed on Vercel:** `SEND_NEWSLETTER_SECRET` (or `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET`) — shared secret for newsletter API auth
+- **Env vars needed on Vercel:** `SEND_NEWSLETTER_SECRET` (server-only API auth) + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` (client-side for Studio action) — same value for both
 - **Sanity schema:** `beehiivPostIds` field added to issue — deploy schema with `npx sanity@latest schema deploy`
 
 ## Immediate Next Steps
 
 1. **Deploy Sanity schema** — run `npx sanity@latest schema deploy` to push `beehiivPostIds` field
-2. **Set env var** — add `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` to `.env.local` and Vercel
+2. **Set env vars** — add `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` to `.env.local` and Vercel (same value)
 3. **Beehiiv setup** — Create `locale` custom field on Beehiiv publication, create EN/ES segments
 4. **Manual test** — `npm run dev` → `/studio` → open published issue → "Send Newsletter" action
 5. **Deploy to Vercel** and verify the newsletter flow end-to-end

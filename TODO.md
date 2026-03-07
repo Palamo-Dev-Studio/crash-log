@@ -298,7 +298,7 @@
 - [x] Security: `escapeHtml`/`sanitizeHref` in `lib/htmlUtils.js`, auth on send-newsletter endpoint
 - [x] Tests: 89 new tests (319→408), verify.sh passes
 - [ ] Deploy Sanity schema (`npx sanity@latest schema deploy`)
-- [ ] Set `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` in `.env.local` and Vercel
+- [ ] Set `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` in `.env.local` and Vercel (same value)
 - [ ] Beehiiv setup: create `locale` custom field, create EN/ES audience segments
 - [ ] Manual end-to-end test: Studio action → Beehiiv draft creation
 - [ ] Deploy to Vercel

@@ -75,6 +75,15 @@ export function SendNewsletterAction({ id, type, published, draft }) {
                   body: JSON.stringify({ slug }),
                 });
 
+                if (!response.ok) {
+                  const text = await response.text().catch(() => "");
+                  setDialogContent({
+                    type: "result",
+                    message: `Server error: ${response.status} ${text}`,
+                  });
+                  return;
+                }
+
                 const data = await response.json();
 
                 if (data.success) {

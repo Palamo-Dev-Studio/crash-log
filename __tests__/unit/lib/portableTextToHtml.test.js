@@ -92,24 +92,8 @@ describe("portableTextToHtml", () => {
   });
 
   it("renders strong text", () => {
-    const blocks = [
-      {
-        _type: "block",
-        _key: "a",
-        style: "normal",
-        children: [
-          {
-            _type: "span",
-            _key: "s1",
-            text: "bold text",
-            marks: ["strong1"],
-          },
-        ],
-        markDefs: [{ _key: "strong1", _type: "strong" }],
-      },
-    ];
     // Strong is a decorator mark, not a markDef — test with decorator syntax
-    const blocks2 = [
+    const blocks = [
       {
         _type: "block",
         _key: "a",
@@ -120,7 +104,7 @@ describe("portableTextToHtml", () => {
         markDefs: [],
       },
     ];
-    const html = portableTextToHtml(blocks2);
+    const html = portableTextToHtml(blocks);
     expect(html).toContain("<strong>bold text</strong>");
   });
 
