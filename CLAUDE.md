@@ -17,9 +17,7 @@ The Crash Log is a bilingual (EN/ES) newsletter website about AI and tech failur
 - `npm run test:coverage` — Run tests with coverage report
 - `npm run test:e2e` — Run Playwright e2e tests (auto-starts dev server)
 
-- `scripts/verify.sh` — Build-gate verification (runs `npm test` then `npm run build`, exits non-zero on failure)
-
-No linter or CI pipeline configured yet.
+- `scripts/verify.sh` — Build-gate verification (runs lint, format check, tests, then build; exits non-zero on failure)
 
 ## Architecture
 
@@ -49,7 +47,7 @@ Schemas live in `sanity/schemas/`. Object types in `sanity/schemas/objects/`.
 
 **Documents:** `issue` (newsletter edition container) → references `story` docs and inline `stackTraceHit` objects. `story` (individual reporting block with severity level). `category` (coverage beat). `agent` (AI or human masthead member). `aboutPage` and `siteSettings` are singletons.
 
-**Severity levels** (on stories): `ERROR`, `OVERRIDE`, `TERMINATE`, `WARNING`, `CRITICAL`, `BREACH`.
+**Severity levels** (on stories): Free-text string field. Colors cycle by story position index, not by label (see `lib/storyColors.js`).
 
 **Localization strategy:** Field-level bilingual via reusable object types — `localizedString`, `localizedText`, `localizedBlockContent`. English is required; Spanish is optional. See `docs/reference/crash-log-i18n-guide-revised.md` for details.
 
@@ -96,7 +94,7 @@ Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` 
 
 ## Current State
 
-Phases 1–8 complete plus Beehiiv newsletter sending. Sanity schemas, Studio, 19 React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, dynamic OG images, Beehiiv subscription, Stripe donations, on-demand revalidation, and Beehiiv newsletter draft creation (via Studio action) are all in place. `scripts/verify.sh` passes (408 tests + 21 static pages). Deployed to Vercel at `crashlog.ai`.
+Phases 1–8 complete plus Beehiiv newsletter sending. Sanity schemas, Studio, 19 React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, dynamic OG images, Beehiiv subscription, Stripe donations, on-demand revalidation, and Beehiiv newsletter draft creation (via Studio action) are all in place. `scripts/verify.sh` passes (408 tests + 36 static pages). Deployed to Vercel at `crashlog.ai`.
 
 ## Testing
 
@@ -106,9 +104,10 @@ Phases 1–8 complete plus Beehiiv newsletter sending. Sanity schemas, Studio, 1
 - Config: `playwright.config.mjs` — Chromium, auto-starts dev server on port 3000
 - Setup: `__tests__/setup.js` — jest-dom matchers, DOM cleanup
 - Mocks: `__tests__/mocks/` — next/image, next/link, next/navigation stubs
-- Unit tests: `__tests__/unit/lib/` — locale, sanity, queries, portableText
-- Component tests: `__tests__/unit/components/` — all 16 components
-- Integration tests: `__tests__/integration/` — middleware, robots, rss-feed
+- Unit tests: `__tests__/unit/lib/` — locale, sanity, queries, portableText, portableTextToHtml, emailTemplate, htmlUtils
+- Unit tests: `__tests__/unit/sanity/` — sendNewsletterAction
+- Component tests: `__tests__/unit/components/` — 20 component test files
+- Integration tests: `__tests__/integration/` — middleware, robots, rss-feed, subscribe, donate, revalidate, send-newsletter, thank-you
 - E2E tests: `e2e/` — home, navigation, locale-switching, empty-state
 
 **JSX in .js files:** The project uses JSX in `.js` files (Next.js convention). A custom Vite plugin in `vitest.config.mjs` (`jsxInJsPlugin`) transforms these via esbuild before Vite's import analysis.

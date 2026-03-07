@@ -3,7 +3,7 @@
 ## Current State
 
 - **Branch:** `main`
-- **Build:** `verify.sh` passes (408 tests + 21 static pages)
+- **Build:** `verify.sh` passes (408 tests + 36 static pages)
 - **Tests:** 408 unit/component/integration tests (Vitest, 36 files) + 14 e2e tests (Playwright) = 422 total
 - **Verification script:** `scripts/verify.sh` — runs lint, format check, tests, then build; exits non-zero on failure
 - **Components:** 19 total + branded 404 page
