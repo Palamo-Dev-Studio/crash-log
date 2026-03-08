@@ -346,6 +346,15 @@ ExecPlan: `docs/plans/active/nicos-notes-column.md`
 - [x] Commit all changes
 - [x] Update tracking docs (agent-notes, TODO, MEMORY)
 
+## Sanity Content Localization
+
+- [x] Push Spanish bios into all 6 agent documents in Sanity
+- [x] Push Spanish translations into aboutPage (introParagraph, workflowSection, contactCTA)
+- [x] Publish all updated documents
+- [x] Spanish About page now renders via `SanityAbout` (no longer uses `FallbackAbout`)
+- [x] Remove `max-width: 640px` from about page text sections (intro, workflow, contact)
+- [x] Fix column email subject: localize prefix for Spanish ("Notas de Nico" vs "Nico's Notes")
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)

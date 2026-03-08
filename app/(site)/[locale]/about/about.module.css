@@ -6,7 +6,6 @@
   font-size: 18px;
   line-height: 1.8;
   color: var(--text-secondary);
-  max-width: 640px;
   margin-bottom: 56px;
 }
 
@@ -34,7 +33,6 @@
   font-size: 16.5px;
   line-height: 1.72;
   color: var(--text-secondary);
-  max-width: 640px;
   margin-bottom: 56px;
 }
 
@@ -57,7 +55,6 @@
   font-size: 16.5px;
   line-height: 1.72;
   color: var(--text-secondary);
-  max-width: 640px;
   margin-bottom: 56px;
 }
 
