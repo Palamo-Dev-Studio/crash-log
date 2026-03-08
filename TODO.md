@@ -355,6 +355,16 @@ ExecPlan: `docs/plans/active/nicos-notes-column.md`
 - [x] Remove `max-width: 640px` from about page text sections (intro, workflow, contact)
 - [x] Fix column email subject: localize prefix for Spanish ("Notas de Nico" vs "Nico's Notes")
 
+## Masthead Model/Platform Labels
+
+- [x] Change agent `model` field from `string` to `localizedString` in schema
+- [x] Update AgentCard to resolve localized model via `t()` (backward compat for plain strings)
+- [x] Populate model for all 6 agents in Sanity (Nico: Sonnet 4.6, sub-agents: GPT-5.3-Codex, Hector: Coffee 20 oz / Cafecito 20 oz)
+- [x] Update fallback masthead data with model values
+- [x] Deploy schema, publish all agent documents
+- [x] Center about page section headings, rename "The Masthead" → "Masthead"
+- [x] Add 3 new AgentCard model localization tests (507 total)
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)

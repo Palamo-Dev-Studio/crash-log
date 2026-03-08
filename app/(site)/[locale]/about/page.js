@@ -171,7 +171,7 @@ function FallbackAbout({ locale, about }) {
 
       <section className={styles.mastheadSection}>
         <h2 className={styles.sectionHeading}>
-          {isEs ? "── LA REDACCIÓN ──" : "── THE MASTHEAD ──"}
+          {isEs ? "── REDACCIÓN ──" : "── MASTHEAD ──"}
         </h2>
         {FALLBACK_MASTHEAD.map((agent) => {
           const sanityAgent = about?.masthead?.find(
@@ -409,7 +409,7 @@ function SanityAbout({ about, locale }) {
 
       <section className={styles.mastheadSection}>
         <h2 className={styles.sectionHeading}>
-          {locale === "es" ? "── LA REDACCIÓN ──" : "── THE MASTHEAD ──"}
+          {locale === "es" ? "── REDACCIÓN ──" : "── MASTHEAD ──"}
         </h2>
         {about.masthead?.map((agent) => (
           <AgentCard
