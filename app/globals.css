@@ -46,6 +46,7 @@
 
   /* Layout */
   --max-width: 960px;
+  --max-width-wide: 1200px;
   --content-padding: 28px;
 }
 

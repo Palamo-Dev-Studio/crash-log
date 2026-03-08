@@ -1,7 +1,11 @@
 // ABOUTME: Dynamic sitemap generator for search engine indexing.
 // ABOUTME: Lists all locale variants of home, about, archive, and individual issue pages.
 
-import { getAllIssuesSummary, getAllCategories } from "@/lib/queries";
+import {
+  getAllIssuesSummary,
+  getAllCategories,
+  getAllColumnsSummary,
+} from "@/lib/queries";
 import { LOCALES } from "@/lib/locale";
 
 const BASE_URL = "https://crashlog.ai";
@@ -10,12 +14,13 @@ const BASE_URL = "https://crashlog.ai";
 const STATIC_PAGE_DATE = "2026-03-04T00:00:00.000Z";
 
 export default async function sitemap() {
-  const [issues, categories] = await Promise.all([
+  const [issues, categories, columns] = await Promise.all([
     getAllIssuesSummary(),
     getAllCategories(),
+    getAllColumnsSummary(),
   ]);
 
-  const staticPages = ["", "/about", "/archive", "/beats"];
+  const staticPages = ["", "/about", "/archive", "/beats", "/nico"];
   const staticEntries = staticPages.flatMap((path) =>
     LOCALES.map((locale) => ({
       url: `${BASE_URL}/${locale}${path}`,
@@ -65,5 +70,22 @@ export default async function sitemap() {
     }))
   );
 
-  return [...staticEntries, ...issueEntries, ...beatEntries];
+  const columnEntries = columns.flatMap((col) =>
+    LOCALES.map((locale) => ({
+      url: `${BASE_URL}/${locale}/nico/${col.slug}`,
+      lastModified:
+        col._updatedAt || col.publishDate || new Date().toISOString(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+      alternates: {
+        languages: {
+          "en-US": `${BASE_URL}/en/nico/${col.slug}`,
+          "es-ES": `${BASE_URL}/es/nico/${col.slug}`,
+          "x-default": `${BASE_URL}/en/nico/${col.slug}`,
+        },
+      },
+    }))
+  );
+
+  return [...staticEntries, ...issueEntries, ...columnEntries, ...beatEntries];
 }

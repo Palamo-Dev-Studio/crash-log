@@ -9,14 +9,27 @@ import styles from "./SiteNav.module.css";
 
 const NAV_ITEMS = [
   { key: "latest", href: "" },
+  { key: "nico", href: "/nico" },
   { key: "archive", href: "/archive" },
   { key: "beats", href: "/beats" },
   { key: "about", href: "/about" },
 ];
 
 const LABELS = {
-  en: { latest: "Latest", archive: "Archive", beats: "Beats", about: "About" },
-  es: { latest: "Último", archive: "Archivo", beats: "Temas", about: "Sobre" },
+  en: {
+    latest: "Latest",
+    nico: "Nico\u2019s Notes",
+    archive: "Archive",
+    beats: "Beats",
+    about: "About",
+  },
+  es: {
+    latest: "Último",
+    nico: "Notas de Nico",
+    archive: "Archivo",
+    beats: "Temas",
+    about: "Sobre",
+  },
 };
 
 export default function SiteNav({ locale }) {

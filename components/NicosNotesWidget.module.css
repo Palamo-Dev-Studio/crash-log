@@ -1,0 +1,79 @@
+/* ABOUTME: Styles for the Nico's Notes sidebar widget on the home page.
+   ABOUTME: Red top border, compact layout, sticky positioning for desktop. */
+
+.widget {
+  border-top: 3px solid var(--agent-nico);
+  padding: 24px 0;
+}
+
+.heading {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--agent-nico);
+  margin-bottom: 20px;
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.titleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.titleLink:hover {
+  color: var(--agent-nico);
+}
+
+.excerpt {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.readLink {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--agent-nico);
+  text-decoration: none;
+}
+
+.readLink:hover {
+  text-decoration: underline;
+}
+
+.archiveLink {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+  text-decoration: none;
+}
+
+.archiveLink:hover {
+  color: var(--text-tertiary);
+}

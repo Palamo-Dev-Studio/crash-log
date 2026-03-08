@@ -1,12 +1,15 @@
 // ABOUTME: Latest issue page — the homepage for each locale.
-// ABOUTME: Fetches and renders the most recently published issue from Sanity.
+// ABOUTME: Two-column layout: latest issue + Nico's Notes sidebar widget.
 
 import { cache } from "react";
-import { getLatestIssue } from "@/lib/queries";
+import { getLatestIssue, getLatestColumn } from "@/lib/queries";
 import { t, LOCALE_OG } from "@/lib/locale";
 import IssueContent from "@/components/IssueContent";
+import NicosNotesWidget from "@/components/NicosNotesWidget";
+import styles from "./home.module.css";
 
 const getCachedLatestIssue = cache(getLatestIssue);
+const getCachedLatestColumn = cache(getLatestColumn);
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
@@ -50,7 +53,21 @@ export async function generateMetadata({ params }) {
 
 export default async function HomePage({ params }) {
   const { locale } = await params;
-  const issue = await getCachedLatestIssue();
+  const [issue, column] = await Promise.all([
+    getCachedLatestIssue(),
+    getCachedLatestColumn(),
+  ]);
 
-  return <IssueContent issue={issue} locale={locale} />;
+  return (
+    <div className={column ? styles.grid : undefined}>
+      <div className={styles.main}>
+        <IssueContent issue={issue} locale={locale} />
+      </div>
+      {column && (
+        <div className={styles.sidebar}>
+          <NicosNotesWidget column={column} locale={locale} />
+        </div>
+      )}
+    </div>
+  );
 }

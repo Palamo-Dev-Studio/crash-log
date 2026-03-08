@@ -21,15 +21,16 @@ vi.mock("next/navigation", () => ({
 import SiteNav from "@/components/SiteNav";
 
 describe("SiteNav", () => {
-  it("renders 4 navigation links", () => {
+  it("renders 5 navigation links", () => {
     render(<SiteNav locale="en" />);
     const links = screen.getAllByRole("link");
-    expect(links).toHaveLength(4);
+    expect(links).toHaveLength(5);
   });
 
-  it("renders Latest, Archive, Beats, About links", () => {
+  it("renders Latest, Nico\u2019s Notes, Archive, Beats, About links", () => {
     render(<SiteNav locale="en" />);
     expect(screen.getByText("Latest")).toBeInTheDocument();
+    expect(screen.getByText("Nico\u2019s Notes")).toBeInTheDocument();
     expect(screen.getByText("Archive")).toBeInTheDocument();
     expect(screen.getByText("Beats")).toBeInTheDocument();
     expect(screen.getByText("About")).toBeInTheDocument();
@@ -38,6 +39,7 @@ describe("SiteNav", () => {
   it("renders Spanish nav labels for es locale", () => {
     render(<SiteNav locale="es" />);
     expect(screen.getByText("Último")).toBeInTheDocument();
+    expect(screen.getByText("Notas de Nico")).toBeInTheDocument();
     expect(screen.getByText("Archivo")).toBeInTheDocument();
     expect(screen.getByText("Temas")).toBeInTheDocument();
     expect(screen.getByText("Sobre")).toBeInTheDocument();
@@ -48,6 +50,10 @@ describe("SiteNav", () => {
     expect(screen.getByText("Latest").closest("a")).toHaveAttribute(
       "href",
       "/en"
+    );
+    expect(screen.getByText("Nico\u2019s Notes").closest("a")).toHaveAttribute(
+      "href",
+      "/en/nico"
     );
     expect(screen.getByText("Archive").closest("a")).toHaveAttribute(
       "href",
@@ -101,6 +107,15 @@ describe("SiteNav", () => {
     render(<SiteNav locale="en" />);
     const about = screen.getByText("About").closest("a");
     expect(about.className).toContain("active");
+    const latest = screen.getByText("Latest").closest("a");
+    expect(latest.className).not.toContain("active");
+  });
+
+  it("applies active class to Nico\u2019s Notes when segment is nico", () => {
+    mockSegment = "nico";
+    render(<SiteNav locale="en" />);
+    const nico = screen.getByText("Nico\u2019s Notes").closest("a");
+    expect(nico.className).toContain("active");
     const latest = screen.getByText("Latest").closest("a");
     expect(latest.className).not.toContain("active");
   });

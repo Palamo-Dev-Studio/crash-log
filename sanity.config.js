@@ -22,9 +22,11 @@ import category from "./sanity/schemas/category";
 import agent from "./sanity/schemas/agent";
 import aboutPage from "./sanity/schemas/aboutPage";
 import siteSettings from "./sanity/schemas/siteSettings";
+import column from "./sanity/schemas/column";
 
 // Actions
 import { SendNewsletterAction } from "./sanity/actions/sendNewsletterAction.jsx";
+import { SendColumnNewsletterAction } from "./sanity/actions/sendColumnNewsletterAction.jsx";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
@@ -40,6 +42,9 @@ export default defineConfig({
     actions: (prev, context) => {
       if (context.schemaType === "issue") {
         return [...prev, SendNewsletterAction];
+      }
+      if (context.schemaType === "column") {
+        return [...prev, SendColumnNewsletterAction];
       }
       return prev;
     },
@@ -60,6 +65,7 @@ export default defineConfig({
       agent,
       aboutPage,
       siteSettings,
+      column,
     ],
   },
 });

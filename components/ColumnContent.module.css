@@ -1,0 +1,91 @@
+/* ABOUTME: Styles for the column detail renderer component.
+   ABOUTME: Red accent for Nico branding, display-font title, serif body. */
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.emptyText {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.header {
+  padding: 32px var(--content-padding) 0;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.prefix {
+  color: var(--agent-nico);
+  font-weight: 600;
+}
+
+.number {
+  color: var(--text-faint);
+}
+
+.date {
+  color: var(--text-faint);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 0;
+}
+
+.body {
+  padding: 32px var(--content-padding);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.body p {
+  margin-bottom: 1.5em;
+}
+
+.body a {
+  color: var(--severity-breach);
+  text-decoration: underline;
+}
+
+.signature {
+  padding: 0 var(--content-padding);
+  max-width: var(--max-width);
+  margin: 0 auto 48px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--agent-nico);
+}

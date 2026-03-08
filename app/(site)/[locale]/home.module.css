@@ -1,0 +1,32 @@
+/* ABOUTME: Styles for the home page two-column layout.
+   ABOUTME: Grid with issue content + Nico's Notes sidebar, stacks on mobile. */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 48px;
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+}
+
+.main {
+  min-width: 0;
+}
+
+.sidebar {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .sidebar {
+    position: static;
+    order: -1;
+  }
+}

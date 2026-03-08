@@ -299,38 +299,52 @@
 
 ExecPlan: `docs/plans/active/nicos-notes-column.md`
 
-### Phase 1: Schema & Data Layer
-- [ ] Create `sanity/schemas/column.js` (columnNumber, slug, publishDate, status, coverImage, title, subtitle, body, metaDescription, beehiivStatus, beehiivPostIds)
-- [ ] Register column schema in `sanity.config.js`
-- [ ] Attach SendNewsletterAction to column documents
-- [ ] Add GROQ queries + fetch wrappers to `lib/queries.js` (getColumnBySlug, getAllColumnSlugs, getAllColumnsForArchive, getColumnsForFeed, getLatestColumn)
+### Phase 1: Schema & Studio (done)
 
-### Phase 2: Routes & Pages
-- [ ] Column detail page: `app/(site)/[locale]/nico/[slug]/page.js` (generateStaticParams, generateMetadata, JSON-LD, render)
-- [ ] Column archive page: `app/(site)/[locale]/nico/page.js`
-- [ ] `ColumnContent.js` component (detail view)
-- [ ] `ColumnCard.js` component (archive card)
+- [x] Create `sanity/schemas/column.js` (columnNumber, slug, publishDate, status, coverImage, coverImageAlt, coverImagePrompt, title, subtitle, body, metaDescription, beehiivStatus, beehiivPostIds)
+- [x] Register column schema in `sanity.config.js`
+- [x] Create `SendColumnNewsletterAction` Studio action (separate from issue action)
+- [x] Attach column action in `sanity.config.js`
+- [x] 12 unit tests for action
 
-### Phase 3: SEO & Distribution
-- [ ] Add column entries to `app/sitemap.js`
-- [ ] Create `app/(site)/[locale]/nico/feed.xml/route.js` (separate column RSS feed)
-- [ ] Add "Nico's Notes" link to `SiteNav`
+### Phase 2: Locale + Data Layer (done)
 
-### Phase 4: Newsletter Integration
-- [ ] Column email template (`buildColumnEmailHtml`, `buildColumnEmailSubject`)
-- [ ] Extend `/api/send-newsletter` for `type: "column"` (or separate endpoint)
-- [ ] Verify Studio sending action works for column documents
+- [x] Parameterize `hasFullTranslation()` with `bodyField` option (backward-compatible)
+- [x] Add 6 GROQ queries + fetch wrappers to `lib/queries.js` (getLatestColumn, getColumnBySlug, getAllColumnSlugs, getAllColumnsForArchive, getColumnsForFeed, getAllColumnsSummary)
+- [x] 3 new locale tests, 17 new query tests
 
-### Phase 5: Tests
-- [ ] Unit tests: column queries, column email template
-- [ ] Component tests: ColumnContent, ColumnCard, NicosNotesWidget
-- [ ] Integration tests: column pages, column RSS, column newsletter API
-- [ ] E2E: column page loads, archive lists columns
+### Phase 3: Column Email Template + API (done)
 
-### Phase 6: Home Page Widget
-- [ ] `NicosNotesWidget.js` component (latest column teaser, red accent)
-- [ ] Integrate widget into home page layout
-- [ ] Widget component tests
+- [x] `lib/columnEmailTemplate.js` — `buildColumnEmailHtml()` + `buildColumnEmailSubject()`
+- [x] `app/api/send-column-newsletter/route.js` — Separate POST handler
+- [x] 15 email template tests, 11 API integration tests
+
+### Phase 4: Routes + Components (done)
+
+- [x] `components/ColumnContent.js` + `.module.css` — Column detail renderer
+- [x] `components/ColumnCard.js` + `.module.css` — Archive listing card
+- [x] `components/NicosNotesWidget.js` + `.module.css` — Home page sidebar widget
+- [x] `app/(site)/[locale]/nico/[slug]/page.js` — Column detail page (metadata, Article + BreadcrumbList JSON-LD, static params)
+- [x] `app/(site)/[locale]/nico/page.js` — Column archive page
+- [x] `app/(site)/[locale]/nico/feed.xml/route.js` — Column RSS feed
+- [x] 13 ColumnContent, 8 ColumnCard, 10 Widget, 6 RSS tests
+
+### Phase 5: Home Page Layout + Navigation + SEO (done)
+
+- [x] `app/globals.css` — Added `--max-width-wide: 1200px` token
+- [x] `app/(site)/[locale]/page.js` — Two-column grid, parallel fetch issue + column
+- [x] `app/(site)/[locale]/home.module.css` — CSS Grid (1fr + 320px sidebar, mobile stack)
+- [x] `components/SiteNav.js` — Added "Nico's Notes" / "Notas de Nico" (5 nav items)
+- [x] `app/sitemap.js` — Added `/nico` static page + dynamic column entries
+- [x] Updated SiteNav tests (9 → 10 tests)
+- [x] verify.sh passes (504 tests + 39 static pages)
+
+### Phase 6: E2E + Deploy + Docs
+
+- [ ] Add Playwright e2e tests: column page loads, archive lists columns, locale switching
+- [ ] Deploy Sanity schema: `npx sanity@latest schema deploy`
+- [ ] Commit all changes
+- [ ] Update tracking docs (agent-notes, TODO, MEMORY)
 
 ## Deferred
 

@@ -101,4 +101,28 @@ describe("hasFullTranslation()", () => {
     };
     expect(hasFullTranslation(issue, "es")).toBe(true);
   });
+
+  it("checks custom bodyField when option is provided", () => {
+    const column = {
+      title: { en: "Hello", es: "Hola" },
+      body: { es: [{ _type: "block" }] },
+    };
+    expect(hasFullTranslation(column, "es", { bodyField: "body" })).toBe(true);
+  });
+
+  it("returns false when custom bodyField is missing translation", () => {
+    const column = {
+      title: { en: "Hello", es: "Hola" },
+      body: { en: [{ _type: "block" }] },
+    };
+    expect(hasFullTranslation(column, "es", { bodyField: "body" })).toBe(false);
+  });
+
+  it("returns false when custom bodyField is empty array", () => {
+    const column = {
+      title: { en: "Hello", es: "Hola" },
+      body: { es: [] },
+    };
+    expect(hasFullTranslation(column, "es", { bodyField: "body" })).toBe(false);
+  });
 });

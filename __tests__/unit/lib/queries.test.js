@@ -27,6 +27,11 @@ const nullFallbackWrappers = [
     name: "getCategoryWithStories",
     fn: () => queries.getCategoryWithStories("test-slug"),
   },
+  { name: "getLatestColumn", fn: () => queries.getLatestColumn() },
+  {
+    name: "getColumnBySlug",
+    fn: () => queries.getColumnBySlug("test-slug"),
+  },
 ];
 
 // --- Wrappers that return [] on failure ---
@@ -40,6 +45,13 @@ const arrayFallbackWrappers = [
   },
   { name: "getAllCategories", fn: () => queries.getAllCategories() },
   { name: "getIssuesForFeed", fn: () => queries.getIssuesForFeed() },
+  { name: "getAllColumnSlugs", fn: () => queries.getAllColumnSlugs() },
+  {
+    name: "getAllColumnsForArchive",
+    fn: () => queries.getAllColumnsForArchive(),
+  },
+  { name: "getColumnsForFeed", fn: () => queries.getColumnsForFeed() },
+  { name: "getAllColumnsSummary", fn: () => queries.getAllColumnsSummary() },
 ];
 
 describe("null-fallback wrappers", () => {
@@ -97,6 +109,14 @@ describe("parameter passing", () => {
       expect.objectContaining({ params: { slug: "tech-slug" } })
     );
   });
+
+  it("getColumnBySlug passes slug param via sanityFetch", async () => {
+    mockSanityFetch.mockResolvedValueOnce(null);
+    await queries.getColumnBySlug("2026-03-07");
+    expect(mockSanityFetch).toHaveBeenCalledWith(
+      expect.objectContaining({ params: { slug: "2026-03-07" } })
+    );
+  });
 });
 
 describe("null client fallback", () => {
@@ -112,6 +132,12 @@ describe("null client fallback", () => {
     expect(await queries.getAllIssuesForArchive()).toEqual([]);
     expect(await queries.getAllCategories()).toEqual([]);
     expect(await queries.getIssuesForFeed()).toEqual([]);
+    expect(await queries.getLatestColumn()).toBeNull();
+    expect(await queries.getColumnBySlug("x")).toBeNull();
+    expect(await queries.getAllColumnSlugs()).toEqual([]);
+    expect(await queries.getAllColumnsForArchive()).toEqual([]);
+    expect(await queries.getColumnsForFeed()).toEqual([]);
+    expect(await queries.getAllColumnsSummary()).toEqual([]);
   });
 });
 
@@ -126,5 +152,11 @@ describe("query string exports", () => {
     expect(queries.ALL_CATEGORIES_QUERY).toContain("category");
     expect(queries.CATEGORY_WITH_STORIES_QUERY).toContain("$slug");
     expect(queries.ISSUES_FOR_FEED_QUERY).toContain("publishDate");
+    expect(queries.LATEST_COLUMN_QUERY).toContain('_type == "column"');
+    expect(queries.COLUMN_BY_SLUG_QUERY).toContain("$slug");
+    expect(queries.ALL_COLUMN_SLUGS_QUERY).toContain("slug");
+    expect(queries.ALL_COLUMNS_FOR_ARCHIVE_QUERY).toContain("columnNumber");
+    expect(queries.COLUMNS_FOR_FEED_QUERY).toContain("publishDate");
+    expect(queries.ALL_COLUMNS_SUMMARY_QUERY).toContain("publishDate");
   });
 });
