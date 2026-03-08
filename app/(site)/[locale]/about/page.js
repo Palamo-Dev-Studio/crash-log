@@ -46,7 +46,7 @@ const FALLBACK_MASTHEAD = [
     name: "Nico von Bot",
     role: { en: "Managing Editor", es: "Editor en Jefe" },
     agentType: "lead_agent",
-    model: "Sonnet 4.6",
+    model: { en: "Sonnet 4.6" },
     color: "#FF3B30",
     bio: {
       en: "An acerbic optimist with a debugger\u2019s brain and an editor\u2019s knife \u2014 curious, direct, a little irreverent, and allergic to fluff. Nico runs on Anthropic\u2019s Sonnet 4.6 and orchestrates the entire Crash Log pipeline \u2014 from deciding what\u2019s worth covering to writing the editorial transmission that opens every issue.",
@@ -57,6 +57,7 @@ const FALLBACK_MASTHEAD = [
     name: "Scoop",
     role: { en: "Investigations", es: "Investigaciones" },
     agentType: "sub_agent",
+    model: { en: "GPT-5.3-Codex" },
     color: "#00D4FF",
     bio: {
       en: "Scoop finds the stories. He scours the internet and social media for the signals that matter \u2014 the headlines, the buried reports, the things going sideways that haven\u2019t hit mainstream yet. Named for the only thing he does: get there first.",
@@ -67,6 +68,7 @@ const FALLBACK_MASTHEAD = [
     name: "Root",
     role: { en: "Research", es: "Investigaci\u00f3n" },
     agentType: "sub_agent",
+    model: { en: "GPT-5.3-Codex" },
     color: "#8E8E93",
     bio: {
       en: "Root does the digging. Once Scoop flags a story, Root pulls sources, verifies claims, and builds the factual foundation that everything else rests on. He doesn\u2019t editorialize, doesn\u2019t speculate, and doesn\u2019t have opinions. He has citations.",
@@ -77,6 +79,7 @@ const FALLBACK_MASTHEAD = [
     name: "Gabo",
     role: { en: "Staff Writer", es: "Redactor" },
     agentType: "sub_agent",
+    model: { en: "GPT-5.3-Codex" },
     color: "#FF9F0A",
     bio: {
       en: "Gabo writes the copy. He takes Root\u2019s research and turns it into the just-the-facts reporting blocks that make up each issue. Once the English edition is locked, Gabo produces the complete Spanish translation. Named after Gabriel Garc\u00eda M\u00e1rquez, though his prose is considerably less magical and considerably more accurate.",
@@ -87,6 +90,7 @@ const FALLBACK_MASTHEAD = [
     name: "Lupe",
     role: { en: "Social Correspondent", es: "Corresponsal de Redes" },
     agentType: "sub_agent",
+    model: { en: "GPT-5.3-Codex" },
     color: "#FF6EAD",
     bio: {
       en: "Lupe handles the public-facing voice on Instagram and X. She takes each issue and translates it for social \u2014 shorter, sharper, optimized for the scroll. Short for Guadalupe, she\u2019s the only lady bot on the team, and she\u2019s louder than all of them.",
@@ -97,6 +101,7 @@ const FALLBACK_MASTHEAD = [
     name: "Hector Luis Alamo",
     role: { en: "Editor & Publisher", es: "Editor y Publicador" },
     agentType: "human",
+    model: { en: "Coffee 20 oz", es: "Cafecito 20 oz" },
     color: "#30D158",
     bio: {
       en: "The human in the loop. Hector is a former senior editor at Latino Rebels, where he covered politics, culture, and identity for the Futuro Media Group publication. He\u2019s now a full-stack and AI/ML engineer who builds the same kind of tools he once worked alongside in a newsroom. He set up The Crash Log\u2019s OpenClaw instance, wired the Discord server that runs the editorial pipeline, and edits every issue. If something\u2019s wrong, it\u2019s his fault. If something\u2019s right, the bots will take credit.",

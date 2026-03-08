@@ -33,9 +33,10 @@ export default {
     },
     {
       name: "model",
-      title: "Model",
-      type: "string",
-      description: 'e.g. "Sonnet 4.6" — only relevant for lead agent',
+      title: "Model / Platform",
+      type: "localizedString",
+      description:
+        'e.g. "Sonnet 4.6", "GPT-5.3-Codex", or "Coffee 20 oz" for the human',
     },
     {
       name: "spawnedBy",

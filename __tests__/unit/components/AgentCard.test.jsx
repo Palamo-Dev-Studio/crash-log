@@ -28,7 +28,7 @@ describe("AgentCard", () => {
     name: "Nico",
     role: { en: "Managing Editor", es: "Editor General" },
     agentType: "lead_agent",
-    model: "claude-3.5",
+    model: { en: "claude-3.5", es: "claude-3.5-es" },
     color: "#FF3B30",
     bio: { en: "AI managing editor", es: "Editor IA" },
     locale: "en",
@@ -64,9 +64,26 @@ describe("AgentCard", () => {
     expect(screen.getByText(/HUMAN IN THE LOOP/)).toBeInTheDocument();
   });
 
-  it("shows model tag when model is present", () => {
+  it("shows model tag when model is present (en)", () => {
     render(<AgentCard {...baseProps} />);
     expect(screen.getByText(/CLAUDE-3\.5/)).toBeInTheDocument();
+  });
+
+  it("resolves localized model for es", () => {
+    render(<AgentCard {...baseProps} locale="es" />);
+    expect(screen.getByText(/CLAUDE-3\.5-ES/)).toBeInTheDocument();
+  });
+
+  it("falls back to en model when es is missing", () => {
+    render(
+      <AgentCard {...baseProps} model={{ en: "Sonnet 4.6" }} locale="es" />
+    );
+    expect(screen.getByText(/SONNET 4\.6/)).toBeInTheDocument();
+  });
+
+  it("handles plain string model for backward compat", () => {
+    render(<AgentCard {...baseProps} model="GPT-5" />);
+    expect(screen.getByText(/GPT-5/)).toBeInTheDocument();
   });
 
   it("omits model from tag when model is absent", () => {
