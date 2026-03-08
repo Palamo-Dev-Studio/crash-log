@@ -341,10 +341,10 @@ ExecPlan: `docs/plans/active/nicos-notes-column.md`
 
 ### Phase 6: E2E + Deploy + Docs
 
-- [ ] Add Playwright e2e tests: column page loads, archive lists columns, locale switching
-- [ ] Deploy Sanity schema: `npx sanity@latest schema deploy`
-- [ ] Commit all changes
-- [ ] Update tracking docs (agent-notes, TODO, MEMORY)
+- [x] Add Playwright e2e tests: 6 tests (archive EN/ES, empty state, nav, locale toggle, page structure)
+- [x] Deploy Sanity schema: `npx sanity@latest schema deploy`
+- [x] Commit all changes
+- [x] Update tracking docs (agent-notes, TODO, MEMORY)
 
 ## Deferred
 
