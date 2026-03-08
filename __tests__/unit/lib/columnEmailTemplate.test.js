@@ -45,7 +45,7 @@ describe("buildColumnEmailSubject", () => {
 
   it("formats ES subject with column number and title", () => {
     const subject = buildColumnEmailSubject(mockColumn, "es");
-    expect(subject).toBe("Nico\u2019s Notes #001: Semana en Resumen");
+    expect(subject).toBe("Notas de Nico #001: Semana en Resumen");
   });
 
   it("pads column number to 3 digits", () => {
