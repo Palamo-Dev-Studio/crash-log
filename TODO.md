@@ -17,7 +17,7 @@
 
 - [x] Localized field types (localizedString, localizedText, localizedBlockContent)
 - [x] Base blockContent type
-- [x] Object types (stackTraceHit, sourceLink)
+- [x] Object types (stackTraceHit with rich text + sources array, sourceLink)
 - [x] Issue document schema
 - [x] Story document schema
 - [x] Category document schema
@@ -364,6 +364,20 @@ ExecPlan: `docs/plans/active/nicos-notes-column.md`
 - [x] Deploy schema, publish all agent documents
 - [x] Center about page section headings, rename "The Masthead" → "Masthead"
 - [x] Add 3 new AgentCard model localization tests (507 total)
+
+## Stack Trace Schema Upgrade
+
+- [x] Change `stackTraceHit.text` from `localizedText` (plain text) to `localizedBlockContent` (rich text with hyperlinks)
+- [x] Replace `sourceUrl` + `sourceOutlet` with `sources[]` array of `sourceLink` objects (multiple sources per hit)
+- [x] Update `StackTrace` component: body text first, source links underneath as "Source: Outlet1 · Outlet2"
+- [x] Update `IssueContent` to pass rich text body + sources array
+- [x] Update GROQ projection in `lib/queries.js`
+- [x] Update email template stack trace rendering (Portable Text to HTML, sources array, localized labels)
+- [x] Deploy schema to Sanity cloud
+- [x] Migrate issue #001 and #002 stack trace data to new format
+- [x] Publish issue #002 with `status: "published"` and direct story references
+- [x] Tests updated (511 total, verify.sh passes)
+- [ ] Manual end-to-end test: Beehiiv draft creation for issue #002
 
 ## Deferred
 

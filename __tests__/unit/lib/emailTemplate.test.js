@@ -87,9 +87,26 @@ const makeIssue = (overrides = {}) => ({
   ],
   stackTrace: [
     {
-      text: { en: "A quick hit", es: "Un dato rápido" },
-      sourceUrl: "https://example.com",
-      sourceOutlet: "Example",
+      text: {
+        en: [
+          {
+            _type: "block",
+            _key: "st1",
+            children: [{ _type: "span", text: "A quick hit" }],
+          },
+        ],
+        es: [
+          {
+            _type: "block",
+            _key: "st2",
+            children: [{ _type: "span", text: "Un dato rápido" }],
+          },
+        ],
+      },
+      sources: [
+        { outlet: "Example", url: "https://example.com" },
+        { outlet: "Other Source", url: "https://other.com" },
+      ],
     },
   ],
   ...overrides,
@@ -169,17 +186,23 @@ describe("buildEmailHtml", () => {
     expect(html).toContain("Mock portable text content");
   });
 
-  it("renders Stack Trace section", () => {
+  it("renders Stack Trace section with rich text", () => {
     const html = buildEmailHtml(makeIssue(), "en");
-    expect(html).toContain("A quick hit");
-    expect(html).toContain("Example");
-    expect(html).toContain('href="https://example.com"');
+    expect(html).toContain("Mock portable text content");
+    expect(html).toContain("Source:");
   });
 
   it("renders Stack Trace source links", () => {
     const html = buildEmailHtml(makeIssue(), "en");
     expect(html).toContain('href="https://example.com"');
     expect(html).toContain("Example");
+    expect(html).toContain('href="https://other.com"');
+    expect(html).toContain("Other Source");
+  });
+
+  it("renders Stack Trace with Fuente label for ES locale", () => {
+    const html = buildEmailHtml(makeIssue(), "es");
+    expect(html).toContain("Fuente:");
   });
 
   it("does not contain CSS var() references", () => {
@@ -242,8 +265,8 @@ describe("buildEmailHtml", () => {
     // The Stack Trace section header should not appear
     const stackTraceHeaderPattern = /letter-spacing.*Stack Trace/;
     expect(html).not.toMatch(stackTraceHeaderPattern);
-    // Verify no stack trace items rendered
-    expect(html).not.toContain("A quick hit");
+    // Verify no stack trace source links rendered
+    expect(html).not.toContain("Source:");
   });
 
   it("handles issue with no Nico's Transmission gracefully", () => {

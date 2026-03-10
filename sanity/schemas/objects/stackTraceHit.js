@@ -1,5 +1,5 @@
 // ABOUTME: Stack Trace hit object type — a quick-fire minor story embedded in issues.
-// ABOUTME: Each issue has up to 3 stack trace hits with localized text.
+// ABOUTME: Each hit has rich text (supports hyperlinks) and an array of source links.
 
 export default {
   name: "stackTraceHit",
@@ -9,30 +9,29 @@ export default {
     {
       name: "text",
       title: "Text",
-      type: "localizedText",
+      type: "localizedBlockContent",
     },
     {
-      name: "sourceUrl",
-      title: "Source URL",
-      type: "url",
-    },
-    {
-      name: "sourceOutlet",
-      title: "Source Outlet",
-      type: "string",
-      description: 'e.g. "Wired", "TechCrunch", "Reuters"',
+      name: "sources",
+      title: "Sources",
+      type: "array",
+      of: [{ type: "sourceLink" }],
     },
   ],
   preview: {
-    select: { text: "text.en", outlet: "sourceOutlet" },
-    prepare({ text, outlet }) {
+    select: { blocks: "text.en", outlet: "sources" },
+    prepare({ blocks, outlet }) {
+      const text = blocks
+        ?.map((b) => b.children?.map((c) => c.text).join(""))
+        .join(" ");
+      const outletNames = outlet?.map((s) => s.outlet).join(", ") || "";
       return {
         title: text
           ? text.length > 60
             ? text.slice(0, 60) + "..."
             : text
           : "Untitled",
-        subtitle: outlet || "",
+        subtitle: outletNames,
       };
     },
   },

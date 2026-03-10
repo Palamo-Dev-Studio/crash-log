@@ -41,11 +41,10 @@ export default function IssueContent({ issue, locale }) {
   const transmission = t(issue.nicosTransmission, locale);
   const stackTraceItems = issue.stackTrace
     ?.map((item) => ({
-      title: item.sourceOutlet,
-      description: t(item.text, locale),
-      url: item.sourceUrl,
+      body: t(item.text, locale),
+      sources: item.sources,
     }))
-    .filter((item) => item.description);
+    .filter((item) => item.body);
 
   return (
     <main>

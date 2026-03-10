@@ -3,32 +3,30 @@
 ## Current State
 
 - **Branch:** `main`
-- **Build:** `verify.sh` passes (507 tests + 39 static pages)
-- **Tests:** 507 unit/component/integration tests (Vitest, 43 files) + 20 e2e tests (Playwright, 5 files) = 527 total
+- **Build:** `verify.sh` passes (511 tests + 39 static pages)
+- **Tests:** 511 unit/component/integration tests (Vitest, 43 files) + 20 e2e tests (Playwright, 5 files) = 531 total
 - **Components:** 22 total (19 original + ColumnContent, ColumnCard, NicosNotesWidget) + branded 404 page
 - **Routes:** All previous routes + `/[locale]/nico` (archive) + `/[locale]/nico/[slug]` (detail) + `/[locale]/nico/feed.xml` (RSS) + `/api/send-column-newsletter`
-- **Sanity:** Project `msr24cg4`, dataset `production`. All schemas deployed. 20 published documents, 0 drafts.
+- **Sanity:** Project `msr24cg4`, dataset `production`. All schemas deployed. 21 published documents (added issue #002), 0 drafts.
 
 ## Recently Completed
 
-**Nico's Notes — Weekly Column** (all 6 phases, commit `8529f2e`):
-Schema, Studio action, email template, API route, 3 components, archive/detail/RSS routes, two-column home layout, nav update, sitemap entries, 6 Playwright e2e tests. ExecPlan: `docs/plans/active/nicos-notes-column.md` (ready to move to `completed/`).
+**Stack Trace Schema Upgrade** (this session):
 
-**Sanity Content Localization** (commits `0898a1b` + prior session):
+- `stackTraceHit.text`: `localizedText` → `localizedBlockContent` (rich text with hyperlinks in Studio)
+- `sourceUrl` + `sourceOutlet` → `sources[]` array of `sourceLink` (multiple sources per hit)
+- StackTrace component redesigned: body text first, sources underneath as "Source: Outlet1 · Outlet2"
+- Email template updated: Portable Text to HTML for stack trace, sources array, localized "Source:"/"Fuente:" labels
+- GROQ projection updated, IssueContent transform updated
+- Schema deployed to Sanity cloud, both issues' stack trace data migrated
+- 4 new tests (507 → 511)
 
-- Spanish bios pushed to all 6 agent documents and published
-- Spanish Portable Text pushed to aboutPage (introParagraph, workflowSection, contactCTA) and published
-- Spanish About page now renders via `SanityAbout` path (Sanity content + avatars), no longer uses `FallbackAbout`
-- About page CSS: removed `max-width: 640px` from intro/workflow/contact sections — text now fills full content width
-- Column email subject localized for Spanish ("Notas de Nico" instead of hardcoded English)
+**Issue #002 Published** (this session):
 
-**Masthead Model/Platform Labels** (this session):
-
-- Agent `model` field changed from `string` to `localizedString` in schema
-- AgentCard resolves localized model via `t()` with backward compat for plain strings
-- All 6 agents populated in Sanity: Nico (Sonnet 4.6), Scoop/Root/Gabo/Lupe (GPT-5.3-Codex), Hector (Coffee 20 oz / Cafecito 20 oz)
-- About page section headings centered, "The Masthead" → "Masthead"
-- Schema deployed, all documents published, 3 new tests
+- "Deployed. Unaccountable. Everywhere." — 4 stories, 3 stack trace hits (all bilingual)
+- Fixed weak `drafts.*` story refs → direct published refs before publishing
+- Set `status: "published"` field (was still "draft" from OpenClaw uploader)
+- Beehiiv draft creation test pending (next step)
 
 ## Deployment
 
@@ -37,7 +35,13 @@ Schema, Studio action, email template, API route, 3 components, archive/detail/R
 - All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
 - **Env vars on Vercel:** `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` — set (same value for both)
 - **Beehiiv:** `locale` custom field created, EN/ES audience segments created
-- **Sanity schema:** All schemas deployed (including column)
+- **Sanity schema:** All schemas deployed (including column + updated stackTraceHit)
+
+## Immediate Next Step
+
+- Deploy latest code to Vercel (push to remote)
+- Test Beehiiv draft creation for issue #002 (via Studio action or API call)
+- Verify stack trace rendering on live site for both issues
 
 ## Pending
 
@@ -61,3 +65,4 @@ Schema, Studio action, email template, API route, 3 components, archive/detail/R
 - No rate limiting on API routes — Vercel baseline DDoS protection covers it.
 - 5-item nav on mobile — verify nav wrapping doesn't break at small widths after deploy.
 - Server-side idempotency for newsletter sending not implemented — Studio action warns but doesn't prevent duplicate sends.
+- OpenClaw uploader sets `status: "draft"` on issue documents — must manually set to `"published"` after publishing in Sanity. Consider automating or documenting this for OpenClaw.

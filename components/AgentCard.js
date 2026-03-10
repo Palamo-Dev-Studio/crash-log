@@ -26,7 +26,9 @@ export default function AgentCard({
   const bioText = typeof bio === "object" ? t(bio, locale) : bio;
   const typeLabel = TYPE_LABELS[agentType] || agentType || "";
   const modelText = typeof model === "object" ? t(model, locale) : model;
-  const tag = modelText ? `${typeLabel} · ${modelText.toUpperCase()}` : typeLabel;
+  const tag = modelText
+    ? `${typeLabel} · ${modelText.toUpperCase()}`
+    : typeLabel;
 
   return (
     <div className={styles.card}>

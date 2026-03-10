@@ -1,11 +1,13 @@
-// ABOUTME: Stack Trace section with a list of trace items.
-// ABOUTME: "STACK TRACE" heading and items with left border.
+// ABOUTME: Stack Trace section with rich text items and source attribution.
+// ABOUTME: "STACK TRACE" heading, items with left border, body text then sources below.
 
+import { PortableText } from "@portabletext/react";
+import { portableTextComponents } from "@/lib/portableText";
 import styles from "./StackTrace.module.css";
 
 const LABELS = {
-  en: { title: "Stack Trace" },
-  es: { title: "Stack Trace" },
+  en: { title: "Stack Trace", source: "Source" },
+  es: { title: "Stack Trace", source: "Fuente" },
 };
 
 export default function StackTrace({ locale, items }) {
@@ -22,16 +24,38 @@ export default function StackTrace({ locale, items }) {
       <div className={styles.items}>
         {items.map((item, i) => (
           <div key={i} className={styles.item}>
-            <div className={styles.itemTitle}>
-              {item.url ? (
-                <a href={item.url} target="_blank" rel="noopener noreferrer">
-                  {item.title}
-                </a>
+            <div className={styles.itemBody}>
+              {item.body ? (
+                <PortableText
+                  value={item.body}
+                  components={portableTextComponents}
+                />
               ) : (
-                item.title
+                item.description && <p>{item.description}</p>
               )}
             </div>
-            <div className={styles.itemDesc}>{item.description}</div>
+            {item.sources && item.sources.length > 0 && (
+              <div className={styles.itemSources}>
+                <span className={styles.sourceLabel}>{labels.source}: </span>
+                {item.sources.map((source, j) => (
+                  <span key={j}>
+                    {j > 0 && <span className={styles.sourceSep}> · </span>}
+                    {source.url ? (
+                      <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.sourceLink}
+                      >
+                        {source.outlet || source.title || source.url}
+                      </a>
+                    ) : (
+                      <span>{source.outlet || source.title}</span>
+                    )}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>

@@ -67,7 +67,22 @@ const makeIssue = (overrides = {}) => ({
       },
     },
   ],
-  stackTrace: [{ sourceOutlet: "TechCrunch", text: { en: "AI hiring surge" } }],
+  stackTrace: [
+    {
+      text: {
+        en: [
+          {
+            _type: "block",
+            _key: "st1",
+            children: [{ _type: "span", text: "AI hiring surge" }],
+          },
+        ],
+      },
+      sources: [
+        { outlet: "TechCrunch", url: "https://techcrunch.com/article" },
+      ],
+    },
+  ],
   ...overrides,
 });
 
@@ -116,7 +131,10 @@ describe("IssueContent", () => {
 
     it("renders stack trace items", () => {
       render(<IssueContent issue={makeIssue()} locale="en" />);
-      expect(screen.getByText("TechCrunch")).toBeInTheDocument();
+      expect(screen.getByText("AI hiring surge")).toBeInTheDocument();
+      expect(
+        screen.getByRole("link", { name: "TechCrunch" })
+      ).toBeInTheDocument();
     });
 
     it("renders DonateCTA when donations are enabled", () => {
