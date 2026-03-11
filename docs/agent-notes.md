@@ -7,11 +7,11 @@
 - **Tests:** 549 unit/component/integration tests (Vitest, 45 files) + 20 e2e tests (Playwright, 5 files) = 569 total
 - **Components:** 24 total (22 previous + SupportContent) + branded 404 page
 - **Routes:** All previous routes + `/[locale]/support` (dedicated donation page)
-- **Sanity:** Project `msr24cg4`, dataset `production`. All schemas deployed. 21 published documents, 0 drafts.
+- **Sanity:** Project `msr24cg4`, dataset `production`. All schemas deployed. 26 published documents (7 categories, 6 agents, 8 stories, 2 issues, 1 aboutPage, 1 siteSettings), 0 drafts.
 
 ## Recently Completed
 
-**Support Page + Recurring Donations** (this session):
+**Support Page + Recurring Donations** (latest session):
 
 - `/api/donate` now accepts `frequency` param: `"once"` (default) or `"monthly"`
 - Monthly creates Stripe Checkout `subscription` session with `recurring: { interval: "month" }`
@@ -24,6 +24,15 @@
 - Accessibility: focus-visible styles on FUND button and custom amount input (CodeRabbit review)
 - `.prettierignore` updated to exclude `.claude/` directory
 - 38 new tests (511 → 549)
+
+**Stack Trace Rich Text + Issue #002** (prior session):
+
+- `stackTraceHit.text`: `localizedText` → `localizedBlockContent` (rich text with hyperlinks in Studio)
+- `sourceUrl` + `sourceOutlet` → `sources[]` array of `sourceLink` (multiple sources per hit)
+- StackTrace component redesigned: body text first, sources underneath as "Source: Outlet1 · Outlet2"
+- Email template updated: Portable Text to HTML for stack trace, sources array
+- Issue #002 "Deployed. Unaccountable. Everywhere." published — 4 stories, 3 stack trace hits
+- Beehiiv draft creation tested — blocked by Enterprise plan requirement
 
 ## Deployment
 
@@ -44,8 +53,8 @@
 
 - [ ] Push latest commits to remote / deploy to Vercel
 - [ ] Manual end-to-end test: Stripe monthly subscription (support page)
-- [ ] Manual end-to-end test: Issue Studio action → Beehiiv draft creation
-- [ ] Manual end-to-end test: Column Studio action → Beehiiv draft creation
+- [x] ~~Manual end-to-end test: Issue Studio action → Beehiiv draft creation~~ (blocked: Beehiiv requires Enterprise plan for Post API)
+- [x] ~~Manual end-to-end test: Column Studio action → Beehiiv draft creation~~ (same blocker)
 - [ ] Activate Beehiiv Recommendations widget when available
 - [ ] Move Nico's Notes ExecPlan to `docs/plans/completed/`
 - [ ] Seed first column content in Sanity
@@ -63,4 +72,5 @@
 - No rate limiting on API routes — Vercel baseline DDoS protection covers it.
 - 5-item nav on mobile — verify nav wrapping doesn't break at small widths after deploy.
 - Server-side idempotency for newsletter sending not implemented — Studio action warns but doesn't prevent duplicate sends.
-- OpenClaw uploader sets `status: "draft"` on issue documents — must manually set to `"published"` after publishing in Sanity. Consider automating or documenting this for OpenClaw.
+- OpenClaw uploader sets `status: "draft"` on issue documents — must manually set to `"published"` after publishing in Sanity. Story refs use `drafts.*` prefix — must fix to direct refs before publishing. Consider automating or documenting this for OpenClaw.
+- Beehiiv Post API requires Enterprise plan (`SEND_API_NOT_ENTERPRISE_PLAN`). Code is ready, manual copy-paste for newsletters until plan is upgraded.

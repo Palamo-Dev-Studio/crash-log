@@ -293,7 +293,7 @@
 - [x] Set `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` in `.env.local` and Vercel (same value)
 - [x] Beehiiv setup: `locale` custom field created, EN/ES audience segments created (Dynamic, OR for EN)
 - [x] Deploy to Vercel
-- [ ] Manual end-to-end test: Studio action → Beehiiv draft creation
+- [x] ~~Manual end-to-end test: Studio action → Beehiiv draft creation~~ (blocked: Beehiiv Post API requires Enterprise plan; code works, manual copy-paste for now)
 
 ## Nico's Notes — Weekly Column
 
@@ -377,7 +377,7 @@ ExecPlan: `docs/plans/active/nicos-notes-column.md`
 - [x] Migrate issue #001 and #002 stack trace data to new format
 - [x] Publish issue #002 with `status: "published"` and direct story references
 - [x] Tests updated (511 total, verify.sh passes)
-- [ ] Manual end-to-end test: Beehiiv draft creation for issue #002
+- [x] ~~Manual end-to-end test: Beehiiv draft creation for issue #002~~ (blocked: Beehiiv Enterprise plan required; email HTML generation verified working)
 
 ## Support Page + Recurring Donations
 
