@@ -88,4 +88,31 @@ describe("Header", () => {
     expect(logo).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/en");
   });
+
+  it("renders FUND button linking to support page", () => {
+    render(<Header locale="en" />);
+    const fundLink = screen.getByText("Fund");
+    expect(fundLink.closest("a")).toHaveAttribute("href", "/en/support");
+  });
+
+  it("renders APOYA button for Spanish locale", () => {
+    render(<Header locale="es" />);
+    const apoyaLink = screen.getByText("Apoya");
+    expect(apoyaLink.closest("a")).toHaveAttribute("href", "/es/support");
+  });
+
+  it("FUND button appears before subscribe form in actions", () => {
+    render(<Header locale="en" />);
+    const subscribeForm = screen.getByTestId("subscribe-form");
+    const actionsContainer = subscribeForm.parentElement;
+    const children = Array.from(actionsContainer.children);
+    const fundIndex = children.findIndex((el) =>
+      el.textContent?.includes("Fund")
+    );
+    const subscribeIndex = children.findIndex(
+      (el) => el.dataset.testid === "subscribe-form"
+    );
+    expect(fundIndex).toBeGreaterThanOrEqual(0);
+    expect(fundIndex).toBeLessThan(subscribeIndex);
+  });
 });

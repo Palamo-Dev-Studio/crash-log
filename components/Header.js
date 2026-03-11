@@ -1,4 +1,4 @@
-// ABOUTME: Site header with masthead wordmark, tagline, and subscribe form.
+// ABOUTME: Site header with masthead wordmark, tagline, fund button, and subscribe form.
 // ABOUTME: Accepts a children slot for LanguageToggle or other header actions.
 
 import Link from "next/link";
@@ -7,8 +7,8 @@ import SubscribeForm from "./SubscribeForm";
 import styles from "./Header.module.css";
 
 const LABELS = {
-  en: { tagline: "AI & Tech Gone Off the Rails" },
-  es: { tagline: "IA y Tecnología Descarriladas" },
+  en: { tagline: "AI & Tech Gone Off the Rails", fund: "Fund" },
+  es: { tagline: "IA y Tecnología Descarriladas", fund: "Apoya" },
 };
 
 export default function Header({ locale, children }) {
@@ -32,6 +32,9 @@ export default function Header({ locale, children }) {
         </div>
         <div className={styles.actions}>
           {children}
+          <Link href={`/${locale}/support`} className={styles.fundButton}>
+            {labels.fund}
+          </Link>
           <SubscribeForm locale={locale} />
         </div>
       </div>

@@ -1,7 +1,9 @@
-// ABOUTME: POST handler that creates Stripe Checkout Sessions for one-time donations.
-// ABOUTME: Validates amount, sanitizes return URL, and returns the hosted checkout URL.
+// ABOUTME: POST handler that creates Stripe Checkout Sessions for donations.
+// ABOUTME: Supports one-time payments and monthly subscriptions via frequency param.
 
 import Stripe from "stripe";
+
+const VALID_FREQUENCIES = ["once", "monthly"];
 
 export async function POST(request) {
   const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -23,7 +25,7 @@ export async function POST(request) {
     );
   }
 
-  const { amount, locale, returnPath } = body;
+  const { amount, locale, returnPath, frequency } = body;
 
   if (typeof amount !== "number" || !Number.isInteger(amount)) {
     return Response.json(
@@ -46,6 +48,16 @@ export async function POST(request) {
     );
   }
 
+  // Default to one-time if not specified (backward-compatible)
+  const freq = frequency || "once";
+
+  if (!VALID_FREQUENCIES.includes(freq)) {
+    return Response.json(
+      { success: false, error: "Invalid frequency. Use 'once' or 'monthly'" },
+      { status: 400 }
+    );
+  }
+
   // Sanitize returnPath — must start with / and contain only safe URL characters
   const safePath =
     typeof returnPath === "string" && /^\/[a-zA-Z0-9\-_/]*$/.test(returnPath)
@@ -53,30 +65,43 @@ export async function POST(request) {
       : "/en";
 
   const baseUrl = new URL(request.url).origin;
+  const isMonthly = freq === "monthly";
 
-  const productName =
-    locale === "es" ? "Donación a The Crash Log" : "Donation to The Crash Log";
+  const productName = isMonthly
+    ? locale === "es"
+      ? "Donación mensual a The Crash Log"
+      : "Monthly donation to The Crash Log"
+    : locale === "es"
+      ? "Donación a The Crash Log"
+      : "Donation to The Crash Log";
 
   let session;
   try {
     const stripe = new Stripe(secretKey);
 
-    session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      submit_type: "donate",
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: { name: productName },
-            unit_amount: amount,
-          },
-          quantity: 1,
-        },
-      ],
+    const priceData = {
+      currency: "usd",
+      product_data: { name: productName },
+      unit_amount: amount,
+    };
+
+    if (isMonthly) {
+      priceData.recurring = { interval: "month" };
+    }
+
+    const sessionParams = {
+      mode: isMonthly ? "subscription" : "payment",
+      line_items: [{ price_data: priceData, quantity: 1 }],
       success_url: `${baseUrl}${safePath}?donated=true`,
       cancel_url: `${baseUrl}${safePath}`,
-    });
+    };
+
+    // submit_type is only valid for one-time payments
+    if (!isMonthly) {
+      sessionParams.submit_type = "donate";
+    }
+
+    session = await stripe.checkout.sessions.create(sessionParams);
   } catch (err) {
     console.error("Stripe API error:", err.message);
     return Response.json(

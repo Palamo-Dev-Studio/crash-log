@@ -4,3 +4,4 @@ out
 coverage
 .sanity
 package-lock.json
+.claude

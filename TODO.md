@@ -379,6 +379,22 @@ ExecPlan: `docs/plans/active/nicos-notes-column.md`
 - [x] Tests updated (511 total, verify.sh passes)
 - [ ] Manual end-to-end test: Beehiiv draft creation for issue #002
 
+## Support Page + Recurring Donations
+
+- [x] Update `POST /api/donate` to accept `frequency` param (`"once"` or `"monthly"`)
+- [x] Monthly mode: Stripe Checkout `subscription` with `recurring: { interval: "month" }`
+- [x] Backward-compatible — no frequency defaults to one-time
+- [x] `DonateCTA`: add one-time/monthly toggle with `aria-pressed` accessibility
+- [x] `SupportContent` component: full-page "Feed the Bots" with preset amounts ($5/$10/$25), custom input, frequency toggle, mission copy
+- [x] `app/(site)/[locale]/support/page.js` — dedicated support page with SEO metadata
+- [x] Header: green "Fund"/"Apoya" button linking to `/[locale]/support`
+- [x] Sitemap: added `/support` to static pages
+- [x] Accessibility: focus-visible styles on FUND button + custom input (CodeRabbit review)
+- [x] Tests: 38 new (5 API, 6 DonateCTA, 22 SupportContent, 3 Header, 2 integration)
+- [x] verify.sh passes (549 tests + 41 static pages)
+- [ ] Manual end-to-end test: Stripe monthly subscription flow
+- [ ] Deploy to Vercel and verify support page on live site
+
 ## Deferred
 
 - [x] Provision Sanity project (project `msr24cg4`, dataset `production`)

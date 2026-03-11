@@ -18,6 +18,8 @@ const LABELS = {
     thanks: "Thank you for your donation!",
     amountLabel: "Donation amount in dollars",
     closeToast: "Close",
+    once: "One-time",
+    monthly: "Monthly",
   },
   es: {
     ariaLabel: "Donar",
@@ -29,6 +31,8 @@ const LABELS = {
     thanks: "\u00a1Gracias por tu donaci\u00f3n!",
     amountLabel: "Monto de donaci\u00f3n en d\u00f3lares",
     closeToast: "Cerrar",
+    once: "Una vez",
+    monthly: "Mensual",
   },
 };
 
@@ -54,6 +58,7 @@ function DonateCTAInner({ locale }) {
 
   const [showToast, setShowToast] = useState(donated);
   const [amount, setAmount] = useState("5");
+  const [frequency, setFrequency] = useState("once");
   const [status, setStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -92,6 +97,7 @@ function DonateCTAInner({ locale }) {
           amount: numAmount * 100,
           locale,
           returnPath: pathname,
+          frequency,
         }),
       });
 
@@ -136,6 +142,24 @@ function DonateCTAInner({ locale }) {
       <section className={styles.card} aria-label={labels.ariaLabel}>
         <p className={styles.copy}>{labels.copy}</p>
         <p className={styles.disclaimer}>{labels.disclaimer}</p>
+        <div className={styles.frequencyToggle} role="group">
+          <button
+            type="button"
+            className={`${styles.freqButton} ${frequency === "once" ? styles.freqActive : ""}`}
+            aria-pressed={frequency === "once"}
+            onClick={() => setFrequency("once")}
+          >
+            {labels.once}
+          </button>
+          <button
+            type="button"
+            className={`${styles.freqButton} ${frequency === "monthly" ? styles.freqActive : ""}`}
+            aria-pressed={frequency === "monthly"}
+            onClick={() => setFrequency("monthly")}
+          >
+            {labels.monthly}
+          </button>
+        </div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.amountWrapper}>
             <span className={styles.currencySymbol}>$</span>

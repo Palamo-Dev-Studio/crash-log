@@ -143,6 +143,7 @@ describe("DonateCTA", () => {
           amount: 500,
           locale: "en",
           returnPath: "/en",
+          frequency: "once",
         }),
       });
 
@@ -343,6 +344,127 @@ describe("DonateCTA", () => {
       ).not.toBeInTheDocument();
 
       vi.useRealTimers();
+    });
+  });
+
+  describe("frequency toggle", () => {
+    it("renders frequency toggle with One-time and Monthly buttons", () => {
+      render(<DonateCTA locale="en" />);
+      expect(
+        screen.getByRole("button", { name: "One-time" })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Monthly" })
+      ).toBeInTheDocument();
+    });
+
+    it("defaults to one-time frequency", () => {
+      render(<DonateCTA locale="en" />);
+      expect(screen.getByRole("button", { name: "One-time" })).toHaveAttribute(
+        "aria-pressed",
+        "true"
+      );
+      expect(screen.getByRole("button", { name: "Monthly" })).toHaveAttribute(
+        "aria-pressed",
+        "false"
+      );
+    });
+
+    it("switches to monthly when Monthly button is clicked", async () => {
+      const user = userEvent.setup();
+      render(<DonateCTA locale="en" />);
+
+      await user.click(screen.getByRole("button", { name: "Monthly" }));
+
+      expect(screen.getByRole("button", { name: "Monthly" })).toHaveAttribute(
+        "aria-pressed",
+        "true"
+      );
+      expect(screen.getByRole("button", { name: "One-time" })).toHaveAttribute(
+        "aria-pressed",
+        "false"
+      );
+    });
+
+    it("sends frequency 'once' to API for one-time donations", async () => {
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            url: "https://checkout.stripe.com/test",
+          }),
+      });
+
+      const originalLocation = window.location;
+      delete window.location;
+      window.location = { href: "" };
+
+      const user = userEvent.setup();
+      render(<DonateCTA locale="en" />);
+
+      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+
+      await waitFor(() => {
+        expect(global.fetch).toHaveBeenCalledWith("/api/donate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: 500,
+            locale: "en",
+            returnPath: "/en",
+            frequency: "once",
+          }),
+        });
+      });
+
+      window.location = originalLocation;
+    });
+
+    it("sends frequency 'monthly' to API for monthly donations", async () => {
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            url: "https://checkout.stripe.com/test",
+          }),
+      });
+
+      const originalLocation = window.location;
+      delete window.location;
+      window.location = { href: "" };
+
+      const user = userEvent.setup();
+      render(<DonateCTA locale="en" />);
+
+      await user.click(screen.getByRole("button", { name: "Monthly" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+
+      await waitFor(() => {
+        expect(global.fetch).toHaveBeenCalledWith("/api/donate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: 500,
+            locale: "en",
+            returnPath: "/en",
+            frequency: "monthly",
+          }),
+        });
+      });
+
+      window.location = originalLocation;
+    });
+
+    it("renders Spanish toggle labels", () => {
+      render(<DonateCTA locale="es" />);
+      expect(
+        screen.getByRole("button", { name: "Una vez" })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Mensual" })
+      ).toBeInTheDocument();
     });
   });
 });

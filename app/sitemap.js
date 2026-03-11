@@ -20,7 +20,7 @@ export default async function sitemap() {
     getAllColumnsSummary(),
   ]);
 
-  const staticPages = ["", "/about", "/archive", "/beats", "/nico"];
+  const staticPages = ["", "/about", "/archive", "/beats", "/nico", "/support"];
   const staticEntries = staticPages.flatMap((path) =>
     LOCALES.map((locale) => ({
       url: `${BASE_URL}/${locale}${path}`,

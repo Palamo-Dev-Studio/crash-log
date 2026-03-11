@@ -3,30 +3,27 @@
 ## Current State
 
 - **Branch:** `main`
-- **Build:** `verify.sh` passes (511 tests + 39 static pages)
-- **Tests:** 511 unit/component/integration tests (Vitest, 43 files) + 20 e2e tests (Playwright, 5 files) = 531 total
-- **Components:** 22 total (19 original + ColumnContent, ColumnCard, NicosNotesWidget) + branded 404 page
-- **Routes:** All previous routes + `/[locale]/nico` (archive) + `/[locale]/nico/[slug]` (detail) + `/[locale]/nico/feed.xml` (RSS) + `/api/send-column-newsletter`
-- **Sanity:** Project `msr24cg4`, dataset `production`. All schemas deployed. 21 published documents (added issue #002), 0 drafts.
+- **Build:** `verify.sh` passes (549 tests + 41 static pages)
+- **Tests:** 549 unit/component/integration tests (Vitest, 45 files) + 20 e2e tests (Playwright, 5 files) = 569 total
+- **Components:** 24 total (22 previous + SupportContent) + branded 404 page
+- **Routes:** All previous routes + `/[locale]/support` (dedicated donation page)
+- **Sanity:** Project `msr24cg4`, dataset `production`. All schemas deployed. 21 published documents, 0 drafts.
 
 ## Recently Completed
 
-**Stack Trace Schema Upgrade** (this session):
+**Support Page + Recurring Donations** (this session):
 
-- `stackTraceHit.text`: `localizedText` → `localizedBlockContent` (rich text with hyperlinks in Studio)
-- `sourceUrl` + `sourceOutlet` → `sources[]` array of `sourceLink` (multiple sources per hit)
-- StackTrace component redesigned: body text first, sources underneath as "Source: Outlet1 · Outlet2"
-- Email template updated: Portable Text to HTML for stack trace, sources array, localized "Source:"/"Fuente:" labels
-- GROQ projection updated, IssueContent transform updated
-- Schema deployed to Sanity cloud, both issues' stack trace data migrated
-- 4 new tests (507 → 511)
-
-**Issue #002 Published** (this session):
-
-- "Deployed. Unaccountable. Everywhere." — 4 stories, 3 stack trace hits (all bilingual)
-- Fixed weak `drafts.*` story refs → direct published refs before publishing
-- Set `status: "published"` field (was still "draft" from OpenClaw uploader)
-- Beehiiv draft creation test pending (next step)
+- `/api/donate` now accepts `frequency` param: `"once"` (default) or `"monthly"`
+- Monthly creates Stripe Checkout `subscription` session with `recurring: { interval: "month" }`
+- Backward-compatible — existing calls without frequency still work
+- `DonateCTA` component: added one-time/monthly toggle with `aria-pressed` accessibility
+- `SupportContent` component: full-page "Feed the Bots" landing with preset amounts ($5/$10/$25), custom input, frequency toggle, mission copy, bilingual
+- `app/(site)/[locale]/support/page.js` — dedicated support page route with full SEO metadata
+- Header: green "Fund"/"Apoya" button (`#30d158`) linking to `/[locale]/support`
+- Sitemap updated with `/support` entries
+- Accessibility: focus-visible styles on FUND button and custom amount input (CodeRabbit review)
+- `.prettierignore` updated to exclude `.claude/` directory
+- 38 new tests (511 → 549)
 
 ## Deployment
 
@@ -39,13 +36,14 @@
 
 ## Immediate Next Step
 
-- Deploy latest code to Vercel (push to remote)
-- Test Beehiiv draft creation for issue #002 (via Studio action or API call)
-- Verify stack trace rendering on live site for both issues
+- Push to remote / deploy to Vercel
+- Verify support page renders correctly on live site
+- Test Stripe monthly subscription flow end-to-end
 
 ## Pending
 
 - [ ] Push latest commits to remote / deploy to Vercel
+- [ ] Manual end-to-end test: Stripe monthly subscription (support page)
 - [ ] Manual end-to-end test: Issue Studio action → Beehiiv draft creation
 - [ ] Manual end-to-end test: Column Studio action → Beehiiv draft creation
 - [ ] Activate Beehiiv Recommendations widget when available

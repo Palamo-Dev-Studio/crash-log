@@ -50,6 +50,32 @@
   margin-top: 4px;
 }
 
+.fundButton {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--agent-hector);
+  border: 1.5px solid var(--agent-hector);
+  background: transparent;
+  padding: 9px 22px;
+  text-decoration: none;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.fundButton:hover {
+  background: var(--agent-hector);
+  color: var(--bg);
+}
+
+.fundButton:focus-visible {
+  outline: 2px solid var(--agent-hector);
+  outline-offset: 2px;
+}
+
 @media (max-width: 480px) {
   .inner {
     flex-wrap: wrap;

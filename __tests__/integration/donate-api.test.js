@@ -259,4 +259,102 @@ describe("POST /api/donate", () => {
     const json = await response.json();
     expect(json.success).toBe(true);
   });
+
+  // --- Recurring donation tests ---
+
+  it("creates one-time payment session by default (no frequency param)", async () => {
+    mockCreate.mockResolvedValueOnce({
+      url: "https://checkout.stripe.com/c/pay_abc123",
+    });
+
+    await POST(makeRequest({ amount: 500, locale: "en", returnPath: "/en" }));
+
+    const callArgs = mockCreate.mock.calls[0][0];
+    expect(callArgs.mode).toBe("payment");
+    expect(callArgs.submit_type).toBe("donate");
+  });
+
+  it("creates one-time payment session when frequency is 'once'", async () => {
+    mockCreate.mockResolvedValueOnce({
+      url: "https://checkout.stripe.com/c/pay_abc123",
+    });
+
+    await POST(
+      makeRequest({
+        amount: 500,
+        locale: "en",
+        returnPath: "/en",
+        frequency: "once",
+      })
+    );
+
+    const callArgs = mockCreate.mock.calls[0][0];
+    expect(callArgs.mode).toBe("payment");
+    expect(callArgs.submit_type).toBe("donate");
+  });
+
+  it("creates subscription session when frequency is 'monthly'", async () => {
+    mockCreate.mockResolvedValueOnce({
+      url: "https://checkout.stripe.com/c/pay_sub123",
+    });
+
+    await POST(
+      makeRequest({
+        amount: 1000,
+        locale: "en",
+        returnPath: "/en",
+        frequency: "monthly",
+      })
+    );
+
+    const callArgs = mockCreate.mock.calls[0][0];
+    expect(callArgs.mode).toBe("subscription");
+    expect(callArgs.submit_type).toBeUndefined();
+    expect(callArgs.line_items[0].price_data.recurring).toEqual({
+      interval: "month",
+    });
+    expect(callArgs.line_items[0].price_data.currency).toBe("usd");
+    expect(callArgs.line_items[0].price_data.unit_amount).toBe(1000);
+    expect(callArgs.line_items[0].price_data.product_data.name).toBe(
+      "Monthly donation to The Crash Log"
+    );
+    expect(callArgs.success_url).toBe("https://crashlog.ai/en?donated=true");
+    expect(callArgs.cancel_url).toBe("https://crashlog.ai/en");
+  });
+
+  it("uses Spanish product name for monthly subscription", async () => {
+    mockCreate.mockResolvedValueOnce({
+      url: "https://checkout.stripe.com/c/pay_sub_es",
+    });
+
+    await POST(
+      makeRequest({
+        amount: 500,
+        locale: "es",
+        returnPath: "/es",
+        frequency: "monthly",
+      })
+    );
+
+    const callArgs = mockCreate.mock.calls[0][0];
+    expect(callArgs.line_items[0].price_data.product_data.name).toBe(
+      "Donación mensual a The Crash Log"
+    );
+  });
+
+  it("returns 400 for invalid frequency value", async () => {
+    const response = await POST(
+      makeRequest({
+        amount: 500,
+        locale: "en",
+        returnPath: "/en",
+        frequency: "yearly",
+      })
+    );
+
+    expect(response.status).toBe(400);
+    const json = await response.json();
+    expect(json.success).toBe(false);
+    expect(json.error).toContain("Invalid frequency");
+  });
 });
