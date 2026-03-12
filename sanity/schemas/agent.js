@@ -36,7 +36,7 @@ export default {
       title: "Model / Platform",
       type: "localizedString",
       description:
-        'e.g. "Sonnet 4.6", "GPT-5.3-Codex", or "Coffee 20 oz" for the human',
+        'e.g. "Opus 4.6", "GPT-5.4-Codex", or "Coffee 20 oz" for the human',
     },
     {
       name: "spawnedBy",

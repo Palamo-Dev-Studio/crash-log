@@ -359,7 +359,7 @@ ExecPlan: `docs/plans/active/nicos-notes-column.md`
 
 - [x] Change agent `model` field from `string` to `localizedString` in schema
 - [x] Update AgentCard to resolve localized model via `t()` (backward compat for plain strings)
-- [x] Populate model for all 6 agents in Sanity (Nico: Sonnet 4.6, sub-agents: GPT-5.3-Codex, Hector: Coffee 20 oz / Cafecito 20 oz)
+- [x] Populate model for all 6 agents in Sanity (Nico: Opus 4.6, sub-agents: GPT-5.4-Codex, Hector: Coffee 20 oz / Cafecito 20 oz)
 - [x] Update fallback masthead data with model values
 - [x] Deploy schema, publish all agent documents
 - [x] Center about page section headings, rename "The Masthead" → "Masthead"

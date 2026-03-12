@@ -11,7 +11,15 @@
 
 ## Recently Completed
 
-**Support Page + Recurring Donations** (latest session):
+**Agent Model Updates** (latest session):
+
+- Nico von Bot: Sonnet 4.6 → Opus 4.6 (model field, bio EN/ES)
+- Sub-agents (Scoop, Root, Gabo, Lupe): GPT-5.3-Codex → GPT-5.4-Codex
+- Updated in: Sanity agent docs (5), aboutPage Portable Text (intro + workflow, EN/ES), fallback masthead code, schema description
+- All 6 Sanity documents published
+- 549 tests still passing
+
+**Support Page + Recurring Donations** (prior session):
 
 - `/api/donate` now accepts `frequency` param: `"once"` (default) or `"monthly"`
 - Monthly creates Stripe Checkout `subscription` session with `recurring: { interval: "month" }`
@@ -45,8 +53,8 @@
 
 ## Immediate Next Step
 
-- Push to remote / deploy to Vercel
-- Verify support page renders correctly on live site
+- Push to remote / deploy to Vercel (includes model updates + support page)
+- Verify support page and about page render correctly on live site
 - Test Stripe monthly subscription flow end-to-end
 
 ## Pending
