@@ -7,11 +7,18 @@
 - **Tests:** 549 unit/component/integration tests (Vitest, 45 files) + 20 e2e tests (Playwright, 5 files) = 569 total
 - **Components:** 24 total (22 previous + SupportContent) + branded 404 page
 - **Routes:** All previous routes + `/[locale]/support` (dedicated donation page)
-- **Sanity:** Project `msr24cg4`, dataset `production`. All schemas deployed. 26 published documents (7 categories, 6 agents, 8 stories, 2 issues, 1 aboutPage, 1 siteSettings), 0 drafts.
+- **Sanity:** Project `msr24cg4`, dataset `production`. All schemas deployed. 4 issues, 15 stories, 6 agents, 7 categories published. 1 draft (Nico's Notes column `nicos-notes-2026-03-15`).
 
 ## Recently Completed
 
-**Agent Model Updates** (latest session):
+**Sanity Data Recovery** (2026-03-17):
+
+- A bad upsert (likely off-by-one ID mapping bug) wrote Issue #3's content into the `crash-log-004` document ID and deleted `crash-log-003` entirely
+- Recovered Issue #3: recreated `crash-log-003` + 3 stories (`crash-log-003-story-01/02/03`) using content preserved in the stale published `crash-log-004`
+- Published Issue #4: resolved circular draft-reference dependency (draft issue → draft stories) by temporarily removing story refs, publishing stories, re-adding refs with published IDs, then publishing the issue
+- All 4 issues now correctly published with proper IDs and content
+
+**Agent Model Updates** (prior session):
 
 - Nico von Bot: Sonnet 4.6 → Opus 4.6 (model field, bio EN/ES)
 - Sub-agents (Scoop, Root, Gabo, Lupe): GPT-5.3-Codex → GPT-5.4-Codex
@@ -23,14 +30,8 @@
 
 - `/api/donate` now accepts `frequency` param: `"once"` (default) or `"monthly"`
 - Monthly creates Stripe Checkout `subscription` session with `recurring: { interval: "month" }`
-- Backward-compatible — existing calls without frequency still work
-- `DonateCTA` component: added one-time/monthly toggle with `aria-pressed` accessibility
-- `SupportContent` component: full-page "Feed the Bots" landing with preset amounts ($5/$10/$25), custom input, frequency toggle, mission copy, bilingual
-- `app/(site)/[locale]/support/page.js` — dedicated support page route with full SEO metadata
-- Header: green "Fund"/"Apoya" button (`#30d158`) linking to `/[locale]/support`
-- Sitemap updated with `/support` entries
-- Accessibility: focus-visible styles on FUND button and custom amount input (CodeRabbit review)
-- `.prettierignore` updated to exclude `.claude/` directory
+- `SupportContent` component: full-page "Feed the Bots" landing with preset amounts, frequency toggle, bilingual
+- Header: green "Fund"/"Apoya" button linking to `/[locale]/support`
 - 38 new tests (511 → 549)
 
 **Stack Trace Rich Text + Issue #002** (prior session):
@@ -53,9 +54,9 @@
 
 ## Immediate Next Step
 
-- Push to remote / deploy to Vercel (includes model updates + support page)
-- Verify support page and about page render correctly on live site
-- Test Stripe monthly subscription flow end-to-end
+- Review Issue #4 content on site (now published)
+- Publish Nico's Notes column draft (`nicos-notes-2026-03-15`) when ready
+- Deploy latest to Vercel
 
 ## Pending
 
@@ -65,7 +66,6 @@
 - [x] ~~Manual end-to-end test: Column Studio action → Beehiiv draft creation~~ (same blocker)
 - [ ] Activate Beehiiv Recommendations widget when available
 - [ ] Move Nico's Notes ExecPlan to `docs/plans/completed/`
-- [ ] Seed first column content in Sanity
 - [ ] Push Spanish role translations to agent documents in Sanity (bio.es done, model.es set for Hector, role.es still missing)
 
 ## Known Issues / Deferred Items
@@ -81,4 +81,5 @@
 - 5-item nav on mobile — verify nav wrapping doesn't break at small widths after deploy.
 - Server-side idempotency for newsletter sending not implemented — Studio action warns but doesn't prevent duplicate sends.
 - OpenClaw uploader sets `status: "draft"` on issue documents — must manually set to `"published"` after publishing in Sanity. Story refs use `drafts.*` prefix — must fix to direct refs before publishing. Consider automating or documenting this for OpenClaw.
+- OpenClaw upsert had an ID mapping bug (off-by-one) that wrote Issue #3 content to `crash-log-004` and deleted `crash-log-003`. Root cause: likely deriving `_id` from a computed value rather than preserving existing IDs, combined with `createOrReplace`. Recommendations shared with Hector to pass to the agent.
 - Beehiiv Post API requires Enterprise plan (`SEND_API_NOT_ENTERPRISE_PLAN`). Code is ready, manual copy-paste for newsletters until plan is upgraded.

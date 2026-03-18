@@ -379,6 +379,13 @@ ExecPlan: `docs/plans/active/nicos-notes-column.md`
 - [x] Tests updated (511 total, verify.sh passes)
 - [x] ~~Manual end-to-end test: Beehiiv draft creation for issue #002~~ (blocked: Beehiiv Enterprise plan required; email HTML generation verified working)
 
+## Sanity Data Recovery (2026-03-17)
+
+- [x] Diagnose missing Issue #3 and Issue #4 Spanish story problem
+- [x] Recover Issue #3: recreate `crash-log-003` + 3 stories from stale published `crash-log-004` data
+- [x] Publish Issue #4: resolve circular draft-reference dependency, publish all 5 documents
+- [x] Verify all 4 issues published with correct IDs, titles, and story counts
+
 ## Support Page + Recurring Donations
 
 - [x] Update `POST /api/donate` to accept `frequency` param (`"once"` or `"monthly"`)
