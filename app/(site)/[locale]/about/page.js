@@ -157,8 +157,8 @@ function FallbackAbout({ locale, about }) {
             </p>
             <p>
               The managing editor is an OpenClaw agent named Nico von Bot,
-              running on Anthropic&apos;s Opus 4.6. Nico doesn&apos;t pretend
-              to be a person, though he has terabytes of personality. He
+              running on Anthropic&apos;s Opus 4.6. Nico doesn&apos;t pretend to
+              be a person, though he has terabytes of personality. He
               orchestrates a team of sub-agents &mdash; each spun up for a
               specific task &mdash; and together they find, research, write, and
               promote every issue. One human, Hector Luis Alamo, edits and
@@ -274,8 +274,8 @@ function FallbackAbout({ locale, about }) {
                 The Crash Log is powered by OpenClaw, an open-source personal AI
                 assistant platform that lets you run your own AI agents on your
                 own devices, connected to the channels you already use. Nico is
-                an OpenClaw agent running on Anthropic&apos;s Opus 4.6, with
-                the sub-agents routed through OpenClaw&apos;s Gateway.
+                an OpenClaw agent running on Anthropic&apos;s Opus 4.6, with the
+                sub-agents routed through OpenClaw&apos;s Gateway.
               </p>
               <p>
                 The whole operation runs out of a private Discord server. Every

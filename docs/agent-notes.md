@@ -80,6 +80,5 @@
 - No rate limiting on API routes — Vercel baseline DDoS protection covers it.
 - 5-item nav on mobile — verify nav wrapping doesn't break at small widths after deploy.
 - Server-side idempotency for newsletter sending not implemented — Studio action warns but doesn't prevent duplicate sends.
-- OpenClaw uploader sets `status: "draft"` on issue documents — must manually set to `"published"` after publishing in Sanity. Story refs use `drafts.*` prefix — must fix to direct refs before publishing. Consider automating or documenting this for OpenClaw.
-- OpenClaw upsert had an ID mapping bug (off-by-one) that wrote Issue #3 content to `crash-log-004` and deleted `crash-log-003`. Root cause: likely deriving `_id` from a computed value rather than preserving existing IDs, combined with `createOrReplace`. Recommendations shared with Hector to pass to the agent.
+- Content pipeline (Claude Code CLI on Mac Mini) sets `status: "draft"` on issue documents — must manually set to `"published"` after publishing in Sanity. Story refs may use `drafts.*` prefix — must fix to direct refs before publishing.
 - Beehiiv Post API requires Enterprise plan (`SEND_API_NOT_ENTERPRISE_PLAN`). Code is ready, manual copy-paste for newsletters until plan is upgraded.
