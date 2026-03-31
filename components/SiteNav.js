@@ -22,6 +22,7 @@ const LABELS = {
     archive: "Archive",
     beats: "Beats",
     about: "About",
+    nav: "Main navigation",
   },
   es: {
     latest: "Último",
@@ -29,6 +30,7 @@ const LABELS = {
     archive: "Archivo",
     beats: "Temas",
     about: "Sobre",
+    nav: "Navegación principal",
   },
 };
 
@@ -37,7 +39,7 @@ export default function SiteNav({ locale }) {
   const labels = LABELS[locale] || LABELS.en;
 
   return (
-    <nav className={styles.nav}>
+    <nav className={styles.nav} aria-label={labels.nav}>
       {NAV_ITEMS.map((item) => {
         const isActive =
           (item.href === "" && !segment) ||

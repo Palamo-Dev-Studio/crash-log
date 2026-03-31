@@ -41,7 +41,8 @@
 }
 
 .input:focus {
-  outline: none;
+  outline: 2px solid var(--severity-error);
+  outline-offset: 2px;
   border-color: var(--severity-error);
 }
 

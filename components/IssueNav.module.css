@@ -1,0 +1,48 @@
+/* ABOUTME: Styles for the prev/next issue navigation component.
+   ABOUTME: Two-column layout with mono font, uppercase labels, and severity-error link color. */
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+}
+
+.side {
+  flex: 1;
+  min-width: 0;
+}
+
+.right {
+  text-align: right;
+}
+
+.link {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.link:hover .title {
+  color: var(--severity-error);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.15s;
+}

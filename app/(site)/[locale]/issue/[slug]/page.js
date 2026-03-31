@@ -3,10 +3,11 @@
 
 import { cache } from "react";
 import { notFound } from "next/navigation";
-import { getIssueBySlug, getAllIssueSlugs } from "@/lib/queries";
+import { getIssueBySlug, getAllIssueSlugs, getAdjacentIssues } from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
 import IssueContent from "@/components/IssueContent";
+import IssueNav from "@/components/IssueNav";
 
 const getCachedIssueBySlug = cache(getIssueBySlug);
 
@@ -73,10 +74,16 @@ function NewsArticleJsonLd({ issue, locale, slug }) {
       "@type": "Organization",
       name: "The Crash Log",
       url: "https://crashlog.ai",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://crashlog.ai/icon.png",
+      },
     },
     author: {
-      "@type": "Organization",
-      name: "The Crash Log",
+      "@type": "Person",
+      name: "Hector Luis Alamo",
+      url: "https://www.linkedin.com/in/hector-luis-alamo-90432941/",
+      jobTitle: "Editor & Publisher",
     },
   };
 
@@ -122,11 +129,14 @@ export default async function IssuePage({ params }) {
 
   if (!issue) notFound();
 
+  const adjacent = await getAdjacentIssues(issue.issueNumber);
+
   return (
     <>
       <NewsArticleJsonLd issue={issue} locale={locale} slug={slug} />
       <BreadcrumbJsonLd issue={issue} locale={locale} slug={slug} />
       <IssueContent issue={issue} locale={locale} />
+      <IssueNav prev={adjacent?.prev} next={adjacent?.next} locale={locale} />
     </>
   );
 }

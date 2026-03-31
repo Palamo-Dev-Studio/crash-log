@@ -123,17 +123,21 @@ export default async function SiteLayout({ children, params }) {
   return (
     <html lang={locale}>
       <head>
+        <link rel="preconnect" href="https://cdn.sanity.io" />
         <WebSiteJsonLd />
       </head>
       <body
         className={`${spaceGrotesk.variable} ${sourceSerif4.variable} ${ibmPlexMono.variable}`}
       >
+        <a href="#main-content" className="skip-to-content">
+          {locale === "es" ? "Saltar al contenido" : "Skip to content"}
+        </a>
         <div className="wrapper">
           <Header locale={locale}>
             <LanguageToggle locale={locale} />
           </Header>
           <SiteNav locale={locale} />
-          {children}
+          <div id="main-content">{children}</div>
         </div>
       </body>
     </html>

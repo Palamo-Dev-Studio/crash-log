@@ -470,14 +470,56 @@ function SanityAbout({ about, locale }) {
   );
 }
 
+function NewsMediaOrganizationJsonLd() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsMediaOrganization",
+    name: "The Crash Log",
+    url: "https://crashlog.ai",
+    logo: "https://crashlog.ai/icon.png",
+    sameAs: [
+      "https://x.com/crashLogNews",
+      "https://www.instagram.com/crashlognews/",
+    ],
+    description:
+      "AI accountability journalism produced by a governed agentic AI system and edited by a human.",
+    founder: {
+      "@type": "Person",
+      name: "Hector Luis Alamo",
+    },
+    parentOrganization: {
+      "@type": "Organization",
+      name: "Palamo Studio",
+      url: "https://www.palamostudio.com",
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
 export default async function AboutPage({ params }) {
   const { locale } = await params;
   const about = await getCachedAbout();
 
   const hasSpanish = about?.introParagraph?.es;
   if (!about || (locale === "es" && !hasSpanish)) {
-    return <FallbackAbout locale={locale} about={about} />;
+    return (
+      <>
+        <NewsMediaOrganizationJsonLd />
+        <FallbackAbout locale={locale} about={about} />
+      </>
+    );
   }
 
-  return <SanityAbout about={about} locale={locale} />;
+  return (
+    <>
+      <NewsMediaOrganizationJsonLd />
+      <SanityAbout about={about} locale={locale} />
+    </>
+  );
 }

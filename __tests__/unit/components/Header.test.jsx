@@ -78,7 +78,7 @@ describe("Header", () => {
     render(<Header locale="en" />);
     const logo = document.querySelector('img[src="/logo-circle.webp"]');
     expect(logo).toBeInTheDocument();
-    expect(logo).toHaveAttribute("alt", "");
+    expect(logo).toHaveAttribute("alt", "The Crash Log");
   });
 
   it("logo and wordmark text are within the same link", () => {

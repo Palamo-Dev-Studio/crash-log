@@ -83,6 +83,8 @@ export default function IssueContent({ issue, locale }) {
             colorKey={getStoryColorKey(index)}
             headline={t(story.headline, locale)}
             tags={t(story.tags, locale)?.split(" / ")}
+            category={story.category}
+            locale={locale}
           >
             {body && (
               <PortableText value={body} components={portableTextComponents} />
@@ -94,6 +96,16 @@ export default function IssueContent({ issue, locale }) {
       <StackTrace locale={locale} items={stackTraceItems} />
 
       <DonateCTA locale={locale} />
+
+      <div className={styles.subscribeBanner}>
+        <p className={styles.subscribeBannerLabel}>
+          {locale === 'es' ? 'No te pierdas la próxima edición' : "Don't miss the next issue"}
+        </p>
+        <a href={`/${locale}`} className={styles.subscribeBannerLink}>
+          {locale === 'es' ? 'Suscríbete' : 'Subscribe'}
+        </a>
+      </div>
+
       <Footer locale={locale} />
     </main>
   );

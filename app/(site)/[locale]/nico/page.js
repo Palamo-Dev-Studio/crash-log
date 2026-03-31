@@ -45,9 +45,7 @@ export default async function NicoArchivePage({ params }) {
   return (
     <main>
       <h1 className={styles.heading}>
-        {locale === "es"
-          ? "\u2500\u2500 NOTAS DE NICO \u2500\u2500"
-          : "\u2500\u2500 NICO\u2019S NOTES \u2500\u2500"}
+        {locale === "es" ? "Notas de Nico" : "Nico\u2019s Notes"}
       </h1>
 
       {columns.length === 0 ? (
