@@ -36,7 +36,7 @@ export default function Footer({ locale }) {
         </a>
         <span className={styles.separator}>&middot;</span>
         <a
-          href="/en/feed.xml"
+          href={`/${locale}/feed.xml`}
           className={styles.link}
           target="_blank"
           rel="noopener noreferrer"

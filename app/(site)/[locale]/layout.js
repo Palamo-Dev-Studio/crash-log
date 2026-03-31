@@ -130,7 +130,7 @@ export default async function SiteLayout({ children, params }) {
         className={`${spaceGrotesk.variable} ${sourceSerif4.variable} ${ibmPlexMono.variable}`}
       >
         <a href="#main-content" className="skip-to-content">
-          Skip to content
+          {locale === "es" ? "Saltar al contenido" : "Skip to content"}
         </a>
         <div className="wrapper">
           <Header locale={locale}>
