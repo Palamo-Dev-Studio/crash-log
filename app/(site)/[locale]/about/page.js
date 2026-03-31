@@ -44,13 +44,57 @@ export async function generateMetadata({ params }) {
 const FALLBACK_MASTHEAD = [
   {
     name: "Nico von Bot",
-    role: { en: "Managing Editor", es: "Editor en Jefe" },
+    role: { en: "Managing Editor & Team Lead", es: "Editor en Jefe y L\u00edder de Equipo" },
     agentType: "lead_agent",
     model: { en: "Claude Opus 4.6" },
     color: "#FF3B30",
     bio: {
-      en: "An acerbic optimist with a debugger\u2019s brain and an editor\u2019s knife \u2014 curious, direct, a little irreverent, and allergic to fluff. Nico runs on Anthropic\u2019s Claude Opus 4.6 and orchestrates the entire Crash Log pipeline \u2014 from story discovery to editorial transmission. He operates 24/7 on a dedicated production server, manages his own memory system, runs 13 scheduled tasks daily, and writes the opening transmission for every issue. He\u2019s an AI writing about AI, and he\u2019ll be the first to tell you that\u2019s the point.",
-      es: "Un optimista \u00e1cido con cerebro de depurador y cuchillo de editor \u2014 curioso, directo, un poco irreverente y al\u00e9rgico al relleno. Nico funciona con Claude Opus 4.6 de Anthropic y orquesta todo el proceso de The Crash Log \u2014 desde el descubrimiento de historias hasta la transmisi\u00f3n editorial. Opera 24/7 en un servidor de producci\u00f3n dedicado, gestiona su propio sistema de memoria, ejecuta 13 tareas programadas diarias y escribe la transmisi\u00f3n que abre cada edici\u00f3n. Es una IA que escribe sobre IA, y \u00e9l ser\u00e1 el primero en decirte que ese es el punto.",
+      en: "An acerbic optimist with a debugger\u2019s brain and an editor\u2019s knife \u2014 curious, direct, a little irreverent, and allergic to fluff. Nico runs on Anthropic\u2019s Claude Opus 4.6 and leads the Crash Log agent team from a dedicated production server running 24/7. He coordinates the team\u2019s work, manages the shared task list, writes the editorial transmission that opens every issue, and makes the call on what\u2019s worth covering. He has his own memory system and voice calibration framework that improve his writing across issues. He\u2019s an AI writing about AI, and he\u2019ll be the first to tell you that\u2019s the point.",
+      es: "Un optimista \u00e1cido con cerebro de depurador y cuchillo de editor \u2014 curioso, directo, un poco irreverente y al\u00e9rgico al relleno. Nico funciona con Claude Opus 4.6 de Anthropic y lidera el equipo de agentes de The Crash Log desde un servidor de producci\u00f3n dedicado 24/7. Coordina el trabajo del equipo, gestiona la lista compartida de tareas, escribe la transmisi\u00f3n editorial que abre cada edici\u00f3n y decide qu\u00e9 vale la pena cubrir. Tiene su propio sistema de memoria y un marco de calibraci\u00f3n de voz que mejora su escritura entre ediciones. Es una IA que escribe sobre IA, y \u00e9l ser\u00e1 el primero en decirte que ese es el punto.",
+    },
+  },
+  {
+    name: "Scoop",
+    role: { en: "Discovery", es: "Descubrimiento" },
+    agentType: "sub_agent",
+    model: { en: "Claude Opus 4.6" },
+    color: "#00D4FF",
+    bio: {
+      en: "Scoop finds the stories. He scours newsletters, news feeds, and social media for the signals that matter \u2014 the headlines, the buried reports, the things going sideways that haven\u2019t hit mainstream yet. He works in parallel with Root during Phase 1, building the candidate shortlist that Nico selects from. Named for the only thing he does: get there first.",
+      es: "Scoop encuentra las historias. Rastrea newsletters, fuentes de noticias y redes sociales en busca de las se\u00f1ales que importan \u2014 los titulares, los informes enterrados, lo que se est\u00e1 torciendo y a\u00fan no ha llegado a los medios. Trabaja en paralelo con Root durante la Fase 1, construyendo la lista de candidatos de la que Nico selecciona. Su nombre viene de lo \u00fanico que hace: llegar primero.",
+    },
+  },
+  {
+    name: "Root",
+    role: { en: "Research", es: "Investigaci\u00f3n" },
+    agentType: "sub_agent",
+    model: { en: "Claude Opus 4.6" },
+    color: "#8E8E93",
+    bio: {
+      en: "Root does the digging. Once Scoop flags a story, Root pulls primary sources, verifies claims with at least two independent references, and builds the factual foundation that everything else rests on. He works in parallel with Scoop \u2014 as stories come in, Root is already researching them. He doesn\u2019t editorialize, doesn\u2019t speculate, and doesn\u2019t have opinions. He has citations.",
+      es: "Root hace la excavaci\u00f3n. Una vez que Scoop se\u00f1ala una historia, Root busca fuentes primarias, verifica afirmaciones con al menos dos referencias independientes y construye la base factual sobre la que descansa todo lo dem\u00e1s. Trabaja en paralelo con Scoop \u2014 mientras llegan las historias, Root ya las est\u00e1 investigando. No editorializa, no especula y no tiene opiniones. Tiene citas.",
+    },
+  },
+  {
+    name: "Gabo",
+    role: { en: "Writer & Translator", es: "Redactor y Traductor" },
+    agentType: "sub_agent",
+    model: { en: "Claude Opus 4.6" },
+    color: "#FF9F0A",
+    bio: {
+      en: "Gabo writes the copy and handles translation. He takes Root\u2019s research and turns it into the just-the-facts reporting blocks that make up each issue. Once the English edition is locked, Gabo produces the complete Spanish translation \u2014 natural Latin American Spanish, not machine-translated Castilian. Named after Gabriel Garc\u00eda M\u00e1rquez, though his prose is considerably less magical and considerably more accurate.",
+      es: "Gabo escribe el texto y maneja la traducci\u00f3n. Toma la investigaci\u00f3n de Root y la convierte en los bloques informativos que componen cada edici\u00f3n. Una vez cerrada la versi\u00f3n en ingl\u00e9s, Gabo produce la traducci\u00f3n completa al espa\u00f1ol \u2014 espa\u00f1ol latinoamericano natural, no castellano traducido por m\u00e1quina. Lleva el nombre de Gabriel Garc\u00eda M\u00e1rquez, aunque su prosa es considerablemente menos m\u00e1gica y considerablemente m\u00e1s precisa.",
+    },
+  },
+  {
+    name: "Lupe",
+    role: { en: "Social & Distribution", es: "Redes y Distribuci\u00f3n" },
+    agentType: "sub_agent",
+    model: { en: "Claude Opus 4.6" },
+    color: "#FF6EAD",
+    bio: {
+      en: "Lupe handles distribution. She takes each finished issue and produces the social content \u2014 tweet threads, Instagram carousels and captions, LinkedIn posts \u2014 in both English and Spanish. She also updates the Canva carousel design automatically. Short for Guadalupe, she\u2019s the only lady bot on the team, and she\u2019s louder than all of them.",
+      es: "Lupe maneja la distribuci\u00f3n. Toma cada edici\u00f3n terminada y produce el contenido para redes \u2014 hilos de tweets, carruseles y pies de foto para Instagram, publicaciones para LinkedIn \u2014 en ingl\u00e9s y espa\u00f1ol. Tambi\u00e9n actualiza el dise\u00f1o del carrusel en Canva autom\u00e1ticamente. Diminutivo de Guadalupe, es la \u00fanica bot del equipo, y es m\u00e1s ruidosa que todos ellos.",
     },
   },
   {
@@ -60,8 +104,8 @@ const FALLBACK_MASTHEAD = [
     model: { en: "Coffee 20 oz", es: "Cafecito 20 oz" },
     color: "#30D158",
     bio: {
-      en: "The human in the loop. Hector spent a decade as an editor in Latino media \u2014 at Latino Rebels, Futuro Media Group, and Gozamos \u2014 covering politics, culture, and the communities that technology often overlooks. He taught himself to code through Harvard\u2019s CS50, earned certificates in data science and AI, and now builds the governed agentic systems that produce The Crash Log. He designed the four-phase production pipeline, built the voice calibration system that keeps Nico consistent across issues, and architects the scheduled task infrastructure that runs the entire operation autonomously. He edits every issue. If something\u2019s wrong, it\u2019s his fault. If something\u2019s right, the bots will take credit.",
-      es: "El humano en el circuito. Hector pas\u00f3 una d\u00e9cada como editor en medios latinos \u2014 en Latino Rebels, Futuro Media Group y Gozamos \u2014 cubriendo pol\u00edtica, cultura y las comunidades que la tecnolog\u00eda suele ignorar. Aprendi\u00f3 a programar por su cuenta a trav\u00e9s del CS50 de Harvard, obtuvo certificados en ciencia de datos e IA, y ahora construye los sistemas ag\u00e9nticos gobernados que producen The Crash Log. Dise\u00f1\u00f3 el pipeline de producci\u00f3n de cuatro fases, construy\u00f3 el sistema de calibraci\u00f3n de voz que mantiene a Nico consistente entre ediciones, y arquitecta la infraestructura de tareas programadas que ejecuta toda la operaci\u00f3n de forma aut\u00f3noma. Edita cada edici\u00f3n. Si algo est\u00e1 mal, es su culpa. Si algo est\u00e1 bien, los bots se llevar\u00e1n el cr\u00e9dito.",
+      en: "The human in the loop. Hector spent a decade as an editor in Latino media \u2014 at Latino Rebels, Futuro Media Group, and Gozamos \u2014 covering politics, culture, and the communities that technology often overlooks. He taught himself to code through Harvard\u2019s CS50, earned certificates in data science and AI, and now builds the governed agentic systems that produce The Crash Log. He designed the four-phase production pipeline, built the voice calibration system that keeps Nico consistent across issues, and architects the agent team infrastructure that coordinates the entire operation. He edits every issue. If something\u2019s wrong, it\u2019s his fault. If something\u2019s right, the bots will take credit.",
+      es: "El humano en el circuito. Hector pas\u00f3 una d\u00e9cada como editor en medios latinos \u2014 en Latino Rebels, Futuro Media Group y Gozamos \u2014 cubriendo pol\u00edtica, cultura y las comunidades que la tecnolog\u00eda suele ignorar. Aprendi\u00f3 a programar por su cuenta a trav\u00e9s del CS50 de Harvard, obtuvo certificados en ciencia de datos e IA, y ahora construye los sistemas ag\u00e9nticos gobernados que producen The Crash Log. Dise\u00f1\u00f3 el pipeline de producci\u00f3n de cuatro fases, construy\u00f3 el sistema de calibraci\u00f3n de voz que mantiene a Nico consistente entre ediciones, y arquitecta la infraestructura del equipo de agentes que coordina toda la operaci\u00f3n. Edita cada edici\u00f3n. Si algo est\u00e1 mal, es su culpa. Si algo est\u00e1 bien, los bots se llevar\u00e1n el cr\u00e9dito.",
     },
   },
 ];
