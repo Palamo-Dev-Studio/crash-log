@@ -34,6 +34,25 @@ export default function Footer({ locale }) {
         >
           Instagram
         </a>
+        <span className={styles.separator}>&middot;</span>
+        <a
+          href="/en/feed.xml"
+          className={styles.link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          RSS
+        </a>
+      </p>
+      <p className={styles.social}>
+        <a
+          href="https://www.palamostudio.com"
+          className={styles.link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Palamo Studio
+        </a>
       </p>
     </footer>
   );

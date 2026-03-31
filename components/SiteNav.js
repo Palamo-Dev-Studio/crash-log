@@ -37,7 +37,7 @@ export default function SiteNav({ locale }) {
   const labels = LABELS[locale] || LABELS.en;
 
   return (
-    <nav className={styles.nav}>
+    <nav className={styles.nav} aria-label={locale === 'es' ? 'Navegación principal' : 'Main navigation'}>
       {NAV_ITEMS.map((item) => {
         const isActive =
           (item.href === "" && !segment) ||

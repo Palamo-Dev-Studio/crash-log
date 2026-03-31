@@ -10,9 +10,6 @@ import { LOCALES } from "@/lib/locale";
 
 const BASE_URL = "https://crashlog.ai";
 
-// Stable timestamp for static pages to avoid search engines seeing constant changes
-const STATIC_PAGE_DATE = "2026-03-04T00:00:00.000Z";
-
 export default async function sitemap() {
   const [issues, categories, columns] = await Promise.all([
     getAllIssuesSummary(),
@@ -20,11 +17,16 @@ export default async function sitemap() {
     getAllColumnsSummary(),
   ]);
 
+  // Use the most recent issue's publish date for content-driven static pages,
+  // falling back to current date if no issues exist
+  const latestIssueDate =
+    issues?.[0]?._updatedAt || issues?.[0]?.publishDate || new Date().toISOString();
+
   const staticPages = ["", "/about", "/archive", "/beats", "/nico", "/support"];
   const staticEntries = staticPages.flatMap((path) =>
     LOCALES.map((locale) => ({
       url: `${BASE_URL}/${locale}${path}`,
-      lastModified: STATIC_PAGE_DATE,
+      lastModified: latestIssueDate,
       changeFrequency: path === "" ? "weekly" : "monthly",
       priority: path === "" ? 1.0 : 0.7,
       alternates: {
@@ -57,7 +59,7 @@ export default async function sitemap() {
   const beatEntries = categories.flatMap((cat) =>
     LOCALES.map((locale) => ({
       url: `${BASE_URL}/${locale}/beat/${cat.slug}`,
-      lastModified: STATIC_PAGE_DATE,
+      lastModified: latestIssueDate,
       changeFrequency: "weekly",
       priority: 0.6,
       alternates: {

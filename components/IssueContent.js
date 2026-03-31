@@ -94,6 +94,16 @@ export default function IssueContent({ issue, locale }) {
       <StackTrace locale={locale} items={stackTraceItems} />
 
       <DonateCTA locale={locale} />
+
+      <div style={{textAlign:'center',padding:'32px 0',borderTop:'1px solid var(--border)',marginTop:'32px'}}>
+        <p style={{fontFamily:'var(--font-mono)',fontSize:'13px',letterSpacing:'1.5px',textTransform:'uppercase',color:'var(--text-tertiary)',marginBottom:'12px'}}>
+          {locale === 'es' ? 'No te pierdas la próxima edición' : "Don't miss the next issue"}
+        </p>
+        <a href={`/${locale}`} style={{fontFamily:'var(--font-mono)',fontSize:'12px',letterSpacing:'1.5px',textTransform:'uppercase',color:'var(--severity-error)',textDecoration:'none',border:'1.5px solid var(--severity-error)',padding:'10px 24px',borderRadius:'2px'}}>
+          {locale === 'es' ? 'Suscríbete' : 'Subscribe'}
+        </a>
+      </div>
+
       <Footer locale={locale} />
     </main>
   );

@@ -45,7 +45,7 @@ export default async function ArchivePage({ params }) {
   return (
     <main>
       <h1 className={styles.heading}>
-        {locale === "es" ? "── ARCHIVO ──" : "── ARCHIVE ──"}
+        {locale === "es" ? "Archivo de The Crash Log" : "The Crash Log Archive"}
       </h1>
 
       {issues.length === 0 ? (

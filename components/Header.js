@@ -21,7 +21,7 @@ export default function Header({ locale, children }) {
           <Link href={`/${locale}`} className={styles.wordmark}>
             <Image
               src="/logo-circle.webp"
-              alt=""
+              alt="The Crash Log"
               width={54}
               height={54}
               className={styles.logo}

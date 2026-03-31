@@ -30,6 +30,18 @@
   color: var(--border-accent);
 }
 
+.beatLink {
+  color: var(--text-faint);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.beatLink:hover {
+  color: var(--severity-error);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .body {
   font-family: var(--font-body);
   font-size: 17.5px;
