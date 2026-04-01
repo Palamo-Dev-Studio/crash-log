@@ -4,8 +4,8 @@
 import styles from "./Footer.module.css";
 
 const LABELS = {
-  en: { credit: "Built with OpenClaw \u00b7 Edited by Humans" },
-  es: { credit: "Hecho con OpenClaw \u00b7 Editado por Humanos" },
+  en: { credit: "Built with Claude Code \u00b7 Edited by Humans" },
+  es: { credit: "Hecho con Claude Code \u00b7 Editado por Humanos" },
 };
 
 export default function Footer({ locale }) {

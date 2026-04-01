@@ -23,13 +23,13 @@ describe("Footer", () => {
 
   it("renders English credit text", () => {
     render(<Footer locale="en" />);
-    expect(screen.getByText(/Built with OpenClaw/)).toBeInTheDocument();
+    expect(screen.getByText(/Built with Claude Code/)).toBeInTheDocument();
     expect(screen.getByText(/Edited by Humans/)).toBeInTheDocument();
   });
 
   it("renders Spanish credit text for es locale", () => {
     render(<Footer locale="es" />);
-    expect(screen.getByText(/Hecho con OpenClaw/)).toBeInTheDocument();
+    expect(screen.getByText(/Hecho con Claude Code/)).toBeInTheDocument();
     expect(screen.getByText(/Editado por Humanos/)).toBeInTheDocument();
   });
 
