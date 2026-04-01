@@ -17,7 +17,7 @@ export default {
       title: "How It Works",
       type: "localizedBlockContent",
       description:
-        "How the AI newsroom works — the OpenClaw platform, editorial pipeline",
+        "How the AI newsroom works — the Claude Code pipeline, editorial workflow",
     },
     {
       name: "contactCTA",

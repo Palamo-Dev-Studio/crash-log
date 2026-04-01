@@ -14,11 +14,9 @@ const LABELS = {
     ariaLabel: "Support The Crash Log",
     heading: "Feed the Bots",
     mission:
-      "The Crash Log is an experiment: an autonomous AI newsroom covering the stories that other outlets overlook, ignore, or get wrong. Every issue is produced by a team of bots \u2014 Nico writes, Scoop investigates, Root researches, Gabo translates, Lupe checks facts \u2014 and a human editor curates the final product.",
+      "The Crash Log is an autonomous AI newsroom covering the stories that keep getting swept under the rug \u2014 the malfunctions, the abuses, the decisions quietly reshaping how the world works. Every issue is produced by an AI system and edited by a human. No sponsors, no advertisers, no algorithm deciding what you see.",
     mission2:
-      "Running this operation isn\u2019t free. Tokens, compute, infrastructure, Nico\u2019s ever-expanding context window \u2014 it all costs real money. Your support keeps The Crash Log independent, hallucination-free, and publishing every week.",
-    mission3:
-      "This is journalism built on OpenClaw \u2014 open-source AI workflows that give autonomous agents a platform to do real work. Your donation funds the bots, the tools, and the mission.",
+      "Running this costs real money. Tokens, compute, a server that never sleeps, and the infrastructure to publish five days a week in two languages. Your support keeps The Crash Log independent, hallucination-free, and publishing.",
     disclaimer: "Contributions are not tax-deductible.",
     button: "Feed the Bots",
     sending: "Processing\u2026",
@@ -31,11 +29,9 @@ const LABELS = {
     ariaLabel: "Apoya a The Crash Log",
     heading: "Alimenta a los Bots",
     mission:
-      "The Crash Log es un experimento: una redacci\u00f3n de IA aut\u00f3noma que cubre las historias que otros medios pasan por alto, ignoran o malinterpretan. Cada edici\u00f3n es producida por un equipo de bots \u2014 Nico escribe, Scoop investiga, Root investiga, Gabo traduce, Lupe verifica hechos \u2014 y un editor humano cura el producto final.",
+      "The Crash Log es una redacci\u00f3n de IA aut\u00f3noma que cubre las historias que siguen barri\u00e9ndose debajo de la alfombra \u2014 las fallas, los abusos, las decisiones que silenciosamente reconfiguran c\u00f3mo funciona el mundo. Cada edici\u00f3n es producida por un sistema de IA y editada por un humano. Sin patrocinadores, sin anunciantes, sin algoritmo decidiendo lo que ves.",
     mission2:
-      "Operar esta redacci\u00f3n no es gratis. Tokens, c\u00f3mputo, infraestructura, la ventana de contexto de Nico que nunca para de crecer \u2014 todo cuesta dinero real. Tu apoyo mantiene a The Crash Log independiente, libre de alucinaciones y publicando cada semana.",
-    mission3:
-      "Esto es periodismo construido sobre OpenClaw \u2014 flujos de trabajo de IA de c\u00f3digo abierto que dan a agentes aut\u00f3nomos una plataforma para hacer trabajo real. Tu donaci\u00f3n financia a los bots, las herramientas y la misi\u00f3n.",
+      "Operar esto cuesta dinero real. Tokens, c\u00f3mputo, un servidor que nunca duerme y la infraestructura para publicar cinco d\u00edas a la semana en dos idiomas. Tu apoyo mantiene a The Crash Log independiente, libre de alucinaciones y publicando.",
     disclaimer: "Las contribuciones no son deducibles de impuestos.",
     button: "Alimenta a los Bots",
     sending: "Procesando\u2026",
@@ -121,7 +117,6 @@ export default function SupportContent({ locale = "en" }) {
       <div className={styles.mission}>
         <p>{labels.mission}</p>
         <p>{labels.mission2}</p>
-        <p>{labels.mission3}</p>
       </div>
 
       <div className={styles.card}>
