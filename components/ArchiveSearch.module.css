@@ -1,0 +1,105 @@
+/* ABOUTME: Styles for the archive search/filter UI: input, category pills, results area. */
+
+.wrapper {
+  margin-bottom: 16px;
+}
+
+.searchRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--surface);
+  border-radius: 4px;
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--severity-error);
+}
+
+.input::placeholder {
+  color: var(--text-faint);
+}
+
+.clearBtn {
+  background: transparent;
+  border: 1px solid var(--surface);
+  border-radius: 4px;
+  padding: 0 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.clearBtn:hover {
+  border-color: var(--severity-error);
+  color: var(--text-primary);
+}
+
+.categoryPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.pill {
+  background: transparent;
+  border: 1px solid var(--surface);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
+}
+
+.pill:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.pillActive {
+  background: var(--severity-error);
+  border-color: var(--severity-error);
+  color: var(--bg, #0a0a0c);
+}
+
+.pillActive:hover {
+  color: var(--bg, #0a0a0c);
+}
+
+.empty {
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--text-tertiary);
+  padding: 48px 0;
+  text-align: center;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+}
