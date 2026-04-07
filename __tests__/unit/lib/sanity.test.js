@@ -91,7 +91,7 @@ describe("lib/sanity", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         "*[_type == 'test']",
         {},
-        { next: { revalidate: 3600 } }
+        { next: { revalidate: 300 } }
       );
     });
 
@@ -132,7 +132,7 @@ describe("lib/sanity", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         "test",
         { slug: "my-slug" },
-        { next: { revalidate: 3600 } }
+        { next: { revalidate: 300 } }
       );
     });
   });
