@@ -158,5 +158,8 @@ describe("query string exports", () => {
     expect(queries.ALL_COLUMNS_FOR_ARCHIVE_QUERY).toContain("columnNumber");
     expect(queries.COLUMNS_FOR_FEED_QUERY).toContain("publishDate");
     expect(queries.ALL_COLUMNS_SUMMARY_QUERY).toContain("publishDate");
+    expect(queries.ALL_COLUMNS_FOR_ARCHIVE_SEARCH_QUERY).toContain("body");
+    expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("nicosTransmission");
+    expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("category");
   });
 });
