@@ -84,11 +84,11 @@
 .pillActive {
   background: var(--severity-error);
   border-color: var(--severity-error);
-  color: var(--bg, #0a0a0c);
+  color: var(--bg);
 }
 
 .pillActive:hover {
-  color: var(--bg, #0a0a0c);
+  color: var(--bg);
 }
 
 .empty {

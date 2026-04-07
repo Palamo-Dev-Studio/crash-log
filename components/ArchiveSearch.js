@@ -26,7 +26,7 @@ const COPY = {
   },
 };
 
-export default function ArchiveSearch({ items, categories, locale }) {
+export default function ArchiveSearch({ items, categories = [], locale }) {
   const [query, setQuery] = useState("");
   const [selectedCats, setSelectedCats] = useState([]);
   const copy = COPY[locale] || COPY.en;

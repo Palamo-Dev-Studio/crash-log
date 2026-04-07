@@ -168,8 +168,8 @@ export default async function ArchivePage({ params }) {
       {empty ? (
         <p className={styles.empty}>
           {locale === "es"
-            ? "No hay ediciones publicadas todavía."
-            : "No issues published yet."}
+            ? "No hay contenido publicado todavía."
+            : "No content published yet."}
         </p>
       ) : (
         <ArchiveSearch

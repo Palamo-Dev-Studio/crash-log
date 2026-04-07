@@ -39,12 +39,22 @@ describe("portableTextToPlain", () => {
     expect(portableTextToPlain(blocks)).toBe("First\nSecond");
   });
 
-  it("skips non-block types like images", () => {
+  it("skips non-block types like images without alt text", () => {
     const blocks = [
       { _type: "block", children: [{ _type: "span", text: "Caption" }] },
       { _type: "image", asset: { _ref: "x" } },
     ];
     expect(portableTextToPlain(blocks)).toBe("Caption");
+  });
+
+  it("extracts image alt text when present", () => {
+    const blocks = [
+      { _type: "block", children: [{ _type: "span", text: "Caption" }] },
+      { _type: "image", asset: { _ref: "x" }, alt: "A diagram of the outage" },
+    ];
+    expect(portableTextToPlain(blocks)).toBe(
+      "Caption\nA diagram of the outage"
+    );
   });
 
   it("ignores spans without text", () => {

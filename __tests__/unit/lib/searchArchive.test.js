@@ -83,12 +83,26 @@ describe("searchArchive", () => {
     expect(out[0].matches).not.toContain("titleSubtitle");
   });
 
-  it("filters by category (OR within categories)", () => {
+  it("filters by a single category", () => {
     const out = searchArchive([baseIssue, column], {
       categories: ["foundation-models"],
     });
     expect(out).toHaveLength(1);
     expect(out[0].id).toBe("issue-1");
+  });
+
+  it("ORs across multiple selected categories", () => {
+    const otherIssue = {
+      ...baseIssue,
+      id: "issue-2",
+      categories: [
+        { slug: "labor-and-automation", name: "Labor & Automation" },
+      ],
+    };
+    const out = searchArchive([baseIssue, otherIssue, column], {
+      categories: ["foundation-models", "labor-and-automation"],
+    });
+    expect(out.map((i) => i.id).sort()).toEqual(["issue-1", "issue-2"]);
   });
 
   it("returns empty when category does not match anything", () => {

@@ -45,7 +45,7 @@
 }
 
 .kind {
-  color: var(--agent-nico, var(--text-muted));
+  color: var(--agent-nico);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -59,7 +59,7 @@
 }
 
 .card mark {
-  background: var(--agent-nico, #ffd54f);
+  background: var(--agent-nico);
   color: inherit;
   padding: 0 2px;
   border-radius: 2px;

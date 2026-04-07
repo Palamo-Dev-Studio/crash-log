@@ -59,7 +59,7 @@
 }
 
 .card mark {
-  background: var(--severity-error, #ffd54f);
+  background: var(--severity-error);
   color: inherit;
   padding: 0 2px;
   border-radius: 2px;
