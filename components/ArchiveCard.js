@@ -4,6 +4,8 @@
 import Link from "next/link";
 import SeverityBadge from "@/components/SeverityBadge";
 import { getStoryColorKey } from "@/lib/storyColors";
+import { highlightMatches } from "@/lib/highlightMatches";
+import { matchedInLabel } from "@/lib/matchedInLabel";
 import styles from "./ArchiveCard.module.css";
 
 function formatDate(dateString, locale) {
@@ -24,8 +26,11 @@ export default function ArchiveCard({
   severities,
   slug,
   locale,
+  query,
+  matches,
 }) {
   const num = String(issueNumber).padStart(3, "0");
+  const matchedIn = matchedInLabel(matches, locale);
 
   const content = (
     <>
@@ -33,8 +38,11 @@ export default function ArchiveCard({
         <span>#{num}</span>
         <span>{formatDate(date, locale)}</span>
       </div>
-      <h3 className={styles.title}>{title}</h3>
-      {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+      <h3 className={styles.title}>{highlightMatches(title, query)}</h3>
+      {subtitle && (
+        <p className={styles.subtitle}>{highlightMatches(subtitle, query)}</p>
+      )}
+      {matchedIn && <p className={styles.matchedIn}>{matchedIn}</p>}
       {severities?.length > 0 && (
         <div className={styles.severities}>
           {severities.map((s, i) => (

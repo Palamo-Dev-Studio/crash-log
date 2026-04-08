@@ -43,3 +43,24 @@
   color: var(--text-muted);
   margin-bottom: 0;
 }
+
+.kind {
+  color: var(--agent-nico);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.matchedIn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 8px;
+  letter-spacing: 0.04em;
+}
+
+.card mark {
+  background: var(--agent-nico);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+}

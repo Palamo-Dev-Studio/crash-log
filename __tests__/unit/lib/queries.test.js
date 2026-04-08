@@ -138,6 +138,22 @@ describe("null client fallback", () => {
     expect(await queries.getAllColumnsForArchive()).toEqual([]);
     expect(await queries.getColumnsForFeed()).toEqual([]);
     expect(await queries.getAllColumnsSummary()).toEqual([]);
+    expect(await queries.getAllColumnsForArchiveSearch()).toEqual([]);
+  });
+
+  it("getAllColumnsForArchiveSearch returns wrapped value when present", async () => {
+    mockSanityFetch.mockResolvedValueOnce([
+      { _id: "c1", columnNumber: 1, slug: "2026-04-04" },
+    ]);
+    const result = await queries.getAllColumnsForArchiveSearch();
+    expect(result).toEqual([
+      { _id: "c1", columnNumber: 1, slug: "2026-04-04" },
+    ]);
+    expect(mockSanityFetch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: queries.ALL_COLUMNS_FOR_ARCHIVE_SEARCH_QUERY,
+      })
+    );
   });
 });
 
@@ -158,5 +174,8 @@ describe("query string exports", () => {
     expect(queries.ALL_COLUMNS_FOR_ARCHIVE_QUERY).toContain("columnNumber");
     expect(queries.COLUMNS_FOR_FEED_QUERY).toContain("publishDate");
     expect(queries.ALL_COLUMNS_SUMMARY_QUERY).toContain("publishDate");
+    expect(queries.ALL_COLUMNS_FOR_ARCHIVE_SEARCH_QUERY).toContain("body");
+    expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("nicosTransmission");
+    expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("category");
   });
 });

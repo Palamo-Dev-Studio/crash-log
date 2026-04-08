@@ -49,3 +49,18 @@
   gap: 8px;
   flex-wrap: wrap;
 }
+
+.matchedIn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+}
+
+.card mark {
+  background: var(--severity-error);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+}
