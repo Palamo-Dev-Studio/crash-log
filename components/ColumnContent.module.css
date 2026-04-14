@@ -16,7 +16,7 @@
 
 .header {
   padding: 32px var(--content-padding) 0;
-  max-width: var(--max-width);
+  max-width: var(--max-width-narrow);
   margin: 0 auto;
 }
 
@@ -64,7 +64,7 @@
 
 .body {
   padding: 32px var(--content-padding);
-  max-width: var(--max-width);
+  max-width: var(--max-width-narrow);
   margin: 0 auto;
   font-family: var(--font-body);
   font-size: 17px;
@@ -83,7 +83,7 @@
 
 .signature {
   padding: 0 var(--content-padding);
-  max-width: var(--max-width);
+  max-width: var(--max-width-narrow);
   margin: 0 auto 48px;
   font-family: var(--font-mono);
   font-size: 12px;

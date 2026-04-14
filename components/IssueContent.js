@@ -47,7 +47,7 @@ export default function IssueContent({ issue, locale }) {
     .filter((item) => item.body);
 
   return (
-    <main>
+    <main className={styles.content}>
       <CoverImage
         image={issue.coverImage}
         alt={t(issue.coverImageAlt, locale)}

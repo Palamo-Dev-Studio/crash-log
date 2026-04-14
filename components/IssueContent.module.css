@@ -1,6 +1,11 @@
 /* ABOUTME: Styles for the IssueContent component.
    ABOUTME: Handles the empty state when no issues are published. */
 
+.content {
+  max-width: var(--max-width-narrow);
+  margin: 0 auto;
+}
+
 .empty {
   display: flex;
   align-items: center;

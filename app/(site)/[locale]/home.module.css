@@ -5,11 +5,8 @@
   display: grid;
   grid-template-columns: 680px 300px;
   gap: 40px;
-  width: 100vw;
-  max-width: var(--max-width-wide);
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 .main {
