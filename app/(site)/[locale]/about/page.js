@@ -7,8 +7,6 @@ import { getAboutPage } from "@/lib/queries";
 import { t, LOCALE_OG } from "@/lib/locale";
 import { portableTextComponents } from "@/lib/portableText";
 import AgentCard from "@/components/AgentCard";
-import DonateCTA from "@/components/DonateCTA";
-import Footer from "@/components/Footer";
 import styles from "./about.module.css";
 
 const getCachedAbout = cache(getAboutPage);
@@ -395,8 +393,6 @@ function FallbackAbout({ locale, about }) {
         </div>
       </section>
 
-      <DonateCTA locale={locale} />
-      <Footer locale={locale} />
     </main>
   );
 }
@@ -464,8 +460,6 @@ function SanityAbout({ about, locale }) {
         </section>
       )}
 
-      <DonateCTA locale={locale} />
-      <Footer locale={locale} />
     </main>
   );
 }

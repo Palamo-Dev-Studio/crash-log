@@ -7,7 +7,6 @@ import { getCategoryWithStories, getAllCategories } from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG } from "@/lib/locale";
 import BeatStoryCard from "@/components/BeatStoryCard";
 import { getStoryColorKey } from "@/lib/storyColors";
-import Footer from "@/components/Footer";
 import styles from "./beat.module.css";
 
 const getCachedCategoryWithStories = cache(getCategoryWithStories);
@@ -99,7 +98,6 @@ export default async function BeatPage({ params }) {
         ))
       )}
 
-      <Footer />
     </main>
   );
 }

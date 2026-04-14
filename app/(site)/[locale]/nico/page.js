@@ -5,7 +5,6 @@ import { cache } from "react";
 import { getAllColumnsForArchive } from "@/lib/queries";
 import { t, LOCALE_OG } from "@/lib/locale";
 import ColumnCard from "@/components/ColumnCard";
-import Footer from "@/components/Footer";
 import styles from "./nico.module.css";
 
 const getCachedColumns = cache(getAllColumnsForArchive);
@@ -68,7 +67,6 @@ export default async function NicoArchivePage({ params }) {
         ))
       )}
 
-      <Footer locale={locale} />
     </main>
   );
 }

@@ -3,7 +3,6 @@
 
 import { LOCALE_OG } from "@/lib/locale";
 import ThankYouContent from "@/components/ThankYouContent";
-import Footer from "@/components/Footer";
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
@@ -26,7 +25,6 @@ export default async function ThankYouPage({ params }) {
   return (
     <main>
       <ThankYouContent locale={locale} />
-      <Footer locale={locale} />
     </main>
   );
 }
