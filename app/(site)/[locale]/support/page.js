@@ -3,7 +3,6 @@
 
 import { LOCALE_OG } from "@/lib/locale";
 import SupportContent from "@/components/SupportContent";
-import Footer from "@/components/Footer";
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
@@ -39,7 +38,6 @@ export default async function SupportPage({ params }) {
   return (
     <main>
       <SupportContent locale={locale} />
-      <Footer locale={locale} />
     </main>
   );
 }

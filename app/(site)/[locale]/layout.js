@@ -8,6 +8,7 @@ import { LOCALES, LOCALE_LABELS, LOCALE_OG } from "@/lib/locale";
 import Header from "@/components/Header";
 import LanguageToggle from "@/components/LanguageToggle";
 import SiteNav from "@/components/SiteNav";
+import SiteBottom from "@/components/SiteBottom";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
@@ -138,6 +139,7 @@ export default async function SiteLayout({ children, params }) {
           </Header>
           <SiteNav locale={locale} />
           <div id="main-content">{children}</div>
+          <SiteBottom locale={locale} />
         </div>
       </body>
     </html>

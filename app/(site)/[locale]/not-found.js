@@ -2,7 +2,6 @@
 // ABOUTME: Uses existing Footer for consistency, adds noindex robots directive.
 
 import Link from "next/link";
-import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "404 — Page Not Found",
@@ -99,7 +98,6 @@ export default function NotFound({ params }) {
           {labels.archive}
         </Link>
       </nav>
-      <Footer locale={locale} />
     </main>
   );
 }

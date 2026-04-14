@@ -137,17 +137,8 @@ describe("IssueContent", () => {
       ).toBeInTheDocument();
     });
 
-    it("renders DonateCTA when donations are enabled", () => {
-      process.env.NEXT_PUBLIC_DONATIONS_ENABLED = "true";
-      render(<IssueContent issue={makeIssue()} locale="en" />);
-      expect(screen.getByText("Feed the Bots")).toBeInTheDocument();
-      delete process.env.NEXT_PUBLIC_DONATIONS_ENABLED;
-    });
-
-    it("renders Footer", () => {
-      render(<IssueContent issue={makeIssue()} locale="en" />);
-      expect(screen.getByText(/2026 The Crash Log/)).toBeInTheDocument();
-    });
+    // DonateCTA and Footer are now rendered by SiteBottom in the layout,
+    // not inside IssueContent. See components/SiteBottom.js.
   });
 
   describe("null story handling", () => {

@@ -10,7 +10,6 @@ import {
 import { t, LOCALE_OG } from "@/lib/locale";
 import { portableTextToPlain } from "@/lib/portableTextToPlain";
 import ArchiveSearch from "@/components/ArchiveSearch";
-import Footer from "@/components/Footer";
 import styles from "./archive.module.css";
 
 const getCachedArchive = cache(getAllIssuesForArchive);
@@ -179,7 +178,6 @@ export default async function ArchivePage({ params }) {
         />
       )}
 
-      <Footer locale={locale} />
     </main>
   );
 }

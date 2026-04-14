@@ -5,7 +5,6 @@ import { cache } from "react";
 import Link from "next/link";
 import { getAllCategories } from "@/lib/queries";
 import { t, LOCALE_OG } from "@/lib/locale";
-import Footer from "@/components/Footer";
 import styles from "./beats.module.css";
 
 const getCachedCategories = cache(getAllCategories);
@@ -85,7 +84,6 @@ export default async function BeatsPage({ params }) {
         </div>
       )}
 
-      <Footer locale={locale} />
     </main>
   );
 }

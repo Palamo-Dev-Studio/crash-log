@@ -3,9 +3,9 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 48px;
-  max-width: var(--max-width-wide);
+  grid-template-columns: 680px 300px;
+  gap: 40px;
+  max-width: var(--max-width);
   margin: 0 auto;
 }
 
