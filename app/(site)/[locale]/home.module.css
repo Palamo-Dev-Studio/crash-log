@@ -5,9 +5,11 @@
   display: grid;
   grid-template-columns: 680px 300px;
   gap: 40px;
+  width: 100vw;
   max-width: var(--max-width-wide);
-  margin: 0 auto;
-  justify-content: center;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .main {
