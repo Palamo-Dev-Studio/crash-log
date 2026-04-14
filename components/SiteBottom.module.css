@@ -4,6 +4,7 @@
 .bottom {
   max-width: var(--max-width-narrow);
   margin: 0 auto;
+  padding-top: 64px;
 }
 
 .subscribeBanner {
