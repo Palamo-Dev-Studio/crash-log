@@ -45,9 +45,9 @@
   --font-mono: "IBM Plex Mono", monospace;
 
   /* Layout */
-  --max-width: 1000px;
+  --max-width: 960px;
   --max-width-wide: 1200px;
-  --content-padding: 20px;
+  --content-padding: 28px;
 }
 
 /* Reset */
