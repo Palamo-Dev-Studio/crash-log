@@ -11,8 +11,6 @@ import NicosTransmission from "@/components/NicosTransmission";
 import StoryBlock from "@/components/StoryBlock";
 import { getStoryColorKey } from "@/lib/storyColors";
 import StackTrace from "@/components/StackTrace";
-import DonateCTA from "@/components/DonateCTA";
-import Footer from "@/components/Footer";
 import styles from "./IssueContent.module.css";
 
 function formatDate(dateString, locale) {
@@ -94,19 +92,6 @@ export default function IssueContent({ issue, locale }) {
       })}
 
       <StackTrace locale={locale} items={stackTraceItems} />
-
-      <DonateCTA locale={locale} />
-
-      <div className={styles.subscribeBanner}>
-        <p className={styles.subscribeBannerLabel}>
-          {locale === 'es' ? 'No te pierdas la próxima edición' : "Don't miss the next issue"}
-        </p>
-        <a href={`/${locale}`} className={styles.subscribeBannerLink}>
-          {locale === 'es' ? 'Suscríbete' : 'Subscribe'}
-        </a>
-      </div>
-
-      <Footer locale={locale} />
     </main>
   );
 }

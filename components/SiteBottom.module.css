@@ -1,0 +1,35 @@
+/* ABOUTME: Styles for the site-wide bottom section.
+   ABOUTME: DonateCTA + subscribe banner + footer, constrained to reading width. */
+
+.bottom {
+  max-width: var(--max-width-narrow);
+  margin: 0 auto;
+}
+
+.subscribeBanner {
+  text-align: center;
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 32px;
+}
+
+.subscribeBannerLabel {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+
+.subscribeBannerLink {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--severity-error);
+  text-decoration: none;
+  border: 1.5px solid var(--severity-error);
+  padding: 10px 24px;
+  border-radius: 2px;
+}

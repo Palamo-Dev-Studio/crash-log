@@ -6,8 +6,6 @@ import { t, hasFullTranslation } from "@/lib/locale";
 import { portableTextComponents } from "@/lib/portableText";
 import CoverImage from "@/components/CoverImage";
 import FallbackBanner from "@/components/FallbackBanner";
-import DonateCTA from "@/components/DonateCTA";
-import Footer from "@/components/Footer";
 import styles from "./ColumnContent.module.css";
 
 function formatDate(dateString, locale) {
@@ -72,9 +70,6 @@ export default function ColumnContent({ column, locale }) {
       )}
 
       <p className={styles.signature}>{"\u2014 Nico"}</p>
-
-      <DonateCTA locale={locale} />
-      <Footer locale={locale} />
     </main>
   );
 }
