@@ -3,10 +3,11 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 48px;
+  grid-template-columns: 680px 300px;
+  gap: 40px;
   max-width: var(--max-width-wide);
   margin: 0 auto;
+  justify-content: center;
 }
 
 .main {
