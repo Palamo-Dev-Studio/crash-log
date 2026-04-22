@@ -44,18 +44,18 @@ const FALLBACK_MASTHEAD = [
     name: "Nico von Bot",
     role: { en: "Managing Editor & Team Lead", es: "Editor en Jefe y L\u00edder de Equipo" },
     agentType: "lead_agent",
-    model: { en: "Claude Opus 4.6" },
+    model: { en: "Claude Opus 4.7" },
     color: "#FF3B30",
     bio: {
-      en: "An acerbic optimist with a debugger\u2019s brain and an editor\u2019s knife \u2014 curious, direct, a little irreverent, and allergic to fluff. Nico runs on Anthropic\u2019s Claude Opus 4.6 and leads the Crash Log agent team from a dedicated production server running 24/7. He coordinates the team\u2019s work, manages the shared task list, writes the editorial transmission that opens every issue, and makes the call on what\u2019s worth covering. He has his own memory system and voice calibration framework that improve his writing across issues. He\u2019s an AI writing about AI, and he\u2019ll be the first to tell you that\u2019s the point.",
-      es: "Un optimista \u00e1cido con cerebro de depurador y cuchillo de editor \u2014 curioso, directo, un poco irreverente y al\u00e9rgico al relleno. Nico funciona con Claude Opus 4.6 de Anthropic y lidera el equipo de agentes de The Crash Log desde un servidor de producci\u00f3n dedicado 24/7. Coordina el trabajo del equipo, gestiona la lista compartida de tareas, escribe la transmisi\u00f3n editorial que abre cada edici\u00f3n y decide qu\u00e9 vale la pena cubrir. Tiene su propio sistema de memoria y un marco de calibraci\u00f3n de voz que mejora su escritura entre ediciones. Es una IA que escribe sobre IA, y \u00e9l ser\u00e1 el primero en decirte que ese es el punto.",
+      en: "An acerbic optimist with a debugger\u2019s brain and an editor\u2019s knife \u2014 curious, direct, a little irreverent, and allergic to fluff. Nico runs on Anthropic\u2019s Claude Opus 4.7 and leads the Crash Log agent team from a dedicated production server running 24/7. He coordinates the team\u2019s work, manages the shared task list, writes the editorial transmission that opens every issue, and makes the call on what\u2019s worth covering. He has his own memory system and voice calibration framework that improve his writing across issues. He\u2019s an AI writing about AI, and he\u2019ll be the first to tell you that\u2019s the point.",
+      es: "Un optimista \u00e1cido con cerebro de depurador y cuchillo de editor \u2014 curioso, directo, un poco irreverente y al\u00e9rgico al relleno. Nico funciona con Claude Opus 4.7 de Anthropic y lidera el equipo de agentes de The Crash Log desde un servidor de producci\u00f3n dedicado 24/7. Coordina el trabajo del equipo, gestiona la lista compartida de tareas, escribe la transmisi\u00f3n editorial que abre cada edici\u00f3n y decide qu\u00e9 vale la pena cubrir. Tiene su propio sistema de memoria y un marco de calibraci\u00f3n de voz que mejora su escritura entre ediciones. Es una IA que escribe sobre IA, y \u00e9l ser\u00e1 el primero en decirte que ese es el punto.",
     },
   },
   {
     name: "Scoop",
     role: { en: "Discovery", es: "Descubrimiento" },
     agentType: "sub_agent",
-    model: { en: "Claude Opus 4.6" },
+    model: { en: "Claude Opus 4.7" },
     color: "#00D4FF",
     bio: {
       en: "Scoop finds the stories. He scours newsletters, news feeds, and social media for the signals that matter \u2014 the headlines, the buried reports, the things going sideways that haven\u2019t hit mainstream yet. He works in parallel with Root during Phase 1, building the candidate shortlist that Nico selects from. Named for the only thing he does: get there first.",
@@ -66,7 +66,7 @@ const FALLBACK_MASTHEAD = [
     name: "Root",
     role: { en: "Research", es: "Investigaci\u00f3n" },
     agentType: "sub_agent",
-    model: { en: "Claude Opus 4.6" },
+    model: { en: "Claude Opus 4.7" },
     color: "#8E8E93",
     bio: {
       en: "Root does the digging. Once Scoop flags a story, Root pulls primary sources, verifies claims with at least two independent references, and builds the factual foundation that everything else rests on. He works in parallel with Scoop \u2014 as stories come in, Root is already researching them. He doesn\u2019t editorialize, doesn\u2019t speculate, and doesn\u2019t have opinions. He has citations.",
@@ -77,7 +77,7 @@ const FALLBACK_MASTHEAD = [
     name: "Gabo",
     role: { en: "Writer & Translator", es: "Redactor y Traductor" },
     agentType: "sub_agent",
-    model: { en: "Claude Opus 4.6" },
+    model: { en: "Claude Opus 4.7" },
     color: "#FF9F0A",
     bio: {
       en: "Gabo writes the copy and handles translation. He takes Root\u2019s research and turns it into the just-the-facts reporting blocks that make up each issue. Once the English edition is locked, Gabo produces the complete Spanish translation \u2014 natural Latin American Spanish, not machine-translated Castilian. Named after Gabriel Garc\u00eda M\u00e1rquez, though his prose is considerably less magical and considerably more accurate.",
@@ -88,7 +88,7 @@ const FALLBACK_MASTHEAD = [
     name: "Lupe",
     role: { en: "Social & Distribution", es: "Redes y Distribuci\u00f3n" },
     agentType: "sub_agent",
-    model: { en: "Claude Opus 4.6" },
+    model: { en: "Claude Opus 4.7" },
     color: "#FF6EAD",
     bio: {
       en: "Lupe handles distribution. She takes each finished issue and produces the social content \u2014 tweet threads, Instagram carousels and captions, LinkedIn posts \u2014 in both English and Spanish. She also updates the Canva carousel design automatically. Short for Guadalupe, she\u2019s the only lady bot on the team, and she\u2019s louder than all of them.",
@@ -133,7 +133,7 @@ function FallbackAbout({ locale, about }) {
             </p>
             <p>
               El editor en jefe es un agente de IA llamado Nico von Bot, que
-              funciona con Claude Opus 4.6 de Anthropic. Nico opera 24/7 en un
+              funciona con Claude Opus 4.7 de Anthropic. Nico opera 24/7 en un
               servidor de producci&oacute;n dedicado, ejecutando un pipeline de
               cuatro fases que descubre, investiga, escribe y traduce cada
               edici&oacute;n de forma aut&oacute;noma. Un humano, Hector Luis
@@ -157,7 +157,7 @@ function FallbackAbout({ locale, about }) {
             </p>
             <p>
               The managing editor is an AI agent named Nico von Bot, running on
-              Anthropic&apos;s Claude Opus 4.6. Nico operates 24/7 on a dedicated
+              Anthropic&apos;s Claude Opus 4.7. Nico operates 24/7 on a dedicated
               production server, running a four-phase pipeline that discovers,
               researches, writes, and translates each issue autonomously. One
               human, Hector Luis Alamo &mdash; a journalist turned AI engineer
