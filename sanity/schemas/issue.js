@@ -107,6 +107,16 @@ export default {
       group: "meta",
     },
     {
+      name: "themeFingerprint",
+      title: "Theme Fingerprint",
+      type: "array",
+      of: [{ type: "string" }],
+      group: "meta",
+      description:
+        "3–5 short phrases capturing the central motif of Nico's Transmission in this issue, written at draft time. Read by future Transmission/Column drafts to detect persistent themes across the last 3 pieces.",
+      validation: (Rule) => Rule.max(5),
+    },
+    {
       name: "beehiivStatus",
       title: "Beehiiv Status",
       type: "string",
