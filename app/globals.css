@@ -14,6 +14,7 @@
   --text-tertiary: #a1a1a6;
   --text-muted: #7c7c80;
   --text-faint: #767676;
+  --text-dek: #9aa0aa; /* article subtitle / dek — italic, muted; distinct from body */
 
   /* Severity */
   --severity-error: #e8453e;
