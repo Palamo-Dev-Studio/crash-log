@@ -119,10 +119,10 @@ describe("FeedCard", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders the title as an h3 in the standard variant", () => {
+  it("renders the title as an h2 in the standard variant", () => {
     render(<FeedCard item={issueItem} locale="en" variant="standard" />);
     expect(
-      screen.getByRole("heading", { level: 3, name: "The Machines Are Hiring" })
+      screen.getByRole("heading", { level: 2, name: "The Machines Are Hiring" })
     ).toBeInTheDocument();
   });
 

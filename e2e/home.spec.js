@@ -50,6 +50,8 @@ test.describe("Home page", () => {
     await page.goto("/en");
     const main = page.locator("main");
     const hasHero = (await main.locator("h1").count()) > 0;
+    // CI has no seeded Sanity data — this is a structural smoke-check; the
+    // real assertions live in the unit layer (HomeFeed.test.jsx).
     if (hasHero) {
       await expect(
         page.getByRole("link", { name: /see the full archive/i })

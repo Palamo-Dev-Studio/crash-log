@@ -79,9 +79,9 @@ describe("HomeFeed", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders the remaining items as standard cards (h3 headings)", () => {
+  it("renders the remaining items as standard cards (h2 headings)", () => {
     render(<HomeFeed items={thirteenItems} locale="en" />);
-    const standardHeadings = screen.getAllByRole("heading", { level: 3 });
+    const standardHeadings = screen.getAllByRole("heading", { level: 2 });
     expect(standardHeadings).toHaveLength(12);
   });
 
@@ -108,6 +108,6 @@ describe("HomeFeed", () => {
 
   it("renders no standard grid when only one item is present", () => {
     render(<HomeFeed items={[makeItem({})]} locale="en" />);
-    expect(screen.queryAllByRole("heading", { level: 3 })).toHaveLength(0);
+    expect(screen.queryAllByRole("heading", { level: 2 })).toHaveLength(0);
   });
 });

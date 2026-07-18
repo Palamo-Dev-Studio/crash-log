@@ -25,12 +25,6 @@
   height: 100%;
 }
 
-.heroImageWrap {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: var(--surface);
-}
-
 .imageWrap {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -80,13 +74,13 @@
 
 .badgeIssue {
   color: var(--agent-scoop);
-  background: rgba(48, 200, 232, 0.12);
+  background: color-mix(in srgb, var(--agent-scoop) 12%, transparent);
   border: 1.5px solid var(--agent-scoop);
 }
 
 .badgeColumn {
   color: var(--agent-nico);
-  background: rgba(232, 69, 62, 0.12);
+  background: color-mix(in srgb, var(--agent-nico) 12%, transparent);
   border: 1.5px solid var(--agent-nico);
 }
 

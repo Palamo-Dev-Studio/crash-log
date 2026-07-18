@@ -66,8 +66,8 @@ export async function generateMetadata({ params }) {
   const description =
     t(latest.metaDescription, locale) ||
     (locale === "es"
-      ? "La última edición de The Crash Log"
-      : "The latest issue of The Crash Log");
+      ? "Lo último de The Crash Log"
+      : "The latest from The Crash Log");
 
   return buildMetadata({ title, description, locale });
 }

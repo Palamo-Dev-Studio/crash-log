@@ -19,6 +19,7 @@ function formatDate(dateString, locale) {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "UTC",
   });
 }
 
@@ -50,14 +51,14 @@ export default function FeedCard({ item, locale, variant = "standard" }) {
     : null;
   const alt = t(item.coverImageAlt, locale) || title || "";
 
-  const TitleTag = isHero ? "h1" : "h3";
+  const TitleTag = isHero ? "h1" : "h2";
 
   return (
     <Link
       href={href}
       className={`${styles.card} ${isHero ? styles.hero : styles.standard}`}
     >
-      <div className={isHero ? styles.heroImageWrap : styles.imageWrap}>
+      <div className={styles.imageWrap}>
         {imageUrl ? (
           <Image
             src={imageUrl}
