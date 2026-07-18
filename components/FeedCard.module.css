@@ -1,0 +1,132 @@
+/* ABOUTME: Styles for the FeedCard component.
+   ABOUTME: Shared card shell plus hero and standard variant overrides. */
+
+.card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.card:hover {
+  border-color: var(--border-accent);
+}
+
+.hero {
+  margin-bottom: 48px;
+}
+
+.standard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.imageWrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--surface);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--surface);
+}
+
+.heroBody {
+  padding: 28px 32px 32px;
+}
+
+.body {
+  padding: 18px 20px 22px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.badgeIssue {
+  color: var(--agent-scoop);
+  background: color-mix(in srgb, var(--agent-scoop) 12%, transparent);
+  border: 1.5px solid var(--agent-scoop);
+}
+
+.badgeColumn {
+  color: var(--agent-nico);
+  background: color-mix(in srgb, var(--agent-nico) 12%, transparent);
+  border: 1.5px solid var(--agent-nico);
+}
+
+.date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 44px);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+.heroDek {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--text-dek);
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+.dek {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  font-style: italic;
+  color: var(--text-dek);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
