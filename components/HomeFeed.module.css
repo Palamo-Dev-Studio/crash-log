@@ -1,0 +1,57 @@
+/* ABOUTME: Styles for the HomeFeed component.
+   ABOUTME: Responsive card grid (3-up desktop, 2-up tablet, 1-up mobile) plus archive link and empty state. */
+
+.feed {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 48px;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.archiveLinkWrap {
+  text-align: center;
+  padding: 8px 0 32px;
+}
+
+.archiveLink {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--severity-error);
+  border: 1.5px solid var(--severity-error);
+  padding: 10px 24px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+}
+
+.emptyText {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+}

@@ -52,6 +52,7 @@ const arrayFallbackWrappers = [
   },
   { name: "getColumnsForFeed", fn: () => queries.getColumnsForFeed() },
   { name: "getAllColumnsSummary", fn: () => queries.getAllColumnsSummary() },
+  { name: "getHomeFeed", fn: () => queries.getHomeFeed() },
 ];
 
 describe("null-fallback wrappers", () => {
@@ -139,6 +140,7 @@ describe("null client fallback", () => {
     expect(await queries.getColumnsForFeed()).toEqual([]);
     expect(await queries.getAllColumnsSummary()).toEqual([]);
     expect(await queries.getAllColumnsForArchiveSearch()).toEqual([]);
+    expect(await queries.getHomeFeed()).toEqual([]);
   });
 
   it("getAllColumnsForArchiveSearch returns wrapped value when present", async () => {
@@ -177,5 +179,20 @@ describe("query string exports", () => {
     expect(queries.ALL_COLUMNS_FOR_ARCHIVE_SEARCH_QUERY).toContain("body");
     expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("nicosTransmission");
     expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("category");
+    expect(queries.HOME_FEED_QUERY).toContain('_type in ["issue","column"]');
+  });
+});
+
+describe("getHomeFeed", () => {
+  it("returns unified issue/column items when sanityFetch resolves", async () => {
+    const data = [
+      { _id: "issue-1", _type: "issue", number: 27 },
+      { _id: "column-1", _type: "column", number: 9 },
+    ];
+    mockSanityFetch.mockResolvedValueOnce(data);
+    expect(await queries.getHomeFeed()).toEqual(data);
+    expect(mockSanityFetch).toHaveBeenCalledWith(
+      expect.objectContaining({ query: queries.HOME_FEED_QUERY })
+    );
   });
 });
