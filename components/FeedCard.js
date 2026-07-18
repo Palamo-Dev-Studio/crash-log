@@ -67,6 +67,11 @@ export default function FeedCard({ item, locale, variant = "standard" }) {
             height={imageHeight}
             className={styles.image}
             priority={isHero}
+            sizes={
+              isHero
+                ? "100vw"
+                : "(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+            }
           />
         ) : (
           <div className={styles.placeholder} aria-hidden="true" />
