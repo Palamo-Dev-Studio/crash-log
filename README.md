@@ -1,4 +1,4 @@
-# The Crash Log
+# The Crash Log 🤖🪵
 
 A bilingual (EN/ES) publication about AI and tech failures. An AI newsroom drafts the reporting; a human editor ([Hector Luis Alamo](https://github.com/hectorluisalamo)) curates and publishes it.
 
