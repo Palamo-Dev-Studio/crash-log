@@ -107,6 +107,7 @@ describe("POST /api/revalidate", () => {
     expect(response.status).toBe(200);
     const json = await response.json();
     expect(json.type).toBe("story");
+    expect(mockRevalidateTag).toHaveBeenCalledWith("sanity");
   });
 
   it("handles category document type", async () => {
@@ -120,6 +121,7 @@ describe("POST /api/revalidate", () => {
     expect(response.status).toBe(200);
     const json = await response.json();
     expect(json.type).toBe("category");
+    expect(mockRevalidateTag).toHaveBeenCalledWith("sanity");
   });
 
   it("returns 500 when parseBody throws", async () => {
