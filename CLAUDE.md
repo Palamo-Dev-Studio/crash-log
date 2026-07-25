@@ -29,11 +29,11 @@ The Crash Log is a bilingual (EN/ES) newsletter website about AI and tech failur
 
 **Locale utilities** (`lib/locale.js`): `t(field, locale)` resolves localized fields with EN fallback. `hasFullTranslation()` checks if an issue has complete Spanish content. Exports `LOCALES`, `DEFAULT_LOCALE`, `LOCALE_LABELS`, `LOCALE_OG`.
 
-**Sanity client** (`lib/sanity.js`): Exports `client` (null-safe — returns `null` when `projectId` is invalid/placeholder), `sanityFetch()` wrapper with Next.js cache revalidation (default 1h), and `urlFor()` chainable image URL builder. API version: `2024-03-01`.
+**Sanity client** (`lib/sanity.js`): Exports `client` (null-safe — returns `null` when `projectId` is invalid/placeholder; `useCdn: false` so post-webhook fetches always see fresh data instead of a ~60s-stale CDN read), `sanityFetch()` wrapper with Next.js cache revalidation (default 5 min) that tags every request `"sanity"`, and `urlFor()` chainable image URL builder. API version: `2024-03-01`.
 
 **Data fetching** (`lib/queries.js`): GROQ queries with try/catch fetch wrappers using `sanityFetch()`. `getLatestIssue()`, `getIssueBySlug()`, `getAllIssueSlugs()`, `getAllIssuesSummary()`. All return `null`/`[]` on failure.
 
-**Revalidation** (`app/api/revalidate/route.js`): Sanity webhook endpoint. Validates HMAC signature via `next-sanity/webhook`, calls `revalidatePath('/', 'layout')` on valid webhook. Time-based revalidation (1h) via `sanityFetch` provides a safety net.
+**Revalidation** (`app/api/revalidate/route.js`): Sanity webhook endpoint. Validates HMAC signature via `next-sanity/webhook`, calls `revalidateTag('sanity')` on a valid webhook. This is paired with `sanityFetch()` tagging every request `"sanity"` (see `lib/sanity.js` above) — neither half works alone. Tag-based invalidation replaced `revalidatePath('/', 'layout')` because path revalidation never reached the page sitting at the `[locale]` route segment (the home page) and breaks again on any future route-shape change; a cache tag invalidates by entry, independent of the route tree. Time-based revalidation (5 min) via `sanityFetch` remains as a safety net. **Exception:** `app/api/send-newsletter/route.js` and `app/api/send-column-newsletter/route.js` call `client.fetch()` directly, untagged — they're one-off POST actions that build outbound Beehiiv emails, not cached page-render paths, so they don't participate in the Next.js Data Cache and don't need the tag.
 
 **Portable Text** (`lib/portableText.js`): Component config for `@portabletext/react` — blocks, marks (with safe external links), and image types.
 
