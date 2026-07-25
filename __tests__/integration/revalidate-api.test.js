@@ -3,11 +3,11 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-const mockRevalidatePath = vi.fn();
+const mockRevalidateTag = vi.fn();
 const mockParseBody = vi.fn();
 
 vi.mock("next/cache", () => ({
-  revalidatePath: (...args) => mockRevalidatePath(...args),
+  revalidateTag: (...args) => mockRevalidateTag(...args),
 }));
 
 vi.mock("next-sanity/webhook", () => ({
@@ -18,7 +18,7 @@ let POST;
 
 beforeEach(async () => {
   vi.resetModules();
-  mockRevalidatePath.mockReset();
+  mockRevalidateTag.mockReset();
   mockParseBody.mockReset();
   process.env.SANITY_REVALIDATE_SECRET = "test-webhook-secret";
 
@@ -93,7 +93,7 @@ describe("POST /api/revalidate", () => {
     expect(json.success).toBe(true);
     expect(json.revalidated).toBe(true);
     expect(json.type).toBe("issue");
-    expect(mockRevalidatePath).toHaveBeenCalledWith("/", "layout");
+    expect(mockRevalidateTag).toHaveBeenCalledWith("sanity");
   });
 
   it("handles story document type", async () => {
@@ -107,6 +107,7 @@ describe("POST /api/revalidate", () => {
     expect(response.status).toBe(200);
     const json = await response.json();
     expect(json.type).toBe("story");
+    expect(mockRevalidateTag).toHaveBeenCalledWith("sanity");
   });
 
   it("handles category document type", async () => {
@@ -120,6 +121,7 @@ describe("POST /api/revalidate", () => {
     expect(response.status).toBe(200);
     const json = await response.json();
     expect(json.type).toBe("category");
+    expect(mockRevalidateTag).toHaveBeenCalledWith("sanity");
   });
 
   it("returns 500 when parseBody throws", async () => {
