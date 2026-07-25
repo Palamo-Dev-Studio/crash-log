@@ -9,7 +9,12 @@ export default function IssueNav({ prev, next, locale }) {
   if (!prev && !next) return null;
 
   return (
-    <nav className={styles.nav} aria-label={locale === "es" ? "Navegación de ediciones" : "Issue navigation"}>
+    <nav
+      className={styles.nav}
+      aria-label={
+        locale === "es" ? "Navegación de ediciones" : "Issue navigation"
+      }
+    >
       <div className={styles.side}>
         {prev && (
           <Link href={`/${locale}/issue/${prev.slug}`} className={styles.link}>

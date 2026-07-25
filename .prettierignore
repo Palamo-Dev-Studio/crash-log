@@ -5,3 +5,10 @@ coverage
 .sanity
 package-lock.json
 .claude
+
+# anthropics/claude-code-action requires the workflow file on a PR branch to
+# match the default branch's copy byte-for-byte (a security control against
+# PRs altering the workflow that reviews them). Reformatting this file breaks
+# that check and 401s the review action's token exchange, so it's excluded
+# from Prettier's scope entirely.
+.github/workflows/claude-review.yml

@@ -42,7 +42,10 @@ export async function generateMetadata({ params }) {
 const FALLBACK_MASTHEAD = [
   {
     name: "Nico von Bot",
-    role: { en: "Managing Editor & Team Lead", es: "Editor en Jefe y L\u00edder de Equipo" },
+    role: {
+      en: "Managing Editor & Team Lead",
+      es: "Editor en Jefe y L\u00edder de Equipo",
+    },
     agentType: "lead_agent",
     model: { en: "Claude Opus 4.7" },
     color: "#FF3B30",
@@ -97,7 +100,10 @@ const FALLBACK_MASTHEAD = [
   },
   {
     name: "Hector Luis Alamo",
-    role: { en: "Architect, Editor & Publisher", es: "Arquitecto, Editor y Publicador" },
+    role: {
+      en: "Architect, Editor & Publisher",
+      es: "Arquitecto, Editor y Publicador",
+    },
     agentType: "human",
     model: { en: "Coffee 20 oz", es: "Cafecito 20 oz" },
     color: "#30D158",
@@ -126,10 +132,10 @@ function FallbackAbout({ locale, about }) {
               c&oacute;mo funciona nuestro mundo.
             </p>
             <p>
-              El bolet&iacute;n es producido por un sistema de IA ag&eacute;ntico
-              y editado por un humano, lo cual es lo m&aacute;s honesto en los
-              medios hoy en d&iacute;a o lo m&aacute;s desolador. Creemos que es
-              ambas cosas.
+              El bolet&iacute;n es producido por un sistema de IA
+              ag&eacute;ntico y editado por un humano, lo cual es lo m&aacute;s
+              honesto en los medios hoy en d&iacute;a o lo m&aacute;s desolador.
+              Creemos que es ambas cosas.
             </p>
             <p>
               El editor en jefe es un agente de IA llamado Nico von Bot, que
@@ -138,8 +144,8 @@ function FallbackAbout({ locale, about }) {
               cuatro fases que descubre, investiga, escribe y traduce cada
               edici&oacute;n de forma aut&oacute;noma. Un humano, Hector Luis
               Alamo &mdash; periodista convertido en ingeniero de IA &mdash;
-              dise&ntilde;&oacute; la arquitectura, calibra la voz de Nico
-              entre ediciones y edita cada n&uacute;mero antes de publicarlo.
+              dise&ntilde;&oacute; la arquitectura, calibra la voz de Nico entre
+              ediciones y edita cada n&uacute;mero antes de publicarlo.
             </p>
             <p>The Crash Log se publica en ingl&eacute;s y espa&ntilde;ol.</p>
           </>
@@ -157,12 +163,13 @@ function FallbackAbout({ locale, about }) {
             </p>
             <p>
               The managing editor is an AI agent named Nico von Bot, running on
-              Anthropic&apos;s Claude Opus 4.7. Nico operates 24/7 on a dedicated
-              production server, running a four-phase pipeline that discovers,
-              researches, writes, and translates each issue autonomously. One
-              human, Hector Luis Alamo &mdash; a journalist turned AI engineer
-              &mdash; designed the architecture, calibrates Nico&apos;s voice
-              across issues, and edits every edition before it ships.
+              Anthropic&apos;s Claude Opus 4.7. Nico operates 24/7 on a
+              dedicated production server, running a four-phase pipeline that
+              discovers, researches, writes, and translates each issue
+              autonomously. One human, Hector Luis Alamo &mdash; a journalist
+              turned AI engineer &mdash; designed the architecture, calibrates
+              Nico&apos;s voice across issues, and edits every edition before it
+              ships.
             </p>
             <p>The Crash Log publishes in English and Spanish.</p>
           </>
@@ -201,62 +208,72 @@ function FallbackAbout({ locale, about }) {
           {isEs ? (
             <>
               <p>
-                The Crash Log funciona con Claude Code de Anthropic, ejecut&aacute;ndose en
-                un Mac Mini dedicado que opera como servidor de producci&oacute;n 24/7.
-                Nico es un agente de IA persistente con su propia memoria, sistema de
-                calibraci&oacute;n de voz y 13 tareas programadas que se ejecutan diariamente
-                &mdash; desde el descubrimiento de historias hasta los informes de inteligencia
-                estrat&eacute;gica.
+                The Crash Log funciona con Claude Code de Anthropic,
+                ejecut&aacute;ndose en un Mac Mini dedicado que opera como
+                servidor de producci&oacute;n 24/7. Nico es un agente de IA
+                persistente con su propia memoria, sistema de calibraci&oacute;n
+                de voz y 13 tareas programadas que se ejecutan diariamente
+                &mdash; desde el descubrimiento de historias hasta los informes
+                de inteligencia estrat&eacute;gica.
               </p>
               <p>
-                El pipeline editorial est&aacute; dise&ntilde;ado como un sistema de cuatro fases
-                con barreras de gobernanza expl&iacute;citas: registros de auditor&iacute;a, reglas
-                de tres intentos para manejo de fallos, l&iacute;mites de alcance para tareas
-                aut&oacute;nomas y puntos de control humanos antes de la publicaci&oacute;n.
+                El pipeline editorial est&aacute; dise&ntilde;ado como un
+                sistema de cuatro fases con barreras de gobernanza
+                expl&iacute;citas: registros de auditor&iacute;a, reglas de tres
+                intentos para manejo de fallos, l&iacute;mites de alcance para
+                tareas aut&oacute;nomas y puntos de control humanos antes de la
+                publicaci&oacute;n.
               </p>
               <p>As&iacute; se arma una edici&oacute;n t&iacute;pica:</p>
               <p>
                 <span className={styles.stepTitle}>
                   1. Fase 1: Descubrimiento e investigaci&oacute;n (~5:00 AM).
                 </span>{" "}
-                Nico escanea newsletters por correo, ejecuta b&uacute;squedas web y cruza fuentes
-                para construir una lista de 8-10 historias candidatas. Selecciona 3 principales y
-                3 para el stack trace, investiga cada una con al menos 2 fuentes independientes,
-                y escribe los bloques de reportaje en ingl&eacute;s. Todo se sube a Sanity como borrador.
+                Nico escanea newsletters por correo, ejecuta b&uacute;squedas
+                web y cruza fuentes para construir una lista de 8-10 historias
+                candidatas. Selecciona 3 principales y 3 para el stack trace,
+                investiga cada una con al menos 2 fuentes independientes, y
+                escribe los bloques de reportaje en ingl&eacute;s. Todo se sube
+                a Sanity como borrador.
               </p>
               <p>
                 <span className={styles.stepTitle}>
                   2. Fase 2: La transmisi&oacute;n de Nico (~5:45 AM).
                 </span>{" "}
-                Nico lee la edici&oacute;n que acaba de construir y escribe la transmisi&oacute;n
-                editorial que la abre &mdash; 150-250 palabras que identifican el hilo que conecta
-                las historias del d&iacute;a. Un sistema de calibraci&oacute;n de voz y autoevaluaci&oacute;n
-                aseguran la consistencia entre ediciones.
+                Nico lee la edici&oacute;n que acaba de construir y escribe la
+                transmisi&oacute;n editorial que la abre &mdash; 150-250
+                palabras que identifican el hilo que conecta las historias del
+                d&iacute;a. Un sistema de calibraci&oacute;n de voz y
+                autoevaluaci&oacute;n aseguran la consistencia entre ediciones.
               </p>
               <p>
                 <span className={styles.stepTitle}>
                   3. Fase 3: Traducci&oacute;n y contenido social (~7:00 AM).
                 </span>{" "}
-                La edici&oacute;n completa se traduce al espa&ntilde;ol latinoamericano natural
-                &mdash; cada historia, titular y la transmisi&oacute;n de Nico. Se genera contenido
-                para redes sociales en ambos idiomas.
+                La edici&oacute;n completa se traduce al espa&ntilde;ol
+                latinoamericano natural &mdash; cada historia, titular y la
+                transmisi&oacute;n de Nico. Se genera contenido para redes
+                sociales en ambos idiomas.
               </p>
               <p>
                 <span className={styles.stepTitle}>
                   4. Fase 4: Producci&oacute;n social (~8:00 AM).
                 </span>{" "}
-                El carrusel de Instagram se actualiza autom&aacute;ticamente en Canva, se generan borradores
-                de hilos para Twitter, pies de foto para Instagram y publicaciones para LinkedIn.
-                Todos los borradores se env&iacute;an a Discord para revisi&oacute;n de Hector.
+                El carrusel de Instagram se actualiza autom&aacute;ticamente en
+                Canva, se generan borradores de hilos para Twitter, pies de foto
+                para Instagram y publicaciones para LinkedIn. Todos los
+                borradores se env&iacute;an a Discord para revisi&oacute;n de
+                Hector.
               </p>
               <p>
                 <span className={styles.stepTitle}>
                   5. Hector edita y publica.
                 </span>{" "}
-                El humano revisa todo &mdash; reescribiendo donde sea necesario, verificando cada
-                fuente y tomando la decisi&oacute;n final. Un sistema de Voice Lab compara cada noche
-                las ediciones de Hector con los borradores originales de Nico, retroalimentando
-                las lecciones al sistema de calibraci&oacute;n.
+                El humano revisa todo &mdash; reescribiendo donde sea necesario,
+                verificando cada fuente y tomando la decisi&oacute;n final. Un
+                sistema de Voice Lab compara cada noche las ediciones de Hector
+                con los borradores originales de Nico, retroalimentando las
+                lecciones al sistema de calibraci&oacute;n.
               </p>
             </>
           ) : (
@@ -269,8 +286,8 @@ function FallbackAbout({ locale, about }) {
                 &mdash; from story discovery to strategic intelligence briefs.
               </p>
               <p>
-                The editorial pipeline is architected as a four-phase system with
-                explicit governance guardrails: audit trails, three-strike
+                The editorial pipeline is architected as a four-phase system
+                with explicit governance guardrails: audit trails, three-strike
                 failure rules, bounded autonomy for unattended tasks, and human
                 checkpoints before anything publishes.
               </p>
@@ -292,8 +309,9 @@ function FallbackAbout({ locale, about }) {
                 </span>{" "}
                 Nico reads the issue he just built and writes the editorial
                 transmission that opens it &mdash; 150-250 words that identify
-                the thread connecting the day&apos;s stories. A voice calibration
-                and self-scoring system ensures consistency across issues.
+                the thread connecting the day&apos;s stories. A voice
+                calibration and self-scoring system ensures consistency across
+                issues.
               </p>
               <p>
                 <span className={styles.stepTitle}>
@@ -318,9 +336,9 @@ function FallbackAbout({ locale, about }) {
                 </span>{" "}
                 The human reviews everything &mdash; rewriting where needed,
                 vetting every source link, and making the final call on what
-                goes out. A nightly Voice Lab process compares Hector&apos;s edits
-                against Nico&apos;s original drafts, feeding lessons back into
-                the calibration system so the AI improves over time.
+                goes out. A nightly Voice Lab process compares Hector&apos;s
+                edits against Nico&apos;s original drafts, feeding lessons back
+                into the calibration system so the AI improves over time.
               </p>
             </>
           )}
@@ -336,7 +354,10 @@ function FallbackAbout({ locale, about }) {
             <>
               <p>
                 The Crash Log es una propiedad de{" "}
-                <a href="https://www.palamostudio.com" className={styles.emailLink}>
+                <a
+                  href="https://www.palamostudio.com"
+                  className={styles.emailLink}
+                >
                   Palamo Studio
                 </a>
                 , una consultor&iacute;a de gobernanza y despliegue de IA. El
@@ -347,10 +368,10 @@ function FallbackAbout({ locale, about }) {
                 integrados desde el dise&ntilde;o.
               </p>
               <p>
-                Si est&aacute;s explorando flujos de trabajo con IA para tu propia
-                organizaci&oacute;n &mdash; o si simplemente tienes preguntas sobre
-                c&oacute;mo funciona todo esto &mdash; a Hector le encantar&iacute;a
-                saber de ti.
+                Si est&aacute;s explorando flujos de trabajo con IA para tu
+                propia organizaci&oacute;n &mdash; o si simplemente tienes
+                preguntas sobre c&oacute;mo funciona todo esto &mdash; a Hector
+                le encantar&iacute;a saber de ti.
               </p>
               <p>
                 Preguntas, comentarios, pistas o consultas de trabajo:{" "}
@@ -366,18 +387,21 @@ function FallbackAbout({ locale, about }) {
             <>
               <p>
                 The Crash Log is a{" "}
-                <a href="https://www.palamostudio.com" className={styles.emailLink}>
+                <a
+                  href="https://www.palamostudio.com"
+                  className={styles.emailLink}
+                >
                   Palamo Studio
-                </a>
-                {" "}property. The newsletter also serves as a working demo of
-                what governed agentic AI can do when it&apos;s built with
-                discipline &mdash; audit trails, failure management, voice
-                calibration, and human oversight baked into the architecture.
+                </a>{" "}
+                property. The newsletter also serves as a working demo of what
+                governed agentic AI can do when it&apos;s built with discipline
+                &mdash; audit trails, failure management, voice calibration, and
+                human oversight baked into the architecture.
               </p>
               <p>
                 If you&apos;re exploring AI workflows for your own organization
-                &mdash; or if you just have questions about how any of this works
-                &mdash; Hector would love to hear from you.
+                &mdash; or if you just have questions about how any of this
+                works &mdash; Hector would love to hear from you.
               </p>
               <p>
                 Questions, comments, tips, or work inquiries:{" "}
@@ -392,7 +416,6 @@ function FallbackAbout({ locale, about }) {
           )}
         </div>
       </section>
-
     </main>
   );
 }
@@ -459,7 +482,6 @@ function SanityAbout({ about, locale }) {
           </div>
         </section>
       )}
-
     </main>
   );
 }
