@@ -1,7 +1,7 @@
 // ABOUTME: Webhook endpoint for Sanity on-demand revalidation.
 // ABOUTME: Validates HMAC signature via next-sanity, then revalidates the site cache.
 
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { parseBody } from "next-sanity/webhook";
 
 export async function POST(request) {
@@ -31,7 +31,7 @@ export async function POST(request) {
       );
     }
 
-    revalidatePath("/", "layout");
+    revalidateTag("sanity");
 
     return Response.json({
       success: true,
