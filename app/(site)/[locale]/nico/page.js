@@ -66,7 +66,6 @@ export default async function NicoArchivePage({ params }) {
           />
         ))
       )}
-
     </main>
   );
 }

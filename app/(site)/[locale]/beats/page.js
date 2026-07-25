@@ -83,7 +83,6 @@ export default async function BeatsPage({ params }) {
           ))}
         </div>
       )}
-
     </main>
   );
 }

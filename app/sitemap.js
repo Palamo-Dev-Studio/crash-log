@@ -20,7 +20,9 @@ export default async function sitemap() {
   // Use the most recent issue's publish date for content-driven static pages,
   // falling back to current date if no issues exist
   const latestIssueDate =
-    issues?.[0]?._updatedAt || issues?.[0]?.publishDate || new Date().toISOString();
+    issues?.[0]?._updatedAt ||
+    issues?.[0]?.publishDate ||
+    new Date().toISOString();
 
   const staticPages = ["", "/about", "/archive", "/beats", "/nico", "/support"];
   const staticEntries = staticPages.flatMap((path) =>

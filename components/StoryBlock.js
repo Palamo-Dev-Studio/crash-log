@@ -38,7 +38,11 @@ export default function StoryBlock({
                 href={`/${locale}/beat/${category.slug.current}`}
                 className={styles.beatLink}
               >
-                {category.name ? (typeof category.name === "object" ? (category.name[locale] || category.name.en) : category.name) : ""}
+                {category.name
+                  ? typeof category.name === "object"
+                    ? category.name[locale] || category.name.en
+                    : category.name
+                  : ""}
               </Link>
             </>
           )}

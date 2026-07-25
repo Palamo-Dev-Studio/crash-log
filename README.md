@@ -40,30 +40,30 @@ The site runs at `http://localhost:3000` (root `/` redirects to `/en`), with the
 
 ### Environment variables
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes | Sanity project ID (the site renders in a degraded/empty state without a valid ID) |
-| `NEXT_PUBLIC_SANITY_DATASET` | No | Sanity dataset (defaults to `production`) |
-| `SANITY_REVALIDATE_SECRET` | For webhooks | HMAC secret validating the Sanity → Next.js revalidation webhook |
-| `SEND_NEWSLETTER_SECRET` | For newsletter send | Guards the newsletter-send endpoint |
-| `BEEHIIV_API_KEY` | For newsletter | Beehiiv API key |
-| `BEEHIIV_PUBLICATION_ID` | For newsletter | Beehiiv publication ID |
-| `STRIPE_SECRET_KEY` | For payments | Stripe secret key |
+| Variable                        | Required            | Purpose                                                                           |
+| ------------------------------- | ------------------- | --------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes                 | Sanity project ID (the site renders in a degraded/empty state without a valid ID) |
+| `NEXT_PUBLIC_SANITY_DATASET`    | No                  | Sanity dataset (defaults to `production`)                                         |
+| `SANITY_REVALIDATE_SECRET`      | For webhooks        | HMAC secret validating the Sanity → Next.js revalidation webhook                  |
+| `SEND_NEWSLETTER_SECRET`        | For newsletter send | Guards the newsletter-send endpoint                                               |
+| `BEEHIIV_API_KEY`               | For newsletter      | Beehiiv API key                                                                   |
+| `BEEHIIV_PUBLICATION_ID`        | For newsletter      | Beehiiv publication ID                                                            |
+| `STRIPE_SECRET_KEY`             | For payments        | Stripe secret key                                                                 |
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the dev server (Next.js + embedded Studio) |
-| `npm run build` | Production build |
-| `npm run start` | Start the production server |
-| `npm test` | Run Vitest unit/component/integration tests |
-| `npm run test:watch` | Vitest in watch mode |
-| `npm run test:coverage` | Tests with a coverage report |
-| `npm run test:e2e` | Playwright e2e tests (auto-starts the dev server) |
-| `npm run lint` / `lint:fix` | ESLint |
-| `npm run format` / `format:check` | Prettier |
-| `scripts/verify.sh` | Build gate — lint, format check, tests, then build (non-zero exit on any failure) |
+| Command                           | Description                                                                       |
+| --------------------------------- | --------------------------------------------------------------------------------- |
+| `npm run dev`                     | Start the dev server (Next.js + embedded Studio)                                  |
+| `npm run build`                   | Production build                                                                  |
+| `npm run start`                   | Start the production server                                                       |
+| `npm test`                        | Run Vitest unit/component/integration tests                                       |
+| `npm run test:watch`              | Vitest in watch mode                                                              |
+| `npm run test:coverage`           | Tests with a coverage report                                                      |
+| `npm run test:e2e`                | Playwright e2e tests (auto-starts the dev server)                                 |
+| `npm run lint` / `lint:fix`       | ESLint                                                                            |
+| `npm run format` / `format:check` | Prettier                                                                          |
+| `scripts/verify.sh`               | Build gate — lint, format check, tests, then build (non-zero exit on any failure) |
 
 ## Project structure
 

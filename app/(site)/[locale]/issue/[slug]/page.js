@@ -3,7 +3,11 @@
 
 import { cache } from "react";
 import { notFound } from "next/navigation";
-import { getIssueBySlug, getAllIssueSlugs, getAdjacentIssues } from "@/lib/queries";
+import {
+  getIssueBySlug,
+  getAllIssueSlugs,
+  getAdjacentIssues,
+} from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
 import IssueContent from "@/components/IssueContent";
