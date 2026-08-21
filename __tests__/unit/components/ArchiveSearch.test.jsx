@@ -326,4 +326,58 @@ describe("ArchiveSearch", () => {
       expect(screen.getByText("Foundation Models")).toBeInTheDocument();
     });
   });
+
+  describe("locale switch (key-based remount)", () => {
+    // page.js renders <ArchiveSearch key={locale} .../> specifically so a locale
+    // switch (LanguageToggle navigating to the other locale's path) unmounts the old
+    // instance rather than reusing it -- App Router preserves the component instance
+    // across a /en/archive -> /es/archive navigation otherwise, the same "no remount"
+    // behavior the URL-sync effect above relies on. React's key-based remount is
+    // ordinary reconciliation, fully reproducible in jsdom (unlike the App Router
+    // navigation itself), so this tests the real mechanism directly.
+    it("cancels a pending debounced write when remounted via a key change", () => {
+      vi.useFakeTimers();
+      try {
+        const { rerender } = render(
+          <ArchiveSearch key="en" {...baseProps} locale="en" />
+        );
+        fireEvent.change(screen.getByLabelText("Search"), {
+          target: { value: "ledger" },
+        });
+
+        // Simulate the locale switch mid-debounce, before the write fires.
+        rerender(<ArchiveSearch key="es" {...baseProps} locale="es" />);
+
+        act(() => {
+          vi.advanceTimersByTime(400);
+        });
+
+        // The OLD instance's pending write must never fire -- its effect cleanup
+        // (clearTimeout) ran on unmount. Without key={locale}, the same instance
+        // would survive the switch and this write WOULD fire on the stale pathname
+        // closure, bouncing the reader back to the locale they just left.
+        expect(mockReplace).not.toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("does not carry the typed query over to the fresh instance after a switch", () => {
+      const { rerender } = render(
+        <ArchiveSearch key="en" {...baseProps} locale="en" />
+      );
+      fireEvent.change(screen.getByLabelText("Search"), {
+        target: { value: "ledger" },
+      });
+      expect(screen.getByLabelText("Search")).toHaveValue("ledger");
+
+      // LanguageToggle's target URL never carries over `q`, and the fresh mount
+      // re-seeds from the (unchanged, empty) URL rather than inheriting old state.
+      // The es locale also swaps the input's aria-label to "Buscar" -- querying by
+      // that (not "Search") is itself part of confirming this is a genuinely fresh
+      // instance, not the old one with its locale prop merely updated in place.
+      rerender(<ArchiveSearch key="es" {...baseProps} locale="es" />);
+      expect(screen.getByLabelText("Buscar")).toHaveValue("");
+    });
+  });
 });

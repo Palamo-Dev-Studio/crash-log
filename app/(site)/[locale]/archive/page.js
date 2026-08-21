@@ -201,7 +201,17 @@ export default async function ArchivePage({ params }) {
             : "No content published yet."}
         </p>
       ) : (
+        // key={locale} forces a fresh mount on a locale switch rather than reusing the
+        // same component instance across it (App Router preserves the instance across
+        // a /en/archive -> /es/archive navigation, since it's the same route segment
+        // with just a different dynamic-param value -- the same "no remount" behavior
+        // ArchiveSearch's own URL-sync effect relies on). Without this, a debounced
+        // write-back timer still in flight when the reader switches locales fires
+        // AFTER the switch with a closure over the OLD pathname, bouncing them back to
+        // the locale they just left. It also resets local query state on switch,
+        // matching the fact that LanguageToggle's target URL never carries over `q`.
         <ArchiveSearch
+          key={locale}
           items={items}
           categories={filterCategories}
           locale={locale}
