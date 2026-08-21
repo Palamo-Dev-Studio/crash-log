@@ -58,6 +58,13 @@
 }
 
 @media (max-width: 600px) {
+  /* .nav is flex with the default nowrap, so flex-basis: 100% on .searchForm alone
+     can't push it to a second row -- it just stays inline and the whole nav scrolls.
+     flex-wrap: wrap is what actually lets the search form drop below the links. */
+  .nav {
+    flex-wrap: wrap;
+  }
+
   .searchForm {
     margin-left: 0;
     flex-basis: 100%;
