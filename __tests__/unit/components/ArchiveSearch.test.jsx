@@ -1,8 +1,8 @@
 // ABOUTME: Component tests for ArchiveSearch — query input, category pills, empty state, clear button.
 // ABOUTME: Verifies filter state changes update the rendered result list.
 
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { act, render, screen, fireEvent } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
@@ -10,6 +10,16 @@ vi.mock("next/link", () => ({
       {children}
     </a>
   ),
+}));
+
+const mockPush = vi.fn();
+const mockReplace = vi.fn();
+let mockSearchParamsString = "";
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/en/archive",
+  useRouter: () => ({ push: mockPush, replace: mockReplace }),
+  useSearchParams: () => new URLSearchParams(mockSearchParamsString),
 }));
 
 import ArchiveSearch from "@/components/ArchiveSearch";
@@ -67,6 +77,12 @@ describe("ArchiveSearch", () => {
     locale: "en",
   };
 
+  beforeEach(() => {
+    mockPush.mockReset();
+    mockReplace.mockReset();
+    mockSearchParamsString = "";
+  });
+
   it("renders all items by default", () => {
     render(<ArchiveSearch {...baseProps} />);
     expect(screen.getByText("Forty Minutes of Exposure")).toBeInTheDocument();
@@ -122,5 +138,72 @@ describe("ArchiveSearch", () => {
   it("renders Spanish copy when locale=es", () => {
     render(<ArchiveSearch {...baseProps} locale="es" />);
     expect(screen.getByLabelText("Buscar")).toBeInTheDocument();
+  });
+
+  describe("URL state", () => {
+    it("seeds the initial query from the URL's q param and renders already filtered", () => {
+      mockSearchParamsString = "q=ledger";
+      const { container } = render(<ArchiveSearch {...baseProps} />);
+
+      expect(screen.getByLabelText("Search")).toHaveValue("ledger");
+      const headings = Array.from(container.querySelectorAll("h3")).map(
+        (h) => h.textContent
+      );
+      expect(headings).toContain("The Ledger Economy");
+      expect(headings).not.toContain("Forty Minutes of Exposure");
+
+      // Seeding from the URL must not itself trigger a redundant navigation on mount.
+      expect(mockReplace).not.toHaveBeenCalled();
+    });
+
+    it("syncs the URL via router.replace (not push) after a debounce, not per keystroke", () => {
+      vi.useFakeTimers();
+      try {
+        render(<ArchiveSearch {...baseProps} />);
+        const input = screen.getByLabelText("Search");
+
+        // Simulate rapid typing — each keystroke well inside the debounce window.
+        for (const partial of ["l", "le", "led", "ledg", "ledge", "ledger"]) {
+          fireEvent.change(input, { target: { value: partial } });
+          act(() => {
+            vi.advanceTimersByTime(100);
+          });
+        }
+
+        // Still under the debounce window since the last keystroke — no sync yet.
+        expect(mockReplace).not.toHaveBeenCalled();
+
+        act(() => {
+          vi.advanceTimersByTime(400);
+        });
+
+        expect(mockReplace).toHaveBeenCalledTimes(1);
+        expect(mockReplace).toHaveBeenCalledWith("/en/archive?q=ledger", {
+          scroll: false,
+        });
+        expect(mockPush).not.toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("removes the q param from the URL when the query is cleared", () => {
+      vi.useFakeTimers();
+      try {
+        mockSearchParamsString = "q=ledger";
+        render(<ArchiveSearch {...baseProps} />);
+
+        fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+        act(() => {
+          vi.advanceTimersByTime(400);
+        });
+
+        expect(mockReplace).toHaveBeenCalledWith("/en/archive", {
+          scroll: false,
+        });
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 });

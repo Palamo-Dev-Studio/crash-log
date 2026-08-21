@@ -30,3 +30,40 @@
 .active {
   color: var(--severity-error);
 }
+
+.searchForm {
+  display: flex;
+  margin-left: auto;
+}
+
+.searchInput {
+  width: 160px;
+  background: var(--surface);
+  border: 1px solid var(--surface);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--severity-error);
+}
+
+.searchInput::placeholder {
+  color: var(--text-faint);
+}
+
+@media (max-width: 600px) {
+  .searchForm {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+}

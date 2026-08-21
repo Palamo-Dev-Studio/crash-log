@@ -3,11 +3,16 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ArchiveCard from "@/components/ArchiveCard";
 import ColumnCard from "@/components/ColumnCard";
 import { searchArchive } from "@/lib/searchArchive";
 import styles from "./ArchiveSearch.module.css";
+
+// How long to wait after the last keystroke before syncing the `q` param to the URL.
+// Keeps a fast typist from generating a router update on every character.
+const URL_SYNC_DEBOUNCE_MS = 400;
 
 const COPY = {
   en: {
@@ -26,8 +31,24 @@ const COPY = {
   },
 };
 
-export default function ArchiveSearch({ items, categories = [], locale }) {
-  const [query, setQuery] = useState("");
+export default function ArchiveSearch(props) {
+  // useSearchParams() requires a Suspense boundary around the client component that
+  // calls it (same pattern as DonateCTA) — without it Next bails the whole page out
+  // of static rendering during prerender/build.
+  return (
+    <Suspense fallback={null}>
+      <ArchiveSearchInner {...props} />
+    </Suspense>
+  );
+}
+
+function ArchiveSearchInner({ items, categories = [], locale }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Seed from the URL so /es/archive?q=modelo renders already-filtered on first paint.
+  const [query, setQuery] = useState(() => searchParams.get("q") || "");
   const [selectedCats, setSelectedCats] = useState([]);
   const copy = COPY[locale] || COPY.en;
 
@@ -35,6 +56,33 @@ export default function ArchiveSearch({ items, categories = [], locale }) {
     () => searchArchive(items, { query, categories: selectedCats }),
     [items, query, selectedCats]
   );
+
+  // Keep the URL's `q` param in sync as the query changes, so results stay shareable/
+  // linkable. Debounced so a fast typist doesn't fire a router update per keystroke,
+  // and router.replace (not push) so searching doesn't spam the back-button history
+  // with one entry per edit — the query is transient UI state, not a distinct page.
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      const trimmed = query.trim();
+      if (trimmed) {
+        params.set("q", trimmed);
+      } else {
+        params.delete("q");
+      }
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    }, URL_SYNC_DEBOUNCE_MS);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
 
   const toggleCat = (slug) => {
     setSelectedCats((prev) =>
