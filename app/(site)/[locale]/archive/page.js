@@ -208,8 +208,12 @@ export default async function ArchivePage({ params }) {
         // ArchiveSearch's own URL-sync effect relies on). Without this, a debounced
         // write-back timer still in flight when the reader switches locales fires
         // AFTER the switch with a closure over the OLD pathname, bouncing them back to
-        // the locale they just left. It also resets local query state on switch,
-        // matching the fact that LanguageToggle's target URL never carries over `q`.
+        // the locale they just left. It also resets ArchiveSearch's local state on
+        // switch -- both the query and the selected category filters -- matching the
+        // fact that LanguageToggle's target URL never carries over `q`. The filters
+        // previously survived a switch only because the component happened not to
+        // remount; that was incidental, and resetting both together is the coherent
+        // behaviour.
         <ArchiveSearch
           key={locale}
           items={items}
