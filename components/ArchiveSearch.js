@@ -31,13 +31,44 @@ const COPY = {
   },
 };
 
-export default function ArchiveSearch(props) {
-  // useSearchParams() requires a Suspense boundary around the client component that
-  // calls it (same pattern as DonateCTA) — without it Next bails the whole page out
-  // of static rendering during prerender/build.
+export default function ArchiveSearch({ items, categories = [], locale }) {
+  const copy = COPY[locale] || COPY.en;
+
+  // useSearchParams() forces this subtree to bail out of static rendering (it can't be
+  // known at build time), so it needs a Suspense boundary — but `fallback={null}`
+  // means the prerendered HTML for /archive contains NOTHING: no input, no pills, no
+  // cards, just a BAILOUT_TO_CLIENT_SIDE_RENDERING marker. That's a real SEO/no-JS/
+  // first-paint regression on the site's main index surface, not a cosmetic gap.
+  //
+  // Fix: give the boundary a REAL fallback — the same view, rendered with the default
+  // (query="", no category filter) state, using the same searchArchive() call the
+  // interactive version uses. It's plain data + JSX with no client-only hooks, so it
+  // renders fully at build/request time. Once hydration resolves useSearchParams()
+  // client-side, React swaps it for the live, interactive ArchiveSearchInner.
+  const fallbackResults = searchArchive(items, {});
+
   return (
-    <Suspense fallback={null}>
-      <ArchiveSearchInner {...props} />
+    <Suspense
+      fallback={
+        <ArchiveSearchView
+          categories={categories}
+          copy={copy}
+          locale={locale}
+          query=""
+          selectedCats={[]}
+          hasActiveFilters={false}
+          results={fallbackResults}
+          onQueryChange={() => {}}
+          onToggleCat={() => {}}
+          onClearAll={() => {}}
+        />
+      }
+    >
+      <ArchiveSearchInner
+        items={items}
+        categories={categories}
+        locale={locale}
+      />
     </Suspense>
   );
 }
@@ -123,6 +154,38 @@ function ArchiveSearchInner({ items, categories = [], locale }) {
   const hasActiveFilters = query.trim() !== "" || selectedCats.length > 0;
 
   return (
+    <ArchiveSearchView
+      categories={categories}
+      copy={copy}
+      locale={locale}
+      query={query}
+      selectedCats={selectedCats}
+      hasActiveFilters={hasActiveFilters}
+      results={results}
+      onQueryChange={setQuery}
+      onToggleCat={toggleCat}
+      onClearAll={clearAll}
+    />
+  );
+}
+
+// Pure presentational view — no hooks, so it's usable both as the Suspense fallback
+// (rendered at build/request time with default state) and as ArchiveSearchInner's own
+// output (rendered client-side with live state). Keeping this as the ONE shared
+// component is what guarantees the fallback and the live view never drift apart.
+function ArchiveSearchView({
+  categories,
+  copy,
+  locale,
+  query,
+  selectedCats,
+  hasActiveFilters,
+  results,
+  onQueryChange,
+  onToggleCat,
+  onClearAll,
+}) {
+  return (
     <div className={styles.wrapper}>
       <div className={styles.searchRow}>
         <input
@@ -131,10 +194,14 @@ function ArchiveSearchInner({ items, categories = [], locale }) {
           className={styles.input}
           placeholder={copy.placeholder}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => onQueryChange(e.target.value)}
         />
         {hasActiveFilters && (
-          <button type="button" className={styles.clearBtn} onClick={clearAll}>
+          <button
+            type="button"
+            className={styles.clearBtn}
+            onClick={onClearAll}
+          >
             {copy.clear}
           </button>
         )}
@@ -149,7 +216,7 @@ function ArchiveSearchInner({ items, categories = [], locale }) {
                 key={cat.slug}
                 type="button"
                 className={`${styles.pill} ${active ? styles.pillActive : ""}`}
-                onClick={() => toggleCat(cat.slug)}
+                onClick={() => onToggleCat(cat.slug)}
                 aria-pressed={active}
               >
                 {cat.name}
@@ -196,3 +263,8 @@ function ArchiveSearchInner({ items, categories = [], locale }) {
     </div>
   );
 }
+
+// Test-only backdoor: ArchiveSearchView needs to be checked in isolation (does the
+// Suspense fallback shape actually render real content?) without fighting jsdom's
+// inability to reproduce Next's real static-rendering CSR bailout.
+export const __test = { ArchiveSearchView };

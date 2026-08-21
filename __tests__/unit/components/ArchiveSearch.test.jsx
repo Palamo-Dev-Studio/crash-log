@@ -22,7 +22,10 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(mockSearchParamsString),
 }));
 
-import ArchiveSearch from "@/components/ArchiveSearch";
+import ArchiveSearch, { __test } from "@/components/ArchiveSearch";
+import { searchArchive } from "@/lib/searchArchive";
+
+const { ArchiveSearchView } = __test;
 
 const issueItem = {
   id: "issue-1",
@@ -261,6 +264,66 @@ describe("ArchiveSearch", () => {
       } finally {
         vi.useRealTimers();
       }
+    });
+  });
+
+  describe("Suspense fallback content", () => {
+    // useSearchParams() forces the /archive route to bail out of static rendering,
+    // so whatever is passed as the Suspense `fallback` is literally what search
+    // engines and no-JS visitors see in the prerendered HTML. jsdom can't reproduce
+    // Next's real build-time CSR bailout (our mocked useSearchParams() resolves
+    // synchronously, so the fallback never actually shows during a normal render),
+    // so these tests check the wiring and the content separately: (1) does
+    // <ArchiveSearch>'s own `fallback` prop actually point at real content rather
+    // than null, and (2) does that content, once rendered, show real cards.
+    it("wires a real fallback (not null) with the full unfiltered item set", () => {
+      // Call the component as a plain function -- it has no hooks of its own, so
+      // this is a legitimate way to inspect exactly what element it builds for
+      // Suspense's `fallback` prop, without needing Suspense to actually trigger.
+      const element = ArchiveSearch(baseProps);
+      expect(element.props.fallback).not.toBeNull();
+      expect(element.props.fallback.type).toBe(ArchiveSearchView);
+      expect(element.props.fallback.props.query).toBe("");
+      expect(element.props.fallback.props.results).toHaveLength(
+        baseProps.items.length
+      );
+    });
+
+    it("renders real, non-empty cards for every item -- not an empty shell", () => {
+      const results = searchArchive(baseProps.items, {});
+      const { container } = render(
+        <ArchiveSearchView
+          categories={baseProps.categories}
+          copy={{
+            placeholder: "Search the archive",
+            clear: "Clear",
+            empty: "No results.",
+            label: "Search",
+          }}
+          locale="en"
+          query=""
+          selectedCats={[]}
+          hasActiveFilters={false}
+          results={results}
+          onQueryChange={() => {}}
+          onToggleCat={() => {}}
+          onClearAll={() => {}}
+        />
+      );
+
+      const headings = Array.from(container.querySelectorAll("h3")).map(
+        (h) => h.textContent
+      );
+      expect(headings).toHaveLength(baseProps.items.length);
+      expect(headings).toContain("Forty Minutes of Exposure");
+      expect(headings).toContain("The Ledger Economy");
+
+      // The search input and category pills must also be present -- a no-JS visitor
+      // should at least see what the archive contains, even if the form is inert.
+      expect(
+        container.querySelector('input[type="search"]')
+      ).toBeInTheDocument();
+      expect(screen.getByText("Foundation Models")).toBeInTheDocument();
     });
   });
 });
