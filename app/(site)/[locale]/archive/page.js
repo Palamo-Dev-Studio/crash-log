@@ -131,33 +131,36 @@ function buildColumnIndexEntry(column, locale) {
 }
 
 /**
- * Build the flattened, locale-scoped search index from raw issues + columns.
+ * Build the flattened index from raw issues + columns. The listing itself is NOT
+ * locale-filtered: an issue or column without a Spanish translation still appears on
+ * /es/archive, showing its English fallback text via t() — same as the homepage does
+ * with FallbackBanner. What's locale-scoped is TEXT SEARCH: each entry carries a
+ * `searchable` flag (via the existing hasFullTranslation() check — no second
+ * predicate) so searchArchive() can exclude untranslated docs from query MATCHES
+ * without hiding them from the browse listing. hasFullTranslation() already returns
+ * true unconditionally for the default locale (en), so `searchable` is always true
+ * there — nothing here special-cases the locale.
  *
- * `t()` falls back to English when a translation is missing, which would otherwise let
- * an untranslated document's English prose land in the `es` index — invisible to a
- * Spanish query, but wrongly matchable by an English one on /es/. Filtering through the
- * existing hasFullTranslation() check first makes "Spanish search over Spanish content"
- * literally true: an ES reader never lands on an issue Nico hasn't actually translated.
- * hasFullTranslation() already returns true unconditionally for the default locale (en),
- * so this filter is a no-op for English — nothing here special-cases the locale.
+ * Category pills are a browse filter, not a search, so they intentionally do NOT
+ * consult `searchable` — a pill-only filter (no text query) shows untranslated docs
+ * exactly like the unfiltered listing does.
  *
  * @param {Array} issues
  * @param {Array} columns
  * @param {string} locale
- * @returns {Array} sorted, publish-date-desc index entries
+ * @returns {Array} sorted, publish-date-desc index entries, each with `searchable`
  */
 export function buildArchiveIndex(issues, columns, locale) {
-  const translatedIssues = (issues || []).filter((issue) =>
-    hasFullTranslation(issue, locale)
-  );
-  const translatedColumns = (columns || []).filter((column) =>
-    hasFullTranslation(column, locale, { bodyField: "body" })
-  );
+  const issueEntries = (issues || []).map((issue) => ({
+    ...buildIssueIndexEntry(issue, locale),
+    searchable: hasFullTranslation(issue, locale),
+  }));
+  const columnEntries = (columns || []).map((column) => ({
+    ...buildColumnIndexEntry(column, locale),
+    searchable: hasFullTranslation(column, locale, { bodyField: "body" }),
+  }));
 
-  return [
-    ...translatedIssues.map((i) => buildIssueIndexEntry(i, locale)),
-    ...translatedColumns.map((c) => buildColumnIndexEntry(c, locale)),
-  ].sort((a, b) => {
+  return [...issueEntries, ...columnEntries].sort((a, b) => {
     const da = a.publishDate || "";
     const db = b.publishDate || "";
     return db.localeCompare(da);
