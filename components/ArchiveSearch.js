@@ -46,9 +46,10 @@ function ArchiveSearchInner({ items, categories = [], locale }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const urlQuery = searchParams.get("q") || "";
 
   // Seed from the URL so /es/archive?q=modelo renders already-filtered on first paint.
-  const [query, setQuery] = useState(() => searchParams.get("q") || "");
+  const [query, setQuery] = useState(urlQuery);
   const [selectedCats, setSelectedCats] = useState([]);
   const copy = COPY[locale] || COPY.en;
 
@@ -56,6 +57,24 @@ function ArchiveSearchInner({ items, categories = [], locale }) {
     () => searchArchive(items, { query, categories: selectedCats }),
     [items, query, selectedCats]
   );
+
+  // The last `q` value WE are responsible for — either the one we seeded from on
+  // mount, or the one our own debounced write below just sent to the URL. Comparing
+  // against this (rather than reacting to every urlQuery change) is what tells "the
+  // header search box navigated here with a new q" apart from "the URL just caught up
+  // with our own edit" — only the former should overwrite local state.
+  const lastKnownUrlQuery = useRef(urlQuery);
+
+  // The archive page doesn't remount when the header search box pushes a new
+  // /{locale}/archive?q=... while already on this page — Next re-renders the same
+  // component in place, so a one-time useState seed never sees the change. Sync local
+  // state FROM the URL whenever it changes for a reason other than our own write.
+  useEffect(() => {
+    if (urlQuery !== lastKnownUrlQuery.current) {
+      lastKnownUrlQuery.current = urlQuery;
+      setQuery(urlQuery);
+    }
+  }, [urlQuery]);
 
   // Keep the URL's `q` param in sync as the query changes, so results stay shareable/
   // linkable. Debounced so a fast typist doesn't fire a router update per keystroke,
@@ -69,8 +88,14 @@ function ArchiveSearchInner({ items, categories = [], locale }) {
     }
 
     const timer = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
       const trimmed = query.trim();
+      // Record what we're about to write BEFORE the URL round-trips, so the sync-from-
+      // URL effect above recognizes this as our own write (not an external navigation)
+      // once router.replace's re-render arrives — even if the user keeps typing in the
+      // meantime, in which case `query` has already moved past `trimmed` by then.
+      lastKnownUrlQuery.current = trimmed;
+
+      const params = new URLSearchParams(searchParams.toString());
       if (trimmed) {
         params.set("q", trimmed);
       } else {

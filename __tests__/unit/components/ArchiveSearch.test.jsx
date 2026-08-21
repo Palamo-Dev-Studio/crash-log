@@ -205,5 +205,62 @@ describe("ArchiveSearch", () => {
         vi.useRealTimers();
       }
     });
+
+    it("syncs local query FROM the URL when q changes after mount (header search navigation)", () => {
+      // The header's search box calls router.push("/en/archive?q=...") while already
+      // on this page -- Next re-renders the same component tree in place rather than
+      // remounting it, so this must NOT rely on a one-time mount-only seed.
+      const { container, rerender } = render(<ArchiveSearch {...baseProps} />);
+      expect(screen.getByLabelText("Search")).toHaveValue("");
+
+      mockSearchParamsString = "q=ledger";
+      rerender(<ArchiveSearch {...baseProps} />);
+
+      expect(screen.getByLabelText("Search")).toHaveValue("ledger");
+      const headings = Array.from(container.querySelectorAll("h3")).map(
+        (h) => h.textContent
+      );
+      expect(headings).toContain("The Ledger Economy");
+      expect(headings).not.toContain("Forty Minutes of Exposure");
+    });
+
+    it("syncs a real external navigation but ignores the stale echo of its own write", () => {
+      // This exercises BOTH halves of the guard in one test on purpose: a sync
+      // mechanism that's simply absent would trivially "not clobber" anything, so a
+      // clobber-only test can't tell "correctly guarded" apart from "not wired at
+      // all." Asserting the external sync fires first rules that out.
+      vi.useFakeTimers();
+      try {
+        const { rerender } = render(<ArchiveSearch {...baseProps} />);
+        const input = screen.getByLabelText("Search");
+
+        // Prove the sync path is actually live: an external navigation (the header
+        // search box, landing on a q we never typed) must be reflected locally.
+        mockSearchParamsString = "q=external";
+        rerender(<ArchiveSearch {...baseProps} />);
+        expect(input).toHaveValue("external");
+
+        // Now type past that and let our own debounced write fire.
+        fireEvent.change(input, { target: { value: "led" } });
+        act(() => {
+          vi.advanceTimersByTime(400);
+        });
+        expect(mockReplace).toHaveBeenCalledWith("/en/archive?q=led", {
+          scroll: false,
+        });
+
+        // Keep typing before that write's navigation round-trips.
+        fireEvent.change(input, { target: { value: "ledger" } });
+
+        // The stale echo of OUR OWN earlier write lands -- must not stomp "ledger".
+        // A naive "always sync from searchParams" effect (no own-write guard) would
+        // revert this back to "led" and fail here.
+        mockSearchParamsString = "q=led";
+        rerender(<ArchiveSearch {...baseProps} />);
+        expect(input).toHaveValue("ledger");
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 });
