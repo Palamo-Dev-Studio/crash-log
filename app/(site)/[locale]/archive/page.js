@@ -7,7 +7,7 @@ import {
   getAllColumnsForArchiveSearch,
   getAllCategories,
 } from "@/lib/queries";
-import { t, LOCALE_OG } from "@/lib/locale";
+import { t, LOCALE_OG, hasFullTranslation } from "@/lib/locale";
 import { portableTextToPlain } from "@/lib/portableTextToPlain";
 import ArchiveSearch from "@/components/ArchiveSearch";
 import styles from "./archive.module.css";
@@ -130,6 +130,40 @@ function buildColumnIndexEntry(column, locale) {
   };
 }
 
+/**
+ * Build the flattened, locale-scoped search index from raw issues + columns.
+ *
+ * `t()` falls back to English when a translation is missing, which would otherwise let
+ * an untranslated document's English prose land in the `es` index — invisible to a
+ * Spanish query, but wrongly matchable by an English one on /es/. Filtering through the
+ * existing hasFullTranslation() check first makes "Spanish search over Spanish content"
+ * literally true: an ES reader never lands on an issue Nico hasn't actually translated.
+ * hasFullTranslation() already returns true unconditionally for the default locale (en),
+ * so this filter is a no-op for English — nothing here special-cases the locale.
+ *
+ * @param {Array} issues
+ * @param {Array} columns
+ * @param {string} locale
+ * @returns {Array} sorted, publish-date-desc index entries
+ */
+export function buildArchiveIndex(issues, columns, locale) {
+  const translatedIssues = (issues || []).filter((issue) =>
+    hasFullTranslation(issue, locale)
+  );
+  const translatedColumns = (columns || []).filter((column) =>
+    hasFullTranslation(column, locale, { bodyField: "body" })
+  );
+
+  return [
+    ...translatedIssues.map((i) => buildIssueIndexEntry(i, locale)),
+    ...translatedColumns.map((c) => buildColumnIndexEntry(c, locale)),
+  ].sort((a, b) => {
+    const da = a.publishDate || "";
+    const db = b.publishDate || "";
+    return db.localeCompare(da);
+  });
+}
+
 export default async function ArchivePage({ params }) {
   const { locale } = await params;
   const [issues, columns, allCategories] = await Promise.all([
@@ -138,14 +172,7 @@ export default async function ArchivePage({ params }) {
     getCachedCategories(),
   ]);
 
-  const items = [
-    ...issues.map((i) => buildIssueIndexEntry(i, locale)),
-    ...columns.map((c) => buildColumnIndexEntry(c, locale)),
-  ].sort((a, b) => {
-    const da = a.publishDate || "";
-    const db = b.publishDate || "";
-    return db.localeCompare(da);
-  });
+  const items = buildArchiveIndex(issues, columns, locale);
 
   // Only surface categories that actually appear in current issues.
   const presentSlugs = new Set();
