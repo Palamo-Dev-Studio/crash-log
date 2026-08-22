@@ -1,8 +1,8 @@
 // ABOUTME: Component tests for ArchiveSearch — query input, category pills, empty state, clear button.
 // ABOUTME: Verifies filter state changes update the rendered result list.
 
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { act, render, screen, fireEvent } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
@@ -12,7 +12,20 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-import ArchiveSearch from "@/components/ArchiveSearch";
+const mockPush = vi.fn();
+const mockReplace = vi.fn();
+let mockSearchParamsString = "";
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/en/archive",
+  useRouter: () => ({ push: mockPush, replace: mockReplace }),
+  useSearchParams: () => new URLSearchParams(mockSearchParamsString),
+}));
+
+import ArchiveSearch, { __test } from "@/components/ArchiveSearch";
+import { searchArchive } from "@/lib/searchArchive";
+
+const { ArchiveSearchView } = __test;
 
 const issueItem = {
   id: "issue-1",
@@ -66,6 +79,12 @@ describe("ArchiveSearch", () => {
     categories: [{ slug: "foundation-models", name: "Foundation Models" }],
     locale: "en",
   };
+
+  beforeEach(() => {
+    mockPush.mockReset();
+    mockReplace.mockReset();
+    mockSearchParamsString = "";
+  });
 
   it("renders all items by default", () => {
     render(<ArchiveSearch {...baseProps} />);
@@ -122,5 +141,243 @@ describe("ArchiveSearch", () => {
   it("renders Spanish copy when locale=es", () => {
     render(<ArchiveSearch {...baseProps} locale="es" />);
     expect(screen.getByLabelText("Buscar")).toBeInTheDocument();
+  });
+
+  describe("URL state", () => {
+    it("seeds the initial query from the URL's q param and renders already filtered", () => {
+      mockSearchParamsString = "q=ledger";
+      const { container } = render(<ArchiveSearch {...baseProps} />);
+
+      expect(screen.getByLabelText("Search")).toHaveValue("ledger");
+      const headings = Array.from(container.querySelectorAll("h3")).map(
+        (h) => h.textContent
+      );
+      expect(headings).toContain("The Ledger Economy");
+      expect(headings).not.toContain("Forty Minutes of Exposure");
+
+      // Seeding from the URL must not itself trigger a redundant navigation on mount.
+      expect(mockReplace).not.toHaveBeenCalled();
+    });
+
+    it("syncs the URL via router.replace (not push) after a debounce, not per keystroke", () => {
+      vi.useFakeTimers();
+      try {
+        render(<ArchiveSearch {...baseProps} />);
+        const input = screen.getByLabelText("Search");
+
+        // Simulate rapid typing — each keystroke well inside the debounce window.
+        for (const partial of ["l", "le", "led", "ledg", "ledge", "ledger"]) {
+          fireEvent.change(input, { target: { value: partial } });
+          act(() => {
+            vi.advanceTimersByTime(100);
+          });
+        }
+
+        // Still under the debounce window since the last keystroke — no sync yet.
+        expect(mockReplace).not.toHaveBeenCalled();
+
+        act(() => {
+          vi.advanceTimersByTime(400);
+        });
+
+        expect(mockReplace).toHaveBeenCalledTimes(1);
+        expect(mockReplace).toHaveBeenCalledWith("/en/archive?q=ledger", {
+          scroll: false,
+        });
+        expect(mockPush).not.toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("removes the q param from the URL when the query is cleared", () => {
+      vi.useFakeTimers();
+      try {
+        mockSearchParamsString = "q=ledger";
+        render(<ArchiveSearch {...baseProps} />);
+
+        fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+        act(() => {
+          vi.advanceTimersByTime(400);
+        });
+
+        expect(mockReplace).toHaveBeenCalledWith("/en/archive", {
+          scroll: false,
+        });
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("syncs local query FROM the URL when q changes after mount (header search navigation)", () => {
+      // The header's search box calls router.push("/en/archive?q=...") while already
+      // on this page -- Next re-renders the same component tree in place rather than
+      // remounting it, so this must NOT rely on a one-time mount-only seed.
+      const { container, rerender } = render(<ArchiveSearch {...baseProps} />);
+      expect(screen.getByLabelText("Search")).toHaveValue("");
+
+      mockSearchParamsString = "q=ledger";
+      rerender(<ArchiveSearch {...baseProps} />);
+
+      expect(screen.getByLabelText("Search")).toHaveValue("ledger");
+      const headings = Array.from(container.querySelectorAll("h3")).map(
+        (h) => h.textContent
+      );
+      expect(headings).toContain("The Ledger Economy");
+      expect(headings).not.toContain("Forty Minutes of Exposure");
+    });
+
+    it("syncs a real external navigation but ignores the stale echo of its own write", () => {
+      // This exercises BOTH halves of the guard in one test on purpose: a sync
+      // mechanism that's simply absent would trivially "not clobber" anything, so a
+      // clobber-only test can't tell "correctly guarded" apart from "not wired at
+      // all." Asserting the external sync fires first rules that out.
+      vi.useFakeTimers();
+      try {
+        const { rerender } = render(<ArchiveSearch {...baseProps} />);
+        const input = screen.getByLabelText("Search");
+
+        // Prove the sync path is actually live: an external navigation (the header
+        // search box, landing on a q we never typed) must be reflected locally.
+        mockSearchParamsString = "q=external";
+        rerender(<ArchiveSearch {...baseProps} />);
+        expect(input).toHaveValue("external");
+
+        // Now type past that and let our own debounced write fire.
+        fireEvent.change(input, { target: { value: "led" } });
+        act(() => {
+          vi.advanceTimersByTime(400);
+        });
+        expect(mockReplace).toHaveBeenCalledWith("/en/archive?q=led", {
+          scroll: false,
+        });
+
+        // Keep typing before that write's navigation round-trips.
+        fireEvent.change(input, { target: { value: "ledger" } });
+
+        // The stale echo of OUR OWN earlier write lands -- must not stomp "ledger".
+        // A naive "always sync from searchParams" effect (no own-write guard) would
+        // revert this back to "led" and fail here.
+        mockSearchParamsString = "q=led";
+        rerender(<ArchiveSearch {...baseProps} />);
+        expect(input).toHaveValue("ledger");
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+  });
+
+  describe("Suspense fallback content", () => {
+    // useSearchParams() forces the /archive route to bail out of static rendering,
+    // so whatever is passed as the Suspense `fallback` is literally what search
+    // engines and no-JS visitors see in the prerendered HTML. jsdom can't reproduce
+    // Next's real build-time CSR bailout (our mocked useSearchParams() resolves
+    // synchronously, so the fallback never actually shows during a normal render),
+    // so these tests check the wiring and the content separately: (1) does
+    // <ArchiveSearch>'s own `fallback` prop actually point at real content rather
+    // than null, and (2) does that content, once rendered, show real cards.
+    it("wires a real fallback (not null) with the full unfiltered item set", () => {
+      // Call the component as a plain function -- it has no hooks of its own, so
+      // this is a legitimate way to inspect exactly what element it builds for
+      // Suspense's `fallback` prop, without needing Suspense to actually trigger.
+      const element = ArchiveSearch(baseProps);
+      expect(element.props.fallback).not.toBeNull();
+      expect(element.props.fallback.type).toBe(ArchiveSearchView);
+      expect(element.props.fallback.props.query).toBe("");
+      expect(element.props.fallback.props.results).toHaveLength(
+        baseProps.items.length
+      );
+    });
+
+    it("renders real, non-empty cards for every item -- not an empty shell", () => {
+      const results = searchArchive(baseProps.items, {});
+      const { container } = render(
+        <ArchiveSearchView
+          categories={baseProps.categories}
+          copy={{
+            placeholder: "Search the archive",
+            clear: "Clear",
+            empty: "No results.",
+            label: "Search",
+          }}
+          locale="en"
+          query=""
+          selectedCats={[]}
+          hasActiveFilters={false}
+          results={results}
+          onQueryChange={() => {}}
+          onToggleCat={() => {}}
+          onClearAll={() => {}}
+        />
+      );
+
+      const headings = Array.from(container.querySelectorAll("h3")).map(
+        (h) => h.textContent
+      );
+      expect(headings).toHaveLength(baseProps.items.length);
+      expect(headings).toContain("Forty Minutes of Exposure");
+      expect(headings).toContain("The Ledger Economy");
+
+      // The search input and category pills must also be present -- a no-JS visitor
+      // should at least see what the archive contains, even if the form is inert.
+      expect(
+        container.querySelector('input[type="search"]')
+      ).toBeInTheDocument();
+      expect(screen.getByText("Foundation Models")).toBeInTheDocument();
+    });
+  });
+
+  describe("locale switch (key-based remount)", () => {
+    // page.js renders <ArchiveSearch key={locale} .../> specifically so a locale
+    // switch (LanguageToggle navigating to the other locale's path) unmounts the old
+    // instance rather than reusing it -- App Router preserves the component instance
+    // across a /en/archive -> /es/archive navigation otherwise, the same "no remount"
+    // behavior the URL-sync effect above relies on. React's key-based remount is
+    // ordinary reconciliation, fully reproducible in jsdom (unlike the App Router
+    // navigation itself), so this tests the real mechanism directly.
+    it("cancels a pending debounced write when remounted via a key change", () => {
+      vi.useFakeTimers();
+      try {
+        const { rerender } = render(
+          <ArchiveSearch key="en" {...baseProps} locale="en" />
+        );
+        fireEvent.change(screen.getByLabelText("Search"), {
+          target: { value: "ledger" },
+        });
+
+        // Simulate the locale switch mid-debounce, before the write fires.
+        rerender(<ArchiveSearch key="es" {...baseProps} locale="es" />);
+
+        act(() => {
+          vi.advanceTimersByTime(400);
+        });
+
+        // The OLD instance's pending write must never fire -- its effect cleanup
+        // (clearTimeout) ran on unmount. Without key={locale}, the same instance
+        // would survive the switch and this write WOULD fire on the stale pathname
+        // closure, bouncing the reader back to the locale they just left.
+        expect(mockReplace).not.toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("does not carry the typed query over to the fresh instance after a switch", () => {
+      const { rerender } = render(
+        <ArchiveSearch key="en" {...baseProps} locale="en" />
+      );
+      fireEvent.change(screen.getByLabelText("Search"), {
+        target: { value: "ledger" },
+      });
+      expect(screen.getByLabelText("Search")).toHaveValue("ledger");
+
+      // LanguageToggle's target URL never carries over `q`, and the fresh mount
+      // re-seeds from the (unchanged, empty) URL rather than inheriting old state.
+      // The es locale also swaps the input's aria-label to "Buscar" -- querying by
+      // that (not "Search") is itself part of confirming this is a genuinely fresh
+      // instance, not the old one with its locale prop merely updated in place.
+      rerender(<ArchiveSearch key="es" {...baseProps} locale="es" />);
+      expect(screen.getByLabelText("Buscar")).toHaveValue("");
+    });
   });
 });

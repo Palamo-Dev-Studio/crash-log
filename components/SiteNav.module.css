@@ -30,3 +30,47 @@
 .active {
   color: var(--severity-error);
 }
+
+.searchForm {
+  display: flex;
+  margin-left: auto;
+}
+
+.searchInput {
+  width: 160px;
+  background: var(--surface);
+  border: 1px solid var(--surface);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--severity-error);
+}
+
+.searchInput::placeholder {
+  color: var(--text-faint);
+}
+
+@media (max-width: 600px) {
+  /* .nav is flex with the default nowrap, so flex-basis: 100% on .searchForm alone
+     can't push it to a second row -- it just stays inline and the whole nav scrolls.
+     flex-wrap: wrap is what actually lets the search form drop below the links. */
+  .nav {
+    flex-wrap: wrap;
+  }
+
+  .searchForm {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+}

@@ -2,7 +2,9 @@
 // ABOUTME: Validates tokenization, AND-across-tokens, OR-across-categories, and field match tracking.
 
 import { describe, it, expect } from "vitest";
-import { searchArchive } from "@/lib/searchArchive";
+import { searchArchive, __test } from "@/lib/searchArchive";
+
+const { normalize, tokenize } = __test;
 
 const baseIssue = {
   id: "issue-1",
@@ -134,5 +136,106 @@ describe("searchArchive", () => {
   it("returns no matches when one token is missing", () => {
     const out = searchArchive([baseIssue], { query: "forty banana" });
     expect(out).toHaveLength(0);
+  });
+});
+
+describe("diacritic folding", () => {
+  it("normalize() folds accented characters to their unaccented form", () => {
+    expect(normalize("crítica")).toBe("critica");
+    expect(normalize("opinión")).toBe("opinion");
+    expect(normalize("año")).toBe("ano");
+  });
+
+  it("normalize() folds ñ to n explicitly", () => {
+    expect(normalize("años mañana señor")).toBe("anos manana senor");
+  });
+
+  it("normalize() is idempotent on already-unaccented text (English control)", () => {
+    expect(normalize("Perplexity Sued")).toBe("perplexity sued");
+  });
+
+  it("tokenize() folds diacritics on the query side", () => {
+    expect(tokenize("crítica año")).toEqual(["critica", "ano"]);
+  });
+
+  const criticaIssue = {
+    id: "issue-critica",
+    type: "issue",
+    publishDate: "2026-04-01",
+    title: "Una Crítica del Modelo",
+    subtitle: "Opinión sobre el año pasado",
+    searchText: "una crítica del modelo opinión sobre el año pasado",
+    fields: {
+      titleSubtitle: "una crítica del modelo opinión sobre el año pasado",
+      transmission: "",
+      headlines: "",
+      bodies: "",
+      stackTrace: "",
+      columnBody: "",
+    },
+    categories: [],
+    raw: { _id: "issue-critica" },
+  };
+
+  it("an accent-free query matches accented indexed content: crítica <- critica", () => {
+    const out = searchArchive([criticaIssue], { query: "critica" });
+    expect(out).toHaveLength(1);
+    expect(out[0].id).toBe("issue-critica");
+  });
+
+  it("an accent-free query matches accented indexed content: opinión <- opinion", () => {
+    const out = searchArchive([criticaIssue], { query: "opinion" });
+    expect(out).toHaveLength(1);
+    expect(out[0].id).toBe("issue-critica");
+  });
+
+  it("an accent-free query matches accented indexed content: año <- ano", () => {
+    const out = searchArchive([criticaIssue], { query: "ano" });
+    expect(out).toHaveLength(1);
+    expect(out[0].id).toBe("issue-critica");
+  });
+
+  it("an accented query matches accent-free indexed content (reverse direction)", () => {
+    const unaccented = {
+      ...criticaIssue,
+      id: "issue-plain",
+      searchText: "una critica del modelo opinion sobre el ano pasado",
+      fields: {
+        ...criticaIssue.fields,
+        titleSubtitle: "una critica del modelo opinion sobre el ano pasado",
+      },
+    };
+    expect(searchArchive([unaccented], { query: "crítica" })).toHaveLength(1);
+    expect(searchArchive([unaccented], { query: "opinión" })).toHaveLength(1);
+    expect(searchArchive([unaccented], { query: "año" })).toHaveLength(1);
+  });
+
+  it("records field matches correctly when diacritics are folded", () => {
+    const out = searchArchive([criticaIssue], { query: "critica" });
+    expect(out[0].matches).toContain("titleSubtitle");
+  });
+
+  it("English queries are unaffected by the diacritic fold (control)", () => {
+    const baseIssue = {
+      id: "issue-en",
+      type: "issue",
+      publishDate: "2026-04-01",
+      title: "Forty Minutes of Exposure",
+      subtitle: "What broke this week",
+      searchText: "forty minutes of exposure what broke this week",
+      fields: {
+        titleSubtitle: "forty minutes of exposure what broke this week",
+        transmission: "",
+        headlines: "",
+        bodies: "",
+        stackTrace: "",
+        columnBody: "",
+      },
+      categories: [],
+      raw: { _id: "issue-en" },
+    };
+    const out = searchArchive([baseIssue], { query: "forty exposure" });
+    expect(out).toHaveLength(1);
+    expect(out[0].id).toBe("issue-en");
   });
 });

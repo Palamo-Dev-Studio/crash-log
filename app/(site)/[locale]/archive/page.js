@@ -7,7 +7,7 @@ import {
   getAllColumnsForArchiveSearch,
   getAllCategories,
 } from "@/lib/queries";
-import { t, LOCALE_OG } from "@/lib/locale";
+import { t, LOCALE_OG, hasFullTranslation } from "@/lib/locale";
 import { portableTextToPlain } from "@/lib/portableTextToPlain";
 import ArchiveSearch from "@/components/ArchiveSearch";
 import styles from "./archive.module.css";
@@ -130,6 +130,43 @@ function buildColumnIndexEntry(column, locale) {
   };
 }
 
+/**
+ * Build the flattened index from raw issues + columns. The listing itself is NOT
+ * locale-filtered: an issue or column without a Spanish translation still appears on
+ * /es/archive, showing its English fallback text via t() — same as the homepage does
+ * with FallbackBanner. What's locale-scoped is TEXT SEARCH: each entry carries a
+ * `searchable` flag (via the existing hasFullTranslation() check — no second
+ * predicate) so searchArchive() can exclude untranslated docs from query MATCHES
+ * without hiding them from the browse listing. hasFullTranslation() already returns
+ * true unconditionally for the default locale (en), so `searchable` is always true
+ * there — nothing here special-cases the locale.
+ *
+ * Category pills are a browse filter, not a search, so they intentionally do NOT
+ * consult `searchable` — a pill-only filter (no text query) shows untranslated docs
+ * exactly like the unfiltered listing does.
+ *
+ * @param {Array} issues
+ * @param {Array} columns
+ * @param {string} locale
+ * @returns {Array} sorted, publish-date-desc index entries, each with `searchable`
+ */
+export function buildArchiveIndex(issues, columns, locale) {
+  const issueEntries = (issues || []).map((issue) => ({
+    ...buildIssueIndexEntry(issue, locale),
+    searchable: hasFullTranslation(issue, locale),
+  }));
+  const columnEntries = (columns || []).map((column) => ({
+    ...buildColumnIndexEntry(column, locale),
+    searchable: hasFullTranslation(column, locale, { bodyField: "body" }),
+  }));
+
+  return [...issueEntries, ...columnEntries].sort((a, b) => {
+    const da = a.publishDate || "";
+    const db = b.publishDate || "";
+    return db.localeCompare(da);
+  });
+}
+
 export default async function ArchivePage({ params }) {
   const { locale } = await params;
   const [issues, columns, allCategories] = await Promise.all([
@@ -138,14 +175,7 @@ export default async function ArchivePage({ params }) {
     getCachedCategories(),
   ]);
 
-  const items = [
-    ...issues.map((i) => buildIssueIndexEntry(i, locale)),
-    ...columns.map((c) => buildColumnIndexEntry(c, locale)),
-  ].sort((a, b) => {
-    const da = a.publishDate || "";
-    const db = b.publishDate || "";
-    return db.localeCompare(da);
-  });
+  const items = buildArchiveIndex(issues, columns, locale);
 
   // Only surface categories that actually appear in current issues.
   const presentSlugs = new Set();
@@ -171,7 +201,21 @@ export default async function ArchivePage({ params }) {
             : "No content published yet."}
         </p>
       ) : (
+        // key={locale} forces a fresh mount on a locale switch rather than reusing the
+        // same component instance across it (App Router preserves the instance across
+        // a /en/archive -> /es/archive navigation, since it's the same route segment
+        // with just a different dynamic-param value -- the same "no remount" behavior
+        // ArchiveSearch's own URL-sync effect relies on). Without this, a debounced
+        // write-back timer still in flight when the reader switches locales fires
+        // AFTER the switch with a closure over the OLD pathname, bouncing them back to
+        // the locale they just left. It also resets ArchiveSearch's local state on
+        // switch -- both the query and the selected category filters -- matching the
+        // fact that LanguageToggle's target URL never carries over `q`. The filters
+        // previously survived a switch only because the component happened not to
+        // remount; that was incidental, and resetting both together is the coherent
+        // behaviour.
         <ArchiveSearch
+          key={locale}
           items={items}
           categories={filterCategories}
           locale={locale}

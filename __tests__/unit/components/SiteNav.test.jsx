@@ -1,10 +1,11 @@
 // ABOUTME: Unit tests for SiteNav component.
 // ABOUTME: Validates nav link rendering, locale prefix, and active state.
 
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 let mockSegment = null;
+const mockPush = vi.fn();
 
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
@@ -16,11 +17,16 @@ vi.mock("next/link", () => ({
 
 vi.mock("next/navigation", () => ({
   useSelectedLayoutSegment: () => mockSegment,
+  useRouter: () => ({ push: mockPush }),
 }));
 
 import SiteNav from "@/components/SiteNav";
 
 describe("SiteNav", () => {
+  beforeEach(() => {
+    mockPush.mockReset();
+  });
+
   it("renders 5 navigation links", () => {
     render(<SiteNav locale="en" />);
     const links = screen.getAllByRole("link");
@@ -118,5 +124,58 @@ describe("SiteNav", () => {
     expect(nico.className).toContain("active");
     const latest = screen.getByText("Latest").closest("a");
     expect(latest.className).not.toContain("active");
+  });
+
+  describe("search input", () => {
+    it("renders a search input with an English aria-label", () => {
+      render(<SiteNav locale="en" />);
+      expect(screen.getByLabelText("Search the archive")).toBeInTheDocument();
+    });
+
+    it("renders a search input with a Spanish aria-label", () => {
+      render(<SiteNav locale="es" />);
+      expect(screen.getByLabelText("Buscar en el archivo")).toBeInTheDocument();
+    });
+
+    it("navigates to /{locale}/archive?q=<query> on submit", () => {
+      render(<SiteNav locale="en" />);
+      const input = screen.getByLabelText("Search the archive");
+      fireEvent.change(input, { target: { value: "perplexity" } });
+      fireEvent.submit(input.closest("form"));
+      expect(mockPush).toHaveBeenCalledWith("/en/archive?q=perplexity");
+    });
+
+    it("encodes special characters in the query", () => {
+      render(<SiteNav locale="en" />);
+      const input = screen.getByLabelText("Search the archive");
+      fireEvent.change(input, { target: { value: "a\u00f1o & modelo" } });
+      fireEvent.submit(input.closest("form"));
+      expect(mockPush).toHaveBeenCalledWith(
+        `/en/archive?q=${encodeURIComponent("a\u00f1o & modelo")}`
+      );
+    });
+
+    it("navigates to the plain archive path when the query is empty", () => {
+      render(<SiteNav locale="en" />);
+      const input = screen.getByLabelText("Search the archive");
+      fireEvent.submit(input.closest("form"));
+      expect(mockPush).toHaveBeenCalledWith("/en/archive");
+    });
+
+    it("trims whitespace-only queries to the plain archive path", () => {
+      render(<SiteNav locale="en" />);
+      const input = screen.getByLabelText("Search the archive");
+      fireEvent.change(input, { target: { value: "   " } });
+      fireEvent.submit(input.closest("form"));
+      expect(mockPush).toHaveBeenCalledWith("/en/archive");
+    });
+
+    it("preserves the es locale prefix on submit", () => {
+      render(<SiteNav locale="es" />);
+      const input = screen.getByLabelText("Buscar en el archivo");
+      fireEvent.change(input, { target: { value: "modelo" } });
+      fireEvent.submit(input.closest("form"));
+      expect(mockPush).toHaveBeenCalledWith("/es/archive?q=modelo");
+    });
   });
 });

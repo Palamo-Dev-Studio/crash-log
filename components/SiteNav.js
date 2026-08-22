@@ -3,8 +3,9 @@
 
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { useRouter, useSelectedLayoutSegment } from "next/navigation";
 import styles from "./SiteNav.module.css";
 
 const NAV_ITEMS = [
@@ -23,6 +24,8 @@ const LABELS = {
     beats: "Beats",
     about: "About",
     nav: "Main navigation",
+    searchLabel: "Search the archive",
+    searchPlaceholder: "Search…",
   },
   es: {
     latest: "Último",
@@ -31,12 +34,25 @@ const LABELS = {
     beats: "Temas",
     about: "Sobre",
     nav: "Navegación principal",
+    searchLabel: "Buscar en el archivo",
+    searchPlaceholder: "Buscar…",
   },
 };
 
 export default function SiteNav({ locale }) {
   const segment = useSelectedLayoutSegment();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
   const labels = LABELS[locale] || LABELS.en;
+
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+    const trimmed = searchQuery.trim();
+    const target = trimmed
+      ? `/${locale}/archive?q=${encodeURIComponent(trimmed)}`
+      : `/${locale}/archive`;
+    router.push(target);
+  }
 
   return (
     <nav className={styles.nav} aria-label={labels.nav}>
@@ -54,6 +70,20 @@ export default function SiteNav({ locale }) {
           </Link>
         );
       })}
+      <form
+        className={styles.searchForm}
+        role="search"
+        onSubmit={handleSearchSubmit}
+      >
+        <input
+          type="search"
+          className={styles.searchInput}
+          aria-label={labels.searchLabel}
+          placeholder={labels.searchPlaceholder}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </form>
     </nav>
   );
 }
