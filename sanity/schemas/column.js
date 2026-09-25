@@ -101,26 +101,6 @@ export default {
         "3–5 short phrases capturing the central motif of this column, written at draft time. Read by future Transmission/Column drafts to detect persistent themes across the last 3 pieces.",
       validation: (Rule) => Rule.max(5),
     },
-    {
-      name: "beehiivStatus",
-      title: "Beehiiv Status",
-      type: "string",
-      group: "meta",
-      options: { list: ["not_sent", "queued", "sent"] },
-      initialValue: "not_sent",
-    },
-    {
-      name: "beehiivPostIds",
-      title: "Beehiiv Post IDs",
-      type: "object",
-      group: "meta",
-      readOnly: true,
-      description: "Tracks Beehiiv draft post IDs for idempotency",
-      fields: [
-        { name: "en", title: "EN Post ID", type: "string" },
-        { name: "es", title: "ES Post ID", type: "string" },
-      ],
-    },
   ],
   preview: {
     select: {

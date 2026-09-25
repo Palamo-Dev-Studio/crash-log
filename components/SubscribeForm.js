@@ -1,21 +1,21 @@
 // ABOUTME: Client-side subscribe form that expands inline from a trigger button.
-// ABOUTME: Posts to /api/subscribe and shows success/error feedback with bilingual labels.
+// ABOUTME: On valid submit, navigates the browser to Substack's subscribe page with the email pre-filled.
 
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import styles from "./SubscribeForm.module.css";
+
+const SUBSTACK_SUBSCRIBE_URL = "https://aicrashlog.substack.com/subscribe";
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const LABELS = {
   en: {
     subscribe: "Subscribe",
     placeholder: "your@email.com",
     submit: "Go",
-    sending: "Sending\u2026",
-    success: "You\u2019re in!",
-    alreadySubscribed: "Already subscribed!",
-    error: "Something went wrong. Try again.",
+    error: "Enter a valid email address.",
     emailLabel: "Email",
     close: "Close subscribe form",
   },
@@ -23,10 +23,7 @@ const LABELS = {
     subscribe: "Suscríbete",
     placeholder: "tu@correo.com",
     submit: "Ir",
-    sending: "Enviando\u2026",
-    success: "\u00A1Listo!",
-    alreadySubscribed: "\u00A1Ya estás suscrito!",
-    error: "Algo salió mal. Inténtalo de nuevo.",
+    error: "Ingresa un correo electrónico válido.",
     emailLabel: "Correo electrónico",
     close: "Cerrar formulario de suscripción",
   },
@@ -35,31 +32,9 @@ const LABELS = {
 export default function SubscribeForm({ locale = "en" }) {
   const [expanded, setExpanded] = useState(false);
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle");
-  const [alreadySubscribed, setAlreadySubscribed] = useState(false);
-  const router = useRouter();
-  const redirectTimerRef = useRef(null);
-
-  useEffect(() => {
-    if (status === "success" && !alreadySubscribed) {
-      redirectTimerRef.current = setTimeout(() => {
-        router.push(`/${locale}/subscribe/thank-you`);
-      }, 1500);
-    }
-    return () => {
-      if (redirectTimerRef.current) clearTimeout(redirectTimerRef.current);
-    };
-  }, [status, alreadySubscribed, locale, router]);
+  const [error, setError] = useState(false);
 
   const l = LABELS[locale] || LABELS.en;
-
-  if (status === "success") {
-    return (
-      <div className={styles.result} role="status">
-        {alreadySubscribed ? l.alreadySubscribed : l.success}
-      </div>
-    );
-  }
 
   if (!expanded) {
     return (
@@ -69,61 +44,50 @@ export default function SubscribeForm({ locale = "en" }) {
     );
   }
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    setStatus("loading");
+    // Belt-and-braces: <input type="email"> already strips leading/trailing
+    // whitespace at the DOM level (WHATWG value sanitization algorithm), so
+    // `email` never actually arrives padded via this input in any browser or
+    // in jsdom — verified directly against a raw jsdom input element. This
+    // .trim() can't be exercised by a UI-driven test for that reason.
+    const trimmed = email.trim();
 
-    try {
-      const response = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, locale }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setAlreadySubscribed(!!data.alreadySubscribed);
-        setStatus("success");
-      } else {
-        setStatus("error");
-      }
-    } catch {
-      setStatus("error");
+    if (!EMAIL_REGEX.test(trimmed)) {
+      setError(true);
+      return;
     }
+
+    setError(false);
+    window.location.href = `${SUBSTACK_SUBSCRIBE_URL}?email=${encodeURIComponent(trimmed)}`;
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <input
         type="email"
         className={styles.input}
         placeholder={l.placeholder}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        disabled={status === "loading"}
         required
         aria-label={l.emailLabel}
       />
-      <button
-        type="submit"
-        className={styles.submit}
-        disabled={status === "loading"}
-      >
-        {status === "loading" ? l.sending : l.submit}
+      <button type="submit" className={styles.submit}>
+        {l.submit}
       </button>
       <button
         type="button"
         className={styles.close}
         onClick={() => {
           setExpanded(false);
-          setStatus("idle");
+          setError(false);
         }}
         aria-label={l.close}
       >
         &times;
       </button>
-      {status === "error" && (
+      {error && (
         <div className={styles.error} role="alert">
           {l.error}
         </div>

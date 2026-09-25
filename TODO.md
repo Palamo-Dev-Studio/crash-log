@@ -156,7 +156,7 @@
 - [x] SubscribeForm redirect tests (3 tests)
 - [x] Thank-you page metadata integration tests (2 tests)
 - [x] verify.sh passes (253 tests + 32 static pages)
-- [ ] Activate Beehiiv Recommendations widget when available (set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`)
+- [x] ~~Activate Beehiiv Recommendations widget when available~~ (moot: newsletter moved to Substack, Beehiiv removed entirely 2026-09-25)
 
 ## Stripe Checkout Donation ("Feed the Bots")
 
@@ -290,7 +290,7 @@
 - [x] Security: `escapeHtml`/`sanitizeHref` in `lib/htmlUtils.js`, auth on send-newsletter endpoint
 - [x] Tests: 89 new tests (319→408), verify.sh passes
 - [x] Deploy Sanity schema (`npx sanity@latest schema deploy`) — required .jsx rename for CLI compatibility
-- [x] Set `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` in `.env.local` and Vercel (same value)
+- [x] Set `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` in `.env.local` and Vercel (same value) — unused as of 2026-09-25 (newsletter-send code removed); still set in Vercel, needs manual deletion there
 - [x] Beehiiv setup: `locale` custom field created, EN/ES audience segments created (Dynamic, OR for EN)
 - [x] Deploy to Vercel
 - [x] ~~Manual end-to-end test: Studio action → Beehiiv draft creation~~ (blocked: Beehiiv Post API requires Enterprise plan; code works, manual copy-paste for now)
@@ -414,5 +414,5 @@ ExecPlan: `docs/plans/active/nicos-notes-column.md`
 - [x] Twitter handle verification (@crashLogNews) — verified
 - [x] Social profile URLs in JSON-LD
 - [x] Linter/formatter setup
-- [x] Add Beehiiv env vars to Vercel for production
+- [x] Add Beehiiv env vars to Vercel for production — unused as of 2026-09-25 (newsletter moved to Substack); still set in Vercel, needs manual deletion there
 - [x] Beehiiv recommendation modal redirect (post-subscribe thank-you page)

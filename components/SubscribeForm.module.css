@@ -88,16 +88,6 @@
   color: var(--text-primary);
 }
 
-.result {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--severity-error);
-  padding: 9px 0;
-}
-
 .error {
   width: 100%;
   font-family: var(--font-mono);
