@@ -42,6 +42,18 @@ describe("SubscribeForm", () => {
     expect(screen.getByText("Go")).toBeInTheDocument();
   });
 
+  it("disables native constraint validation so the component's own localized error shows", async () => {
+    const user = userEvent.setup();
+    render(<SubscribeForm locale="en" />);
+
+    await user.click(screen.getByText("Subscribe"));
+
+    expect(screen.getByLabelText("Email").closest("form")).toHaveProperty(
+      "noValidate",
+      true
+    );
+  });
+
   it("shows Spanish placeholder and labels when expanded in es locale", async () => {
     const user = userEvent.setup();
     render(<SubscribeForm locale="es" />);
@@ -94,7 +106,7 @@ describe("SubscribeForm", () => {
     );
   });
 
-  it("trims leading/trailing whitespace before navigating", async () => {
+  it("navigates with a clean email when a padded value is entered (email input sanitization strips the padding)", async () => {
     render(<SubscribeForm locale="en" />);
 
     fireEvent.click(screen.getByText("Subscribe"));

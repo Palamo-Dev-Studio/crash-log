@@ -101,7 +101,7 @@ Phases 1–8 complete. Sanity schemas, Studio, React components, issue pages, lo
 - Setup: `__tests__/setup.js` — jest-dom matchers, DOM cleanup
 - Mocks: `__tests__/mocks/` — next/image, next/link, next/navigation stubs
 - Unit tests: `__tests__/unit/lib/` — locale, sanity, queries, portableText
-- Component tests: `__tests__/unit/components/` — 20 component test files
+- Component tests: `__tests__/unit/components/`
 - Integration tests: `__tests__/integration/` — middleware, robots, rss-feed, donate, revalidate
 - E2E tests: `e2e/` — home, navigation, locale-switching, empty-state
 

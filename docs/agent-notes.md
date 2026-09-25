@@ -79,6 +79,6 @@
 - OG images use Inter font instead of Space Grotesk — ImageResponse edge runtime limits font loading.
 - No rate limiting on API routes — Vercel baseline DDoS protection covers it.
 - 5-item nav on mobile — verify nav wrapping doesn't break at small widths after deploy.
-- Server-side idempotency for newsletter sending not implemented — Studio action warns but doesn't prevent duplicate sends.
+- ~~Server-side idempotency for newsletter sending not implemented — Studio action warns but doesn't prevent duplicate sends.~~ (moot: removed 2026-09-25)
 - Content pipeline (Claude Code CLI on Mac Mini) sets `status: "draft"` on issue documents — must manually set to `"published"` after publishing in Sanity. Story refs may use `drafts.*` prefix — must fix to direct refs before publishing.
-- Beehiiv Post API requires Enterprise plan (`SEND_API_NOT_ENTERPRISE_PLAN`). Code is ready, manual copy-paste for newsletters until plan is upgraded.
+- ~~Beehiiv Post API requires Enterprise plan (`SEND_API_NOT_ENTERPRISE_PLAN`). Code is ready, manual copy-paste for newsletters until plan is upgraded.~~ (moot: removed 2026-09-25)

@@ -63,7 +63,7 @@ export default function SubscribeForm({ locale = "en" }) {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <input
         type="email"
         className={styles.input}
