@@ -48,8 +48,8 @@
 - **Domain:** `crashlog.ai` (Vercel)
 - **Sanity CORS:** `https://crashlog.ai` and `http://localhost:3001` with credentials
 - All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
-- **Env vars on Vercel:** `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` — set (same value for both)
-- **Beehiiv:** `locale` custom field created, EN/ES audience segments created
+- **Env vars on Vercel:** `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` — set (same value for both). **As of 2026-09-25, no code reads these** (the newsletter-send routes and Studio actions that used them were removed). Still present in Vercel — Hector should delete them there; not deleted as of this note.
+- **Beehiiv:** `locale` custom field created, EN/ES audience segments created. **As of 2026-09-25, unused** — the newsletter moved to Substack, `BEEHIIV_API_KEY` and `BEEHIIV_PUBLICATION_ID` are no longer read by any code. Still present in Vercel — Hector should delete them there; not deleted as of this note.
 - **Sanity schema:** All schemas deployed (including column + updated stackTraceHit)
 
 ## Immediate Next Step
@@ -64,13 +64,13 @@
 - [ ] Manual end-to-end test: Stripe monthly subscription (support page)
 - [x] ~~Manual end-to-end test: Issue Studio action → Beehiiv draft creation~~ (blocked: Beehiiv requires Enterprise plan for Post API)
 - [x] ~~Manual end-to-end test: Column Studio action → Beehiiv draft creation~~ (same blocker)
-- [ ] Activate Beehiiv Recommendations widget when available
+- [x] ~~Activate Beehiiv Recommendations widget when available~~ (moot: newsletter moved to Substack, Beehiiv removed entirely 2026-09-25)
 - [ ] Move Nico's Notes ExecPlan to `docs/plans/completed/`
 - [ ] Push Spanish role translations to agent documents in Sanity (bio.es done, model.es set for Hector, role.es still missing)
 
 ## Known Issues / Deferred Items
 
-- `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` exposes newsletter auth secret to client bundle — both issue and column actions use this pattern. Consider server-side session validation in a future security pass.
+- ~~`NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` exposes newsletter auth secret to client bundle — both issue and column actions use this pattern. Consider server-side session validation in a future security pass.~~ (moot: the newsletter-send Studio actions and their secret were removed entirely 2026-09-25, newsletter moved to Substack)
 - `FallbackAbout` component + `FALLBACK_MASTHEAD` array still exist in code — now redundant since Sanity has full ES content. Can be removed in a cleanup pass.
 - Agent `role.es` fields not yet populated in Sanity — Spanish roles still come from `FallbackAbout` or are empty in `SanityAbout`.
 - `@sanity/image-url` deprecation warning: default export deprecated, use named `createImageUrlBuilder` instead. Non-blocking.

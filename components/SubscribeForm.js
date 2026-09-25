@@ -46,6 +46,11 @@ export default function SubscribeForm({ locale = "en" }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    // Belt-and-braces: <input type="email"> already strips leading/trailing
+    // whitespace at the DOM level (WHATWG value sanitization algorithm), so
+    // `email` never actually arrives padded via this input in any browser or
+    // in jsdom — verified directly against a raw jsdom input element. This
+    // .trim() can't be exercised by a UI-driven test for that reason.
     const trimmed = email.trim();
 
     if (!EMAIL_REGEX.test(trimmed)) {

@@ -49,9 +49,7 @@ describe("SubscribeForm", () => {
     await user.click(screen.getByText("Suscríbete"));
 
     expect(screen.getByPlaceholderText("tu@correo.com")).toBeInTheDocument();
-    expect(
-      screen.getByLabelText("Correo electrónico")
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Correo electrónico")).toBeInTheDocument();
     expect(screen.getByText("Ir")).toBeInTheDocument();
   });
 
@@ -93,6 +91,20 @@ describe("SubscribeForm", () => {
 
     expect(window.location.href).toBe(
       `${SUBSTACK_SUBSCRIBE_URL}?email=hello%2Btest%26more%40crashlog.ai`
+    );
+  });
+
+  it("trims leading/trailing whitespace before navigating", async () => {
+    render(<SubscribeForm locale="en" />);
+
+    fireEvent.click(screen.getByText("Subscribe"));
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "  hello@crashlog.ai  " },
+    });
+    fireEvent.submit(screen.getByLabelText("Email").closest("form"));
+
+    expect(window.location.href).toBe(
+      `${SUBSTACK_SUBSCRIBE_URL}?email=hello%40crashlog.ai`
     );
   });
 

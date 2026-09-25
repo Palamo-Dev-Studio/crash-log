@@ -40,12 +40,12 @@ The site runs at `http://localhost:3000` (root `/` redirects to `/en`), with the
 
 ### Environment variables
 
-| Variable                        | Required            | Purpose                                                                           |
-| ------------------------------- | ------------------- | --------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes                 | Sanity project ID (the site renders in a degraded/empty state without a valid ID) |
-| `NEXT_PUBLIC_SANITY_DATASET`    | No                  | Sanity dataset (defaults to `production`)                                         |
-| `SANITY_REVALIDATE_SECRET`      | For webhooks        | HMAC secret validating the Sanity → Next.js revalidation webhook                  |
-| `STRIPE_SECRET_KEY`             | For payments        | Stripe secret key                                                                 |
+| Variable                        | Required     | Purpose                                                                           |
+| ------------------------------- | ------------ | --------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes          | Sanity project ID (the site renders in a degraded/empty state without a valid ID) |
+| `NEXT_PUBLIC_SANITY_DATASET`    | No           | Sanity dataset (defaults to `production`)                                         |
+| `SANITY_REVALIDATE_SECRET`      | For webhooks | HMAC secret validating the Sanity → Next.js revalidation webhook                  |
+| `STRIPE_SECRET_KEY`             | For payments | Stripe secret key                                                                 |
 
 ## Scripts
 
