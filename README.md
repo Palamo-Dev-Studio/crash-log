@@ -18,7 +18,7 @@ The Crash Log covers where AI and technology break — the crashes, the bugs, th
 - **Styling:** Plain CSS — design tokens + CSS modules, dark theme by default (no CSS framework)
 - **Testing:** Vitest (unit/component/integration) + Playwright (e2e)
 - **Tooling:** ESLint + Prettier
-- **Integrations:** Beehiiv (newsletter delivery), Stripe (payments)
+- **Integrations:** Substack (newsletter subscribe handoff), Stripe (payments)
 
 ## Getting started
 
@@ -45,9 +45,6 @@ The site runs at `http://localhost:3000` (root `/` redirects to `/en`), with the
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes                 | Sanity project ID (the site renders in a degraded/empty state without a valid ID) |
 | `NEXT_PUBLIC_SANITY_DATASET`    | No                  | Sanity dataset (defaults to `production`)                                         |
 | `SANITY_REVALIDATE_SECRET`      | For webhooks        | HMAC secret validating the Sanity → Next.js revalidation webhook                  |
-| `SEND_NEWSLETTER_SECRET`        | For newsletter send | Guards the newsletter-send endpoint                                               |
-| `BEEHIIV_API_KEY`               | For newsletter      | Beehiiv API key                                                                   |
-| `BEEHIIV_PUBLICATION_ID`        | For newsletter      | Beehiiv publication ID                                                            |
 | `STRIPE_SECRET_KEY`             | For payments        | Stripe secret key                                                                 |
 
 ## Scripts

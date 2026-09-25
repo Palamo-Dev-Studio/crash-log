@@ -1,36 +1,27 @@
 // ABOUTME: Unit tests for the SubscribeForm client component.
-// ABOUTME: Validates idle/expanded/loading/success/error states and bilingual labels.
+// ABOUTME: Validates idle/expanded states, bilingual labels, and the Substack navigation on valid submit.
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import {
-  render,
-  screen,
-  waitFor,
-  act,
-  fireEvent,
-} from "@testing-library/react";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-
-const mockPush = vi.fn();
-
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: mockPush }),
-}));
 
 import SubscribeForm from "@/components/SubscribeForm";
 
-const originalFetch = global.fetch;
-
-beforeEach(() => {
-  global.fetch = vi.fn();
-  mockPush.mockReset();
-});
-
-afterEach(() => {
-  global.fetch = originalFetch;
-});
+const SUBSTACK_SUBSCRIBE_URL = "https://aicrashlog.substack.com/subscribe";
 
 describe("SubscribeForm", () => {
+  let originalLocation;
+
+  beforeEach(() => {
+    originalLocation = window.location;
+    delete window.location;
+    window.location = { href: "" };
+  });
+
+  afterEach(() => {
+    window.location = originalLocation;
+  });
+
   it("renders Subscribe button in idle state", () => {
     render(<SubscribeForm locale="en" />);
     expect(screen.getByText("Subscribe")).toBeInTheDocument();
@@ -59,7 +50,7 @@ describe("SubscribeForm", () => {
 
     expect(screen.getByPlaceholderText("tu@correo.com")).toBeInTheDocument();
     expect(
-      screen.getByLabelText("Correo electr\u00F3nico")
+      screen.getByLabelText("Correo electrónico")
     ).toBeInTheDocument();
     expect(screen.getByText("Ir")).toBeInTheDocument();
   });
@@ -76,107 +67,7 @@ describe("SubscribeForm", () => {
     expect(screen.queryByLabelText("Email")).not.toBeInTheDocument();
   });
 
-  it("shows success message on successful subscription", async () => {
-    global.fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve({ success: true }),
-    });
-
-    const user = userEvent.setup();
-    render(<SubscribeForm locale="en" />);
-
-    await user.click(screen.getByText("Subscribe"));
-    await user.type(screen.getByLabelText("Email"), "test@example.com");
-    await user.click(screen.getByText("Go"));
-
-    await waitFor(() => {
-      expect(screen.getByRole("status")).toHaveTextContent("You\u2019re in!");
-    });
-  });
-
-  it("shows already subscribed message for duplicate emails", async () => {
-    global.fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve({ success: true, alreadySubscribed: true }),
-    });
-
-    const user = userEvent.setup();
-    render(<SubscribeForm locale="en" />);
-
-    await user.click(screen.getByText("Subscribe"));
-    await user.type(screen.getByLabelText("Email"), "test@example.com");
-    await user.click(screen.getByText("Go"));
-
-    await waitFor(() => {
-      expect(screen.getByRole("status")).toHaveTextContent(
-        "Already subscribed!"
-      );
-    });
-  });
-
-  it("shows error message on API failure", async () => {
-    global.fetch.mockResolvedValueOnce({
-      json: () =>
-        Promise.resolve({ success: false, error: "Failed to subscribe" }),
-    });
-
-    const user = userEvent.setup();
-    render(<SubscribeForm locale="en" />);
-
-    await user.click(screen.getByText("Subscribe"));
-    await user.type(screen.getByLabelText("Email"), "test@example.com");
-    await user.click(screen.getByText("Go"));
-
-    await waitFor(() => {
-      expect(screen.getByRole("alert")).toHaveTextContent(
-        "Something went wrong. Try again."
-      );
-    });
-  });
-
-  it("shows error message on network failure", async () => {
-    global.fetch.mockRejectedValueOnce(new Error("Network error"));
-
-    const user = userEvent.setup();
-    render(<SubscribeForm locale="en" />);
-
-    await user.click(screen.getByText("Subscribe"));
-    await user.type(screen.getByLabelText("Email"), "test@example.com");
-    await user.click(screen.getByText("Go"));
-
-    await waitFor(() => {
-      expect(screen.getByRole("alert")).toHaveTextContent(
-        "Something went wrong. Try again."
-      );
-    });
-  });
-
-  it("shows loading state while submitting", async () => {
-    let resolvePromise;
-    global.fetch.mockReturnValueOnce(
-      new Promise((resolve) => {
-        resolvePromise = resolve;
-      })
-    );
-
-    const user = userEvent.setup();
-    render(<SubscribeForm locale="en" />);
-
-    await user.click(screen.getByText("Subscribe"));
-    await user.type(screen.getByLabelText("Email"), "test@example.com");
-    await user.click(screen.getByText("Go"));
-
-    expect(screen.getByText("Sending\u2026")).toBeInTheDocument();
-    expect(screen.getByLabelText("Email")).toBeDisabled();
-
-    resolvePromise({
-      json: () => Promise.resolve({ success: true }),
-    });
-  });
-
-  it("sends correct fetch payload", async () => {
-    global.fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve({ success: true }),
-    });
-
+  it("navigates to the Substack subscribe URL with the email pre-filled on valid submit", async () => {
     const user = userEvent.setup();
     render(<SubscribeForm locale="en" />);
 
@@ -184,37 +75,66 @@ describe("SubscribeForm", () => {
     await user.type(screen.getByLabelText("Email"), "hello@crashlog.ai");
     await user.click(screen.getByText("Go"));
 
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "hello@crashlog.ai", locale: "en" }),
-      });
-    });
+    expect(window.location.href).toBe(
+      `${SUBSTACK_SUBSCRIBE_URL}?email=hello%40crashlog.ai`
+    );
   });
 
-  it("includes locale in request body for Spanish", async () => {
-    global.fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve({ success: true }),
-    });
+  it("percent-encodes special characters (+ and &) in the email", async () => {
+    const user = userEvent.setup();
+    render(<SubscribeForm locale="en" />);
 
+    await user.click(screen.getByText("Subscribe"));
+    await user.type(
+      screen.getByLabelText("Email"),
+      "hello+test&more@crashlog.ai"
+    );
+    await user.click(screen.getByText("Go"));
+
+    expect(window.location.href).toBe(
+      `${SUBSTACK_SUBSCRIBE_URL}?email=hello%2Btest%26more%40crashlog.ai`
+    );
+  });
+
+  it("navigates regardless of locale (no locale param is sent)", async () => {
     const user = userEvent.setup();
     render(<SubscribeForm locale="es" />);
 
     await user.click(screen.getByText("Suscríbete"));
     await user.type(
-      screen.getByLabelText("Correo electr\u00F3nico"),
+      screen.getByLabelText("Correo electrónico"),
       "hello@crashlog.ai"
     );
     await user.click(screen.getByText("Ir"));
 
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "hello@crashlog.ai", locale: "es" }),
-      });
+    expect(window.location.href).toBe(
+      `${SUBSTACK_SUBSCRIBE_URL}?email=hello%40crashlog.ai`
+    );
+  });
+
+  it("does not navigate and shows an error for an invalid email", async () => {
+    render(<SubscribeForm locale="en" />);
+
+    fireEvent.click(screen.getByText("Subscribe"));
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "not-an-email" },
     });
+    fireEvent.submit(screen.getByLabelText("Email").closest("form"));
+
+    expect(window.location.href).toBe("");
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Enter a valid email address."
+    );
+  });
+
+  it("does not navigate for an empty email", async () => {
+    render(<SubscribeForm locale="en" />);
+
+    fireEvent.click(screen.getByText("Subscribe"));
+    fireEvent.submit(screen.getByLabelText("Email").closest("form"));
+
+    expect(window.location.href).toBe("");
+    expect(screen.getByRole("alert")).toBeInTheDocument();
   });
 
   it("has close button with correct aria-label in Spanish", async () => {
@@ -228,22 +148,16 @@ describe("SubscribeForm", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps form open on error for retry", async () => {
-    global.fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve({ success: false, error: "Failed" }),
-    });
-
-    const user = userEvent.setup();
+  it("keeps form open after an invalid-email error, for retry", async () => {
     render(<SubscribeForm locale="en" />);
 
-    await user.click(screen.getByText("Subscribe"));
-    await user.type(screen.getByLabelText("Email"), "test@example.com");
-    await user.click(screen.getByText("Go"));
-
-    await waitFor(() => {
-      expect(screen.getByRole("alert")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("Subscribe"));
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "not-an-email" },
     });
+    fireEvent.submit(screen.getByLabelText("Email").closest("form"));
 
+    expect(screen.getByRole("alert")).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toBeInTheDocument();
     expect(screen.getByText("Go")).toBeInTheDocument();
   });
@@ -251,106 +165,5 @@ describe("SubscribeForm", () => {
   it("defaults to en when locale is not provided", () => {
     render(<SubscribeForm />);
     expect(screen.getByText("Subscribe")).toBeInTheDocument();
-  });
-
-  describe("redirect behavior", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
-    it("redirects to /en/subscribe/thank-you after 1.5s on new subscription", async () => {
-      global.fetch.mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true }),
-      });
-
-      render(<SubscribeForm locale="en" />);
-
-      // Use fireEvent instead of userEvent to avoid timer conflicts
-      fireEvent.click(screen.getByText("Subscribe"));
-      fireEvent.change(screen.getByLabelText("Email"), {
-        target: { value: "test@example.com" },
-      });
-      await act(async () => {
-        fireEvent.submit(screen.getByLabelText("Email").closest("form"));
-      });
-
-      // Flush microtasks so fetch resolves and state updates
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(0);
-      });
-
-      expect(screen.getByRole("status")).toHaveTextContent("You\u2019re in!");
-      expect(mockPush).not.toHaveBeenCalled();
-
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(1500);
-      });
-
-      expect(mockPush).toHaveBeenCalledWith("/en/subscribe/thank-you");
-    });
-
-    it("redirects to /es/subscribe/thank-you for Spanish locale", async () => {
-      global.fetch.mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true }),
-      });
-
-      render(<SubscribeForm locale="es" />);
-
-      fireEvent.click(screen.getByText("Suscríbete"));
-      fireEvent.change(screen.getByLabelText("Correo electr\u00F3nico"), {
-        target: { value: "test@example.com" },
-      });
-      await act(async () => {
-        fireEvent.submit(
-          screen.getByLabelText("Correo electr\u00F3nico").closest("form")
-        );
-      });
-
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(0);
-      });
-
-      expect(screen.getByRole("status")).toHaveTextContent("\u00A1Listo!");
-
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(1500);
-      });
-
-      expect(mockPush).toHaveBeenCalledWith("/es/subscribe/thank-you");
-    });
-
-    it("does NOT redirect for already-subscribed users", async () => {
-      global.fetch.mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, alreadySubscribed: true }),
-      });
-
-      render(<SubscribeForm locale="en" />);
-
-      fireEvent.click(screen.getByText("Subscribe"));
-      fireEvent.change(screen.getByLabelText("Email"), {
-        target: { value: "test@example.com" },
-      });
-      await act(async () => {
-        fireEvent.submit(screen.getByLabelText("Email").closest("form"));
-      });
-
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(0);
-      });
-
-      expect(screen.getByRole("status")).toHaveTextContent(
-        "Already subscribed!"
-      );
-
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(3000);
-      });
-
-      expect(mockPush).not.toHaveBeenCalled();
-    });
   });
 });

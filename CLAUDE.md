@@ -33,7 +33,7 @@ The Crash Log is a bilingual (EN/ES) newsletter website about AI and tech failur
 
 **Data fetching** (`lib/queries.js`): GROQ queries with try/catch fetch wrappers using `sanityFetch()`. `getLatestIssue()`, `getIssueBySlug()`, `getAllIssueSlugs()`, `getAllIssuesSummary()`. All return `null`/`[]` on failure.
 
-**Revalidation** (`app/api/revalidate/route.js`): Sanity webhook endpoint. Validates HMAC signature via `next-sanity/webhook`, then calls `revalidateTag('sanity')` — paired with `sanityFetch()` tagging every request `"sanity"` (see `lib/sanity.js` above); neither half works alone. Time-based revalidation (5 min) via `sanityFetch` remains as a safety net. **Exception:** `app/api/send-newsletter/route.js` and `app/api/send-column-newsletter/route.js` call `client.fetch()` directly, untagged — they build outbound Beehiiv emails, not cached page-render paths, so they don't need the tag.
+**Revalidation** (`app/api/revalidate/route.js`): Sanity webhook endpoint. Validates HMAC signature via `next-sanity/webhook`, then calls `revalidateTag('sanity')` — paired with `sanityFetch()` tagging every request `"sanity"` (see `lib/sanity.js` above); neither half works alone. Time-based revalidation (5 min) via `sanityFetch` remains as a safety net.
 
 **Portable Text** (`lib/portableText.js`): Component config for `@portabletext/react` — blocks, marks (with safe external links), and image types.
 
@@ -64,13 +64,9 @@ Required in `.env.local`:
 
 - `NEXT_PUBLIC_SANITY_PROJECT_ID` — Sanity project ID
 - `NEXT_PUBLIC_SANITY_DATASET` — Sanity dataset name (defaults to `production`)
-- `BEEHIIV_API_KEY` — Beehiiv API key (server-only)
-- `BEEHIIV_PUBLICATION_ID` — Beehiiv publication ID (server-only)
 - `STRIPE_SECRET_KEY` — Stripe secret key for Checkout Sessions (server-only)
 - `NEXT_PUBLIC_DONATIONS_ENABLED` — Set to `"true"` to show the DonateCTA component
 - `SANITY_REVALIDATE_SECRET` — HMAC secret for Sanity webhook revalidation (server-only)
-- `SEND_NEWSLETTER_SECRET` — Server-only secret for send-newsletter API auth
-- `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` — Same secret, exposed to client for Sanity Studio action
 
 ## Reference Documentation
 
@@ -94,7 +90,7 @@ Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` 
 
 ## Current State
 
-Phases 1–8 complete plus Beehiiv newsletter sending. Sanity schemas, Studio, 19 React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, dynamic OG images, Beehiiv subscription, Stripe donations, on-demand revalidation, and Beehiiv newsletter draft creation (via Studio action) are all in place. `scripts/verify.sh` passes (408 tests + 36 static pages). Deployed to Vercel at `crashlog.ai`.
+Phases 1–8 complete. Sanity schemas, Studio, 19 React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, dynamic OG images, Substack subscribe handoff, Stripe donations, and on-demand revalidation are all in place. The subscribe form sends readers to Substack's own subscribe page with their email pre-filled; Substack handles confirmation and delivery. `scripts/verify.sh` passes (408 tests + 36 static pages). Deployed to Vercel at `crashlog.ai`.
 
 ## Testing
 
@@ -104,10 +100,9 @@ Phases 1–8 complete plus Beehiiv newsletter sending. Sanity schemas, Studio, 1
 - Config: `playwright.config.mjs` — Chromium, auto-starts dev server on port 3000
 - Setup: `__tests__/setup.js` — jest-dom matchers, DOM cleanup
 - Mocks: `__tests__/mocks/` — next/image, next/link, next/navigation stubs
-- Unit tests: `__tests__/unit/lib/` — locale, sanity, queries, portableText, portableTextToHtml, emailTemplate, htmlUtils
-- Unit tests: `__tests__/unit/sanity/` — sendNewsletterAction
+- Unit tests: `__tests__/unit/lib/` — locale, sanity, queries, portableText, portableTextToHtml, htmlUtils
 - Component tests: `__tests__/unit/components/` — 20 component test files
-- Integration tests: `__tests__/integration/` — middleware, robots, rss-feed, subscribe, donate, revalidate, send-newsletter, thank-you
+- Integration tests: `__tests__/integration/` — middleware, robots, rss-feed, donate, revalidate
 - E2E tests: `e2e/` — home, navigation, locale-switching, empty-state
 
 **JSX in .js files:** The project uses JSX in `.js` files (Next.js convention). A custom Vite plugin in `vitest.config.mjs` (`jsxInJsPlugin`) transforms these via esbuild before Vite's import analysis.

@@ -156,7 +156,7 @@
 - [x] SubscribeForm redirect tests (3 tests)
 - [x] Thank-you page metadata integration tests (2 tests)
 - [x] verify.sh passes (253 tests + 32 static pages)
-- [ ] Activate Beehiiv Recommendations widget when available (set `NEXT_PUBLIC_BEEHIIV_RECOMMENDATIONS_URL`)
+- [x] ~~Activate Beehiiv Recommendations widget when available~~ (moot: newsletter moved to Substack, Beehiiv removed entirely 2026-09-25)
 
 ## Stripe Checkout Donation ("Feed the Bots")
 
