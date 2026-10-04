@@ -3,6 +3,7 @@
 
 import DonateCTA from "@/components/DonateCTA";
 import Footer from "@/components/Footer";
+import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
 import styles from "./SiteBottom.module.css";
 
 export default function SiteBottom({ locale }) {
@@ -16,7 +17,7 @@ export default function SiteBottom({ locale }) {
             ? "No te pierdas la próxima edición"
             : "Don't miss the next issue"}
         </p>
-        <a href={`/${locale}`} className={styles.subscribeBannerLink}>
+        <a href={SUBSTACK_SUBSCRIBE_URL} className={styles.subscribeBannerLink}>
           {locale === "es" ? "Suscríbete" : "Subscribe"}
         </a>
       </div>
