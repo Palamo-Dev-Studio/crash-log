@@ -4,9 +4,8 @@
 "use client";
 
 import { useState } from "react";
+import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
 import styles from "./SubscribeForm.module.css";
-
-const SUBSTACK_SUBSCRIBE_URL = "https://aicrashlog.substack.com/subscribe";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
