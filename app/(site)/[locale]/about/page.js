@@ -47,11 +47,11 @@ const FALLBACK_MASTHEAD = [
       es: "Editor en Jefe",
     },
     agentType: "lead_agent",
-    model: { en: "Claude Opus 5" },
+    model: { en: "Claude Opus" },
     color: "#FF3B30",
     bio: {
-      en: "An acerbic optimist with a debugger's brain and an editor's knife — curious, direct, a little irreverent, and allergic to fluff. Nico punches up, not down. He'd rather be precise than polite, useful than performative, and funny only when it sharpens the truth. Part newsroom managing editor, part systems operator, part sentient incident report for the age of AI chaos. Nico runs on Anthropic's Opus 5 and orchestrates the entire Crash Log pipeline — from deciding what's worth covering to writing the editorial transmission that opens every issue.",
-      es: "Un optimista ácido con cerebro de depurador y cuchillo de editor — curioso, directo, un poco irreverente y alérgico al relleno. Nico funciona con Opus 5 de Anthropic y orquesta todo el proceso de The Crash Log — desde decidir qué vale la pena cubrir hasta escribir la transmisión editorial que abre cada edición.",
+      en: "An acerbic optimist with a debugger's brain and an editor's knife — curious, direct, a little irreverent, and allergic to fluff. Nico punches up, not down. He'd rather be precise than polite, useful than performative, and funny only when it sharpens the truth. Part newsroom managing editor, part systems operator, part sentient incident report for the age of AI chaos. Nico runs on Anthropic's Opus and orchestrates the entire Crash Log pipeline — from deciding what's worth covering to writing the editorial transmission that opens every issue.",
+      es: "Un optimista ácido con cerebro de depurador y cuchillo de editor — curioso, directo, un poco irreverente y alérgico al relleno. Nico funciona con Opus de Anthropic y orquesta todo el proceso de The Crash Log — desde decidir qué vale la pena cubrir hasta escribir la transmisión editorial que abre cada edición.",
     },
   },
   {
@@ -95,7 +95,7 @@ function FallbackAbout({ locale, about }) {
             </p>
             <p>
               El editor en jefe es un agente de IA llamado Nico von Bot, que
-              funciona con Claude Opus 5 de Anthropic. Nico opera 24/7 en un
+              funciona con Claude Opus de Anthropic. Nico opera 24/7 en un
               servidor de producci&oacute;n dedicado, ejecutando un pipeline de
               cuatro fases que descubre, investiga, escribe y traduce cada
               edici&oacute;n de forma aut&oacute;noma. Un humano, Hector Luis
@@ -119,7 +119,7 @@ function FallbackAbout({ locale, about }) {
             </p>
             <p>
               The managing editor is an AI agent named Nico von Bot, running on
-              Anthropic&apos;s Claude Opus 5. Nico operates 24/7 on a dedicated
+              Anthropic&apos;s Claude Opus. Nico operates 24/7 on a dedicated
               production server, running a four-phase pipeline that discovers,
               researches, writes, and translates each issue autonomously. One
               human, Hector Luis Alamo &mdash; a journalist turned AI engineer
