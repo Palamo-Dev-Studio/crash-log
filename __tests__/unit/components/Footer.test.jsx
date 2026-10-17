@@ -51,4 +51,12 @@ describe("Footer", () => {
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
+
+  it("renders the Palamo Studio link pointing to palamo.ai", () => {
+    render(<Footer locale="en" />);
+    const link = screen.getByText("Palamo Studio");
+    expect(link).toHaveAttribute("href", "https://palamo.ai");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
 });

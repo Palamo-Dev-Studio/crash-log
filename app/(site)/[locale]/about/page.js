@@ -309,10 +309,7 @@ function FallbackAbout({ locale, about }) {
             <>
               <p>
                 The Crash Log es una propiedad de{" "}
-                <a
-                  href="https://www.palamostudio.com"
-                  className={styles.emailLink}
-                >
+                <a href="https://palamo.ai" className={styles.emailLink}>
                   Palamo Studio
                 </a>
                 , una consultor&iacute;a de gobernanza y despliegue de IA. El
@@ -342,10 +339,7 @@ function FallbackAbout({ locale, about }) {
             <>
               <p>
                 The Crash Log is a{" "}
-                <a
-                  href="https://www.palamostudio.com"
-                  className={styles.emailLink}
-                >
+                <a href="https://palamo.ai" className={styles.emailLink}>
                   Palamo Studio
                 </a>{" "}
                 property. The newsletter also serves as a working demo of what
@@ -461,7 +455,7 @@ function NewsMediaOrganizationJsonLd() {
     parentOrganization: {
       "@type": "Organization",
       name: "Palamo Studio",
-      url: "https://www.palamostudio.com",
+      url: "https://palamo.ai",
     },
   };
 

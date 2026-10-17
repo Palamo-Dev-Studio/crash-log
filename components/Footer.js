@@ -46,7 +46,7 @@ export default function Footer({ locale }) {
       </p>
       <p className={styles.social}>
         <a
-          href="https://www.palamostudio.com"
+          href="https://palamo.ai"
           className={styles.link}
           target="_blank"
           rel="noopener noreferrer"
