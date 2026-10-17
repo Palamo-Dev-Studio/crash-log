@@ -2,6 +2,7 @@
 // ABOUTME: Renders a 1200x630 dark-themed editorial card with the site name and tagline.
 
 import { ImageResponse } from "next/og";
+import { loadInterFonts } from "@/lib/ogFonts";
 
 export const alt = "The Crash Log — AI & Tech Gone Off the Rails";
 
@@ -12,20 +13,9 @@ export const size = {
 
 export const contentType = "image/png";
 
-async function fetchFont(url) {
-  const res = await fetch(url);
-  return res.arrayBuffer();
-}
-
 export default async function SiteOgImage() {
-  const [interBold, interRegular] = await Promise.all([
-    fetchFont(
-      "https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fAZ9hiJ-Ek-_EeA.woff2"
-    ),
-    fetchFont(
-      "https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2"
-    ),
-  ]);
+  // Falls back to ImageResponse's built-in font if the Inter files cannot be loaded.
+  const fonts = await loadInterFonts().catch(() => null);
 
   return new ImageResponse(
     <div
@@ -154,20 +144,24 @@ export default async function SiteOgImage() {
     </div>,
     {
       ...size,
-      fonts: [
-        {
-          name: "Inter",
-          data: interBold,
-          style: "normal",
-          weight: 700,
-        },
-        {
-          name: "Inter",
-          data: interRegular,
-          style: "normal",
-          weight: 400,
-        },
-      ],
+      ...(fonts
+        ? {
+            fonts: [
+              {
+                name: "Inter",
+                data: fonts[0],
+                style: "normal",
+                weight: 700,
+              },
+              {
+                name: "Inter",
+                data: fonts[1],
+                style: "normal",
+                weight: 400,
+              },
+            ],
+          }
+        : {}),
     }
   );
 }

@@ -20,12 +20,7 @@ const EMPTY_DESCRIPTION = {
 
 // Builds the full metadata shape (OG + Twitter card + hreflang alternates) shared
 // by the empty-feed and populated-feed branches of generateMetadata below.
-function buildMetadata({
-  title,
-  description,
-  locale,
-  ogTitle = `${title} — The Crash Log`,
-}) {
+function buildMetadata({ title, description, locale, ogTitle = title }) {
   return {
     title,
     description,
@@ -69,7 +64,15 @@ export async function generateMetadata({ params }) {
       ? "Lo último de The Crash Log"
       : "The latest from The Crash Log");
 
-  return buildMetadata({ title, description, locale });
+  // The layout's "%s — The Crash Log" template does not apply to a page.js in
+  // the same segment, so the populated-feed title is branded here.
+  const brandedTitle = `${title} — The Crash Log`;
+  return buildMetadata({
+    title: brandedTitle,
+    description,
+    locale,
+    ogTitle: brandedTitle,
+  });
 }
 
 export default async function HomePage({ params }) {

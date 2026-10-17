@@ -77,7 +77,7 @@ describe("home page generateMetadata", () => {
         params: Promise.resolve({ locale: "en" }),
       });
 
-      expect(metadata.title).toBe("GPT-5 Meltdown");
+      expect(metadata.title).toBe("GPT-5 Meltdown — The Crash Log");
       expect(metadata.description).toBe(
         "The latest models keep failing in new ways."
       );
@@ -101,7 +101,7 @@ describe("home page generateMetadata", () => {
         params: Promise.resolve({ locale: "es" }),
       });
 
-      expect(metadata.title).toBe("El Colapso de GPT-5");
+      expect(metadata.title).toBe("El Colapso de GPT-5 — The Crash Log");
       expect(metadata.description).toBe(
         "Los modelos más nuevos siguen fallando de formas nuevas."
       );
