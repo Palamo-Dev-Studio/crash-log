@@ -33,27 +33,30 @@ function formatPublishDate(dateStr, locale) {
 export default async function IssueOgImage({ params }) {
   const { locale, slug } = await params;
 
-  const [[interBold, interRegular], issue] = await Promise.all([
-    loadInterFonts(),
+  // Falls back to ImageResponse's built-in font if the Inter files cannot be loaded.
+  const [fonts, issue] = await Promise.all([
+    loadInterFonts().catch(() => null),
     getIssueBySlug(slug),
   ]);
 
-  const fontConfig = {
-    fonts: [
-      {
-        name: "Inter",
-        data: interBold,
-        style: "normal",
-        weight: 700,
-      },
-      {
-        name: "Inter",
-        data: interRegular,
-        style: "normal",
-        weight: 400,
-      },
-    ],
-  };
+  const fontConfig = fonts
+    ? {
+        fonts: [
+          {
+            name: "Inter",
+            data: fonts[0],
+            style: "normal",
+            weight: 700,
+          },
+          {
+            name: "Inter",
+            data: fonts[1],
+            style: "normal",
+            weight: 400,
+          },
+        ],
+      }
+    : {};
 
   // If no issue found, render a generic fallback that mirrors the site OG
   if (!issue) {

@@ -14,7 +14,8 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function SiteOgImage() {
-  const [interBold, interRegular] = await loadInterFonts();
+  // Falls back to ImageResponse's built-in font if the Inter files cannot be loaded.
+  const fonts = await loadInterFonts().catch(() => null);
 
   return new ImageResponse(
     <div
@@ -143,20 +144,24 @@ export default async function SiteOgImage() {
     </div>,
     {
       ...size,
-      fonts: [
-        {
-          name: "Inter",
-          data: interBold,
-          style: "normal",
-          weight: 700,
-        },
-        {
-          name: "Inter",
-          data: interRegular,
-          style: "normal",
-          weight: 400,
-        },
-      ],
+      ...(fonts
+        ? {
+            fonts: [
+              {
+                name: "Inter",
+                data: fonts[0],
+                style: "normal",
+                weight: 700,
+              },
+              {
+                name: "Inter",
+                data: fonts[1],
+                style: "normal",
+                weight: 400,
+              },
+            ],
+          }
+        : {}),
     }
   );
 }

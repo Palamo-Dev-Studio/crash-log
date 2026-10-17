@@ -55,6 +55,49 @@ describe("loadGoogleFont", () => {
     expect(calls.some((u) => u.endsWith(".woff2"))).toBe(false);
   });
 
+  const FONT_URL = "https://fonts.gstatic.com/s/inter/v20/bold.ttf";
+  const cssWith = (src) => `@font-face {
+  font-family: 'Inter';
+  font-weight: 700;
+  src: ${src};
+}`;
+
+  it.each([
+    ["unquoted", `url(${FONT_URL}) format('truetype')`],
+    ["single-quoted", `url('${FONT_URL}') format('truetype')`],
+    ["double-quoted", `url("${FONT_URL}") format("truetype")`],
+    [
+      "after a local() source with extra whitespace",
+      `local('Inter Bold'), local("Inter-Bold"),  url( "${FONT_URL}" )   format( 'opentype' )`,
+    ],
+  ])("extracts a %s source URL without its quotes", async (_label, src) => {
+    const calls = stubFetch(cssWith(src));
+    await loadGoogleFont("Inter", 700);
+    expect(calls).toContain(FONT_URL);
+  });
+
+  it("picks the TrueType file when a woff2 source is listed before it", async () => {
+    const calls = stubFetch(
+      cssWith(
+        `url(https://fonts.gstatic.com/s/inter/v20/bold.woff2) format('woff2'), url('${FONT_URL}') format('truetype')`
+      )
+    );
+    await loadGoogleFont("Inter", 700);
+    expect(calls).toContain(FONT_URL);
+    expect(calls.some((u) => u.endsWith(".woff2"))).toBe(false);
+  });
+
+  it("rejects a quoted woff2-only source", async () => {
+    stubFetch(
+      cssWith(
+        `url("https://fonts.gstatic.com/s/inter/v20/bold.woff2") format("woff2")`
+      )
+    );
+    await expect(loadGoogleFont("Inter", 700)).rejects.toThrow(
+      /No TTF\/OTF source/
+    );
+  });
+
   it("rejects when the font file request fails", async () => {
     stubFetch(TTF_CSS, 500);
     await expect(loadGoogleFont("Inter", 700)).rejects.toThrow(
