@@ -38,6 +38,21 @@ describe.each(["en", "es"])("About page links [%s]", (locale) => {
     ).toEqual([]);
   });
 
+  it("uses info@palamo.ai for every mailto link, in href and visible text", async () => {
+    const { container } = await renderAbout(locale);
+    const mailtos = [...container.querySelectorAll("a")].filter((a) =>
+      (a.getAttribute("href") || "").toLowerCase().startsWith("mailto:")
+    );
+    expect(mailtos.length).toBeGreaterThan(0);
+    for (const link of mailtos) {
+      expect(link.getAttribute("href")).toBe("mailto:info@palamo.ai");
+      expect(link.textContent.trim()).toBe("info@palamo.ai");
+    }
+    expect(
+      mailtos.filter((a) => /palamostudio/i.test(a.getAttribute("href")))
+    ).toEqual([]);
+  });
+
   it("points parentOrganization.url in the JSON-LD at https://palamo.ai", async () => {
     const { container } = await renderAbout(locale);
     const script = container.querySelector(
