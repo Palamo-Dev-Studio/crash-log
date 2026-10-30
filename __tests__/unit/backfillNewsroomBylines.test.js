@@ -302,3 +302,26 @@ describe("run (top-level failure path)", () => {
     expect(text).not.toContain("SECRET123");
   });
 });
+
+describe("clientOptions perspective", () => {
+  it("pins the raw perspective on both read and write paths", () => {
+    const base = { projectId: "p", dataset: "d" };
+    expect(clientOptions({ ...base, apply: false }).perspective).toBe("raw");
+    expect(
+      clientOptions({ ...base, apply: true, token: "t" }).perspective
+    ).toBe("raw");
+  });
+});
+
+describe("parseArgs --expect strictness", () => {
+  it.each(["", "1e1", "0x5", "-1", "0", "1.5", " 5", "5 ", "+5", "abc"])(
+    "rejects %j",
+    (v) => {
+      expect(parseArgs([`--expect=${v}`]).expect).toBeNull();
+    }
+  );
+  it("accepts plain positive decimals", () => {
+    expect(parseArgs(["--expect=1"]).expect).toBe(1);
+    expect(parseArgs(["--expect=88"]).expect).toBe(88);
+  });
+});

@@ -33,11 +33,15 @@ export function formatError(err, secrets = []) {
 
 export function parseArgs(argv) {
   const expectArg = argv.find((a) => a.startsWith("--expect="));
-  const expect = expectArg ? Number(expectArg.slice("--expect=".length)) : null;
+  const expectText = expectArg ? expectArg.slice("--expect=".length) : null;
   return {
     apply: argv.includes("--apply"),
     allowDrafts: argv.includes("--allow-drafts"),
-    expect: Number.isInteger(expect) && expect >= 0 ? expect : null,
+    // Plain decimal digits only (no "", "1e1", "0x5", "-1"); 0 is rejected.
+    expect:
+      expectText !== null && /^[1-9][0-9]*$/.test(expectText)
+        ? Number(expectText)
+        : null,
   };
 }
 
@@ -92,6 +96,9 @@ export function clientOptions({ apply, token, projectId, dataset }) {
     projectId,
     dataset,
     apiVersion: "2024-03-01",
+    // "raw" sees drafts and published docs alike; never "published", which
+    // would blind the draft check.
+    perspective: "raw",
     useCdn: !apply,
     token: apply ? token : undefined,
   };
