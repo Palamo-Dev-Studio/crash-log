@@ -139,6 +139,9 @@ risk)? Backfill script — keep, one final test round (count `<` mutant, `main()
   text can't wrap. Phase 7: a crawl test that loads EVERY route at 320/360/390 (EN/ES) and asserts no horizontal
   overflow (SPEC criterion 8), plus `overflow-wrap: anywhere` on long-URL text. Declined NITs from the Phase 5
   review: e2e stamp markup is synthetic (unit test covers the component); source date not wrapped in `<time>`.
+- **Carried into Phase 7 (Phase 6 PASS minors):** `e2e/article-template.spec.js:173-182` counts the subscribe line
+  page-wide (footer has a copy) and accepts zero — scope to `main article`, expect exactly 1;
+  `components/ArticleLayout.js:95` `sizes` uses `68ch` (≈544px) for a 673px column — use `680px`.
 - **Unmatched URLs serve Next's bare 404** (no masthead/footer). Phase 7: add a `[locale]/[...rest]` catch-all
   that calls `notFound()` so the branded 404 renders.
 - Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
@@ -152,8 +155,8 @@ risk)? Backfill script — keep, one final test round (count `<` mutant, `main()
 | 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | PASS `320fb31`; lint + p3b pending |
 | 4   | Home: cover hero, rail, recent files                                                        | merged `86ec32d`                   |
 | 5   | Off the Rails issue page: case cards, verdict stamps                                        | merged                             |
-| 6   | Practical article template + Nico's Notes column page                                       | building                           |
-| 7   | Every other page (archive, beats, about, support, 404, OG images) + legacy token removal    | —                                  |
+| 6   | Practical article template + Nico's Notes column page                                       | merged                             |
+| 7   | Every other page (archive, beats, about, support, 404, OG images) + legacy token removal    | building                           |
 | 8   | Whole-branch Fable review → CodeRabbit → PR                                                 | —                                  |
 
 ## Acceptance criteria
