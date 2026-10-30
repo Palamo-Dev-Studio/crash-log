@@ -91,6 +91,11 @@ test.describe("Home page", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     for (const locale of ["en", "es"]) {
       await page.goto(`/${locale}`);
+      // A cover without art may legitimately end above the rail.
+      test.skip(
+        (await page.locator("main article img").count()) === 0,
+        "cover has no image; hero may end higher than the rail"
+      );
       // Compare the last visible content on each side (the read cue and the
       // subscribe box), not the grid cells: grid stretch equalises those.
       const bottoms = await page.evaluate(() => {

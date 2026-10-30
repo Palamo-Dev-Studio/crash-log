@@ -204,6 +204,8 @@ describe("query string exports", () => {
     expect(q).not.toMatch(/pt::text\(body\)/);
     // recent + one latest per series, every one newest-first.
     expect(q.split("order(publishDate desc)[0]").length - 1).toBe(3);
+    // The recent slice itself is ordered by publish date, newest first.
+    expect(q).toMatch(/"recent": [^\n]*\| order\(publishDate desc\)\[0\.\.\./);
     expect(q).not.toContain("order(publishDate asc)");
   });
 });
@@ -230,6 +232,20 @@ describe("getHomeFeed", () => {
     expect(mockSanityFetch).toHaveBeenCalledWith(
       expect.objectContaining({ query: queries.HOME_FEED_QUERY })
     );
+  });
+
+  it("sorts a doc with no publishDate last and keeps valid dates newest first", async () => {
+    mockSanityFetch.mockResolvedValueOnce({
+      recent: [
+        { _id: "a", _type: "issue", publishDate: "2026-10-20" },
+        { _id: "undated", _type: "column" },
+        { _id: "b", _type: "column", publishDate: "2026-10-27" },
+        { _id: "c", _type: "practical", publishDate: "2026-10-01" },
+      ],
+      latest: [],
+    });
+    const feed = await queries.getHomeFeed();
+    expect(feed.map((d) => d._id)).toEqual(["b", "a", "c", "undated"]);
   });
 
   it("returns [] when sanityFetch throws or returns null", async () => {
