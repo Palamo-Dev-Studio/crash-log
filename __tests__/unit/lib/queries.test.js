@@ -159,6 +159,38 @@ describe("null client fallback", () => {
   });
 });
 
+describe("Off the Rails queries", () => {
+  it("issue projection carries the series type, byline and the case-card story fields", () => {
+    const q = queries.ISSUE_BY_SLUG_QUERY;
+    for (const field of [
+      "_type",
+      "byline",
+      "verdict",
+      "summary",
+      "imageAlt",
+      "imageCredit",
+      "image,",
+      "sources[]",
+    ]) {
+      expect(q).toContain(field);
+    }
+  });
+
+  it("the index query is published issues newest first with code and byline fields", () => {
+    const q = queries.ISSUES_INDEX_QUERY;
+    expect(q).toContain('status == "published"');
+    expect(q).toContain("order(publishDate desc)");
+    for (const field of ["_type", "issueNumber", "byline", "title", "slug"]) {
+      expect(q).toContain(field);
+    }
+  });
+
+  it("getIssuesIndex returns [] on a failed fetch", async () => {
+    mockSanityFetch.mockRejectedValueOnce(new Error("boom"));
+    expect(await queries.getIssuesIndex()).toEqual([]);
+  });
+});
+
 describe("query string exports", () => {
   it("exports all query constants", () => {
     expect(queries.LATEST_ISSUE_QUERY).toContain('_type == "issue"');
