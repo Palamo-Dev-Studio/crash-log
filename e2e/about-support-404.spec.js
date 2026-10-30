@@ -23,6 +23,15 @@ test.describe("branded 404 catch-all", () => {
     });
   }
 
+  test("the ES 404 has a Spanish <title>; EN stays English", async ({
+    page,
+  }) => {
+    await page.goto("/es/nonexistent");
+    await expect(page).toHaveTitle(/Página no encontrada/);
+    await page.goto("/en/nonexistent");
+    await expect(page).toHaveTitle(/Page Not Found/);
+  });
+
   test("a deep unmatched path is also a branded 404", async ({ page }) => {
     const response = await page.goto("/en/no/such/path");
     expect(response.status()).toBe(404);
@@ -70,10 +79,11 @@ test.describe("About page", () => {
     await page.goto("/en/about");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     const names = await page
-      .locator("main h3")
+      .getByTestId("masthead")
+      .locator("h3")
       .evaluateAll((els) => els.map((e) => e.textContent.trim()));
-    expect(names.length).toBeLessThanOrEqual(6);
-    expect(names).toContain("Hector Luis Alamo");
+    // Exact set, order-independent: Sanity's displayOrder decides the order.
+    expect([...names].sort()).toEqual(["Hector Luis Alamo", "Nico von Bot"]);
   });
 });
 

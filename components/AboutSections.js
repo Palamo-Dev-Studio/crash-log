@@ -70,7 +70,7 @@ export function FallbackAbout({ locale, about }) {
       <section className={styles.section}>
         <h2 className={styles.heading}>{copy.whoHeading}</h2>
         <p className={styles.mastheadIntro}>{copy.whoIntro}</p>
-        <div className={styles.masthead}>
+        <div className={styles.masthead} data-testid="masthead">
           {FALLBACK_MASTHEAD.map((person) => {
             const sanityAgent = about?.masthead?.find(
               (a) => a.name === person.name
@@ -145,7 +145,7 @@ function Prose({ blocks }) {
 
 function Masthead({ people, locale }) {
   return (
-    <div className={styles.masthead}>
+    <div className={styles.masthead} data-testid="masthead">
       {people.map((agent) => (
         <AgentCard
           key={agent._id}
@@ -233,7 +233,9 @@ function LegacySanityAbout({ about, locale }) {
   return (
     <main>
       <header className={styles.head}>
-        <h1 className={styles.title}>{ABOUT_TITLE[locale] || ABOUT_TITLE.en}</h1>
+        <h1 className={styles.title}>
+          {ABOUT_TITLE[locale] || ABOUT_TITLE.en}
+        </h1>
       </header>
       {intro && (
         <section className={styles.section}>
@@ -246,7 +248,7 @@ function LegacySanityAbout({ about, locale }) {
       {about.masthead?.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.heading}>{headings.masthead}</h2>
-          <div className={styles.masthead}>
+          <div className={styles.masthead} data-testid="masthead">
             {about.masthead.map((agent) => (
               <AgentCard
                 key={agent._id}

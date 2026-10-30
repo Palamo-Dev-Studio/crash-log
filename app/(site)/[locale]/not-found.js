@@ -2,9 +2,10 @@
 // ABOUTME: Delegates to NotFoundContent, which resolves the locale from params when given, else from the URL.
 
 import NotFoundContent from "@/components/NotFoundContent";
+import { NOT_FOUND_TITLE } from "@/lib/notFoundTitle";
 
 export const metadata = {
-  title: "404 — Page Not Found",
+  title: NOT_FOUND_TITLE.en,
   robots: { index: false, follow: false },
 };
 
