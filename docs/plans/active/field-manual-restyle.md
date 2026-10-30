@@ -68,7 +68,9 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
   Hector carry "Reported with Nico" / "Con reportería de Nico" with the byline on the post page (issue header,
   article header). Archive "newsroom" issues and Nico's Notes carry none. Build in Phases 5–6 via a `getCredit`
   helper next to `getByline`.
-- **Old masthead retired** (Hector, 2026-10-30): Scoop, Root, Gabo, Lupe. About shows two people: Hector and Nico.
+- **Masthead is two people, Hector and Nico** (Hector, 2026-10-30). Verified 2026-10-30: Sanity holds only those two
+  `agent` docs and the About masthead references only them, so no retire step is needed (the earlier plan assumed
+  four retired agents still in Sanity; they weren't).
 - **Support page headline → "Feed the Agents"** (Hector, 2026-10-30); Phase 7.
 - **About page rewrite** (Hector, 2026-10-30): Nico drafts in Nico's voice (three series, who makes it, how it
   works, contact; no weekday labels); Hector edits; it goes into Sanity at ship time with his go.
