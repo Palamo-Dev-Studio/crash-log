@@ -142,6 +142,12 @@ risk)? Backfill script — keep, one final test round (count `<` mutant, `main()
 - **Carried into Phase 7 (Phase 6 PASS minors):** `e2e/article-template.spec.js:173-182` counts the subscribe line
   page-wide (footer has a copy) and accepts zero — scope to `main article`, expect exactly 1;
   `components/ArticleLayout.js:95` `sizes` uses `68ch` (≈544px) for a 673px column — use `680px`.
+- 🔴 **Token leak in the backfill scripts (found by the 7d review, 2026-10-30):** `main().catch((err) =>
+console.error(err))` prints @sanity/client network errors whole, and `err.request` carries the raw
+  `authorization: Bearer <token>` header. Present in the merged byline script too (its review missed it). Fix on
+  `field-manual-p7d` for both scripts (safe formatter + leak test); 7b's retire-agents script warned before
+  shipping. Lesson: any script that holds a token gets a test that drives its top-level error handler with a
+  token-bearing error and asserts the token never prints.
 - **Unmatched URLs serve Next's bare 404** (no masthead/footer). Phase 7: add a `[locale]/[...rest]` catch-all
   that calls `notFound()` so the branded 404 renders.
 - Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
