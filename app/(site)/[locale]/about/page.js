@@ -327,10 +327,7 @@ function FallbackAbout({ locale, about }) {
               </p>
               <p>
                 Preguntas, comentarios, pistas o consultas de trabajo:{" "}
-                <a
-                  href="mailto:info@palamo.ai"
-                  className={styles.emailLink}
-                >
+                <a href="mailto:info@palamo.ai" className={styles.emailLink}>
                   info@palamo.ai
                 </a>
               </p>
@@ -354,10 +351,7 @@ function FallbackAbout({ locale, about }) {
               </p>
               <p>
                 Questions, comments, tips, or work inquiries:{" "}
-                <a
-                  href="mailto:info@palamo.ai"
-                  className={styles.emailLink}
-                >
+                <a href="mailto:info@palamo.ai" className={styles.emailLink}>
                   info@palamo.ai
                 </a>
               </p>
