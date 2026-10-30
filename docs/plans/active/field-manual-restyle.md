@@ -84,6 +84,8 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **Date formatting is duplicated 7×** (FeedCard, ColumnContent, IssueContent, ArchiveCard, ColumnCard,
   BeatStoryCard, issue OG image); only FeedCard and the OG image pin `timeZone: "UTC"`, so the others can show a
   date one day early depending on server timezone. Consolidate into one helper (UTC) when Phases 4–6 touch these.
+- **Unmatched URLs serve Next's bare 404** (no masthead/footer). Phase 7: add a `[locale]/[...rest]` catch-all
+  that calls `notFound()` so the branded 404 renders.
 - Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
 
 ## Phases
