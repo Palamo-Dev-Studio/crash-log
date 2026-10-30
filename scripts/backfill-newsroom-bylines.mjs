@@ -11,8 +11,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export const MAX_ISSUE_NUMBER = 27;
 const NEWSROOM_BYLINE = "newsroom";
 
-// Published only (drafts have a "drafts." id prefix); byline missing or empty.
-export const QUERY = `*[_type == "issue" && !(_id in path("drafts.**")) && issueNumber <= $max && (!defined(byline) || byline == "")] | order(issueNumber asc) { _id, _rev, issueNumber, byline }`;
+// Published only (drafts and release versions have "drafts." / "versions." id
+// prefixes); byline missing or empty.
+export const QUERY = `*[_type == "issue" && !(_id in path("drafts.**")) && !(_id in path("versions.**")) && issueNumber <= $max && (!defined(byline) || byline == "")] | order(issueNumber asc) { _id, _rev, issueNumber, byline }`;
 
 // Drafts that shadow a listed issue: a pending draft would publish without the byline.
 export const DRAFTS_QUERY = `*[_type == "issue" && _id in $draftIds]._id`;
@@ -68,6 +69,38 @@ export function planBackfill(
   };
 }
 
+// Client settings for the run. Reads are public, so a dry run needs no token
+// and uses the CDN; the write path must bypass the CDN and carry the token.
+export function clientOptions({ apply, token, projectId, dataset }) {
+  if (apply && !token) {
+    throw new Error("--apply needs SANITY_API_TOKEN (env or .env.local).");
+  }
+  return {
+    projectId,
+    dataset,
+    apiVersion: "2024-03-01",
+    useCdn: !apply,
+    token: apply ? token : undefined,
+  };
+}
+
+// Draft IDs that would shadow the given published docs.
+export function draftIdsFor(docs) {
+  return docs.map((d) => `drafts.${d._id}`);
+}
+
+// Summary printed after a write run, with a re-run hint when some failed.
+export function applySummary(total, failures) {
+  const patched = total - failures.length;
+  const lines = [`patched ${patched}, failed ${failures.length}`];
+  if (failures.length && patched > 0) {
+    lines.push(
+      `Re-run with --expect=${failures.length} to retry the remaining issue(s).`
+    );
+  }
+  return lines;
+}
+
 // Each patch is locked to the fetched revision: a concurrent edit makes that
 // doc's commit fail instead of being overwritten. Returns the failures.
 export async function applyWrites(client, writes, log = console.log) {
@@ -108,25 +141,23 @@ async function main() {
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 
   // Reads are public, so the dry run needs no token and uses the CDN.
-  let token = null;
-  if (apply) {
-    token = loadToken();
-    if (!token) {
-      console.error("--apply needs SANITY_API_TOKEN (env or .env.local).");
-      process.exit(1);
-    }
+  let options;
+  try {
+    options = clientOptions({
+      apply,
+      token: apply ? loadToken() : null,
+      projectId,
+      dataset,
+    });
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
   }
-  const client = createClient({
-    projectId,
-    dataset,
-    apiVersion: "2024-03-01",
-    useCdn: !apply,
-    token: token || undefined,
-  });
+  const client = createClient(options);
 
   const docs = await client.fetch(QUERY, { max: MAX_ISSUE_NUMBER });
   const draftIds = await client.fetch(DRAFTS_QUERY, {
-    draftIds: docs.map((d) => `drafts.${d._id}`),
+    draftIds: draftIdsFor(docs),
   });
   const { candidates, writes, errors } = planBackfill(docs, draftIds, opts);
 
@@ -144,6 +175,9 @@ async function main() {
     console.log(
       "Dry run. Nothing written. Pass --apply --expect=<n> to write."
     );
+    console.log(
+      "Dry run reads without a token, so it cannot see drafts; --apply checks for them."
+    );
     return;
   }
   if (errors.length) {
@@ -153,6 +187,7 @@ async function main() {
 
   const failures = await applyWrites(client, writes);
   for (const f of failures) console.error(`FAILED ${f.id}: ${f.message}`);
+  for (const line of applySummary(writes.length, failures)) console.log(line);
   if (failures.length) process.exit(1);
 }
 

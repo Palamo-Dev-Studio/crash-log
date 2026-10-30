@@ -8,6 +8,9 @@ import {
   parseArgs,
   planBackfill,
   applyWrites,
+  clientOptions,
+  draftIdsFor,
+  applySummary,
 } from "../../scripts/backfill-newsroom-bylines.mjs";
 
 const doc = (n, extra = {}) => ({
@@ -97,6 +100,12 @@ describe("planBackfill", () => {
     expect(plan.errors.join(" ")).toMatch(/expected 3.*found 2/);
   });
 
+  it("aborts when more issues are found than expected (found > expect)", () => {
+    const plan = planBackfill(docs, [], { apply: true, expect: 1 });
+    expect(plan.writes).toEqual([]);
+    expect(plan.errors.join(" ")).toMatch(/expected 1.*found 2/);
+  });
+
   it("aborts when a draft exists unless --allow-drafts", () => {
     const blocked = planBackfill(docs, ["drafts.issue-3"], APPLY);
     expect(blocked.writes).toEqual([]);
@@ -172,10 +181,59 @@ describe("applyWrites", () => {
   });
 });
 
+describe("clientOptions", () => {
+  const base = { projectId: "p", dataset: "d" };
+
+  it("write path bypasses the CDN and carries the token", () => {
+    const o = clientOptions({ ...base, apply: true, token: "tok" });
+    expect(o.useCdn).toBe(false);
+    expect(o.token).toBe("tok");
+  });
+
+  it("dry run uses the CDN and carries no token, even if one is supplied", () => {
+    const o = clientOptions({ ...base, apply: false, token: "tok" });
+    expect(o.useCdn).toBe(true);
+    expect(o.token).toBeUndefined();
+    expect(clientOptions({ ...base, apply: false, token: null }).token).toBe(
+      undefined
+    );
+  });
+
+  it("throws when apply has no token", () => {
+    expect(() => clientOptions({ ...base, apply: true, token: null })).toThrow(
+      /SANITY_API_TOKEN/
+    );
+  });
+});
+
+describe("draftIdsFor", () => {
+  it("maps published ids to drafts.<id>", () => {
+    expect(draftIdsFor(docs)).toEqual(["drafts.issue-3", "drafts.issue-9"]);
+    expect(draftIdsFor([])).toEqual([]);
+  });
+});
+
+describe("applySummary", () => {
+  it("reports counts and no hint when all succeeded", () => {
+    expect(applySummary(3, [])).toEqual(["patched 3, failed 0"]);
+  });
+  it("hints the remaining count after a partial failure", () => {
+    const lines = applySummary(3, [{ id: "a", message: "x" }]);
+    expect(lines[0]).toBe("patched 2, failed 1");
+    expect(lines[1]).toContain("--expect=1");
+  });
+  it("gives no re-run hint when nothing was patched", () => {
+    expect(applySummary(1, [{ id: "a", message: "x" }])).toEqual([
+      "patched 0, failed 1",
+    ]);
+  });
+});
+
 describe("QUERY", () => {
   it("selects published issues up to the cap with no or empty byline and projects _rev", () => {
     expect(QUERY).toContain('_type == "issue"');
     expect(QUERY).toContain('!(_id in path("drafts.**"))');
+    expect(QUERY).toContain('!(_id in path("versions.**"))');
     expect(QUERY).toContain("issueNumber <= $max");
     expect(QUERY).toContain("!defined(byline)");
     expect(QUERY).toContain('byline == ""');
