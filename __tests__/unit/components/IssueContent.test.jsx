@@ -170,6 +170,50 @@ describe("IssueContent", () => {
       expect(screen.getByText("3 CASES")).toBeInTheDocument();
     });
 
+    describe("reading time", () => {
+      const longBody = (n) => [
+        {
+          _type: "block",
+          children: [
+            {
+              _type: "span",
+              text: Array.from({ length: n }, (_, i) => `w${i}`).join(" "),
+            },
+          ],
+        },
+      ];
+      const minutesFor = (story) => makeIssue({ stories: [story] });
+
+      it("counts a fallback summary once, as part of the body", () => {
+        // 450 body + 3 transmission words = 453 -> 2 min; counting the
+        // 75-word fallback summary again would make it 528 -> 3 min.
+        render(
+          <IssueContent
+            issue={minutesFor(storyWith("a", { body: { en: longBody(450) } }))}
+            locale="en"
+          />
+        );
+        expect(screen.getByText("2 MIN READ")).toBeInTheDocument();
+      });
+
+      it("counts a real summary in addition to the body", () => {
+        // 200 body + 30 summary + 3 transmission = 233 -> 2 min (203 -> 1).
+        const summary = Array.from({ length: 30 }, (_, i) => `s${i}`).join(" ");
+        render(
+          <IssueContent
+            issue={minutesFor(
+              storyWith("a", {
+                body: { en: longBody(200) },
+                summary: { en: summary },
+              })
+            )}
+            locale="en"
+          />
+        );
+        expect(screen.getByText("2 MIN READ")).toBeInTheDocument();
+      });
+    });
+
     it("renders the full-files section only when a story has a body", () => {
       const withBody = makeIssue();
       render(<IssueContent issue={withBody} locale="en" />);
