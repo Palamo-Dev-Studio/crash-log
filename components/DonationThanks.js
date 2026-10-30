@@ -46,7 +46,8 @@ function DonationThanksInner({ locale }) {
   const labels = LABELS[locale] || LABELS.en;
 
   useEffect(() => {
-    // Hydration gate: the toast must render only after the server HTML matched.
+    // Mount gate: the live region renders empty in the server HTML and the
+    // toast fills it after hydration, so screen readers announce the change.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
@@ -80,7 +81,7 @@ function DonationThanksInner({ locale }) {
       prior && prior.isConnected
         ? prior
         : document.getElementById("main-content");
-    target?.focus();
+    target?.focus({ preventScroll: true });
   }
 
   if (!open || !mounted) return null;
