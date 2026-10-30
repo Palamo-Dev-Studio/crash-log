@@ -133,6 +133,107 @@ test.describe("Nico's Notes column page (article template)", () => {
   });
 
   for (const locale of ["en", "es"]) {
+    test(`/${locale} column page ends with exactly one subscribe box after the last paragraph`, async ({
+      page,
+    }) => {
+      const path = await firstColumnPath(page, locale);
+      test.skip(!path, "no published columns in Sanity");
+      await page.goto(path);
+      const line =
+        locale === "es"
+          ? "Expedientes nuevos cada semana. Gratis."
+          : "New files every week. Free.";
+      await expect(page.locator("main article").getByText(line)).toHaveCount(1);
+      await expect(
+        page.locator("main article").getByRole("link", {
+          name: locale === "es" ? "Suscríbete" : "Subscribe",
+        })
+      ).toHaveAttribute("href", /substack\.com/);
+      const lastIsBox = await page.evaluate((text) => {
+        const article = document.querySelector("main article");
+        const box = [...article.querySelectorAll("p")].find(
+          (p) => p.textContent.trim() === text
+        ).parentElement;
+        const paras = [...article.querySelectorAll("p")].filter(
+          (p) => !box.contains(p)
+        );
+        const lastPara = paras[paras.length - 1];
+        return (
+          !!lastPara &&
+          !!(
+            lastPara.compareDocumentPosition(box) &
+            Node.DOCUMENT_POSITION_FOLLOWING
+          )
+        );
+      }, line);
+      expect(lastIsBox).toBe(true);
+    });
+  }
+
+  test("a Practical page shows the subscribe box at most once", async ({
+    page,
+  }) => {
+    await page.goto("/en/practical");
+    const link = page.locator("main a[href^='/en/practical/']").first();
+    test.skip((await link.count()) === 0, "no published practicals");
+    await page.goto(await link.getAttribute("href"));
+    expect(
+      await page.getByText("New files every week. Free.").count()
+    ).toBeLessThanOrEqual(1);
+  });
+
+  test("column cover sits inside the prose column, with reserved height and no overflow at 320/390", async ({
+    browser,
+  }) => {
+    for (const width of [1440, 390, 320]) {
+      const page = await browser.newPage({
+        viewport: { width, height: 900 },
+      });
+      const path = await firstColumnPath(page, "en");
+      test.skip(!path, "no published columns in Sanity");
+      await page.goto(path);
+      const img = page.locator("main article figure img");
+      // The page's own JSON-LD says whether the column has a cover, so a missing
+      // figure on a column that has one fails instead of skipping.
+      const hasCover = await page.evaluate(() =>
+        [...document.querySelectorAll('script[type="application/ld+json"]')]
+          .map((n) => JSON.parse(n.textContent))
+          .some((d) => d["@type"] === "Article" && d.image)
+      );
+      test.skip(!hasCover, "newest column has no cover image");
+      await expect(img).toHaveCount(1);
+      await expect(img).toBeVisible();
+      const art = await page.locator("main article").boundingBox();
+      const fig = await page.locator("main article figure").boundingBox();
+      expect(fig.x).toBeGreaterThanOrEqual(art.x - 1);
+      expect(fig.x + fig.width).toBeLessThanOrEqual(art.x + art.width + 1);
+      expect(fig.width).toBeGreaterThan(Math.min(art.width, 300) - 2);
+      // Reserved 16:9 box, so no layout shift when the image arrives.
+      expect(Math.abs(fig.width / fig.height - 16 / 9)).toBeLessThan(0.05);
+      // Sits after the byline block, before the first body paragraph.
+      const order = await page.evaluate(() => {
+        const a = document.querySelector("main article");
+        const f = a.querySelector("figure");
+        const h = a.querySelector("header");
+        const p = [...a.querySelectorAll("p")].find(
+          (n) => !h.contains(n) && !n.closest("figure")
+        );
+        const F = Node.DOCUMENT_POSITION_FOLLOWING;
+        return (
+          !!(h.compareDocumentPosition(f) & F) &&
+          !!(f.compareDocumentPosition(p) & F)
+        );
+      });
+      expect(order).toBe(true);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - window.innerWidth
+      );
+      expect(overflow).toBeLessThanOrEqual(0);
+      await page.close();
+    }
+  });
+
+  for (const locale of ["en", "es"]) {
     for (const width of [320, 360, 390]) {
       test(`/${locale} column page and indexes do not scroll sideways at ${width}px`, async ({
         browser,
