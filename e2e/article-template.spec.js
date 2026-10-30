@@ -115,7 +115,7 @@ test.describe("Nico's Notes column page (article template)", () => {
     await page.goto(path);
 
     const h2s = await page.locator("main article h2").allTextContents();
-    const aside = page.locator("main aside[aria-label]");
+    const aside = page.getByRole("complementary", { name: "In this file" });
     if (h2s.length < 2) {
       await expect(aside).toHaveCount(0);
       // No TOC: the prose column sits centred, equal gutters either side.
