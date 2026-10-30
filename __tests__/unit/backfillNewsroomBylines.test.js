@@ -1,6 +1,7 @@
 // ABOUTME: Unit tests for scripts/backfill-newsroom-bylines.mjs decision logic and write locking.
 // ABOUTME: Pins dry-run default, --expect/draft/rev guards, never-overwrite and the published-only, #1-27 query.
 
+import { format } from "node:util";
 import { describe, it, expect, vi } from "vitest";
 import {
   QUERY,
@@ -11,6 +12,8 @@ import {
   clientOptions,
   draftIdsFor,
   applySummary,
+  formatError,
+  run,
 } from "../../scripts/backfill-newsroom-bylines.mjs";
 
 const doc = (n, extra = {}) => ({
@@ -238,5 +241,64 @@ describe("QUERY", () => {
     expect(QUERY).toContain("!defined(byline)");
     expect(QUERY).toContain('byline == ""');
     expect(QUERY).toContain("_rev");
+  });
+});
+
+describe("formatError", () => {
+  it("returns the message, not the object", () => {
+    expect(formatError(new Error("connect ECONNREFUSED"))).toBe(
+      "connect ECONNREFUSED"
+    );
+    expect(formatError("plain")).toBe("plain");
+  });
+  it("scrubs bearer tokens and known secrets from the message", () => {
+    const err = new Error("failed: Bearer SECRET123 at https://x/?t=SECRET123");
+    const out = formatError(err, ["SECRET123"]);
+    expect(out).not.toContain("SECRET123");
+    expect(formatError(new Error("Bearer abc.def"))).toBe("Bearer ***");
+  });
+});
+
+describe("run (top-level failure path)", () => {
+  const leakyError = (message) =>
+    Object.assign(new Error(message), {
+      request: { headers: { authorization: "Bearer SECRET123" } },
+    });
+  const capture = async (argv, deps) => {
+    const out = [];
+    const sink = (...a) => out.push(format(...a));
+    const e = vi.spyOn(console, "error").mockImplementation(sink);
+    const l = vi.spyOn(console, "log").mockImplementation(sink);
+    try {
+      const code = await run(argv, deps);
+      return { code, text: out.join("\n") };
+    } finally {
+      e.mockRestore();
+      l.mockRestore();
+    }
+  };
+  const failingClient = (message) => () => ({
+    fetch: vi.fn().mockRejectedValue(leakyError(message)),
+  });
+
+  it("never prints the token a rejected fetch carries on err.request", async () => {
+    const { code, text } = await capture([], {
+      make: failingClient("connect ECONNREFUSED"),
+    });
+    expect(code).toBe(1);
+    expect(text).toContain("connect ECONNREFUSED");
+    expect(text).not.toContain("SECRET123");
+  });
+
+  it("scrubs a token the message itself mentions when one is passed in options", async () => {
+    const { code, text } = await capture(["--apply", "--expect=1"], {
+      readToken: () => "SECRET123",
+      make: failingClient(
+        "GET-request to https://msr24cg4.api.sanity.io/?token=SECRET123 failed"
+      ),
+    });
+    expect(code).toBe(1);
+    expect(text).toContain("GET-request to https://msr24cg4.api.sanity.io");
+    expect(text).not.toContain("SECRET123");
   });
 });
