@@ -57,7 +57,7 @@ describe("social links", () => {
   });
 
   it("leaves no X/Twitter or old Instagram strings in app, components or lib", () => {
-    const banned = /x\.com|twitter\.com|crashlognews/i;
+    const banned = /\bx\.com\b|\btwitter\.com\b|crashlognews/i;
     const hits = ["app", "components", "lib"]
       .flatMap(sourceFiles)
       .filter((f) => banned.test(readFileSync(f, "utf-8")));
