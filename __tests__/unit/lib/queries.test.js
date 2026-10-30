@@ -190,6 +190,22 @@ describe("query string exports", () => {
     expect(queries.HOME_FEED_QUERY).toContain("practicalNumber");
     expect(queries.HOME_FEED_QUERY).toContain("byline");
   });
+
+  it("HOME_FEED_QUERY projects locale-specific reading text and orders each latest by newest", () => {
+    const q = queries.HOME_FEED_QUERY;
+    // Issues read from the transmission, everything else from body, per locale.
+    for (const locale of ["en", "es"]) {
+      expect(q).toContain(
+        `"${locale}": select(_type == "issue" => pt::text(nicosTransmission.${locale}), pt::text(body.${locale}))`
+      );
+      expect(q).toContain(`"${locale}": pt::text(body.${locale})`);
+    }
+    // Story reading never falls back to a bare (object) body.
+    expect(q).not.toMatch(/pt::text\(body\)/);
+    // recent + one latest per series, every one newest-first.
+    expect(q.split("order(publishDate desc)[0]").length - 1).toBe(3);
+    expect(q).not.toContain("order(publishDate asc)");
+  });
 });
 
 describe("getHomeFeed", () => {
