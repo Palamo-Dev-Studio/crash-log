@@ -1,5 +1,5 @@
 /* ABOUTME: Global CSS with design tokens (custom properties) for The Crash Log.
-   ABOUTME: Defines Field Manual tokens, transitional legacy token aliases, and base reset styles. */
+   ABOUTME: Defines the Field Manual tokens and base reset styles. */
 
 :root {
   /* Field Manual tokens (source of truth: docs/reference/field-manual/mockups/styles.css) */
@@ -20,54 +20,6 @@
   --serif-d: var(--font-display), Georgia, serif;
   --serif-b: var(--font-body), Georgia, serif;
   --mono: var(--font-mono), ui-monospace, monospace;
-
-  /* Legacy token names — TRANSITIONAL. Values are remapped onto the Field
-     Manual palette (dark text on cream, AA contrast) so pages not yet
-     restyled stay legible. Removed in Phase 7 once every component uses the
-     Field Manual tokens above. */
-
-  /* Surfaces */
-  --bg: #f4ecdd;
-  --surface: #fbf7ee;
-  --border: #cfc3ae;
-  --border-accent: #b8aa91;
-
-  /* Text */
-  --text-primary: #2a2420;
-  --text-secondary: #463c32;
-  --text-tertiary: #5c5043;
-  --text-muted: #5c5043;
-  --text-faint: #6b5e4f;
-  --text-dek: #5c5043; /* article subtitle / dek — italic, muted; distinct from body */
-
-  /* Severity (all AA as text on cream) */
-  --severity-error: #8f3219;
-  --severity-override: #7d5200;
-  --severity-terminate: #8f3219;
-  --severity-warning: #6c5700;
-  --severity-critical: #7f2020;
-  --severity-breach: #17615d;
-
-  /* Severity Glows */
-  --severity-error-glow: rgba(168, 63, 36, 0.1);
-  --severity-override-glow: rgba(138, 90, 0, 0.1);
-  --severity-terminate-glow: rgba(168, 63, 36, 0.1);
-  --severity-warning-glow: rgba(122, 98, 0, 0.1);
-  --severity-critical-glow: rgba(127, 32, 32, 0.1);
-  --severity-breach-glow: rgba(31, 111, 107, 0.1);
-
-  /* Agent Accents */
-  --agent-nico: #8f3219;
-  --agent-scoop: #17615d;
-  --agent-root: #5c5043;
-  --agent-gabo: #8a5a00;
-  --agent-lupe: #a3306c;
-  --agent-hector: #2b6b2f;
-
-  /* Layout */
-  --max-width: 1044px;
-  --max-width-narrow: 680px;
-  --content-padding: 24px;
 }
 
 /* Reset */
@@ -148,7 +100,7 @@ button {
   height: auto;
   overflow: visible;
   padding: 12px 24px;
-  background: var(--severity-error);
+  background: var(--terra-ink);
   color: #fff;
   font-family: var(--font-mono);
   font-size: 13px;

@@ -147,13 +147,3 @@ describe("every var() reference is declared", () => {
     expect(undeclared).toEqual([]);
   });
 });
-
-describe("legacy token mapping", () => {
-  it("maps the legacy page background onto the cream surface", () => {
-    expect(site["|--bg"]).toBe(site["|--cream"]);
-  });
-
-  it("maps legacy primary text onto ink", () => {
-    expect(site["|--text-primary"]).toBe(site["|--ink"]);
-  });
-});

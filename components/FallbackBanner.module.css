@@ -5,9 +5,9 @@
   font-family: var(--font-mono);
   font-size: 13px;
   letter-spacing: 1px;
-  color: var(--severity-warning);
-  background: var(--severity-warning-glow);
-  border: 1px solid rgba(255, 214, 10, 0.2);
+  color: var(--terra-ink);
+  background: color-mix(in srgb, var(--terra) 10%, transparent);
+  border: 1px solid var(--rule);
   border-radius: 4px;
   padding: 14px 20px;
   margin-bottom: 32px;
