@@ -15,6 +15,7 @@ const IMAGE_HEIGHT = 506;
 
 export default function CaseCard({ story, index, locale, fileId }) {
   const labels = OTR_LABELS[locale] || OTR_LABELS.en;
+  const headlineId = `case-headline-${caseNumber(index)}`;
   const number = `${labels.caseWord} ${caseNumber(index)}`;
   const summary = getCaseSummary(story, locale);
   const source = getSourceInfo(story);
@@ -38,7 +39,9 @@ export default function CaseCard({ story, index, locale, fileId }) {
         )}
         <VerdictStamp text={getVerdict(story, locale)} index={index} />
       </div>
-      <h2 className={styles.headline}>{t(story.headline, locale)}</h2>
+      <h2 id={headlineId} className={styles.headline}>
+        {t(story.headline, locale)}
+      </h2>
       {imageUrl && (
         <figure className={styles.figure}>
           <Image
@@ -59,7 +62,9 @@ export default function CaseCard({ story, index, locale, fileId }) {
       {summary && <p className={styles.summary}>{summary}</p>}
       {source && (
         <div className={styles.source}>
-          <span className={styles.seg}>{labels.source}</span>
+          <span className={`${styles.seg} ${styles.label}`}>
+            {labels.source}
+          </span>
           <span className={styles.seg}>
             <b>{source.outlet}</b>
             {source.extra > 0 && ` +${source.extra}`}
@@ -72,8 +77,9 @@ export default function CaseCard({ story, index, locale, fileId }) {
           target="_blank"
           rel="noopener noreferrer"
           className={styles.read}
+          aria-describedby={headlineId}
         >
-          {labels.readFile} →
+          {labels.readFile} <span aria-hidden="true">→</span>
         </a>
       )}
     </article>

@@ -144,6 +144,27 @@ describe("CaseCard", () => {
     expect(link.getAttribute("rel")).toContain("noopener");
   });
 
+  it("describes each read link by its card's headline, with the arrow hidden from the name", () => {
+    render(
+      <>
+        <CaseCard story={STORY} index={0} locale="en" />
+        <CaseCard
+          story={{ ...STORY, headline: { en: "Second headline" } }}
+          index={1}
+          locale="en"
+        />
+      </>
+    );
+    const links = screen.getAllByRole("link", { name: "Read the file" });
+    expect(links).toHaveLength(2);
+    expect(links[0]).toHaveAccessibleDescription("Memory gets pricey");
+    expect(links[1]).toHaveAccessibleDescription("Second headline");
+    const ids = screen
+      .getAllByRole("heading", { level: 2 })
+      .map((h) => h.getAttribute("id"));
+    expect(new Set(ids).size).toBe(2);
+  });
+
   it("uses the Spanish read label", () => {
     render(<CaseCard story={STORY} index={0} locale="es" />);
     expect(
