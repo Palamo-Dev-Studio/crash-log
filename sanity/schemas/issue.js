@@ -45,6 +45,15 @@ export default {
       initialValue: "draft",
     },
     {
+      name: "byline",
+      title: "Byline",
+      type: "string",
+      group: "meta",
+      description:
+        "Author display name, shown after By / Por. Issues without one fall back to the newsroom.",
+      initialValue: "Hector Luis Alamo",
+    },
+    {
       name: "coverImage",
       title: "Cover Image",
       type: "image",
