@@ -8,21 +8,31 @@ test.describe("Nico's Notes", () => {
     const response = await page.goto("/en/nico");
     expect(response).not.toBeNull();
     expect(response.status()).toBe(200);
-    await expect(page.locator("h1")).toContainText("NICO\u2019S NOTES");
+    await expect(page.locator("h1")).toHaveText("Nico\u2019s Notes");
   });
 
   test("archive page loads with correct heading (ES)", async ({ page }) => {
     const response = await page.goto("/es/nico");
     expect(response).not.toBeNull();
     expect(response.status()).toBe(200);
-    await expect(page.locator("h1")).toContainText("NOTAS DE NICO");
+    await expect(page.locator("h1")).toHaveText("Notas de Nico");
   });
 
-  test("archive page shows empty state when no columns exist", async ({
+  // The old test assumed an empty dataset; production Sanity now has columns, so
+  // assert whichever state the data is in. The empty state itself is covered by
+  // __tests__/unit/components/SeriesIndex.test.jsx.
+  test("archive lists columns as NOTE file rows, or shows the empty state", async ({
     page,
   }) => {
     await page.goto("/en/nico");
-    await expect(page.locator("text=No columns published yet.")).toBeVisible();
+    const rows = page.locator("main a[href^='/en/nico/']");
+    if ((await rows.count()) === 0) {
+      await expect(page.getByText("No columns published yet.")).toBeVisible();
+      return;
+    }
+    await expect(rows.first()).toContainText(/NOTE-\d{3}/);
+    await expect(rows.first()).toContainText("By Nico von Bot");
+    await expect(page.getByText("No columns published yet.")).toHaveCount(0);
   });
 
   test("nav link navigates to /en/nico", async ({ page }) => {
@@ -42,7 +52,7 @@ test.describe("Nico's Notes", () => {
       .click();
     await page.waitForURL("**/es/nico");
     expect(page.url()).toContain("/es/nico");
-    await expect(page.locator("h1")).toContainText("NOTAS DE NICO");
+    await expect(page.locator("h1")).toHaveText("Notas de Nico");
   });
 
   test("page has header, nav, main, footer structure", async ({ page }) => {
