@@ -15,6 +15,8 @@ describe("slugifyHeading", () => {
   it("lowercases, hyphenates and strips accents", () => {
     expect(slugifyHeading("What you need")).toBe("what-you-need");
     expect(slugifyHeading("¿Qué necesitas?")).toBe("que-necesitas");
+    expect(slugifyHeading("Configuración")).toBe("configuracion");
+    expect(slugifyHeading("Público objetivo")).toBe("publico-objetivo");
   });
 
   it("falls back for text with no letters or digits", () => {
@@ -24,6 +26,12 @@ describe("slugifyHeading", () => {
 });
 
 describe("prepareArticleBody", () => {
+  it("never hands out an id the page layout already uses", () => {
+    const body = [h("h2", "Main content"), h("h2", "Main content")];
+    const { toc } = prepareArticleBody(body, "en");
+    expect(toc.map((t) => t.id)).toEqual(["main-content-2", "main-content-3"]);
+  });
+
   it("lists every H2 in order, text and id, ignoring H3 and normal blocks", () => {
     const body = [
       h("normal", "intro"),
