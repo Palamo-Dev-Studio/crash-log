@@ -41,6 +41,8 @@ describe("VerdictStamp", () => {
     expect(css).toContain(`url(#${STAMP_FILTER_ID})`);
     expect(css).toContain("5px double var(--terra)");
     expect(css).toContain("letter-spacing: 0.09em");
-    expect(css).toMatch(/white-space:\s*nowrap/);
+    // Wraps at spaces only; the e2e suite checks the rendered behaviour.
+    expect(css).not.toMatch(/white-space:\s*nowrap/);
+    expect(css).toMatch(/word-break:\s*keep-all/);
   });
 });
