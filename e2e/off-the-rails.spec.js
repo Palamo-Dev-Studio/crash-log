@@ -24,7 +24,7 @@ test.describe("Off the Rails issue page", () => {
     });
   }
 
-  test("grid is two columns at 1440 and one column at 390", async ({
+  test("grid is two columns at 1440 and one column at 800 and 390", async ({
     browser,
   }) => {
     const positions = async (width) => {
@@ -41,45 +41,123 @@ test.describe("Off the Rails issue page", () => {
     expect(Math.abs(wide.a.y - wide.b.y)).toBeLessThan(2);
     expect(wide.b.x).toBeGreaterThan(wide.a.x + wide.a.width - 1);
     expect(Math.abs(wide.a.height - wide.b.height)).toBeLessThan(2);
-    const narrow = await positions(390);
-    expect(narrow.b.y).toBeGreaterThan(narrow.a.y + narrow.a.height - 1);
-    expect(Math.abs(narrow.a.x - narrow.b.x)).toBeLessThan(2);
+    for (const width of [800, 390]) {
+      const narrow = await positions(width);
+      expect(narrow.b.y, `${width}px`).toBeGreaterThan(
+        narrow.a.y + narrow.a.height - 1
+      );
+      expect(Math.abs(narrow.a.x - narrow.b.x), `${width}px`).toBeLessThan(2);
+    }
   });
+
+  // Counts the line fragments of every space-separated word in every stamp.
+  // A word broken mid-word spans two line boxes, so it yields two client rects.
+  const brokenStampWords = (page) =>
+    page.$$eval("span[style*='--rot']", (els) => {
+      const broken = [];
+      for (const el of els) {
+        const node = el.firstChild;
+        if (!node || node.nodeType !== Node.TEXT_NODE) continue;
+        const text = node.textContent;
+        for (const m of text.matchAll(/\S+/g)) {
+          const range = document.createRange();
+          range.setStart(node, m.index);
+          range.setEnd(node, m.index + m[0].length);
+          if (range.getClientRects().length > 1) broken.push(m[0]);
+        }
+      }
+      return broken;
+    });
+  const horizontalOverflow = (page) =>
+    page.evaluate(
+      () =>
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth
+    );
 
   for (const locale of ["en", "es"]) {
     for (const width of [360, 390]) {
-      test(`/${locale} at ${width}px: no horizontal overflow, stamps do not break mid-word`, async ({
+      test(`/${locale} at ${width}px: no horizontal overflow and no stamp word broken mid-word, even with a long verdict`, async ({
         browser,
       }) => {
         const page = await browser.newPage({
           viewport: { width, height: 800 },
         });
         await page.goto(ISSUE_PATH(locale));
-        const overflow = await page.evaluate(
-          () =>
-            document.documentElement.scrollWidth -
-            document.documentElement.clientWidth
-        );
-        expect(overflow).toBeLessThanOrEqual(0);
-        // A stamp that wraps is taller than one line (line-height 1.2 * 14px + chrome).
-        const wrapped = await page.$$eval("span[style*='--rot']", (els) =>
-          els.map((el) => ({
-            text: el.textContent,
-            wraps:
-              el.offsetHeight >
-              parseFloat(getComputedStyle(el).lineHeight) * 1.5 + 20,
-            nowrap: getComputedStyle(el).whiteSpace === "nowrap",
-          }))
-        );
-        expect(wrapped.length).toBeGreaterThan(0);
-        for (const s of wrapped) {
-          expect(s.nowrap, s.text).toBe(true);
-          expect(s.wraps, s.text).toBe(false);
-        }
+        expect(
+          await page.locator("span[style*='--rot']").count()
+        ).toBeGreaterThan(0);
+        expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+        expect(await brokenStampWords(page)).toEqual([]);
+
+        // Inject a 33+ character verdict into the first card's stamp.
+        await page.evaluate(() => {
+          const stamp = document.querySelector("article span[style*='--rot']");
+          stamp.firstChild.textContent =
+            "BILLED TO YOUR GRANDMOTHER TWICE OVER";
+        });
+        expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+        expect(await brokenStampWords(page)).toEqual([]);
+        await page.close();
+      });
+
+      test(`/${locale} at ${width}px: no kicker separator dot starts a line`, async ({
+        browser,
+      }) => {
+        const page = await browser.newPage({
+          viewport: { width, height: 800 },
+        });
+        await page.goto(ISSUE_PATH(locale));
+        const result = await page.evaluate(() => {
+          const kicker = document
+            .querySelector("h1")
+            .closest("section").firstElementChild;
+          const walker = document.createTreeWalker(
+            kicker,
+            NodeFilter.SHOW_TEXT
+          );
+          const glyphs = [];
+          for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+            for (let i = 0; i < n.textContent.length; i++) {
+              const ch = n.textContent[i];
+              if (!ch.trim()) continue;
+              const r = document.createRange();
+              r.setStart(n, i);
+              r.setEnd(n, i + 1);
+              const rect = r.getBoundingClientRect();
+              glyphs.push({ ch, top: rect.top, left: rect.left });
+            }
+          }
+          const stranded = glyphs.filter(
+            (g) =>
+              g.ch === "·" &&
+              !glyphs.some(
+                (o) => o !== g && Math.abs(o.top - g.top) < 4 && o.left < g.left
+              )
+          );
+          const dots = [...kicker.children[1].children].slice(1);
+          return {
+            stranded: stranded.length,
+            pseudoDisplays: dots.map(
+              (el) => getComputedStyle(el, "::before").display
+            ),
+          };
+        });
+        expect(result.stranded).toBe(0);
+        // The separator pseudo-elements between kicker segments are hidden.
+        for (const d of result.pseudoDisplays) expect(d).toBe("none");
         await page.close();
       });
     }
   }
+
+  test("the source label renders uppercase", async ({ page }) => {
+    await page.goto(ISSUE_PATH("en"));
+    const label = page.getByText("Source", { exact: true }).first();
+    expect(
+      await label.evaluate((el) => getComputedStyle(el).textTransform)
+    ).toBe("uppercase");
+  });
 
   test("'Read the file' opens an external URL carrying ref=crashlog.ai", async ({
     page,
