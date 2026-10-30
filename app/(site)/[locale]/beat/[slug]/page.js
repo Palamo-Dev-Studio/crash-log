@@ -59,7 +59,9 @@ export default async function BeatPage({ params }) {
   const { locale, slug } = await params;
   const data = await getCachedCategoryWithStories(slug);
   const category = data?.category;
-  const stories = data?.stories || [];
+  // A story with no published issue has nowhere to link, so it is dropped once, here:
+  // the kicker count and the rows both read this list.
+  const stories = (data?.stories || []).filter((story) => story.issue?.slug);
 
   if (!category) notFound();
 
