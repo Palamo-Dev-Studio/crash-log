@@ -44,6 +44,12 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **Steam handoff must say: set `byline` explicitly.** `issue.byline`'s `initialValue` applies only to
   documents created in Studio; API-created issues get no byline and render "The Crash Log newsroom".
 
+- **Subscribe is a plain link to Substack** (masthead button and rail box), not an inline-expanding form
+  (Hector, 2026-10-30, after two review rounds of masthead layout bugs from the inline form).
+- **Dates go through one helper, `lib/formatDate.js`** (UTC, never a weekday), enforced by an ESLint rule
+  banning date formatting elsewhere. RSS feeds keep `toUTCString` (RFC 822 pubDate). Replaces output word-scans.
+- **Masthead Support link** sits in a terracotta outline box (Hector, 2026-10-30).
+
 ## Phase 1 follow-ups (Opus PASS 2026-10-30 on `4aa6c51`, branch `field-manual-phase1`; merge after phase 2 fix)
 
 - `getFileCode`: require a non-negative integer (today -3 → `OTR-0-3`, 1.5 → `OTR-1.5`); test the trailing-`?` branch of `withRef`.
