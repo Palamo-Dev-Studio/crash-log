@@ -153,6 +153,15 @@ describe("fitTitle", () => {
     );
   });
 
+  it("shrinks a 40-char single word to one line instead of hard-breaking it at 104px", () => {
+    const word = "x".repeat(40);
+    const { lines, fontSize } = fitTitle(word, 104);
+    expect(lines).toEqual([word]);
+    expect(fontSize).toBeLessThan(104);
+    // Control: at the starting size the word does not fit one line, so only shrinking keeps it whole.
+    expect(balanceLines(word, 104, TITLE_BOX.width).length).toBeGreaterThan(1);
+  });
+
   it("does not wrap an over-long word word-per-line and leaves a normal title's size alone", () => {
     expect(balanceLines(`a ${"q".repeat(60)} b c d`, 104).length).toBeLessThan(
       5
