@@ -1,7 +1,7 @@
 // ABOUTME: Root layout for the public site. Owns <html> with dynamic lang attribute.
 // ABOUTME: Loads Google Fonts, global CSS, validates locale, wraps pages in shared chrome.
 
-import { Space_Grotesk, Source_Serif_4, IBM_Plex_Mono } from "next/font/google";
+import { Instrument_Serif, Newsreader, DM_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import "@/app/globals.css";
 import { LOCALES, LOCALE_LABELS, LOCALE_OG } from "@/lib/locale";
@@ -10,22 +10,27 @@ import LanguageToggle from "@/components/LanguageToggle";
 import SiteNav from "@/components/SiteNav";
 import SiteBottom from "@/components/SiteBottom";
 
-const spaceGrotesk = Space_Grotesk({
+const instrumentSerif = Instrument_Serif({
   variable: "--font-display",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
-const sourceSerif4 = Source_Serif_4({
+const newsreader = Newsreader({
   variable: "--font-body",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
+  weight: "variable",
+  style: ["normal", "italic"],
+  axes: ["opsz"],
   display: "swap",
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
+const dmMono = DM_Mono({
   variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -128,7 +133,7 @@ export default async function SiteLayout({ children, params }) {
         <WebSiteJsonLd />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${sourceSerif4.variable} ${ibmPlexMono.variable}`}
+        className={`${instrumentSerif.variable} ${newsreader.variable} ${dmMono.variable}`}
       >
         <a href="#main-content" className="skip-to-content">
           {locale === "es" ? "Saltar al contenido" : "Skip to content"}
