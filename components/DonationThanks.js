@@ -1,13 +1,11 @@
 // ABOUTME: Thank-you toast shown when Stripe returns a donor to any page with ?donated=true.
-// ABOUTME: Auto-dismisses after 10s and cleans the param from the URL; gated by NEXT_PUBLIC_DONATIONS_ENABLED.
+// ABOUTME: Stays until closed, then cleans the param from the URL; gated by NEXT_PUBLIC_DONATIONS_ENABLED.
 
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./DonationThanks.module.css";
-
-const AUTO_DISMISS_MS = 10000;
 
 const LABELS = {
   en: {
@@ -80,13 +78,6 @@ function DonationThanksInner({ locale }) {
         : document.getElementById("main-content");
     target?.focus();
   }
-
-  useEffect(() => {
-    if (!open) return;
-    const timer = setTimeout(dismiss, AUTO_DISMISS_MS);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
 
   if (!open || !mounted) return null;
 

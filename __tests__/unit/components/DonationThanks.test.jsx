@@ -1,5 +1,5 @@
 // ABOUTME: Unit tests for the DonationThanks toast shown after a Stripe checkout redirect.
-// ABOUTME: Covers the ?donated=true param, env gating, close button, 10s auto-dismiss, URL cleanup and EN/ES copy.
+// ABOUTME: Covers the ?donated=true param, env gating, close button, persistence until closed, URL cleanup and EN/ES copy.
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { act, render, screen } from "@testing-library/react";
@@ -76,21 +76,20 @@ describe("DonationThanks", () => {
     });
   });
 
-  it("auto-dismisses after 10 seconds and cleans the URL", () => {
+  it("stays until closed: no auto-dismiss, focus and URL untouched", () => {
     vi.useFakeTimers();
+    const prior = document.createElement("button");
+    document.body.appendChild(prior);
+    prior.focus();
     setMockSearchParams("donated=true");
     render(<DonationThanks locale="en" />);
     act(() => {
-      vi.advanceTimersByTime(9999);
+      vi.advanceTimersByTime(60000);
     });
     expect(screen.getByText(EN)).toBeInTheDocument();
-    act(() => {
-      vi.advanceTimersByTime(1);
-    });
-    expect(screen.queryByText(EN)).not.toBeInTheDocument();
-    expect(getMockReplace()).toHaveBeenCalledWith("/en/support", {
-      scroll: false,
-    });
+    expect(prior).toHaveFocus();
+    expect(getMockReplace()).not.toHaveBeenCalled();
+    prior.remove();
   });
 
   describe("live region", () => {
@@ -158,17 +157,6 @@ describe("DonationThanks", () => {
       expect(prior).toHaveFocus();
       expect(main).not.toHaveFocus();
       prior.remove();
-    });
-
-    it("does not steal focus on auto-dismiss", () => {
-      vi.useFakeTimers();
-      const main = addMain();
-      setMockSearchParams("donated=true");
-      render(<DonationThanks locale="en" />);
-      act(() => {
-        vi.advanceTimersByTime(10000);
-      });
-      expect(main).not.toHaveFocus();
     });
   });
 });
