@@ -137,8 +137,8 @@ describe("IssueContent", () => {
       ).toBeInTheDocument();
     });
 
-    // DonateCTA and Footer are now rendered by SiteBottom in the layout,
-    // not inside IssueContent. See components/SiteBottom.js.
+    // The Footer is rendered in the layout, not inside IssueContent.
+    // See components/Footer.js.
   });
 
   describe("null story handling", () => {

@@ -1,76 +1,52 @@
 /* ABOUTME: Styles for the site navigation bar.
-   ABOUTME: Horizontal nav with mono uppercase links and active state highlighting. */
+   ABOUTME: Mono links with a terracotta underline on the active item; one scrolling row on mobile. */
 
 .nav {
   display: flex;
-  gap: 28px;
-  padding: 22px 0 24px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 52px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  flex-wrap: wrap;
+  gap: 6px 30px;
+  padding: 16px 0 0;
+  margin-bottom: 20px;
+  font-family: var(--mono);
+  font-size: var(--label);
 }
 
 .link {
   white-space: nowrap;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: color 0.2s;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  color: var(--ink);
 }
 
-.link:hover {
-  color: var(--text-primary);
+.link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
-.active {
-  color: var(--severity-error);
+.active,
+.active:hover {
+  color: var(--terra-ink);
+  border-bottom-color: var(--terra);
 }
 
-.searchForm {
-  display: flex;
-  margin-left: auto;
-}
-
-.searchInput {
-  width: 160px;
-  background: var(--surface);
-  border: 1px solid var(--surface);
-  border-radius: 4px;
-  padding: 8px 12px;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--text-primary);
-  transition: border-color 0.2s;
-}
-
-.searchInput:focus {
-  outline: none;
-  border-color: var(--severity-error);
-}
-
-.searchInput::placeholder {
-  color: var(--text-faint);
-}
-
-@media (max-width: 600px) {
-  /* .nav is flex with the default nowrap, so flex-basis: 100% on .searchForm alone
-     can't push it to a second row -- it just stays inline and the whole nav scrolls.
-     flex-wrap: wrap is what actually lets the search form drop below the links. */
+@media (max-width: 700px) {
   .nav {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 24px;
+    padding-top: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-right: calc(var(--gutter) * -1);
+    padding-right: var(--gutter);
+    -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, #000 88%, transparent);
   }
 
-  .searchForm {
-    margin-left: 0;
-    flex-basis: 100%;
+  .nav::-webkit-scrollbar {
+    display: none;
   }
 
-  .searchInput {
-    width: 100%;
+  .link {
+    padding: 12px 0;
   }
 }

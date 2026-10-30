@@ -1,32 +1,47 @@
-/* ABOUTME: Styles for the EN/ES language toggle button.
-   ABOUTME: Mono font, active/inactive states with color differentiation. */
+/* ABOUTME: Styles for the segmented EN | ES language toggle.
+   ABOUTME: Ink-outlined pair of links; the active segment is filled ink with cream text. */
 
 .toggle {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  background: none;
-  border: 1px solid var(--border);
-  padding: 6px 12px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: border-color 0.2s;
+  display: inline-flex;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: var(--label);
 }
 
-.toggle:hover {
-  border-color: var(--border-accent);
+.segment {
+  padding: 7px 11px;
+  line-height: 1;
+  color: var(--ink);
 }
 
-.active {
-  color: var(--text-primary);
+.segment + .segment {
+  border-left: 1.5px solid var(--ink);
 }
 
-.inactive {
-  color: var(--text-faint);
+.segment:hover {
+  color: var(--terra-ink);
 }
 
-.separator {
-  color: var(--text-faint);
-  margin: 0 2px;
+.segment:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -4px;
+}
+
+.active,
+.active:hover {
+  background: var(--ink);
+  color: var(--cream);
+  font-weight: 500;
+}
+
+.active:focus-visible {
+  outline-color: var(--cream);
+}
+
+@media (max-width: 700px) {
+  .segment {
+    padding: 12px 14px;
+  }
 }

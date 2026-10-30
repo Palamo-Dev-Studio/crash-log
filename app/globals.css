@@ -161,9 +161,9 @@ button {
 
 /* Wrapper utility */
 .wrapper {
-  max-width: var(--max-width);
+  max-width: calc(var(--wrap) + var(--gutter) * 2);
   margin: 0 auto;
-  padding: 0 var(--content-padding);
+  padding: 0 var(--gutter);
 }
 
 @media (prefers-reduced-motion: reduce) {

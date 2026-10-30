@@ -36,7 +36,10 @@ test.describe("Nico's Notes", () => {
     page,
   }) => {
     await page.goto("/en/nico");
-    await page.click("button:has-text('ES')");
+    await page
+      .locator("header")
+      .getByRole("link", { name: "ES", exact: true })
+      .click();
     await page.waitForURL("**/es/nico");
     expect(page.url()).toContain("/es/nico");
     await expect(page.locator("h1")).toContainText("NOTAS DE NICO");

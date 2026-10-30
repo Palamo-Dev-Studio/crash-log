@@ -1,14 +1,23 @@
-// ABOUTME: Site header with masthead wordmark, tagline, fund button, and subscribe form.
-// ABOUTME: Accepts a children slot for LanguageToggle or other header actions.
+// ABOUTME: Site masthead: roundel, wordmark with blinking cursor, tagline, language toggle, Support and Subscribe.
+// ABOUTME: Accepts a children slot (the LanguageToggle) rendered first in the tools group.
 
 import Link from "next/link";
-import Image from "next/image";
+import Roundel from "./Roundel";
 import SubscribeForm from "./SubscribeForm";
 import styles from "./Header.module.css";
 
+// Placeholder copy (SPEC): tweak the strings here.
 const LABELS = {
-  en: { tagline: "AI & Tech Gone Off the Rails", fund: "Fund" },
-  es: { tagline: "IA y Tecnología Descarriladas", fund: "Apoya" },
+  en: {
+    tagline: "Incident reports on AI · Read closely · What to do next",
+    taglineShort: "Incident reports on AI",
+    support: "Support",
+  },
+  es: {
+    tagline: "Incidentes de IA · Lectura atenta · Qué hacer después",
+    taglineShort: "Incidentes de IA",
+    support: "Apoyar",
+  },
 };
 
 export default function Header({ locale, children }) {
@@ -16,24 +25,28 @@ export default function Header({ locale, children }) {
 
   return (
     <header className={styles.header}>
-      <div className={styles.inner}>
-        <div>
-          <Link href={`/${locale}`} className={styles.wordmark}>
-            <Image
-              src="/logo-circle.webp"
-              alt="The Crash Log"
-              width={54}
-              height={54}
-              className={styles.logo}
-            />
-            <span className={styles.wordmarkText}>The Crash Log</span>
-          </Link>
-          <div className={styles.tagline}>{labels.tagline}</div>
-        </div>
-        <div className={styles.actions}>
+      <div className={styles.top}>
+        <Link href={`/${locale}`} className={styles.brand}>
+          <Roundel size={72} className={styles.markLarge} />
+          {/* Decorative twin of the large mark, shown on mobile in its place. */}
+          <span className={styles.markSmall} aria-hidden="true">
+            <Roundel size={44} />
+          </span>
+          <span>
+            <span className={styles.name}>
+              The Crash Log
+              <span className={styles.cursor} aria-hidden="true" />
+            </span>
+            <span className={styles.tag}>
+              <span className={styles.tagFull}>{labels.tagline}</span>
+              <span className={styles.tagShort}>{labels.taglineShort}</span>
+            </span>
+          </span>
+        </Link>
+        <div className={styles.tools}>
           {children}
-          <Link href={`/${locale}/support`} className={styles.fundButton}>
-            {labels.fund}
+          <Link href={`/${locale}/support`} className={styles.support}>
+            {labels.support}
           </Link>
           <SubscribeForm locale={locale} />
         </div>
