@@ -73,6 +73,10 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **About page rewrite** (Hector, 2026-10-30): Nico drafts in Nico's voice (three series, who makes it, how it
   works, contact; no weekday labels); Hector edits; it goes into Sanity at ship time with his go.
 - **About copy approved** (Hector, 2026-10-30): EN + ES in `docs/plans/active/about-page-copy.md`.
+- 🔴 **Ship order: run the `byline: "newsroom"` backfill BEFORE the restyle deploys.** The new code credits any
+  issue without a byline to Hector ("Reported with Nico"); deployed first, all 26 archive issues would be
+  misattributed live until the write lands. The current production code ignores `byline`, so writing it early is
+  invisible. Same for archive `verdict`s if approved.
 - **Archive backfills are Nico's (Ice), at ship time, attended:** the `byline: "newsroom"` write, and (proposed,
   awaiting Hector) plain-English `verdict` EN/ES for the ~80 archive stories, drafted by Nico as one table for
   Hector's approval and written by a guarded script like the byline one. Needs `SANITY_API_TOKEN` or a
