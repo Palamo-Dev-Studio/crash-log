@@ -25,6 +25,44 @@ describe("date-formatting lint rule", () => {
     "export const f = () => new Intl.DateTimeFormat('en').format(new Date());",
   ];
 
+  // Evasions of the original CallExpression-only rule; each must still error once.
+  const evasions = [
+    "export const f = (d) => d['toLocaleDateString']();",
+    "export const f = (d) => { const g = d.toLocaleDateString; return g.call(d); };",
+    "const { DateTimeFormat } = Intl;\nexport const f = () => DateTimeFormat;",
+    "const { DateTimeFormat } = globalThis.Intl;\nexport const f = () => DateTimeFormat;",
+    "export const f = () => new globalThis.Intl.DateTimeFormat('en');",
+    "export const f = () => Intl['DateTimeFormat'];",
+    "export const f = (d) => d.toLocaleString('en', { weekday: 'long' });",
+    "export const f = (d) => d.toLocaleString('en', { dateStyle: 'full' });",
+    "export const f = (d) => d.toLocaleString('en', { timeStyle: 'short' });",
+  ];
+
+  for (const code of evasions) {
+    it(`errors on evasion: ${code}`, async () => {
+      const errors = await dateErrors(code, COMPONENT);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].message).toBe(
+        "Format dates with lib/formatDate.js (UTC, no weekday)"
+      );
+    });
+  }
+
+  it("still bans evasions in a feed route (except toUTCString)", async () => {
+    for (const code of evasions) {
+      expect((await dateErrors(code, FEED)).length).toBeGreaterThan(0);
+    }
+    expect(
+      await dateErrors("export const f = (d) => d['toUTCString']();", FEED)
+    ).toHaveLength(0);
+    expect(
+      await dateErrors(
+        "export const f = (d) => { const g = d.toUTCString; return g.call(d); };",
+        FEED
+      )
+    ).toHaveLength(0);
+  });
+
   for (const code of banned) {
     it(`errors in a component: ${code}`, async () => {
       const errors = await dateErrors(code, COMPONENT);
@@ -60,7 +98,19 @@ describe("date-formatting lint rule", () => {
     ).toHaveLength(1);
   });
 
-  it("does not ban toLocaleString (numbers and currency)", async () => {
+  it("allows every evasion form in lib/formatDate.js", async () => {
+    for (const code of evasions) {
+      expect(await dateErrors(code, HELPER)).toHaveLength(0);
+    }
+  });
+
+  it("does not ban toLocaleString (reserved for number and currency formatting)", async () => {
+    for (const code of [
+      "export const f = (n) => n.toLocaleString();",
+      "export const f = (n) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });",
+    ]) {
+      expect(await dateErrors(code, COMPONENT)).toHaveLength(0);
+    }
     expect(
       await dateErrors(
         "export const f = (n) => n.toLocaleString('en');",

@@ -6,17 +6,27 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import prettier from "eslint-config-prettier/flat";
 
 // Date formatting goes through lib/formatDate.js (UTC, never a weekday).
-// `toLocaleString` is deliberately NOT banned: the site uses it for numbers and currency.
+// `toLocaleString` is reserved for number and currency formatting, so it is only
+// banned when its options ask for date or time parts.
+// Accepted residual risk: string coercion (`${date}`, `date.toString()`) is not caught.
 const DATE_MESSAGE = "Format dates with lib/formatDate.js (UTC, no weekday)";
-const dateMethodSelector = (names) => ({
-  selector: `CallExpression[callee.property.name=/^(${names.join("|")})$/]`,
-  message: DATE_MESSAGE,
-});
-const intlDateSelector = {
-  selector:
-    "MemberExpression[object.name='Intl'][property.name='DateTimeFormat']",
-  message: DATE_MESSAGE,
-};
+const DATE_METHODS = [
+  "toLocaleDateString",
+  "toLocaleTimeString",
+  "toDateString",
+  "toUTCString",
+];
+// Selectors match member access (not just calls) so `f = d.toLocaleDateString`,
+// `d["toLocaleDateString"]` and destructured/aliased Intl cannot dodge the rule.
+const dateSelectors = (methods) =>
+  [
+    `MemberExpression[property.name=/^(${methods.join("|")})$/]`,
+    `MemberExpression[computed=true][property.value=/^(${[...methods, "DateTimeFormat"].join("|")})$/]`,
+    'MemberExpression[property.name="DateTimeFormat"]',
+    'VariableDeclarator[init.name="Intl"] Property[key.name="DateTimeFormat"]',
+    'VariableDeclarator[init.property.name="Intl"] Property[key.name="DateTimeFormat"]',
+    'CallExpression[callee.property.name="toLocaleString"] ObjectExpression > Property[key.name=/^(weekday|dateStyle|timeStyle)$/]',
+  ].map((selector) => ({ selector, message: DATE_MESSAGE }));
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -35,16 +45,7 @@ const eslintConfig = defineConfig([
   ]),
   {
     rules: {
-      "no-restricted-syntax": [
-        "error",
-        dateMethodSelector([
-          "toLocaleDateString",
-          "toLocaleTimeString",
-          "toDateString",
-          "toUTCString",
-        ]),
-        intlDateSelector,
-      ],
+      "no-restricted-syntax": ["error", ...dateSelectors(DATE_METHODS)],
     },
   },
   {
@@ -58,12 +59,7 @@ const eslintConfig = defineConfig([
     rules: {
       "no-restricted-syntax": [
         "error",
-        dateMethodSelector([
-          "toLocaleDateString",
-          "toLocaleTimeString",
-          "toDateString",
-        ]),
-        intlDateSelector,
+        ...dateSelectors(DATE_METHODS.filter((m) => m !== "toUTCString")),
       ],
     },
   },
