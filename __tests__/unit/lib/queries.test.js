@@ -228,4 +228,3 @@ describe("getHomeFeed", () => {
     expect(await queries.getHomeFeed()).toEqual([]);
   });
 });
-

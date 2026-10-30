@@ -104,3 +104,13 @@ describe("formatDate never carries a weekday", () => {
     }
   }
 });
+
+describe("formatDate dayMonth style", () => {
+  it("shows day and month only, in UTC, with no year or weekday", () => {
+    expect(formatDate("2026-11-02T23:30:00Z", "en", "dayMonth")).toBe("Nov 2");
+    expect(formatDate("2026-11-02T23:30:00Z", "es", "dayMonth")).toMatch(
+      /^2 nov/
+    );
+    expect(formatDate("2026-11-02", "en", "dayMonth")).not.toMatch(/2026/);
+  });
+});

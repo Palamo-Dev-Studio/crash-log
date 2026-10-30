@@ -32,7 +32,8 @@ vi.mock("@/lib/sanity", () => ({
 import ArchiveCard from "@/components/ArchiveCard";
 import ColumnCard from "@/components/ColumnCard";
 import BeatStoryCard from "@/components/BeatStoryCard";
-import FeedCard from "@/components/FeedCard";
+import HomeCover from "@/components/HomeCover";
+import RecentFiles from "@/components/RecentFiles";
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -91,16 +92,31 @@ const RENDERERS = {
       locale={locale}
     />
   ),
-  FeedCard: (date, locale) => (
-    <FeedCard
+  HomeCover: (date, locale) => (
+    <HomeCover
       locale={locale}
-      item={{
+      doc={{
         _type: "issue",
         slug: "s",
-        number: 1,
+        issueNumber: 1,
         title: { en: "T", es: "T" },
         publishDate: date,
       }}
+    />
+  ),
+  RecentFiles: (date, locale) => (
+    <RecentFiles
+      locale={locale}
+      docs={[
+        {
+          _id: "i",
+          _type: "issue",
+          slug: "s",
+          issueNumber: 1,
+          title: { en: "T", es: "T" },
+          publishDate: date,
+        },
+      ]}
     />
   ),
 };

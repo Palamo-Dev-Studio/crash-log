@@ -1,0 +1,40 @@
+/* ABOUTME: Layout for the home page body: two-column grid (hero 2fr, rail 1fr) that stacks at 980px.
+   ABOUTME: align-items: stretch makes the hero and the rail end on the same baseline on desktop. */
+
+.home {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 48px;
+  padding-top: 32px;
+  padding-bottom: 56px;
+  align-items: stretch;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+}
+
+.emptyText {
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .home {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 700px) {
+  .home {
+    padding-top: 22px;
+    padding-bottom: 36px;
+    gap: 30px;
+  }
+}
