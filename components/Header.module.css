@@ -23,7 +23,8 @@
 }
 
 .brand:focus-visible,
-.support:focus-visible {
+.support:focus-visible,
+.subscribe:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 4px;
 }
@@ -93,8 +94,40 @@
   font-size: var(--label);
 }
 
+/* Support: terracotta outline box. Padding is the Subscribe button's minus the
+   1.5px border, so the two boxes are the same height. */
 .support {
-  color: var(--muted);
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  color: var(--terra-ink);
+  border: 1.5px solid var(--terra);
+  border-radius: 2px;
+  padding: 9.5px 16.5px;
+}
+
+.support:hover {
+  background: var(--terra-ink);
+  color: var(--cream);
+}
+
+/* Subscribe: ink button (mockup .btn). A plain link to Substack. */
+.subscribe {
+  display: inline-block;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--cream);
+  background: var(--ink);
+  border-radius: 4px;
+  padding: 11px 18px;
+}
+
+.subscribe:hover {
+  background: var(--terra-ink);
+  color: var(--cream);
 }
 
 @media (max-width: 700px) {
@@ -140,6 +173,12 @@
     width: 100%;
     justify-content: space-between;
     gap: 12px;
+  }
+
+  .subscribe {
+    padding: 13px 18px;
+    min-height: 44px;
+    box-sizing: border-box;
   }
 
   /* Support lives in the footer on mobile (mockup). */

@@ -152,46 +152,54 @@ test.describe("footer fine print at 390px", () => {
   });
 });
 
-test.describe("subscribe form at 390px", () => {
-  test.use({ viewport: { width: 390, height: 800 } });
+test.describe("masthead toggle is never squeezed", () => {
+  for (const width of [360, 390]) {
+    for (const path of ["/en", "/es"]) {
+      test(`EN and ES fully visible at ${width}px on ${path}`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width, height: 800 });
+        await page.goto(path);
+        const toggle = page.locator("header [class*='toggle']");
+        const natural = (await toggle.boundingBox()).width;
+        // Force pressure: a wide sibling must not be able to squeeze the toggle.
+        await page
+          .locator("header a[href*='substack']")
+          .evaluate((el) => (el.style.paddingInline = "200px"));
+        expect((await toggle.boundingBox()).width).toBeCloseTo(natural, 0);
+        const { scrollWidth, clientWidth } = await toggle.evaluate((el) => ({
+          scrollWidth: el.scrollWidth,
+          clientWidth: el.clientWidth,
+        }));
+        expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+        for (const name of ["EN", "ES"]) {
+          const box = await toggle
+            .getByRole("link", { name, exact: true })
+            .boundingBox();
+          const t = await toggle.boundingBox();
+          expect(box.x).toBeGreaterThanOrEqual(t.x);
+          expect(box.x + box.width).toBeLessThanOrEqual(t.x + t.width + 0.5);
+          expect(box.width).toBeGreaterThan(20);
+        }
+      });
+    }
+  }
+});
 
-  test("opens without growing the header much, keeps input and Go on one row, focuses the input", async ({
-    page,
-  }) => {
+test.describe("masthead Subscribe", () => {
+  test("is a plain link to Substack", async ({ page }) => {
     await page.goto("/en");
-    const header = page.locator("header");
-    const before = (await header.boundingBox()).height;
-    await header.getByRole("button", { name: "Subscribe" }).click();
-    const input = header.getByLabel("Email");
-    await expect(input).toBeFocused();
-    const go = header.getByRole("button", { name: "Go", exact: true });
-    const [i, g, h] = await Promise.all([
-      input.boundingBox(),
-      go.boundingBox(),
-      header.boundingBox(),
-    ]);
-    expect(Math.abs(i.y - g.y)).toBeLessThan(4);
-    expect(h.height - before).toBeLessThan(20);
-    const width = await page.evaluate(
-      () => document.documentElement.scrollWidth
+    const link = page
+      .locator("header")
+      .getByRole("link", { name: "Subscribe" });
+    await expect(link).toHaveAttribute(
+      "href",
+      "https://aicrashlog.substack.com/subscribe"
     );
-    expect(width).toBeLessThanOrEqual(390);
-    await page.screenshot({
-      path: "test-results/subscribe-390-open.png",
-      clip: { x: 0, y: 0, width: 390, height: 260 },
-    });
-  });
-
-  test("Escape closes the form and returns focus to the trigger", async ({
-    page,
-  }) => {
-    await page.goto("/en");
-    const header = page.locator("header");
-    await header.getByRole("button", { name: "Subscribe" }).click();
-    await page.keyboard.press("Escape");
+    await page.goto("/es");
     await expect(
-      header.getByRole("button", { name: "Subscribe" })
-    ).toBeFocused();
+      page.locator("header").getByRole("link", { name: "Suscríbete" })
+    ).toBeVisible();
   });
 });
 

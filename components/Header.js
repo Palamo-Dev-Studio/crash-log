@@ -1,9 +1,9 @@
-// ABOUTME: Site masthead: roundel, wordmark with blinking cursor, tagline, language toggle, Support and Subscribe.
+// ABOUTME: Site masthead: roundel, wordmark with blinking cursor, tagline, language toggle, Support box and Subscribe link.
 // ABOUTME: Accepts a children slot (the LanguageToggle) rendered first in the tools group.
 
 import Link from "next/link";
 import Roundel from "./Roundel";
-import SubscribeForm from "./SubscribeForm";
+import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
 import styles from "./Header.module.css";
 
 // Placeholder copy (SPEC): tweak the strings here.
@@ -12,11 +12,13 @@ const LABELS = {
     tagline: "Incident reports on AI · Read closely · What to do next",
     taglineShort: "Incident reports on AI",
     support: "Support",
+    subscribe: "Subscribe",
   },
   es: {
     tagline: "Incidentes de IA · Lectura atenta · Qué hacer después",
     taglineShort: "Incidentes de IA",
     support: "Apoyar",
+    subscribe: "Suscríbete",
   },
 };
 
@@ -48,7 +50,9 @@ export default function Header({ locale, children }) {
           <Link href={`/${locale}/support`} className={styles.support}>
             {labels.support}
           </Link>
-          <SubscribeForm locale={locale} />
+          <a href={SUBSTACK_SUBSCRIBE_URL} className={styles.subscribe}>
+            {labels.subscribe}
+          </a>
         </div>
       </div>
     </header>
