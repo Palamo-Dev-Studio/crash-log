@@ -91,10 +91,16 @@ test.describe("Home page", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     for (const locale of ["en", "es"]) {
       await page.goto(`/${locale}`);
-      const bottoms = await page.evaluate(() => [
-        document.querySelector("main article").getBoundingClientRect().bottom,
-        document.querySelector("main aside").getBoundingClientRect().bottom,
-      ]);
+      // Compare the last visible content on each side (the read cue and the
+      // subscribe box), not the grid cells: grid stretch equalises those.
+      const bottoms = await page.evaluate(() => {
+        const cue = document.querySelector("main article a").lastElementChild;
+        const box = document.querySelector("main aside").lastElementChild;
+        return [
+          cue.getBoundingClientRect().bottom,
+          box.getBoundingClientRect().bottom,
+        ];
+      });
       expect(Math.abs(bottoms[0] - bottoms[1])).toBeLessThanOrEqual(2);
     }
   });
