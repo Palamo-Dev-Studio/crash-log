@@ -183,7 +183,14 @@ describe("cards", () => {
   });
 
   it("SiteCard carries the wordmark and the locale tagline", () => {
-    expect(texts(SiteCard({ locale: "en" }))).toContain("Crash Log");
+    // The footer also reads "The Crash Log", so pin the serif wordmark element itself.
+    const wordmark = collect(SiteCard({ locale: "en" })).find(
+      (n) =>
+        typeof n === "object" &&
+        n.props.style?.fontFamily === "Instrument Serif"
+    );
+    expect(wordmark.props.children).toBe("The Crash Log");
+    expect(wordmark.props.style.fontSize).toBeLessThanOrEqual(128);
     expect(texts(SiteCard({ locale: "en" })).join(" ")).toContain(
       "Incident reports on AI"
     );
