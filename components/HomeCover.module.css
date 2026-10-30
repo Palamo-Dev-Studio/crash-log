@@ -1,0 +1,103 @@
+/* ABOUTME: Styles for the home cover hero (ported from mockups/styles.css "home" section).
+   ABOUTME: The illustration's right edge fades into the cream with a mask-image gradient. */
+
+.cover {
+  display: flex;
+  flex-direction: column;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.art {
+  width: 100%;
+  aspect-ratio: 964 / 556;
+  -webkit-mask-image: linear-gradient(to right, #000 78%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 78%, transparent 100%);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.seg {
+  white-space: nowrap;
+}
+
+.seg + .seg::before {
+  content: "·";
+  margin: 0 0.6em 0 0.5em;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 52px;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.dek {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.45;
+  color: #463c32;
+  text-wrap: pretty;
+}
+
+.cue {
+  align-self: flex-start;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  color: var(--terra-ink);
+  border-bottom: 2px solid var(--terra);
+  padding-bottom: 1px;
+}
+
+.link:hover .title {
+  color: var(--terra-ink);
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 6px;
+}
+
+@media (max-width: 700px) {
+  .title {
+    font-size: 40px;
+  }
+
+  .dek {
+    font-size: 19px;
+  }
+
+  .segs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 14px;
+  }
+
+  .seg + .seg::before {
+    display: none;
+  }
+}

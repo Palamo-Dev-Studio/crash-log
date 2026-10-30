@@ -2,6 +2,8 @@
 // ABOUTME: Weekday names come from Intl (not typed); checks rendered cards for 7 days x en/es. Source-level enforcement is the ESLint rule.
 
 import { describe, it, expect, vi } from "vitest";
+import fs from "node:fs";
+import path from "node:path";
 import { render } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
@@ -14,6 +16,8 @@ vi.mock("next/link", () => ({
 vi.mock("next/image", () => ({
   default: ({ src, alt }) => <img src={src} alt={alt} />,
 }));
+vi.mock("next/navigation", () => import("../mocks/next-navigation"));
+vi.mock("@portabletext/react", () => ({ PortableText: () => null }));
 vi.mock("@/lib/sanity", () => ({
   urlFor: () => ({
     width() {
@@ -32,7 +36,12 @@ vi.mock("@/lib/sanity", () => ({
 import ArchiveCard from "@/components/ArchiveCard";
 import ColumnCard from "@/components/ColumnCard";
 import BeatStoryCard from "@/components/BeatStoryCard";
-import FeedCard from "@/components/FeedCard";
+import { formatDate } from "@/lib/formatDate";
+import HomeCover from "@/components/HomeCover";
+import HomeRail from "@/components/HomeRail";
+import IssueContent from "@/components/IssueContent";
+import ColumnContent from "@/components/ColumnContent";
+import RecentFiles from "@/components/RecentFiles";
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -91,21 +100,94 @@ const RENDERERS = {
       locale={locale}
     />
   ),
-  FeedCard: (date, locale) => (
-    <FeedCard
+  HomeCover: (date, locale) => (
+    <HomeCover
       locale={locale}
-      item={{
+      doc={{
         _type: "issue",
         slug: "s",
-        number: 1,
+        issueNumber: 1,
         title: { en: "T", es: "T" },
         publishDate: date,
       }}
     />
   ),
+  HomeRail: (date, locale) => (
+    <HomeRail
+      locale={locale}
+      rail={[
+        {
+          series: "offTheRails",
+          onCover: false,
+          doc: {
+            _id: "i",
+            _type: "issue",
+            slug: "s",
+            issueNumber: 1,
+            title: { en: "T", es: "T" },
+            publishDate: date,
+          },
+        },
+      ]}
+    />
+  ),
+  IssueContent: (date, locale) => (
+    <IssueContent
+      locale={locale}
+      issue={{
+        _id: "i",
+        issueNumber: 1,
+        slug: "s",
+        title: { en: "T", es: "T" },
+        publishDate: date,
+      }}
+    />
+  ),
+  ColumnContent: (date, locale) => (
+    <ColumnContent
+      locale={locale}
+      column={{
+        columnNumber: 1,
+        slug: "s",
+        title: { en: "T", es: "T" },
+        publishDate: date,
+      }}
+    />
+  ),
+  RecentFiles: (date, locale) => (
+    <RecentFiles
+      locale={locale}
+      docs={[
+        {
+          _id: "i",
+          _type: "issue",
+          slug: "s",
+          issueNumber: 1,
+          title: { en: "T", es: "T" },
+          publishDate: date,
+        },
+      ]}
+    />
+  ),
 };
 
+// Components that render the year-less dayMonth style.
+const YEARLESS = new Set(["HomeRail"]);
+
 describe("displayed dates never carry a weekday", () => {
+  it("every component that calls formatDate has a renderer here", () => {
+    const dir = path.resolve(import.meta.dirname, "../../components");
+    const callers = fs
+      .readdirSync(dir)
+      .filter((f) => f.endsWith(".js"))
+      .filter((f) =>
+        fs.readFileSync(path.join(dir, f), "utf8").includes("formatDate(")
+      )
+      .map((f) => f.replace(/\.js$/, ""));
+    expect(callers.length).toBeGreaterThan(0);
+    expect(Object.keys(RENDERERS)).toEqual(expect.arrayContaining(callers));
+  });
+
   it("the generated weekday list is non-trivial", () => {
     expect(weekdayNames().length).toBeGreaterThan(10);
   });
@@ -116,7 +198,13 @@ describe("displayed dates never carry a weekday", () => {
         for (const date of WEEK) {
           const { container, unmount } = render(renderCard(date, locale));
           // A date really rendered (guards against a vacuous pass).
-          expect(container.textContent).toMatch(/2026/);
+          if (YEARLESS.has(name)) {
+            expect(container.textContent).toContain(
+              formatDate(date, locale, "dayMonth")
+            );
+          } else {
+            expect(container.textContent).toMatch(/2026/);
+          }
           expectNoWeekday(container.textContent);
           unmount();
         }

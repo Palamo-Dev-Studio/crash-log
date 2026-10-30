@@ -1,10 +1,11 @@
-// ABOUTME: Home page — unified chronological feed of issues and columns.
-// ABOUTME: Hero card for the newest published item, standard card grid for the next 12.
+// ABOUTME: Home page — cover hero (newest file of any series), "Latest files" rail and recent-files list.
+// ABOUTME: Files come from one feed query; selectHomeFiles decides what goes where.
 
 import { cache } from "react";
 import { getHomeFeed } from "@/lib/queries";
 import { t, LOCALE_OG } from "@/lib/locale";
-import HomeFeed from "@/components/HomeFeed";
+import HomeFiles from "@/components/HomeFiles";
+import { selectHomeFiles } from "@/lib/homeFiles";
 
 const getCachedHomeFeed = cache(getHomeFeed);
 
@@ -79,5 +80,5 @@ export default async function HomePage({ params }) {
   const { locale } = await params;
   const feed = await getCachedHomeFeed();
 
-  return <HomeFeed items={feed} locale={locale} />;
+  return <HomeFiles selection={selectHomeFiles(feed)} locale={locale} />;
 }

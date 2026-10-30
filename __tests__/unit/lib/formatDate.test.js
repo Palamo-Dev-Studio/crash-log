@@ -4,7 +4,7 @@
 import { describe, it, expect } from "vitest";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
-import { formatDate } from "@/lib/formatDate";
+import { formatDate, DATE_STYLES } from "@/lib/formatDate";
 
 describe("formatDate styles", () => {
   const cases = [
@@ -46,7 +46,7 @@ describe("formatDate is UTC regardless of the process timezone", () => {
   for (const tz of ["America/Los_Angeles", "Asia/Tokyo", "UTC"]) {
     it(`TZ=${tz}`, () => {
       const script = `
-        import { formatDate } from "./lib/formatDate.js";
+        import { formatDate, DATE_STYLES } from "./lib/formatDate.js";
         const out = [
           formatDate("2026-10-30T07:00:00Z", "en", "long"),
           formatDate("2026-03-01T02:00:00Z", "en", "short"),
@@ -74,6 +74,12 @@ describe("formatDate is UTC regardless of the process timezone", () => {
 });
 
 describe("formatDate never carries a weekday", () => {
+  it("sweeps every named style", () => {
+    expect(DATE_STYLES).toEqual(
+      expect.arrayContaining(["long", "short", "dayMonth"])
+    );
+  });
+
   const longNames = (locale) => {
     const fmt = new Intl.DateTimeFormat(locale, {
       weekday: "long",
@@ -85,7 +91,7 @@ describe("formatDate never carries a weekday", () => {
   };
 
   for (const locale of ["en", "es"]) {
-    for (const style of ["long", "short"]) {
+    for (const style of DATE_STYLES) {
       it(`${locale} ${style}, 7 consecutive days`, () => {
         const names = longNames(locale);
         expect(names.length).toBe(7);
@@ -95,7 +101,7 @@ describe("formatDate never carries a weekday", () => {
             locale,
             style
           );
-          expect(out).toMatch(/2026/);
+          expect(out).toMatch(style === "dayMonth" ? /\d/ : /2026/);
           for (const name of names) {
             expect(out.toLowerCase()).not.toContain(name.toLowerCase());
           }
@@ -103,4 +109,14 @@ describe("formatDate never carries a weekday", () => {
       });
     }
   }
+});
+
+describe("formatDate dayMonth style", () => {
+  it("shows day and month only, in UTC, with no year or weekday", () => {
+    expect(formatDate("2026-11-02T23:30:00Z", "en", "dayMonth")).toBe("Nov 2");
+    expect(formatDate("2026-11-02T23:30:00Z", "es", "dayMonth")).toMatch(
+      /^2 nov/
+    );
+    expect(formatDate("2026-11-02", "en", "dayMonth")).not.toMatch(/2026/);
+  });
 });
