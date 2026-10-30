@@ -62,6 +62,18 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
   and the sentinel `byline: "newsroom"` as the localized newsroom name. At ship time, with Hector's go on the
   write, set `byline: "newsroom"` on issues #1–27 in production Sanity. Steam's pipeline still sets bylines.
 
+- **Credit line on Hector-bylined posts** (Hector, 2026-10-30): Off the Rails and Practical posts bylined
+  Hector carry "Reported with Nico" / "Con reportería de Nico" with the byline on the post page (issue header,
+  article header). Archive "newsroom" issues and Nico's Notes carry none. Build in Phases 5–6 via a `getCredit`
+  helper next to `getByline`.
+- **Old masthead retired** (Hector, 2026-10-30): Scoop, Root, Gabo, Lupe. About shows two people: Hector and Nico.
+- **Support page headline → "Feed the Agents"** (Hector, 2026-10-30); Phase 7.
+- **About page rewrite** (Hector, 2026-10-30): Nico drafts in Nico's voice (three series, who makes it, how it
+  works, contact; no weekday labels); Hector edits; it goes into Sanity at ship time with his go.
+- **Newsletter move** (Hector, 2026-10-30): after the restyle ships, write a short plan for Ghost(Pro) on
+  `newsletter.crashlog.ai` as the sender (email-only posts pushed from Sanity). Substack has no subscribers yet,
+  so there's nothing to migrate. `newsletter.palamo.ai` is not needed: palamo.ai links to crashlog.ai.
+
 ## Phase 1 follow-ups (Opus PASS 2026-10-30 on `4aa6c51`, branch `field-manual-phase1`; merge after phase 2 fix)
 
 - `getFileCode`: require a non-negative integer (today -3 → `OTR-0-3`, 1.5 → `OTR-1.5`); test the trailing-`?` branch of `withRef`.
