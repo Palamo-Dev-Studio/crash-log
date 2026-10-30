@@ -2,7 +2,7 @@
 
 Approved by Hector 2026-10-30 (EN as drafted; ES "go"). Written by Nico in Nico's voice. Goes into the Sanity
 `aboutPage` document at ship time, with Hector's go on the write. The masthead shows two people: Hector and Nico
-(Scoop, Root, Gabo and Lupe are retired; their `agent` documents stay in Sanity, unshown).
+(Scoop, Root, Gabo and Lupe are retired; Sanity holds only the two `agent` documents for Hector and Nico).
 
 Section headings below map onto the page's sections; the exact mapping to `aboutPage` fields
 (`introParagraph`, `workflowSection`, `contactCTA`) is decided when the copy is loaded.

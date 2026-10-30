@@ -8,6 +8,10 @@ import { setMockPathname, resetMocks } from "../../mocks/next-navigation";
 
 vi.mock("next/navigation", () => import("../../mocks/next-navigation"));
 
+vi.mock("@/lib/supportCopy", () => ({
+  PUBLISH_CADENCE: { en: "SENTINEL-EN-CADENCE", es: "SENTINEL-ES-CADENCE" },
+}));
+
 import SupportContent from "@/components/SupportContent";
 
 describe("SupportContent", () => {
@@ -28,6 +32,17 @@ describe("SupportContent", () => {
         /bots/i
       );
     });
+
+    it.each(["en", "es"])(
+      "mission copy takes its publishing cadence from PUBLISH_CADENCE [%s]",
+      (locale) => {
+        setMockPathname(`/${locale}/support`);
+        const { container } = render(<SupportContent locale={locale} />);
+        expect(container.textContent).toContain(
+          `SENTINEL-${locale.toUpperCase()}-CADENCE`
+        );
+      }
+    );
 
     it("renders the page heading", () => {
       render(<SupportContent locale="en" />);

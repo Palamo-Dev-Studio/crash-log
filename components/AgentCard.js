@@ -33,6 +33,8 @@ export default function AgentCard({
     <div className={styles.card}>
       <div className={styles.avatar}>
         {image ? (
+          // alt repeats the adjacent name on purpose: the photo identifies the
+          // person and tests find the avatar by it; the duplicate read is brief.
           <Image
             src={urlFor(image).width(240).height(240).url()}
             alt={name}
