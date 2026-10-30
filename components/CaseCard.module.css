@@ -67,6 +67,15 @@ a.number:hover {
   text-wrap: pretty;
 }
 
+/* Fallback summaries are a whole body paragraph: clamp by lines, not by sentence. */
+.summaryClamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .source {
   font-family: var(--mono);
   font-size: var(--label);

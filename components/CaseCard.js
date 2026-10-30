@@ -7,7 +7,12 @@ import { t } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
 import { withRef } from "@/lib/series";
 import { caseNumber, OTR_LABELS } from "@/lib/offTheRailsLabels";
-import { getCaseSummary, getSourceInfo, getVerdict } from "@/lib/caseCard";
+import {
+  getCaseSummary,
+  getSourceInfo,
+  getVerdict,
+  hasOwnSummary,
+} from "@/lib/caseCard";
 import styles from "./CaseCard.module.css";
 
 const IMAGE_WIDTH = 900;
@@ -59,7 +64,17 @@ export default function CaseCard({ story, index, locale, fileId }) {
           )}
         </figure>
       )}
-      {summary && <p className={styles.summary}>{summary}</p>}
+      {summary && (
+        <p
+          className={
+            hasOwnSummary(story, locale)
+              ? styles.summary
+              : `${styles.summary} ${styles.summaryClamped}`
+          }
+        >
+          {summary}
+        </p>
+      )}
       {source && (
         <div className={styles.source}>
           <span className={`${styles.seg} ${styles.label}`}>

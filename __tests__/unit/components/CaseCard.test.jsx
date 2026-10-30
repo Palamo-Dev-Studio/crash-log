@@ -100,6 +100,25 @@ describe("CaseCard", () => {
     expect(screen.queryByText(/Body second para/)).not.toBeInTheDocument();
   });
 
+  it("clamps only fallback summaries, never authored ones", () => {
+    const { rerender } = render(
+      <CaseCard story={STORY} index={0} locale="en" />
+    );
+    expect(screen.getByText("Short summary.").className).not.toContain(
+      "summaryClamped"
+    );
+    rerender(
+      <CaseCard
+        story={{ ...STORY, summary: undefined }}
+        index={0}
+        locale="en"
+      />
+    );
+    expect(screen.getByText("Body first para.").className).toContain(
+      "summaryClamped"
+    );
+  });
+
   it("renders the image with alt and credit line when present", () => {
     render(<CaseCard story={STORY} index={0} locale="es" />);
     expect(screen.getByRole("img", { name: "Un chip" })).toBeInTheDocument();

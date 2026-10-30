@@ -50,6 +50,33 @@ test.describe("Off the Rails issue page", () => {
     }
   });
 
+  for (const locale of ["en", "es"]) {
+    for (const width of [1440, 390]) {
+      test(`/${locale} at ${width}px: fallback summaries clamp to 5 lines`, async ({
+        browser,
+      }) => {
+        const page = await browser.newPage({
+          viewport: { width, height: 900 },
+        });
+        await page.goto(`/${locale}/issue/crash-log-011`);
+        const metrics = await page.$$eval("[class*='summaryClamped']", (els) =>
+          els.map((el) => ({
+            height: el.getBoundingClientRect().height,
+            lineHeight: parseFloat(getComputedStyle(el).lineHeight),
+            overflowing: el.scrollHeight > el.clientHeight,
+          }))
+        );
+        expect(metrics.length).toBeGreaterThan(0);
+        for (const m of metrics) {
+          expect(m.height).toBeLessThanOrEqual(5 * m.lineHeight + 2);
+        }
+        // At least one paragraph is long enough that the clamp is doing work.
+        expect(metrics.some((m) => m.overflowing)).toBe(true);
+        await page.close();
+      });
+    }
+  }
+
   // Counts the line fragments of every space-separated word in every stamp.
   // A word broken mid-word spans two line boxes, so it yields two client rects.
   const brokenStampWords = (page) =>
