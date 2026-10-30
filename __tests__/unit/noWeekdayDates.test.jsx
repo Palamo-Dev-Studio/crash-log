@@ -42,6 +42,7 @@ import HomeRail from "@/components/HomeRail";
 import CaseCard from "@/components/CaseCard";
 import IssueContent from "@/components/IssueContent";
 import ColumnContent from "@/components/ColumnContent";
+import ArticleLayout from "@/components/ArticleLayout";
 import RecentFiles from "@/components/RecentFiles";
 import FileRow from "@/components/FileRow";
 
@@ -154,6 +155,14 @@ const RENDERERS = {
         title: { en: "T", es: "T" },
         publishDate: date,
       }}
+    />
+  ),
+  ArticleLayout: (date, locale) => (
+    <ArticleLayout
+      locale={locale}
+      doc={{ _type: "practical", practicalNumber: 1, publishDate: date }}
+      title="T"
+      body={[]}
     />
   ),
   ColumnContent: (date, locale) => (

@@ -32,6 +32,10 @@ const nullFallbackWrappers = [
     name: "getColumnBySlug",
     fn: () => queries.getColumnBySlug("test-slug"),
   },
+  {
+    name: "getPracticalBySlug",
+    fn: () => queries.getPracticalBySlug("test-slug"),
+  },
 ];
 
 // --- Wrappers that return [] on failure ---
@@ -52,6 +56,12 @@ const arrayFallbackWrappers = [
   },
   { name: "getColumnsForFeed", fn: () => queries.getColumnsForFeed() },
   { name: "getAllColumnsSummary", fn: () => queries.getAllColumnsSummary() },
+  { name: "getAllPracticalSlugs", fn: () => queries.getAllPracticalSlugs() },
+  { name: "getPracticalIndex", fn: () => queries.getPracticalIndex() },
+  {
+    name: "getAllPracticalSummary",
+    fn: () => queries.getAllPracticalSummary(),
+  },
 ];
 // getHomeFeed returns a merged list, so it has its own describe below.
 
@@ -108,6 +118,14 @@ describe("parameter passing", () => {
     await queries.getCategoryWithStories("tech-slug");
     expect(mockSanityFetch).toHaveBeenCalledWith(
       expect.objectContaining({ params: { slug: "tech-slug" } })
+    );
+  });
+
+  it("getPracticalBySlug passes slug param via sanityFetch", async () => {
+    mockSanityFetch.mockResolvedValueOnce(null);
+    await queries.getPracticalBySlug("2026-11-04");
+    expect(mockSanityFetch).toHaveBeenCalledWith(
+      expect.objectContaining({ params: { slug: "2026-11-04" } })
     );
   });
 
