@@ -49,11 +49,14 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **Dates go through one helper, `lib/formatDate.js`** (UTC, never a weekday), enforced by an ESLint rule
   banning date formatting elsewhere. RSS feeds keep `toUTCString` (RFC 822 pubDate). Replaces output word-scans.
 - **Masthead Support link** sits in a terracotta outline box (Hector, 2026-10-30).
+- **Donation thank-you has no auto-dismiss:** it stays until closed (Hector, 2026-10-30, after the timer's
+  focus loss became the second review round on the toast's focus handling).
 
 - **Donation prompt on every page** (Hector, 2026-10-30): restyle `DonateCTA` in Field Manual tokens and render
   it site-wide above the footer, still gated by `NEXT_PUBLIC_DONATIONS_ENABLED`.
-- **Footer "Follow" column** (Hector, 2026-10-30): Bluesky `@hectoralamo.bsky.social`, Instagram `@crashlognews`,
-  TikTok (handle pending). "A Palamo publication" → palamo.ai, listed in the Elsewhere column.
+- **Footer "Follow" column** (Hector, 2026-10-30): Bluesky `@hectoralamo.bsky.social`, Instagram
+  `@hectoralamo.ai`, TikTok `@hectorluislamo` (spelling being confirmed). X dropped everywhere, including JSON-LD
+  `sameAs` and twitter `site`; `sameAs` = the Follow-column URLs from one shared constant. "A Palamo publication" → palamo.ai, listed in the Elsewhere column.
 - **Wordmark stays "The Crash Log"** (Hector, 2026-10-30).
 - **Byline flip approved** (Hector, 2026-10-30): `getByline` treats a missing issue byline as "Hector Luis Alamo"
   and the sentinel `byline: "newsroom"` as the localized newsroom name. At ship time, with Hector's go on the
