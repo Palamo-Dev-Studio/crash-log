@@ -69,12 +69,6 @@ export default {
       type: "number",
       description: "Controls masthead ordering (lower = first)",
     },
-    {
-      name: "retired",
-      title: "Retired",
-      type: "boolean",
-      description: "Hide from the About masthead",
-    },
   ],
   preview: {
     select: { name: "name", role: "role.en", type: "agentType" },

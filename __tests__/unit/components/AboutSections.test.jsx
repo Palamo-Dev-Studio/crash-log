@@ -1,5 +1,5 @@
 // ABOUTME: Unit tests for the About page bodies: fallback copy and two-person masthead, Sanity masthead, no weekday headings.
-// ABOUTME: Also pins that the About query and agent schema support the `retired` flag.
+// ABOUTME: Covers the About fallback and Sanity bodies.
 
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
@@ -14,8 +14,6 @@ vi.mock("@/lib/sanity", () => ({
 }));
 
 import { FallbackAbout, SanityAbout } from "@/components/AboutSections";
-import { ABOUT_PAGE_QUERY } from "@/lib/queries";
-import agentSchema from "@/sanity/schemas/agent";
 
 const WEEKDAYS = [
   ...new Set(
@@ -96,18 +94,5 @@ describe("SanityAbout", () => {
   it("omits the masthead section when nobody is listed", () => {
     render(<SanityAbout about={{ masthead: [] }} locale="en" />);
     expect(screen.queryByText("Masthead")).not.toBeInTheDocument();
-  });
-});
-
-describe("retired agents", () => {
-  it("About query filters out retired agents before dereferencing", () => {
-    expect(ABOUT_PAGE_QUERY).toContain("masthead[@->retired != true]->");
-  });
-
-  it("agent schema has an optional boolean `retired` field", () => {
-    const field = agentSchema.fields.find((f) => f.name === "retired");
-    expect(field.type).toBe("boolean");
-    expect(field.description).toBe("Hide from the About masthead");
-    expect(field.validation).toBeUndefined();
   });
 });
