@@ -31,7 +31,7 @@ describe("social links", () => {
       "https://bsky.app/profile/hectoralamo.bsky.social"
     );
     expect(INSTAGRAM_URL).toBe("https://www.instagram.com/hectoralamo.ai");
-    expect(TIKTOK_URL).toBe("https://www.tiktok.com/@hectorluislamo");
+    expect(TIKTOK_URL).toBe("https://www.tiktok.com/@hectorluisalamo");
     expect(SAME_AS).toEqual([BLUESKY_URL, INSTAGRAM_URL, TIKTOK_URL]);
   });
 
