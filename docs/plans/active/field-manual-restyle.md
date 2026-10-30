@@ -126,6 +126,10 @@ risk)? Backfill script — keep, one final test round (count `<` mutant, `main()
 - **Date formatting is duplicated 7×** (FeedCard, ColumnContent, IssueContent, ArchiveCard, ColumnCard,
   BeatStoryCard, issue OG image); only FeedCard and the OG image pin `timeZone: "UTC"`, so the others can show a
   date one day early depending on server timezone. Consolidate into one helper (UTC) when Phases 4–6 touch these.
+- **Sideways scroll on `/es/issue/crash-log-009`** (9px at 390, 79px at 320): a bare Bloomberg URL in Stack Trace
+  text can't wrap. Phase 7: a crawl test that loads EVERY route at 320/360/390 (EN/ES) and asserts no horizontal
+  overflow (SPEC criterion 8), plus `overflow-wrap: anywhere` on long-URL text. Declined NITs from the Phase 5
+  review: e2e stamp markup is synthetic (unit test covers the component); source date not wrapped in `<time>`.
 - **Unmatched URLs serve Next's bare 404** (no masthead/footer). Phase 7: add a `[locale]/[...rest]` catch-all
   that calls `notFound()` so the branded 404 renders.
 - Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
@@ -138,8 +142,8 @@ risk)? Backfill script — keep, one final test round (count `<` mutant, `main()
 | 2   | Tokens, fonts (`next/font`), roundel SVGs, favicon set                                      | PASS `1e65711`                     |
 | 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | PASS `320fb31`; lint + p3b pending |
 | 4   | Home: cover hero, rail, recent files                                                        | merged `86ec32d`                   |
-| 5   | Off the Rails issue page: case cards, verdict stamps                                        | building                           |
-| 6   | Practical article template + Nico's Notes column page                                       | —                                  |
+| 5   | Off the Rails issue page: case cards, verdict stamps                                        | merged                             |
+| 6   | Practical article template + Nico's Notes column page                                       | building                           |
 | 7   | Every other page (archive, beats, about, support, 404, OG images) + legacy token removal    | —                                  |
 | 8   | Whole-branch Fable review → CodeRabbit → PR                                                 | —                                  |
 
