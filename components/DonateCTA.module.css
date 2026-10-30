@@ -1,13 +1,13 @@
 /* ABOUTME: Styles for the donate call-to-action panel (Field Manual card language).
-   ABOUTME: Card surface with a double ink top rule, mono label, serif line, terra-ink Donate button. */
+   ABOUTME: Card surface (its own 1px border only), mono label, serif line, terra-ink Donate button. */
 
 .card {
   background: var(--card);
   border: 1px solid var(--rule);
-  border-top: 3px double var(--ink);
   border-radius: 4px;
   padding: 24px 28px;
-  margin: 40px 0 8px;
+  /* Bottom margin collapses with the footer's 8px top margin, so it sets the gap itself. */
+  margin: 40px 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 20px 40px;
@@ -168,6 +168,7 @@
     grid-template-columns: minmax(0, 1fr);
     padding: 22px 20px;
     margin-top: 32px;
+    margin-bottom: 28px;
   }
 
   .copy {
