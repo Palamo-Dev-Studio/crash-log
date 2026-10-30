@@ -46,10 +46,14 @@ function DonationThanksInner({ locale }) {
   const labels = LABELS[locale] || LABELS.en;
 
   useEffect(() => {
+    // Hydration gate: the toast must render only after the server HTML matched.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
   useEffect(() => {
+    // Re-opens the toast when a later navigation carries ?donated=true.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (donated) setOpen(true);
   }, [donated]);
 
