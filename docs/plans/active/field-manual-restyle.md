@@ -117,8 +117,8 @@ risk)? Backfill script — keep, one final test round (count `<` mutant, `main()
 | 1   | Schema: `story.verdict`, `story.summary`, `story.image` (+credit), author, `practical` type | merged `e2532e3`                   |
 | 2   | Tokens, fonts (`next/font`), roundel SVGs, favicon set                                      | PASS `1e65711`                     |
 | 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | PASS `320fb31`; lint + p3b pending |
-| 4   | Home: cover hero, rail, recent files                                                        | building                           |
-| 5   | Off the Rails issue page: case cards, verdict stamps                                        | —                                  |
+| 4   | Home: cover hero, rail, recent files                                                        | merged `86ec32d`                   |
+| 5   | Off the Rails issue page: case cards, verdict stamps                                        | building                           |
 | 6   | Practical article template + Nico's Notes column page                                       | —                                  |
 | 7   | Every other page (archive, beats, about, support, 404, OG images) + legacy token removal    | —                                  |
 | 8   | Whole-branch Fable review → CodeRabbit → PR                                                 | —                                  |
