@@ -18,6 +18,7 @@ const eslintConfig = defineConfig([
     "playwright-report/**",
     "next-env.d.ts",
     "docs/reference/**",
+    ".claude/**",
   ]),
   {
     files: ["sanity/**/*.js"],
