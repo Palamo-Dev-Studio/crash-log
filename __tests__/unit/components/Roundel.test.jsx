@@ -4,7 +4,17 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import Roundel from "@/components/Roundel";
+import Roundel, { sanitizeId } from "@/components/Roundel";
+
+describe("sanitizeId", () => {
+  it("strips the colons React 18 puts in useId values", () => {
+    expect(sanitizeId(":r0:")).toBe("r0");
+  });
+
+  it("leaves React 19 ids, which contain no colons, unchanged", () => {
+    expect(sanitizeId("_r_0_")).toBe("_r_0_");
+  });
+});
 
 describe("Roundel", () => {
   describe.each([16, 32])("simple variant at %ipx", (size) => {

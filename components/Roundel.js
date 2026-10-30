@@ -7,8 +7,13 @@ import { SYMBOL_PATH, SYMBOL_ORIGIN } from "@/components/roundelSymbol";
 const STAMP_MIN_SIZE = 48;
 const LEGEND = "CRASH LOG · FILED · CRASH LOG · FILED · ";
 
+// useId values can contain ":" (React 18) which is not valid in a url(#id) reference.
+export function sanitizeId(id) {
+  return id.replace(/:/g, "");
+}
+
 export default function Roundel({ size = 32, className }) {
-  const uid = useId().replace(/:/g, "");
+  const uid = sanitizeId(useId());
   const isStamp = size >= STAMP_MIN_SIZE;
 
   if (!isStamp) {
