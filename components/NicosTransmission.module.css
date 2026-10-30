@@ -1,41 +1,35 @@
-/* ABOUTME: Styles for Nico's Transmission editorial intro card.
-   ABOUTME: Card with red left border, label with em-dash prefix, body text, and signature. */
+/* ABOUTME: Styles for Nico's Transmission in Field Manual tokens: card, ink rule, mono label, Newsreader body.
+   ABOUTME: Sits below the case files on archive issues; teal-ink label keeps AA contrast on the card. */
 
 .transmission {
-  background: var(--surface);
-  border: 1px solid var(--border-accent);
-  border-left: 3px solid var(--severity-error);
-  border-radius: 4px;
-  padding: 40px 42px;
-  margin: 0 0 64px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--ink);
+  padding: 28px 32px;
+  margin: 40px 0 0;
+  max-width: 720px;
 }
 
 .label {
-  font-family: var(--font-mono);
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 2.5px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--severity-error);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.label::before {
-  content: "——";
-  color: var(--severity-error);
+  color: var(--teal-ink);
+  margin-bottom: 14px;
 }
 
 .body {
-  font-family: var(--font-body);
-  font-size: 17.5px;
-  font-weight: 400;
-  font-style: normal;
-  color: var(--text-secondary);
-  line-height: 1.82;
-  margin-bottom: 24px;
+  font-family: var(--serif-b);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.body p {
+  margin: 0;
 }
 
 .body p + p {
@@ -43,23 +37,23 @@
 }
 
 .body a {
-  color: var(--text-primary);
+  color: var(--terra-ink);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .body a:hover {
-  color: var(--severity-error);
+  color: var(--ink);
 }
 
 .sig {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 700px) {
   .transmission {
-    padding: 24px 20px;
+    padding: 20px 18px;
   }
 }

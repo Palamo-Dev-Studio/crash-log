@@ -1,0 +1,133 @@
+/* ABOUTME: Case card styles (ported from mockups/styles.css ".case"): card with dashed-rule source line pinned to the bottom.
+   ABOUTME: Under 400px the stamp drops below the case number; the 700px block matches the mockup's mobile padding. */
+
+.case {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.number {
+  font-family: var(--mono);
+  font-size: var(--label);
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 4px;
+}
+
+a.number:hover {
+  color: var(--terra-ink);
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.12;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.figure {
+  margin: 0;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.credit {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.summary {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.source {
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+  border-top: 1px dashed var(--rule);
+  padding-top: 12px;
+  margin-top: auto;
+}
+
+.source b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.seg {
+  white-space: normal;
+}
+
+.seg + .seg::before {
+  content: "·";
+  margin: 0 0.6em 0 0.5em;
+}
+
+.read {
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  color: var(--terra-ink);
+  align-self: flex-start;
+  border-bottom: 2px solid var(--terra);
+  padding: 2px 0 1px;
+}
+
+.read:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.read:focus-visible,
+a.number:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .case {
+    padding: 18px;
+  }
+
+  .headline {
+    font-size: 26px;
+  }
+
+  .read {
+    padding: 12px 0 4px;
+  }
+}
+
+@media (max-width: 400px) {
+  .top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

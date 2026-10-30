@@ -42,6 +42,7 @@ import HomeRail from "@/components/HomeRail";
 import IssueContent from "@/components/IssueContent";
 import ColumnContent from "@/components/ColumnContent";
 import RecentFiles from "@/components/RecentFiles";
+import FileRow from "@/components/FileRow";
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -149,6 +150,19 @@ const RENDERERS = {
       column={{
         columnNumber: 1,
         slug: "s",
+        title: { en: "T", es: "T" },
+        publishDate: date,
+      }}
+    />
+  ),
+  FileRow: (date, locale) => (
+    <FileRow
+      locale={locale}
+      doc={{
+        _id: "i",
+        _type: "issue",
+        slug: "s",
+        issueNumber: 1,
         title: { en: "T", es: "T" },
         publishDate: date,
       }}

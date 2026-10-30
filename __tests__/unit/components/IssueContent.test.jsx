@@ -86,6 +86,16 @@ const makeIssue = (overrides = {}) => ({
   ...overrides,
 });
 
+const storyWith = (id, overrides = {}) => ({
+  _id: id,
+  severity: "ERROR",
+  headline: { en: `Headline ${id}` },
+  body: {
+    en: [{ _type: "block", children: [{ _type: "span", text: `Body ${id}` }] }],
+  },
+  ...overrides,
+});
+
 describe("IssueContent", () => {
   describe("empty state", () => {
     it("renders English empty text when issue is null", () => {
@@ -114,19 +124,102 @@ describe("IssueContent", () => {
       ).toBeInTheDocument();
     });
 
-    it("renders zero-padded issue number", () => {
+    it("renders the zero-padded OTR file code in the kicker", () => {
       render(<IssueContent issue={makeIssue()} locale="en" />);
-      expect(screen.getByText(/Issue #014/)).toBeInTheDocument();
+      expect(screen.getByText(/CASE FILE OTR-014/)).toBeInTheDocument();
     });
 
-    it("renders story headline", () => {
+    it("renders the story headline on its card and in the full file", () => {
       render(<IssueContent issue={makeIssue()} locale="en" />);
-      expect(screen.getByText("Robot Fails")).toBeInTheDocument();
+      expect(screen.getAllByText("Robot Fails")).toHaveLength(2);
     });
 
-    it("renders severity badge for story", () => {
+    it("stamps the severity on a legacy story with no verdict", () => {
       render(<IssueContent issue={makeIssue()} locale="en" />);
-      expect(screen.getByText("ERROR")).toBeInTheDocument();
+      // card stamp + full-file stamp
+      expect(screen.getAllByText("ERROR")).toHaveLength(2);
+    });
+
+    it("credits a Hector-bylined issue and not a newsroom one", () => {
+      const { rerender } = render(
+        <IssueContent issue={makeIssue()} locale="en" />
+      );
+      expect(screen.getByText("Hector Luis Alamo")).toBeInTheDocument();
+      expect(screen.getByText("Reported with Nico")).toBeInTheDocument();
+      rerender(
+        <IssueContent issue={makeIssue({ byline: "newsroom" })} locale="es" />
+      );
+      expect(
+        screen.getByText("la redacción de The Crash Log")
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText(/Con reportería de Nico/)
+      ).not.toBeInTheDocument();
+    });
+
+    it("renders one card per story, with the story count in the kicker", () => {
+      const issue = makeIssue({
+        stories: [
+          storyWith("a", { summary: { en: "Sum A" }, body: undefined }),
+          storyWith("b", { summary: { en: "Sum B" }, body: undefined }),
+          storyWith("c", { summary: { en: "Sum C" }, body: undefined }),
+        ],
+      });
+      render(<IssueContent issue={issue} locale="en" />);
+      expect(screen.getAllByRole("article")).toHaveLength(3);
+      expect(screen.getByText("3 CASES")).toBeInTheDocument();
+    });
+
+    it("renders the full-files section only when a story has a body", () => {
+      const withBody = makeIssue();
+      render(<IssueContent issue={withBody} locale="en" />);
+      expect(screen.getByText("The full files")).toBeInTheDocument();
+      // card summary (first paragraph fallback) + full file body
+      expect(screen.getAllByText("Story body")).toHaveLength(2);
+    });
+
+    it("renders cards only (no full files) when no story has a body", () => {
+      const issue = makeIssue({
+        stories: [
+          storyWith("a", { summary: { en: "Sum A" }, body: undefined }),
+        ],
+      });
+      render(<IssueContent issue={issue} locale="en" />);
+      expect(screen.queryByText("The full files")).not.toBeInTheDocument();
+      expect(screen.getAllByRole("article")).toHaveLength(1);
+      // the case number is not a link when there is no file to jump to
+      expect(
+        screen.queryByRole("link", { name: "Case 01" })
+      ).not.toBeInTheDocument();
+    });
+
+    it("links a card's case number to the full file for stories with a body only", () => {
+      const issue = makeIssue({
+        stories: [
+          storyWith("a", { summary: { en: "Sum A" } }),
+          storyWith("b", { summary: { en: "Sum B" }, body: undefined }),
+        ],
+      });
+      render(<IssueContent issue={issue} locale="en" />);
+      expect(screen.getByRole("link", { name: "Case 01" })).toHaveAttribute(
+        "href",
+        "#case-file-01"
+      );
+      expect(
+        screen.queryByRole("link", { name: "Case 02" })
+      ).not.toBeInTheDocument();
+    });
+
+    it("defines the stamp filter exactly once for the page", () => {
+      const { container } = render(
+        <IssueContent
+          issue={makeIssue({
+            stories: [storyWith("a"), storyWith("b"), storyWith("c")],
+          })}
+          locale="en"
+        />
+      );
+      expect(container.querySelectorAll("filter")).toHaveLength(1);
     });
 
     it("renders stack trace items", () => {
@@ -164,7 +257,8 @@ describe("IssueContent", () => {
         ],
       });
       render(<IssueContent issue={issue} locale="en" />);
-      expect(screen.getByText("Robot Fails")).toBeInTheDocument();
+      expect(screen.getAllByText("Robot Fails")).toHaveLength(2);
+      expect(screen.getAllByRole("article")).toHaveLength(2);
     });
   });
 

@@ -24,7 +24,15 @@ export default async function sitemap() {
     issues?.[0]?.publishDate ||
     new Date().toISOString();
 
-  const staticPages = ["", "/about", "/archive", "/beats", "/nico", "/support"];
+  const staticPages = [
+    "",
+    "/about",
+    "/archive",
+    "/beats",
+    "/nico",
+    "/off-the-rails",
+    "/support",
+  ];
   const staticEntries = staticPages.flatMap((path) =>
     LOCALES.map((locale) => ({
       url: `${BASE_URL}/${locale}${path}`,
