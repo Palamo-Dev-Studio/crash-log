@@ -1,10 +1,11 @@
 // ABOUTME: Unit tests for LanguageToggle client component.
 // ABOUTME: Validates the EN | ES segments, aria-current, and path-preserving hrefs.
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 
 let mockPathname = "/en/archive";
+let mockSearch = "";
 
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
@@ -16,6 +17,7 @@ vi.mock("next/link", () => ({
 
 vi.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
+  useSearchParams: () => new URLSearchParams(mockSearch),
 }));
 
 import LanguageToggle, { pathForLocale } from "@/components/LanguageToggle";
@@ -31,6 +33,10 @@ describe("pathForLocale", () => {
 });
 
 describe("LanguageToggle", () => {
+  beforeEach(() => {
+    mockSearch = "";
+  });
+
   it("renders EN and ES links in a labelled group", () => {
     mockPathname = "/en/archive";
     render(<LanguageToggle locale="en" />);
@@ -74,5 +80,28 @@ describe("LanguageToggle", () => {
     render(<LanguageToggle locale="en" />);
     fireEvent.click(screen.getByText("ES"));
     expect(document.cookie).toContain("CRASH_LOG_LOCALE=es");
+  });
+
+  it("keeps the query string in the other locale's href", () => {
+    mockPathname = "/en/archive";
+    mockSearch = "q=x";
+    render(<LanguageToggle locale="en" />);
+    expect(screen.getByText("ES")).toHaveAttribute("href", "/es/archive?q=x");
+  });
+
+  it("keeps a multi-param query intact", () => {
+    mockPathname = "/es/archive";
+    mockSearch = "q=a%20b&tag=ai";
+    render(<LanguageToggle locale="es" />);
+    expect(screen.getByText("EN")).toHaveAttribute(
+      "href",
+      "/en/archive?q=a+b&tag=ai"
+    );
+  });
+
+  it("adds no ? when there is no query", () => {
+    mockPathname = "/en/archive";
+    render(<LanguageToggle locale="en" />);
+    expect(screen.getByText("ES").getAttribute("href")).not.toContain("?");
   });
 });

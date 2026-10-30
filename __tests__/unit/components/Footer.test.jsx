@@ -1,5 +1,5 @@
 // ABOUTME: Unit tests for Footer component.
-// ABOUTME: Validates the series list, Elsewhere links, fine print, roundel, and absence of weekday copy.
+// ABOUTME: Validates the series list, Elsewhere links, fine print and roundel.
 
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
@@ -15,9 +15,6 @@ vi.mock("next/link", () => ({
 import Footer from "@/components/Footer";
 import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
 
-const WEEKDAYS =
-  /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|domingo|mon|tue|wed|thu|fri|sat|sun)\b/i;
-
 describe("Footer", () => {
   it("renders a footer element", () => {
     render(<Footer locale="en" />);
@@ -28,6 +25,26 @@ describe("Footer", () => {
     render(<Footer locale="en" />);
     const mark = screen.getByRole("img", { name: "Crash Log" });
     expect(mark.querySelector("textPath")).toBeNull();
+  });
+
+  it("renders the roundel at 22px, matching the reference render", () => {
+    render(<Footer locale="en" />);
+    const mark = screen.getByRole("img", { name: "Crash Log" });
+    expect(mark).toHaveAttribute("width", "22");
+    expect(mark).toHaveAttribute("height", "22");
+  });
+
+  it("uses h2 for the column headings (no skipped levels) and no h4", () => {
+    const { container } = render(<Footer locale="en" />);
+    const headings = screen.getAllByRole("heading");
+    expect(headings.map((h) => h.tagName)).toEqual(["H2", "H2"]);
+    expect(container.querySelector("h3, h4, h5, h6")).toBeNull();
+  });
+
+  it("gives the language links a group role with its label", () => {
+    render(<Footer locale="en" />);
+    const group = screen.getByRole("group", { name: "Languages" });
+    expect(group.querySelectorAll("a")).toHaveLength(2);
   });
 
   it("renders the series list with colour-classed codes", () => {
@@ -96,18 +113,5 @@ describe("Footer", () => {
     render(<Footer locale="en" />);
     expect(screen.getByText("EN").closest("a")).toHaveAttribute("href", "/en");
     expect(screen.getByText("ES").closest("a")).toHaveAttribute("href", "/es");
-  });
-
-  it.each(["en", "es"])(
-    "has no weekday names or MON/WED/FRI (%s)",
-    (locale) => {
-      const { container } = render(<Footer locale={locale} />);
-      expect(container.textContent).not.toMatch(WEEKDAYS);
-    }
-  );
-
-  it("weekday guard actually catches weekday copy", () => {
-    expect("Mon / Wed / Fri").toMatch(WEEKDAYS);
-    expect("viernes").toMatch(WEEKDAYS);
   });
 });

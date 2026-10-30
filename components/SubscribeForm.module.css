@@ -100,6 +100,14 @@
 }
 
 @media (max-width: 700px) {
+  /* Input + Go + close stay on one row down to 360px; the input absorbs the slack. */
+  .form {
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    min-width: 0;
+    justify-content: flex-end;
+  }
+
   .trigger {
     padding: 13px 18px;
     min-height: 44px;
@@ -110,8 +118,14 @@
   }
 
   .input {
-    flex: 1 1 140px;
+    flex: 1 1 0;
     width: auto;
+    min-width: 0;
     min-height: 44px;
+  }
+
+  .submit,
+  .close {
+    flex: none;
   }
 }

@@ -26,10 +26,17 @@ describe("Header", () => {
     expect(screen.getByText("The Crash Log")).toBeInTheDocument();
   });
 
-  it("renders the roundel with the accessible name Crash Log, once", () => {
+  it("marks both roundels decorative so the brand link is named once", () => {
     render(<Header locale="en" />);
-    const marks = screen.getAllByRole("img", { name: "Crash Log" });
-    expect(marks).toHaveLength(1);
+    expect(screen.queryAllByRole("img")).toHaveLength(0);
+    expect(screen.getByRole("link", { name: /^The Crash Log/ })).toBeVisible();
+    const link = screen.getByRole("link", { name: /^The Crash Log/ });
+    expect(link).not.toHaveAccessibleName(/Crash Log\s+The Crash Log/);
+    link.querySelectorAll("svg").forEach((svg) => {
+      expect(svg).toHaveAttribute("aria-hidden", "true");
+      expect(svg).not.toHaveAttribute("role");
+      expect(svg).not.toHaveAttribute("aria-label");
+    });
   });
 
   it("renders the stamp roundel at masthead size (ring legend present)", () => {

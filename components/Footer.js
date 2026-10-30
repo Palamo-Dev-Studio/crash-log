@@ -66,7 +66,7 @@ export default function Footer({ locale }) {
       <div className={styles.rule}>
         <div className={styles.grid}>
           <div className={styles.brand}>
-            <Roundel size={40} className={styles.mark} />
+            <Roundel size={22} className={styles.mark} />
             <div>
               <p className={styles.blurb}>{labels.blurb}</p>
               <p className={styles.subscribe}>
@@ -81,7 +81,7 @@ export default function Footer({ locale }) {
             </div>
           </div>
           <div>
-            <h4 className={styles.heading}>{labels.seriesHeading}</h4>
+            <h2 className={styles.heading}>{labels.seriesHeading}</h2>
             <ul className={styles.list}>
               {SERIES_LIST.map(({ key, code }) => (
                 <li key={key}>
@@ -96,7 +96,7 @@ export default function Footer({ locale }) {
             </ul>
           </div>
           <div>
-            <h4 className={styles.heading}>{labels.elsewhereHeading}</h4>
+            <h2 className={styles.heading}>{labels.elsewhereHeading}</h2>
             <ul className={styles.list}>
               <li>
                 <Link href={`/${locale}/archive`}>{labels.archive}</Link>
@@ -121,7 +121,7 @@ export default function Footer({ locale }) {
             <span className={styles.seg}>&copy; {year} The Crash Log</span>
             <span className={styles.seg}>{labels.publication}</span>
           </span>
-          <span aria-label={labels.languages}>
+          <span role="group" aria-label={labels.languages}>
             <Link href="/en" hrefLang="en" lang="en">
               EN
             </Link>

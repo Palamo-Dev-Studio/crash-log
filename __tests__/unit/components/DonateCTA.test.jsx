@@ -280,70 +280,14 @@ describe("DonateCTA", () => {
   });
 
   describe("thank-you toast", () => {
-    it("shows toast when donated=true is in URL", () => {
+    it("does not render the toast itself (DonationThanks owns it)", () => {
       setMockSearchParams("donated=true");
       render(<DonateCTA locale="en" />);
-
-      expect(
-        screen.getByText("Thank you for your donation!")
-      ).toBeInTheDocument();
-    });
-
-    it("shows Spanish thank-you toast for es locale", () => {
-      setMockSearchParams("donated=true");
-      render(<DonateCTA locale="es" />);
-
-      expect(
-        screen.getByText("\u00a1Gracias por tu donaci\u00f3n!")
-      ).toBeInTheDocument();
-    });
-
-    it("still shows form alongside toast", () => {
-      setMockSearchParams("donated=true");
-      render(<DonateCTA locale="en" />);
-
-      expect(
-        screen.getByLabelText("Donation amount in dollars")
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText("Thank you for your donation!")
-      ).toBeInTheDocument();
-    });
-
-    it("dismisses toast when close button is clicked", async () => {
-      setMockSearchParams("donated=true");
-      const user = userEvent.setup();
-      render(<DonateCTA locale="en" />);
-
-      expect(
-        screen.getByText("Thank you for your donation!")
-      ).toBeInTheDocument();
-
-      await user.click(screen.getByLabelText("Close"));
 
       expect(
         screen.queryByText("Thank you for your donation!")
       ).not.toBeInTheDocument();
-    });
-
-    it("auto-dismisses toast after 10 seconds", () => {
-      vi.useFakeTimers();
-      setMockSearchParams("donated=true");
-      render(<DonateCTA locale="en" />);
-
-      expect(
-        screen.getByText("Thank you for your donation!")
-      ).toBeInTheDocument();
-
-      act(() => {
-        vi.advanceTimersByTime(10000);
-      });
-
-      expect(
-        screen.queryByText("Thank you for your donation!")
-      ).not.toBeInTheDocument();
-
-      vi.useRealTimers();
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
   });
 

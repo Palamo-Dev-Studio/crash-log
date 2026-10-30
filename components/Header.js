@@ -27,10 +27,10 @@ export default function Header({ locale, children }) {
     <header className={styles.header}>
       <div className={styles.top}>
         <Link href={`/${locale}`} className={styles.brand}>
-          <Roundel size={72} className={styles.markLarge} />
+          <Roundel size={72} className={styles.markLarge} decorative />
           {/* Decorative twin of the large mark, shown on mobile in its place. */}
           <span className={styles.markSmall} aria-hidden="true">
-            <Roundel size={44} />
+            <Roundel size={44} decorative />
           </span>
           <span>
             <span className={styles.name}>

@@ -12,9 +12,14 @@ export function sanitizeId(id) {
   return id.replace(/:/g, "");
 }
 
-export default function Roundel({ size = 32, className }) {
+// `decorative` drops the role and label and hides the mark, for use inside a
+// link or heading that already carries the name.
+export default function Roundel({ size = 32, className, decorative = false }) {
   const uid = sanitizeId(useId());
   const isStamp = size >= STAMP_MIN_SIZE;
+  const a11y = decorative
+    ? { "aria-hidden": "true" }
+    : { role: "img", "aria-label": "Crash Log" };
 
   if (!isStamp) {
     return (
@@ -23,8 +28,7 @@ export default function Roundel({ size = 32, className }) {
         width={size}
         height={size}
         viewBox="0 0 48 48"
-        role="img"
-        aria-label="Crash Log"
+        {...a11y}
       >
         <circle
           cx="24"
@@ -52,8 +56,7 @@ export default function Roundel({ size = 32, className }) {
       width={size}
       height={size}
       viewBox="0 0 120 120"
-      role="img"
-      aria-label="Crash Log"
+      {...a11y}
     >
       <defs>
         <filter id={filterId} x="-4%" y="-4%" width="108%" height="108%">

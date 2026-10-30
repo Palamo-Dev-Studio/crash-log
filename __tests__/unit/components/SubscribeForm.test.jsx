@@ -190,4 +190,35 @@ describe("SubscribeForm", () => {
     render(<SubscribeForm />);
     expect(screen.getByText("Subscribe")).toBeInTheDocument();
   });
+
+  describe("focus management", () => {
+    it("does not steal focus on first render", () => {
+      render(<SubscribeForm locale="en" />);
+      expect(document.body).toHaveFocus();
+    });
+
+    it("moves focus to the email input on open", async () => {
+      const user = userEvent.setup();
+      render(<SubscribeForm locale="en" />);
+      await user.click(screen.getByText("Subscribe"));
+      expect(screen.getByLabelText("Email")).toHaveFocus();
+    });
+
+    it("returns focus to the trigger when the close button is used", async () => {
+      const user = userEvent.setup();
+      render(<SubscribeForm locale="en" />);
+      await user.click(screen.getByText("Subscribe"));
+      await user.click(screen.getByLabelText("Close subscribe form"));
+      expect(screen.getByRole("button", { name: "Subscribe" })).toHaveFocus();
+    });
+
+    it("closes on Escape and returns focus to the trigger", async () => {
+      const user = userEvent.setup();
+      render(<SubscribeForm locale="en" />);
+      await user.click(screen.getByText("Subscribe"));
+      await user.keyboard("{Escape}");
+      expect(screen.queryByLabelText("Email")).not.toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Subscribe" })).toHaveFocus();
+    });
+  });
 });

@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import LanguageToggle from "@/components/LanguageToggle";
 import SiteNav from "@/components/SiteNav";
 import Footer from "@/components/Footer";
+import DonationThanks from "@/components/DonationThanks";
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-display",
@@ -147,6 +148,7 @@ export default async function SiteLayout({ children, params }) {
           <div id="main-content">{children}</div>
           <Footer locale={locale} />
         </div>
+        <DonationThanks locale={locale} />
       </body>
     </html>
   );

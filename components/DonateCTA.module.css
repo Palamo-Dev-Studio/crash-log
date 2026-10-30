@@ -155,80 +155,8 @@
   margin-top: 12px;
 }
 
-.toastOverlay {
-  position: fixed;
-  top: 120px;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  padding: 0 24px;
-  pointer-events: none;
-}
-
-.toast {
-  background: var(--surface);
-  border: 1px solid var(--border-accent);
-  border-radius: 4px;
-  padding: 48px 64px;
-  text-align: center;
-  pointer-events: auto;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  animation: toast-in 0.3s ease-out;
-  max-width: 600px;
-  width: 100%;
-}
-
-@keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.toastClose {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-
-.toastClose:hover {
-  color: var(--text-primary);
-}
-
-.thanks {
-  font-family: var(--font-mono);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--severity-error);
-  flex: 1;
-}
-
 @media (max-width: 480px) {
   .card {
     padding: 24px 20px;
-  }
-
-  .toastOverlay {
-    top: 80px;
-    padding: 0 16px;
-  }
-
-  .toast {
-    padding: 32px 24px;
   }
 }

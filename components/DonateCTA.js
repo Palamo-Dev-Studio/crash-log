@@ -3,8 +3,8 @@
 
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import styles from "./DonateCTA.module.css";
 
 const LABELS = {
@@ -15,9 +15,7 @@ const LABELS = {
     button: "Feed the Bots",
     sending: "Processing\u2026",
     error: "Something went wrong. Try again.",
-    thanks: "Thank you for your donation!",
     amountLabel: "Donation amount in dollars",
-    closeToast: "Close",
     once: "One-time",
     monthly: "Monthly",
   },
@@ -28,9 +26,7 @@ const LABELS = {
     button: "Alimenta a los Bots",
     sending: "Procesando\u2026",
     error: "Algo sali\u00f3 mal. Int\u00e9ntalo de nuevo.",
-    thanks: "\u00a1Gracias por tu donaci\u00f3n!",
     amountLabel: "Monto de donaci\u00f3n en d\u00f3lares",
-    closeToast: "Cerrar",
     once: "Una vez",
     monthly: "Mensual",
   },
@@ -43,38 +39,19 @@ export default function DonateCTA({ locale = "en" }) {
     return null;
   }
 
-  return (
-    <Suspense fallback={null}>
-      <DonateCTAInner locale={locale} />
-    </Suspense>
-  );
+  return <DonateCTAInner locale={locale} />;
 }
 
+// The ?donated=true thank-you toast lives in DonationThanks (site layout).
 function DonateCTAInner({ locale }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const donated = searchParams.get("donated") === "true";
 
-  const [showToast, setShowToast] = useState(donated);
   const [amount, setAmount] = useState("5");
   const [frequency, setFrequency] = useState("once");
   const [status, setStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   const labels = LABELS[locale] || LABELS.en;
-
-  function dismissToast() {
-    setShowToast(false);
-    router.replace(pathname, { scroll: false });
-  }
-
-  useEffect(() => {
-    if (!showToast) return;
-    const timer = setTimeout(dismissToast, 10000);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showToast]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -125,20 +102,6 @@ function DonateCTAInner({ locale }) {
 
   return (
     <>
-      {showToast && (
-        <div className={styles.toastOverlay} role="status" aria-live="polite">
-          <div className={styles.toast}>
-            <p className={styles.thanks}>{labels.thanks}</p>
-            <button
-              className={styles.toastClose}
-              onClick={dismissToast}
-              aria-label={labels.closeToast}
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-      )}
       <section className={styles.card} aria-label={labels.ariaLabel}>
         <p className={styles.copy}>{labels.copy}</p>
         <p className={styles.disclaimer}>{labels.disclaimer}</p>

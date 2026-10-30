@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
 import styles from "./SubscribeForm.module.css";
 
@@ -32,12 +32,35 @@ export default function SubscribeForm({ locale = "en" }) {
   const [expanded, setExpanded] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
+  const inputRef = useRef(null);
+  const triggerRef = useRef(null);
+  const hasOpened = useRef(false);
 
   const l = LABELS[locale] || LABELS.en;
 
+  // Move focus with the swap: into the input on open, back to the trigger on
+  // close, so keyboard users never drop to <body>.
+  useEffect(() => {
+    if (expanded) {
+      hasOpened.current = true;
+      inputRef.current?.focus();
+    } else if (hasOpened.current) {
+      triggerRef.current?.focus();
+    }
+  }, [expanded]);
+
+  function collapse() {
+    setExpanded(false);
+    setError(false);
+  }
+
   if (!expanded) {
     return (
-      <button className={styles.trigger} onClick={() => setExpanded(true)}>
+      <button
+        ref={triggerRef}
+        className={styles.trigger}
+        onClick={() => setExpanded(true)}
+      >
         {l.subscribe}
       </button>
     );
@@ -62,8 +85,16 @@ export default function SubscribeForm({ locale = "en" }) {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") collapse();
+      }}
+      noValidate
+    >
       <input
+        ref={inputRef}
         type="email"
         className={styles.input}
         placeholder={l.placeholder}
@@ -78,10 +109,7 @@ export default function SubscribeForm({ locale = "en" }) {
       <button
         type="button"
         className={styles.close}
-        onClick={() => {
-          setExpanded(false);
-          setError(false);
-        }}
+        onClick={collapse}
         aria-label={l.close}
       >
         &times;

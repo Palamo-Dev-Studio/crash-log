@@ -126,4 +126,22 @@ describe("Roundel", () => {
     const { container } = render(<Roundel size={72} className="mark-lg" />);
     expect(container.querySelector("svg")).toHaveClass("mark-lg");
   });
+
+  describe("decorative prop", () => {
+    it.each([32, 72])("hides the %ipx mark from assistive tech", (size) => {
+      const { container } = render(<Roundel size={size} decorative />);
+      const svg = container.querySelector("svg");
+      expect(svg).toHaveAttribute("aria-hidden", "true");
+      expect(svg).not.toHaveAttribute("role");
+      expect(svg).not.toHaveAttribute("aria-label");
+      expect(screen.queryByRole("img")).toBeNull();
+    });
+
+    it.each([32, 72])("stays accessible by default at %ipx", (size) => {
+      render(<Roundel size={size} />);
+      expect(
+        screen.getByRole("img", { name: "Crash Log" })
+      ).toBeInTheDocument();
+    });
+  });
 });
