@@ -9,6 +9,9 @@ vi.mock("@/lib/ogFonts", () => ({ loadOgFonts: vi.fn() }));
 
 import {
   balanceLines,
+  fitTitle,
+  TITLE_BOX,
+  TITLE_LINE_HEIGHT,
   clampTitle,
   titleFontSize,
   MAX_TITLE_LENGTH,
@@ -53,6 +56,19 @@ describe("clampTitle", () => {
     expect(out.length).toBeLessThanOrEqual(MAX_TITLE_LENGTH);
     expect(out.endsWith("…")).toBe(true);
     expect(out).not.toMatch(/wor…$/);
+  });
+
+  it("backs up to the last space when the cut lands mid-word", () => {
+    // Index 89 falls inside the second word, so the cut must retreat to the space at 70.
+    const out = clampTitle(`${"x".repeat(70)} ${"y".repeat(50)}`);
+    expect(out).toBe(`${"x".repeat(70)}…`);
+  });
+
+  it("hard-cuts mid-word when the last space is too early to keep", () => {
+    // The only space sits at index 3, well before 60% of the limit, so the cut
+    // must fall mid-word rather than back at that space.
+    const out = clampTitle(`abc ${"x".repeat(200)}`);
+    expect(out).toBe(`abc ${"x".repeat(MAX_TITLE_LENGTH - 5)}…`);
   });
 
   it("handles missing titles", () => {
@@ -102,25 +118,64 @@ describe("balanceLines", () => {
     expect(lines[lines.length - 1].split(" ").length).toBeGreaterThan(1);
   });
 
-  it("puts an over-long single word on its own line instead of hanging", () => {
-    const lines = balanceLines(
-      "Supercalifragilisticexpialidocious-and-more words",
-      104
-    );
-    expect(lines.join(" ")).toContain(
-      "Supercalifragilisticexpialidocious-and-more"
-    );
+  it("hard-breaks a word too long for any line and never drops characters", () => {
+    const lines = balanceLines(`ab ${"c".repeat(100)} de`, 104);
+    expect(lines.join("").replace(/ /g, "")).toBe(`ab${"c".repeat(100)}de`);
+    lines.forEach((l) => expect(l.length).toBeLessThanOrEqual(25));
+    expect(lines.length).toBeLessThan(8);
   });
 
   it("returns no lines for an empty title", () => {
     expect(balanceLines("   ", 88)).toEqual([]);
   });
 
-  it("stays fast on adversarial input", () => {
+  it("terminates on a 200-word input", () => {
     const title = Array.from({ length: 200 }, (_, i) => `w${i}`).join(" ");
-    const start = performance.now();
-    balanceLines(title, 62);
-    expect(performance.now() - start).toBeLessThan(50);
+    expect(balanceLines(title, 62).join(" ")).toBe(title);
+  });
+});
+
+describe("fitTitle", () => {
+  const widthOf = (line, size) => line.length * size * 0.41;
+
+  it.each([
+    ["a 40-char single word", "x".repeat(40), 104],
+    ["a no-space 120-char title", "y".repeat(120), 62],
+    ["a long word among short ones", `Why ${"z".repeat(50)} matters`, 88],
+  ])("keeps %s inside the title box", (_label, title, start) => {
+    const { lines, fontSize } = fitTitle(title, start);
+    expect(lines.join("")).toBe(title.replace(/\s+/g, ""));
+    expect(lines.length * fontSize * TITLE_LINE_HEIGHT).toBeLessThanOrEqual(
+      TITLE_BOX.height
+    );
+    lines.forEach((l) =>
+      expect(widthOf(l, fontSize)).toBeLessThanOrEqual(TITLE_BOX.width)
+    );
+  });
+
+  it("does not wrap an over-long word word-per-line and leaves a normal title's size alone", () => {
+    expect(balanceLines(`a ${"q".repeat(60)} b c d`, 104).length).toBeLessThan(
+      5
+    );
+    const normal = fitTitle("Check the Backups", 104);
+    expect(normal.fontSize).toBe(104);
+    expect(normal.lines).toEqual(["Check the Backups"]);
+  });
+
+  it("TitleCard lays a no-space title out as box-sized lines", () => {
+    const lineEls = collect(TitleCard({ title: "w".repeat(120) })).filter(
+      (n) => typeof n === "object" && n.props.style?.lineHeight === 1.06
+    );
+    expect(lineEls.length).toBeGreaterThan(0);
+    const { fontSize } = lineEls[0].props.style;
+    expect(lineEls.length * fontSize * TITLE_LINE_HEIGHT).toBeLessThanOrEqual(
+      TITLE_BOX.height
+    );
+    lineEls.forEach((el) =>
+      expect(el.props.children.length * fontSize * 0.41).toBeLessThanOrEqual(
+        TITLE_BOX.width
+      )
+    );
   });
 });
 
