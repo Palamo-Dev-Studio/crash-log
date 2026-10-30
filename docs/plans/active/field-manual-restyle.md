@@ -75,6 +75,14 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 
 **Declined for the PR body:** the lockfile's `node_modules/sharp`, `@img/colour` and `detect-libc` entries stay `"optional": true` rather than `"devOptional": true`. Only `npm ci --omit=optional` drops sharp, and neither CI nor Vercel uses that mode; the site build doesn't import sharp.
 
+**Declined NITs for the PR body (Opus PASS on `320fb31`):** `E2E_PORT=0x0BB8` parses as 3000 (hex input, nobody
+types it); the Support/Subscribe test checks parity, not absolute height (Chromium's border rounding already makes
+a both-shrink mutant fail).
+
+**Waiting on Hector (2026-10-30):** lint rule — stop iterating (ban simple forms, list exotic ones as accepted
+risk)? Backfill script — keep, one final test round (count `<` mutant, `main()` guards as pure functions, exclude
+`versions.**`, dry-run note on drafts, partial-run summary), then close?
+
 ## Known issues
 
 - **`main`'s e2e suite is red before this branch:** 7 Playwright failures at `1f133a3` (archive-search ×2,
@@ -90,16 +98,16 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 
 ## Phases
 
-| #   | Phase                                                                                       | Status           |
-| --- | ------------------------------------------------------------------------------------------- | ---------------- |
-| 1   | Schema: `story.verdict`, `story.summary`, `story.image` (+credit), author, `practical` type | merged `e2532e3` |
-| 2   | Tokens, fonts (`next/font`), roundel SVGs, favicon set                                      | PASS `1e65711`   |
-| 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | building         |
-| 4   | Home: cover hero, rail, recent files                                                        | —                |
-| 5   | Off the Rails issue page: case cards, verdict stamps                                        | —                |
-| 6   | Practical article template + Nico's Notes column page                                       | —                |
-| 7   | Every other page (archive, beats, about, support, 404, OG images) + legacy token removal    | —                |
-| 8   | Whole-branch Fable review → CodeRabbit → PR                                                 | —                |
+| #   | Phase                                                                                       | Status                             |
+| --- | ------------------------------------------------------------------------------------------- | ---------------------------------- |
+| 1   | Schema: `story.verdict`, `story.summary`, `story.image` (+credit), author, `practical` type | merged `e2532e3`                   |
+| 2   | Tokens, fonts (`next/font`), roundel SVGs, favicon set                                      | PASS `1e65711`                     |
+| 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | PASS `320fb31`; lint + p3b pending |
+| 4   | Home: cover hero, rail, recent files                                                        | building                           |
+| 5   | Off the Rails issue page: case cards, verdict stamps                                        | —                                  |
+| 6   | Practical article template + Nico's Notes column page                                       | —                                  |
+| 7   | Every other page (archive, beats, about, support, 404, OG images) + legacy token removal    | —                                  |
+| 8   | Whole-branch Fable review → CodeRabbit → PR                                                 | —                                  |
 
 ## Acceptance criteria
 
