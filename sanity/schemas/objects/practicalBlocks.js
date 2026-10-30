@@ -56,10 +56,35 @@ export const exhibit = {
       fields: [{ name: "alt", type: "string", title: "Alt text" }],
     },
     {
-      name: "text",
-      title: "Rows / Text",
-      type: "text",
-      description: "One row per line",
+      name: "from",
+      title: "From",
+      type: "string",
+      description: 'Optional sub-header, e.g. "Customer brief · 07:30"',
+    },
+    {
+      name: "rows",
+      title: "Rows",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "exhibitRow",
+          fields: [
+            {
+              name: "lead",
+              title: "Lead (bold)",
+              type: "string",
+            },
+            {
+              name: "text",
+              title: "Text",
+              type: "string",
+              description: "Rest of the line, after the bold lead",
+            },
+          ],
+          preview: { select: { title: "lead", subtitle: "text" } },
+        },
+      ],
     },
     { name: "caption", title: "Caption", type: "string" },
   ],
@@ -121,6 +146,13 @@ export const replyAsk = {
     },
     { name: "text", title: "Text", type: "text" },
     { name: "buttonLabel", title: "Button Label", type: "string" },
+    {
+      name: "buttonUrl",
+      title: "Button URL",
+      type: "url",
+      description: "mailto:, https: or http: link",
+      validation: (Rule) => Rule.uri({ scheme: ["mailto", "https", "http"] }),
+    },
   ],
   preview: { select: { title: "title", subtitle: "text" } },
 };

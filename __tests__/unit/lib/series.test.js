@@ -71,6 +71,12 @@ describe("getFileCode", () => {
   it("keeps 0 as a valid number", () => {
     expect(getFileCode({ _type: "issue", issueNumber: 0 })).toBe("OTR-000");
   });
+  it.each([NaN, Infinity, -Infinity, -3, 1.5, "27", "", true])(
+    "returns null for the non-integer or negative number %s",
+    (bad) => {
+      expect(getFileCode({ _type: "issue", issueNumber: bad })).toBeNull();
+    }
+  );
   it("returns null for unknown types and missing docs", () => {
     expect(getFileCode({ _type: "story", issueNumber: 1 })).toBeNull();
     expect(getFileCode(null)).toBeNull();
@@ -123,6 +129,9 @@ describe("getByline", () => {
 });
 
 describe("withRef", () => {
+  it("appends ref after a trailing ? without doubling the separator", () => {
+    expect(withRef("https://x.com/?")).toBe("https://x.com/?ref=crashlog.ai");
+  });
   it("adds ref to a plain URL", () => {
     expect(withRef("https://example.com/a")).toBe(
       "https://example.com/a?ref=crashlog.ai"

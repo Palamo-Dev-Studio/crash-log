@@ -132,7 +132,7 @@ describe("practical body", () => {
     expect(initial(practicalBlocks.replyAsk)).toBe("Your turn");
   });
 
-  it("models steps as items of {title, text} and exhibit with label, tag, image, text, caption", () => {
+  it("models steps as items of {title, text} and exhibit with label, tag, image, from, rows, caption", () => {
     const stepFields = field(practicalBlocks.steps, "items").of[0].fields.map(
       (f) => f.name
     );
@@ -141,8 +141,43 @@ describe("practical body", () => {
       "label",
       "tag",
       "image",
-      "text",
+      "from",
+      "rows",
       "caption",
     ]);
+  });
+
+  it("gives exhibit an optional from string and rows of {lead, text}", () => {
+    const from = field(practicalBlocks.exhibit, "from");
+    expect(from.type).toBe("string");
+    expect(from.validation).toBeUndefined();
+    const rows = field(practicalBlocks.exhibit, "rows");
+    expect(rows.type).toBe("array");
+    expect(rows.of).toHaveLength(1);
+    expect(rows.of[0].type).toBe("object");
+    expect(rows.of[0].fields.map((f) => [f.name, f.type])).toEqual([
+      ["lead", "string"],
+      ["text", "string"],
+    ]);
+  });
+
+  describe("replyAsk buttonUrl", () => {
+    const urlField = () => field(practicalBlocks.replyAsk, "buttonUrl");
+    it("is an optional url field", () => {
+      expect(urlField().type).toBe("url");
+      expect(urlField().validation).toBeDefined();
+    });
+    it("allows only mailto, https and http schemes", () => {
+      const calls = [];
+      const rule = {
+        uri: (opts) => {
+          calls.push(opts);
+          return rule;
+        },
+      };
+      urlField().validation(rule);
+      expect(calls).toHaveLength(1);
+      expect([...calls[0].scheme].sort()).toEqual(["http", "https", "mailto"]);
+    });
   });
 });
