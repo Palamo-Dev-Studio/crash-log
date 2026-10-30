@@ -135,21 +135,43 @@ test.describe("mobile nav scroller", () => {
   });
 });
 
-test.describe("footer fine print at 390px", () => {
-  test.use({ viewport: { width: 390, height: 800 } });
+test.describe("footer fine print on narrow screens", () => {
+  for (const width of [360, 390]) {
+    for (const path of ["/en", "/es"]) {
+      test(`copyright and languages share one row at ${width}px on ${path}`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width, height: 800 });
+        await page.goto(path);
+        const fine = page.locator("footer div[class*='fine']");
+        const copyright = fine.locator(
+          "span[class*='seg']:not([class*='segs'])"
+        );
+        const langs = fine.locator("[role='group']");
+        await expect(copyright).toHaveCount(1);
+        await expect(copyright).toContainText("The Crash Log");
 
-  test("copyright and publication share one row, as in the reference render", async ({
-    page,
-  }) => {
-    await page.goto("/en");
-    const tops = await page
-      .locator("footer span[class*='seg']:not([class*='segs'])")
-      .evaluateAll((els) =>
-        els.map((el) => Math.round(el.getBoundingClientRect().top))
-      );
-    expect(tops).toHaveLength(2);
-    expect(tops[0]).toBe(tops[1]);
-  });
+        // Copyright stays on a single line.
+        const lineHeight = await copyright.evaluate((el) =>
+          parseFloat(getComputedStyle(el).lineHeight)
+        );
+        const c = await copyright.boundingBox();
+        expect(c.height).toBeLessThan(lineHeight * 1.5);
+
+        // Copyright and EN · ES links sit on one row, and the row fits.
+        const l = await langs.boundingBox();
+        expect(Math.abs(c.y - l.y)).toBeLessThan(lineHeight / 2);
+        const { scrollWidth, clientWidth } = await fine.evaluate((el) => ({
+          scrollWidth: el.scrollWidth,
+          clientWidth: el.clientWidth,
+        }));
+        expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+
+        // The publication credit lives in the Elsewhere column, not here.
+        await expect(fine).not.toContainText(/Palamo/i);
+      });
+    }
+  }
 });
 
 test.describe("masthead toggle is never squeezed", () => {
