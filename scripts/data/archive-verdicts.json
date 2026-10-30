@@ -1,0 +1,885 @@
+{
+  "_comment": "Plain-English verdicts for archive stories (issues 1-27), approved by Hector 2026-10-30. Written to Sanity story.verdict at ship time, before deploy, by a guarded script.",
+  "stories": [
+    {
+      "_id": "b3cb6afd-4f62-4093-976b-c6ae584be4f8",
+      "issueNumber": 1,
+      "headline": "Love Scam Ops Team Discovers Product-Market Fit",
+      "severity": "EXPLOIT",
+      "verdict": {
+        "en": "FRAUD AT SCALE",
+        "es": "FRAUDE A ESCALA"
+      }
+    },
+    {
+      "_id": "fc508f00-1877-4b18-a862-71be5a7cf75c",
+      "issueNumber": 1,
+      "headline": "The Support Bot Issued a Law Nobody Passed",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "POLICY INVENTED",
+        "es": "POLÍTICA INVENTADA"
+      }
+    },
+    {
+      "_id": "fc101daf-d3b8-4598-9b94-078c96e1a3c8",
+      "issueNumber": 1,
+      "headline": "The Supreme Court Keeps Human Authorship on the Payroll",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "HUMANS ONLY",
+        "es": "SOLO HUMANOS"
+      }
+    },
+    {
+      "_id": "fc306b63-dcff-4828-b049-b148ff845516",
+      "issueNumber": 1,
+      "headline": "Apple's Lab Notes Say Reasoning Models Hit a Wall, Then Pretend Not To",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "FOLDS UNDER PRESSURE",
+        "es": "SE QUIEBRA BAJO PRESIÓN"
+      }
+    },
+    {
+      "_id": "crash-log-002-story-01",
+      "issueNumber": 2,
+      "headline": "Chatbot becomes doomsday life coach",
+      "severity": "FATAL_ERROR",
+      "verdict": {
+        "en": "SUED OVER A DEATH",
+        "es": "DEMANDADO POR UNA MUERTE"
+      }
+    },
+    {
+      "_id": "crash-log-002-story-02",
+      "issueNumber": 2,
+      "headline": "Buenos Aires brings AI culture war to elementary school",
+      "severity": "BETA_IN_PROD",
+      "verdict": {
+        "en": "CLASSROOM BACKLASH",
+        "es": "RECHAZO EN EL AULA"
+      }
+    },
+    {
+      "_id": "crash-log-002-story-03",
+      "issueNumber": 2,
+      "headline": "Supreme Court to AI art: no human, no copyright",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "NO HUMAN, NO COPYRIGHT",
+        "es": "SIN HUMANO, SIN DERECHOS"
+      }
+    },
+    {
+      "_id": "crash-log-002-story-04",
+      "issueNumber": 2,
+      "headline": "District blocks ChatGPT for child safety",
+      "severity": "ROLLBACK",
+      "verdict": {
+        "en": "BLOCKED AT SCHOOL",
+        "es": "BLOQUEADO EN LA ESCUELA"
+      }
+    },
+    {
+      "_id": "crash-log-003-story-01",
+      "issueNumber": 3,
+      "headline": "Clipboard Roulette, Now with Wallet Drain",
+      "severity": "EXEC",
+      "verdict": {
+        "en": "MALWARE IN DISGUISE",
+        "es": "MALWARE DISFRAZADO"
+      }
+    },
+    {
+      "_id": "crash-log-003-story-02",
+      "issueNumber": 3,
+      "headline": "National Testing in Australia Delayed by Outage",
+      "severity": "TIMEOUT",
+      "verdict": {
+        "en": "TEST DAY CRASHED",
+        "es": "SE CAYÓ EL EXAMEN"
+      }
+    },
+    {
+      "_id": "crash-log-003-story-03",
+      "issueNumber": 3,
+      "headline": "Grammarly Tried \"Expert Review,\" Then Reviewed the Backlash",
+      "severity": "ROLLBACK",
+      "verdict": {
+        "en": "PULLED AFTER BACKLASH",
+        "es": "RETIRADO TRAS LAS CRÍTICAS"
+      }
+    },
+    {
+      "_id": "crash-log-004-story-01",
+      "issueNumber": 4,
+      "headline": "DOGE-Linked Engineer Allegedly Walks Out of Social Security With Databases on Thumb Drive",
+      "severity": "EXFILTRATED",
+      "verdict": {
+        "en": "ON A THUMB DRIVE",
+        "es": "EN UNA MEMORIA USB"
+      }
+    },
+    {
+      "_id": "crash-log-004-story-02",
+      "issueNumber": 4,
+      "headline": "Spanish Politician Runs a Document Through an AI Detector to Prove It's Real",
+      "severity": "INVALID_INPUT",
+      "verdict": {
+        "en": "WRONG TOOL",
+        "es": "HERRAMIENTA EQUIVOCADA"
+      }
+    },
+    {
+      "_id": "crash-log-004-story-03",
+      "issueNumber": 4,
+      "headline": "Elon Musk Announces Joint xAI-Tesla System Designed to Replace Entire Companies",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "ANNOUNCED, NOT BUILT",
+        "es": "ANUNCIADO, NO CONSTRUIDO"
+      }
+    },
+    {
+      "_id": "crash-log-004-story-04",
+      "issueNumber": 4,
+      "headline": "MIT Brain Scanners Find Signs of Cognitive Debt",
+      "severity": "ERR_CD",
+      "verdict": {
+        "en": "COGNITIVE DEBT",
+        "es": "DEUDA COGNITIVA"
+      }
+    },
+    {
+      "_id": "c6027426-be13-4578-b61c-9fb727d5becd",
+      "issueNumber": 6,
+      "headline": "Gaming CEO Runs Corporate Strategy by ChatGPT",
+      "severity": "LOGIC_ERROR",
+      "verdict": {
+        "en": "STRATEGY BY CHATBOT",
+        "es": "ESTRATEGIA POR CHATBOT"
+      }
+    },
+    {
+      "_id": "e98aa006-3268-4e96-a8d9-223381d8c6b9",
+      "issueNumber": 6,
+      "headline": "Grok Made Child Pornography of Three Tennessee Teenagers' Yearbook Photos",
+      "severity": "UNHANDLED_EXCEPTION",
+      "verdict": {
+        "en": "MINORS TARGETED",
+        "es": "MENORES VULNERADAS"
+      }
+    },
+    {
+      "_id": "9ea15faf-1b96-44a5-8f74-58ea711309e2",
+      "issueNumber": 6,
+      "headline": "Anthropic Draws Red Lines on Surveillance; Pentagon Calls It a National Security Threat",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "PUNISHED FOR SAYING NO",
+        "es": "CASTIGADO POR DECIR QUE NO"
+      }
+    },
+    {
+      "_id": "30135763-01ff-48fb-a612-31cc79506b9b",
+      "issueNumber": 6,
+      "headline": "GitHub's Database Crashes Three Times This Month After Cache Setting Change",
+      "severity": "TIMEOUT",
+      "verdict": {
+        "en": "DOWN THREE TIMES",
+        "es": "CAÍDO TRES VECES"
+      }
+    },
+    {
+      "_id": "5d65bb40-36bd-4cb9-bfbd-529ae3d0f44a",
+      "issueNumber": 7,
+      "headline": "OpenAI Is Guaranteeing Private Equity Firms a 17.5% Return to Force AI Adoption That Isn't Happening on Its Own",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "RETURNS GUARANTEED",
+        "es": "GANANCIA GARANTIZADA"
+      }
+    },
+    {
+      "_id": "ee959fdc-b4b2-427e-ba80-0b5d3de7bc03",
+      "issueNumber": 7,
+      "headline": "White House AI Framework Tells Congress to Preempt State Laws and Let Industry Self-Regulate",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "SELF-REGULATION",
+        "es": "AUTORREGULACIÓN"
+      }
+    },
+    {
+      "_id": "2214c9c8-d174-4d22-92f5-2b73c0a09d82",
+      "issueNumber": 7,
+      "headline": "Google Just Opened Your Gmail and Photos to Gemini AI — For Free, For Everyone",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "PAID IN DATA",
+        "es": "SE PAGA CON DATOS"
+      }
+    },
+    {
+      "_id": "bb2b320c-5851-4ff2-a03d-a21f4d234c9f",
+      "issueNumber": 7,
+      "headline": "Meta Open-Sources a Model That Predicts Your Brain Activity — Trained on 700 Volunteers Who Didn't Know This Was the Plan",
+      "severity": "NULL_POINTER",
+      "verdict": {
+        "en": "REPURPOSED DATA",
+        "es": "DATOS REUTILIZADOS"
+      }
+    },
+    {
+      "_id": "3MIYMi4eUplBBqKDrZtdcz",
+      "issueNumber": 8,
+      "headline": "Meta Loses Twice in Court; $375M Child Safety Verdict and First-Ever 'Addictive by Design' Ruling",
+      "severity": "FATAL_EXCEPTION",
+      "verdict": {
+        "en": "LIABLE, TWICE",
+        "es": "RESPONSABLE, DOS VECES"
+      }
+    },
+    {
+      "_id": "3MIYMi4eUplBBqKDrZtdej",
+      "issueNumber": 8,
+      "headline": "OpenAI Pulls the Plug on Sora After Six Months, Torpedoing Disney's $1 Billion Investment",
+      "severity": "DEPRECATED",
+      "verdict": {
+        "en": "SIX MONTHS AND OUT",
+        "es": "SEIS MESES Y FUERA"
+      }
+    },
+    {
+      "_id": "3MIYMi4eUplBBqKDrZtdgT",
+      "issueNumber": 8,
+      "headline": "Anthropic Accidentally Leaks Its Most Powerful AI Model Through a CMS Misconfiguration",
+      "severity": "NULL_POINTER",
+      "verdict": {
+        "en": "LEAKED BY ACCIDENT",
+        "es": "FILTRADO POR ERROR"
+      }
+    },
+    {
+      "_id": "3MIYMi4eUplBBqKDrZtdiD",
+      "issueNumber": 8,
+      "headline": "AI Can Build a 'Comprehensive Picture of Any Person's Life' From Data the Government Buys Without a Warrant",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "NO WARRANT NEEDED",
+        "es": "SIN ORDEN JUDICIAL"
+      }
+    },
+    {
+      "_id": "bnKHE8NFvD5dhRfAAoatyF",
+      "issueNumber": 9,
+      "headline": "AI Chatbots Agree With Users 49% More Than Humans Do — Even When Users Are Wrong, Harmful, or Breaking the Law",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "YES-MAN",
+        "es": "SIEMPRE DE ACUERDO"
+      }
+    },
+    {
+      "_id": "bnKHE8NFvD5dhRfAAoau1v",
+      "issueNumber": 9,
+      "headline": "Federal Judge Calls Pentagon's Anthropic Ban 'Orwellian', Military Already Training Other AI on Classified Data",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "BLOCKED IN COURT",
+        "es": "FRENADO EN LA CORTE"
+      }
+    },
+    {
+      "_id": "bnKHE8NFvD5dhRfAAoau5b",
+      "issueNumber": 9,
+      "headline": "45,000 Tech Workers Cut in Q1; 1-in-5 Due to AI, Not Restructuring",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "ONE IN FIVE",
+        "es": "UNO DE CADA CINCO"
+      }
+    },
+    {
+      "_id": "bnKHE8NFvD5dhRfAAoau9H",
+      "issueNumber": 9,
+      "headline": "The Pentagon Wants AI Companies to Train Models on Classified Surveillance Data",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "CLASSIFIED TRAINING DATA",
+        "es": "DATOS CLASIFICADOS"
+      }
+    },
+    {
+      "_id": "ESi6o53PQdAxfwmpqpGiLi",
+      "issueNumber": 10,
+      "headline": "Oracle Fires 30,000 Workers via 6 AM Email to Fund AI Data Centers",
+      "severity": "FATAL_EXCEPTION",
+      "verdict": {
+        "en": "FIRED BY EMAIL",
+        "es": "DESPEDIDOS POR CORREO"
+      }
+    },
+    {
+      "_id": "bnKHE8NFvD5dhRfAAuXEKV",
+      "issueNumber": 10,
+      "headline": "Anthropic Accidentally Leaks Claude Code Source via npm, Second Blunder in a Week",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "SHIPPED THE SOURCE",
+        "es": "CÓDIGO A LA VISTA"
+      }
+    },
+    {
+      "_id": "S9mF1lBwsv6MdFz667WEM7",
+      "issueNumber": 10,
+      "headline": "OkCupid Shared 3 Million Users' Photos with Facial Recognition Firm, Settles with FTC for $0",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "SETTLED FOR $0",
+        "es": "ACUERDO POR $0"
+      }
+    },
+    {
+      "_id": "7a8d92ff-819d-4dd1-ab2f-fb61c33e9d12",
+      "issueNumber": 11,
+      "headline": "OpenAI Is Paying Thousands of Freelancers to Train ChatGPT to Do Their Jobs",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "TRAIN YOUR REPLACEMENT",
+        "es": "ENTRENA A TU REEMPLAZO"
+      }
+    },
+    {
+      "_id": "73e3ffb1-74e4-4515-a3e1-88575ab2713b",
+      "issueNumber": 11,
+      "headline": "After Cutting 4,000 Workers, Dorsey Says AI Should Replace Every Middle Manager",
+      "severity": "DEPRECATED",
+      "verdict": {
+        "en": "MANAGERS NEXT",
+        "es": "SIGUEN LOS GERENTES"
+      }
+    },
+    {
+      "_id": "55e3d8ad-d70d-4b81-84d0-03b49ace712f",
+      "issueNumber": 11,
+      "headline": "Perplexity AI Sued for Secretly Funneling User Conversations to Meta, Google",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "SUED FOR SHARING",
+        "es": "DEMANDADO POR COMPARTIR"
+      }
+    },
+    {
+      "_id": "8a62bf9b-480c-4084-a8b2-7dd707a849c5",
+      "issueNumber": 11,
+      "headline": "Iran's Revolutionary Guard Names 18 U.S. Tech Companies as Military Targets",
+      "severity": "FATAL_EXCEPTION",
+      "verdict": {
+        "en": "ON THE TARGET LIST",
+        "es": "EN LA LISTA DE BLANCOS"
+      }
+    },
+    {
+      "_id": "08cb163e-84e7-46bd-8f54-2a2d94660220",
+      "issueNumber": 12,
+      "headline": "Bipartisan Bill Would Force Warrants for AI-Powered Mass Surveillance",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "A BILL, NOT A LAW",
+        "es": "PROYECTO, NO LEY"
+      }
+    },
+    {
+      "_id": "bf6c4e40-c3c9-4000-8539-da0cc981ed35",
+      "issueNumber": 12,
+      "headline": "40-Minute Supply Chain Attack Exposed 36% of Cloud Environments",
+      "severity": "FATAL_EXCEPTION",
+      "verdict": {
+        "en": "40 MINUTES WAS ENOUGH",
+        "es": "BASTARON 40 MINUTOS"
+      }
+    },
+    {
+      "_id": "793c6a39-bb00-4312-a4ca-34c977ae6520",
+      "issueNumber": 12,
+      "headline": "AI Health Chatbots Believe Medical Lies When They Sound Like Doctors",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "FOOLED BY A WHITE COAT",
+        "es": "ENGAÑADO POR LA BATA"
+      }
+    },
+    {
+      "_id": "6e9426b4-a082-472c-aee0-73be2cab918b",
+      "issueNumber": 12,
+      "headline": "Google Drops Gemma 4 Under Apache 2.0, First Truly Open-Source Gemma",
+      "severity": "DEPRECATED",
+      "verdict": {
+        "en": "ACTUALLY OPEN",
+        "es": "ABIERTO DE VERDAD"
+      }
+    },
+    {
+      "_id": "dd2ba331-a978-46ab-99b4-28ceabd2e916",
+      "issueNumber": 13,
+      "headline": "Amazon Turns Ring Doorbells Into Face Database",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "FACE DATABASE",
+        "es": "BASE DE ROSTROS"
+      }
+    },
+    {
+      "_id": "0ba0e7b6-1d82-4ce4-b105-c217911864ea",
+      "issueNumber": 13,
+      "headline": "Brazil Piloting Predictive Policing in Cities Where 64% of Prisoners Are Black",
+      "severity": "NULL_POINTER",
+      "verdict": {
+        "en": "INHERITED BIAS",
+        "es": "SESGO HEREDADO"
+      }
+    },
+    {
+      "_id": "b233a877-30ee-4292-af9a-57268fdda184",
+      "issueNumber": 13,
+      "headline": "EU Can Now Fine Foundation Model Companies 3% of Global Revenue for Bad Paperwork",
+      "severity": "DEPRECATED",
+      "verdict": {
+        "en": "PAPERWORK WITH TEETH",
+        "es": "EL PAPELEO MUERDE"
+      }
+    },
+    {
+      "_id": "052c4ac4-23f4-478b-ba1d-a73dbfe0f9c3",
+      "issueNumber": 14,
+      "headline": "Anthropic Says New Model Is Too Dangerous To Ship; Ships It To 12 Companies",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "SHIPPED ANYWAY",
+        "es": "LANZADO IGUAL"
+      }
+    },
+    {
+      "_id": "45dda77f-f2a5-48ac-a833-1764c9e5dfbe",
+      "issueNumber": 14,
+      "headline": "AI News Startup Nota Shuts 11 Sites After Plagiarizing 53 Local Journalists",
+      "severity": "FATAL_EXCEPTION",
+      "verdict": {
+        "en": "PLAGIARISM AT SCALE",
+        "es": "PLAGIO A ESCALA"
+      }
+    },
+    {
+      "_id": "f8cfefd4-2b56-44ab-8cf1-7e702326b8c4",
+      "issueNumber": 14,
+      "headline": "Google Adds Gemini Suicide Hotline After Florida Wrongful-Death Lawsuit",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "SAFEGUARD AFTER THE FACT",
+        "es": "PROTECCIÓN TARDÍA"
+      }
+    },
+    {
+      "_id": "i15-story-gavalas-gemini",
+      "issueNumber": 15,
+      "headline": "Google Releases Full Chat Logs in Gemini Wrongful Death Case, Pledges $30 Million for Crisis Safeguards",
+      "severity": "FATAL_EXCEPTION",
+      "verdict": {
+        "en": "THE LOGS ARE PUBLIC",
+        "es": "LOS REGISTROS SON PÚBLICOS"
+      }
+    },
+    {
+      "_id": "i15-story-altman-attacks",
+      "issueNumber": 15,
+      "headline": "Sam Altman's Home Hit Twice in Three Days as Anti-AI Anger Turns Physical",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "ANGER TURNS VIOLENT",
+        "es": "LA IRA SE VUELVE VIOLENCIA"
+      }
+    },
+    {
+      "_id": "i15-story-compute-crunch",
+      "issueNumber": 15,
+      "headline": "AI Capacity Crunch Hits as GPU Rental Prices Spike 48%; Anthropic Rations Access",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "RATIONED",
+        "es": "RACIONADO"
+      }
+    },
+    {
+      "_id": "31eadaa9-7a26-4f01-9c2e-a50343e78c17",
+      "issueNumber": 16,
+      "headline": "DHS Expands AI Surveillance Arsenal to Track Americans While Defying 96 Court Orders",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "ORDERS IGNORED",
+        "es": "ÓRDENES IGNORADAS"
+      }
+    },
+    {
+      "_id": "1605e36e-42cd-4d36-888c-b6f6778f7f38",
+      "issueNumber": 16,
+      "headline": "Researchers Find 26 AI Agent Routers Secretly Injecting Malicious Code, Stealing Credentials",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "MAN IN THE MIDDLE",
+        "es": "INTERMEDIARIO MALICIOSO"
+      }
+    },
+    {
+      "_id": "dc36bd6b-177a-4cdf-ac0c-7551450c83f3",
+      "issueNumber": 16,
+      "headline": "Mexico Passes AI Reforms to Protect Performers' Voices and Images; Industry Warns of USMCA Fallout",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "VOICES PROTECTED",
+        "es": "VOCES PROTEGIDAS"
+      }
+    },
+    {
+      "_id": "795eecc1-048f-4ce1-bbb8-30e45d0ef6c5",
+      "issueNumber": 16,
+      "headline": "Linux Kernel Formally Allows AI-Generated Code With Full Human Liability",
+      "severity": "DEPRECATED",
+      "verdict": {
+        "en": "A HUMAN SIGNS FOR IT",
+        "es": "UN HUMANO RESPONDE"
+      }
+    },
+    {
+      "_id": "d617be36-05ab-4125-bd44-cc3dd58b794c",
+      "issueNumber": 17,
+      "headline": "Congress Buys 10 More Days for Section 702, Data Broker Loophole",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "10-DAY REPRIEVE",
+        "es": "PRÓRROGA DE 10 DÍAS"
+      }
+    },
+    {
+      "_id": "1b9e450f-a510-449e-9b54-7a533388631c",
+      "issueNumber": 17,
+      "headline": "Anthropic's CPO Resigned From Figma's Board Three Days Before Anthropic Launched Its Figma Killer",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "CONVENIENT TIMING",
+        "es": "QUÉ OPORTUNO"
+      }
+    },
+    {
+      "_id": "76245f96-071b-44ea-ab96-8f65d3dd35ac",
+      "issueNumber": 17,
+      "headline": "AI Was the #1 Stated Reason for U.S. Job Cuts in March",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "REASON NO. 1",
+        "es": "MOTIVO NÚMERO 1"
+      }
+    },
+    {
+      "_id": "4ad90b75-55d2-4b22-aeb8-436601bcc19c",
+      "issueNumber": 17,
+      "headline": "Democrats Introduce GUARDRAILS Act to Block White House's AI Framework",
+      "severity": "NULL_POINTER",
+      "verdict": {
+        "en": "OPPOSITION FILED",
+        "es": "OPOSICIÓN PRESENTADA"
+      }
+    },
+    {
+      "_id": "39fef182-eb7c-44eb-ae50-050e34de102d",
+      "issueNumber": 18,
+      "headline": "Two CIA Officers Die in a Mexican Car Crash, Their Mission a Secret, Even to Mexico",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "SECRET, EVEN TO MEXICO",
+        "es": "SECRETO, INCLUSO PARA MÉXICO"
+      }
+    },
+    {
+      "_id": "ce5eb2f6-dec1-4149-9b43-65619292c723",
+      "issueNumber": 18,
+      "headline": "Anthropic Owes AWS $100 Billion; AWS Writes $5 Billion Check to Make Sure It Collects",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "CIRCULAR MONEY",
+        "es": "DINERO CIRCULAR"
+      }
+    },
+    {
+      "_id": "5f0459cc-50a9-4b91-b19b-04a72ad64213",
+      "issueNumber": 18,
+      "headline": "44%of New Music Uploaded to Deezer Made by AI",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "44% SYNTHETIC",
+        "es": "44% SINTÉTICO"
+      }
+    },
+    {
+      "_id": "1ea6dd18-01a3-4ddc-94a5-1f267b0e6838",
+      "issueNumber": 19,
+      "headline": "Musk v. OpenAI Trial Replays Decade of AI-Safety Rhetoric Under Oath",
+      "severity": "FATAL_EXCEPTION",
+      "verdict": {
+        "en": "UNDER OATH",
+        "es": "BAJO JURAMENTO"
+      }
+    },
+    {
+      "_id": "2990b9e4-d111-4c07-92e6-f4f8dc0f2c30",
+      "issueNumber": 19,
+      "headline": "Mexico's Banks Used AI to Issue 40 Million Credit Cards; Half Unused, Active Ones Charge 150% APR",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "BILLED TO YOU",
+        "es": "LO PAGAS TÚ"
+      }
+    },
+    {
+      "_id": "dc23b46f-d6bf-48ad-9e1f-a19b621753dc",
+      "issueNumber": 19,
+      "headline": "OpenAI, Anthropic Each Spin Up Billion-Dollar 'Deployment Companies' — With Private-Equity Downside Floors",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "DOWNSIDE COVERED",
+        "es": "RIESGO CUBIERTO"
+      }
+    },
+    {
+      "_id": "b69e5156-ad5d-4803-8a41-9baefcf3f9d7",
+      "issueNumber": 20,
+      "headline": "Figure's Humanoid Robots Cross 100,000 Packages in 5-Day Nonstop Warehouse Sort",
+      "severity": "FATAL_EXCEPTION",
+      "verdict": {
+        "en": "NO BREAKS NEEDED",
+        "es": "SIN DESCANSOS"
+      }
+    },
+    {
+      "_id": "d25370a7-5fff-471a-9065-ef39fdcbd56f",
+      "issueNumber": 20,
+      "headline": "OpenAI Turns Malta Into First Country to Default to ChatGPT",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "FIRST YEAR FREE",
+        "es": "EL PRIMER AÑO, GRATIS"
+      }
+    },
+    {
+      "_id": "5a338023-8ef0-44c0-b4ee-d07c6e487de7",
+      "issueNumber": 20,
+      "headline": "OpenAI Adds Plaid Integration, Connects ChatGPT to Bank Accounts Across 12,000 Institutions",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "BANK ACCESS GRANTED",
+        "es": "ACCESO AL BANCO"
+      }
+    },
+    {
+      "_id": "0dec3b55-8c82-46eb-a4e1-32e4dd823a6c",
+      "issueNumber": 21,
+      "headline": "OpenAI Launches ChatGPT Bank-Account Access Days After Privacy Suit",
+      "severity": "NULL_POINTER",
+      "verdict": {
+        "en": "DAYS AFTER THE LAWSUIT",
+        "es": "DÍAS DESPUÉS DE LA DEMANDA"
+      }
+    },
+    {
+      "_id": "72c6e654-3a0f-471f-8786-3edb08fb89e8",
+      "issueNumber": 21,
+      "headline": "Standard Chartered CEO Says AI Will Replace 'Lower-Value Human Capital' as Bank Confirms 7,800 Job Cuts",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "HUMAN CAPITAL, DISCOUNTED",
+        "es": "CAPITAL HUMANO REBAJADO"
+      }
+    },
+    {
+      "_id": "c42545f9-f066-410a-be8f-5e4e623ebb65",
+      "issueNumber": 21,
+      "headline": "Anthropic, U.S. Government Argue in Appeals Court Over Pentagon Blacklisting",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "BACK IN COURT",
+        "es": "DE VUELTA EN LA CORTE"
+      }
+    },
+    {
+      "_id": "c9d6a05f-19a4-420e-a7ce-3e6b91521cfc",
+      "issueNumber": 22,
+      "headline": "Trump Pulls AI Safety Executive Order Hours Before Signing, After Silicon Valley Pushback",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "PULLED AT THE LAST HOUR",
+        "es": "RETIRADO A ÚLTIMA HORA"
+      }
+    },
+    {
+      "_id": "164326b7-51c0-4150-9ea5-007dc1acef7b",
+      "issueNumber": 22,
+      "headline": "Meta Cuts 8,000 Jobs While Defending Keystroke-Tracking Software That Trains AI on Workers",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "TRAINED ON ITS STAFF",
+        "es": "ENTRENADO CON SU PERSONAL"
+      }
+    },
+    {
+      "_id": "33e478e4-2087-4716-b508-4cca5f2fe300",
+      "issueNumber": 22,
+      "headline": "Mexico to Cut Off Mobile Service to Anyone Who Refuses Iris, Fingerprint, and Face Scans by July 1",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "SCAN OR LOSE SERVICE",
+        "es": "ESCANEO O SIN SERVICIO"
+      }
+    },
+    {
+      "_id": "82917db6-deb5-44e1-a342-08ca6cdfcd6d",
+      "issueNumber": 23,
+      "headline": "80% of Companies Piloting AI Cut Workers; Gartner Says Cuts Aren't Paying Off",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "CUTS DIDN'T PAY",
+        "es": "LOS RECORTES NO RINDIERON"
+      }
+    },
+    {
+      "_id": "82f6fa21-aea9-4c8a-9121-e02479994cb3",
+      "issueNumber": 23,
+      "headline": "Pope Leo XIV Releases 42,000-Word Encyclical Warning AI Could Trigger \"Social Calamity\"",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "WARNING FROM ROME",
+        "es": "ADVERTENCIA DESDE ROMA"
+      }
+    },
+    {
+      "_id": "29e49da8-9464-4bfc-8818-8775c971bf9d",
+      "issueNumber": 24,
+      "headline": "Free GitHub Tool Strips Safety Guardrails From Open-Weight AI Models in Minutes, FT Investigation Finds",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "GUARDRAILS OPTIONAL",
+        "es": "SALVAGUARDAS OPCIONALES"
+      }
+    },
+    {
+      "_id": "82a9bd15-9eb2-49fb-90df-ff7e4cebd26e",
+      "issueNumber": 24,
+      "headline": "Startup Offers Free NYC Apartment Cleanings in Exchange for Recordings to Train Robots",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "PAID IN FOOTAGE",
+        "es": "SE PAGA CON VIDEO"
+      }
+    },
+    {
+      "_id": "c04cffa5-b7b4-4d3e-b6dc-603ed956224f",
+      "issueNumber": 24,
+      "headline": "DHS Seeks $7.5 Million for Facial-Recognition Smart Glasses for ICE",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "FACES ON SIGHT",
+        "es": "ROSTROS A LA VISTA"
+      }
+    },
+    {
+      "_id": "58f87646-3f67-4a91-9423-f28f9fba70c5",
+      "issueNumber": 25,
+      "headline": "Florida Sues Sam Altman Personally; Says ChatGPT Helped Plan a Mass Shooting",
+      "severity": "FATAL_EXCEPTION",
+      "verdict": {
+        "en": "SUED PERSONALLY",
+        "es": "DEMANDADO EN PERSONA"
+      }
+    },
+    {
+      "_id": "ac7d10e7-fb78-4cbe-9600-6d1a4889d719",
+      "issueNumber": 25,
+      "headline": "Hackers Hijacked Instagram Accounts by Asking Meta's Own AI Support Bot to Add Their Email Addresses",
+      "severity": "ACCESS_DENIED",
+      "verdict": {
+        "en": "THE BOT LET THEM IN",
+        "es": "EL BOT ABRIÓ LA PUERTA"
+      }
+    },
+    {
+      "_id": "42e7319e-0c24-492f-9aed-e42671522226",
+      "issueNumber": 25,
+      "headline": "Mexican State Arrests Two Women Behind Critical Facebook Page Under New AI Law",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "CRITICS ARRESTED",
+        "es": "CRÍTICAS DETENIDAS"
+      }
+    },
+    {
+      "_id": "2c3796c7-5dc3-49c4-a9a5-55b8ccbf4524",
+      "issueNumber": 26,
+      "headline": "Anthropic Says AI Is Nearing the Point Where It Builds Itself, Asks Rivals To Hit Pause",
+      "severity": "NULL_POINTER",
+      "verdict": {
+        "en": "PAUSE REQUESTED",
+        "es": "PAUSA SOLICITADA"
+      }
+    },
+    {
+      "_id": "1fdb9814-471d-4355-8538-cf0e7ed474d5",
+      "issueNumber": 26,
+      "headline": "Researchers Catalog 37 Manipulative “Dark Patterns” Built Into ChatGPT, Gemini, Companion Bots",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "MANIPULATION BY DESIGN",
+        "es": "MANIPULACIÓN A PROPÓSITO"
+      }
+    },
+    {
+      "_id": "e3e015fe-094b-493a-9bb2-2004e6e7543c",
+      "issueNumber": 26,
+      "headline": "UN Warns AI Could Drink as Much Water as 1.3 Billion People by 2030",
+      "severity": "STACK_OVERFLOW",
+      "verdict": {
+        "en": "THIRSTY MACHINES",
+        "es": "MÁQUINAS SEDIENTAS"
+      }
+    },
+    {
+      "_id": "c761aaa8-4e0a-4f30-b446-614956b9e96e",
+      "issueNumber": 27,
+      "headline": "GitLab Cuts 14% of Its Staff, Exits 22 Countries To \"Bet the Company\" on AI Agents",
+      "severity": "RUNTIME_ERROR",
+      "verdict": {
+        "en": "ALL IN ON AGENTS",
+        "es": "TODO A LOS AGENTES"
+      }
+    },
+    {
+      "_id": "0e293b62-8148-4312-8591-adee50b72f30",
+      "issueNumber": 27,
+      "headline": "Pentagon Wants $13.4 Billion for Autonomous Weapons as Experts Warn AI Errors Could Target Wrong People",
+      "severity": "OVERRIDE",
+      "verdict": {
+        "en": "WRONG-TARGET RISK",
+        "es": "RIESGO DE ERRAR EL BLANCO"
+      }
+    },
+    {
+      "_id": "3d692a9d-839a-4479-b4b5-7bff916d2294",
+      "issueNumber": 27,
+      "headline": "Brazil Clears Police To Use AI in Criminal Investigations While Banning Live Facial Recognition in Public — With Carve-Outs",
+      "severity": "NULL_POINTER",
+      "verdict": {
+        "en": "BANNED, WITH EXCEPTIONS",
+        "es": "PROHIBIDO, CON EXCEPCIONES"
+      }
+    }
+  ]
+}

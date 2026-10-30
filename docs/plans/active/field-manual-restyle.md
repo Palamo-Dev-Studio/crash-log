@@ -92,6 +92,15 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
   story on archive issues.
 - **Archive verdicts approved** (Hector, 2026-10-30): Nico drafts EN/ES verdicts for the archive stories as one
   table; Hector approves; written at ship time (before deploy) by a guarded script.
+- **Archive verdicts approved as drafted** (Hector, 2026-10-30): `scripts/data/archive-verdicts.json` (88 stories,
+  full IDs). Ship prep: extend the guarded backfill script to write them (same guards: dry run by default,
+  `--apply --expect=88`, `ifRevisionId`, never overwrite a non-empty verdict), run before deploy.
+- **Nico's Notes pages show the cover image**, between byline and body (Hector, 2026-10-30).
+- **Columns end with the "New files every week. Free." subscribe box** (Hector, 2026-10-30).
+- **Reading time has one implementation** (Hector, 2026-10-30, after two review rounds): home feed projects
+  Practical body text and uses the same extractor as the article page.
+- **Heading anchors renumber only for repeated titles; accepted.** Steam handoff: no repeated H2 titles in a
+  Practical post.
 - **Newsletter move** (Hector, 2026-10-30): after the restyle ships, write a short plan for Ghost(Pro) on
   `newsletter.crashlog.ai` as the sender (email-only posts pushed from Sanity). Substack has no subscribers yet,
   so there's nothing to migrate. `newsletter.palamo.ai` is not needed: palamo.ai links to crashlog.ai.
