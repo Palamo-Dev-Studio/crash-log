@@ -42,9 +42,9 @@
 
   /* Severity (all AA as text on cream) */
   --severity-error: #8f3219;
-  --severity-override: #8a5a00;
+  --severity-override: #7d5200;
   --severity-terminate: #8f3219;
-  --severity-warning: #7a6200;
+  --severity-warning: #6c5700;
   --severity-critical: #7f2020;
   --severity-breach: #17615d;
 

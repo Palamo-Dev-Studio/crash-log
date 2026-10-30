@@ -59,8 +59,8 @@
 }
 
 .card mark {
-  background: var(--severity-error);
-  color: inherit;
+  background: color-mix(in srgb, var(--terra) 18%, transparent);
+  color: var(--ink);
   padding: 0 2px;
   border-radius: 2px;
 }

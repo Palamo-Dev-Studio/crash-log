@@ -176,8 +176,7 @@
 }
 
 .submitButton:hover {
-  background: #ff6961;
-  box-shadow: 0 0 20px rgba(255, 59, 48, 0.3);
+  background: var(--terra-ink);
 }
 
 .submitButton:disabled {
