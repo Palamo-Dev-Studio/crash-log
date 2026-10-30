@@ -54,7 +54,8 @@ const mastheadDocs = PAYLOAD.agents.map((a) => ({
 const payloadAbout = {
   ...PAYLOAD.aboutPage,
   masthead: [...mastheadDocs].sort((a, b) => {
-    const order = (x) => PAYLOAD.agents.find((p) => p._id === x._id).displayOrder;
+    const order = (x) =>
+      PAYLOAD.agents.find((p) => p._id === x._id).displayOrder;
     return order(a) - order(b);
   }),
 };
@@ -75,9 +76,10 @@ describe.each(["en", "es"])("About copy parity [%s]", (locale) => {
     expect(items.length).toBeGreaterThan(15);
     for (const item of items) {
       const at = text.indexOf(item.text, from);
-      expect(at, `missing or out of order: ${item.text}`).toBeGreaterThanOrEqual(
-        from
-      );
+      expect(
+        at,
+        `missing or out of order: ${item.text}`
+      ).toBeGreaterThanOrEqual(from);
       from = at + item.text.length;
     }
   });
@@ -100,9 +102,10 @@ describe.each(["en", "es"])("About copy parity [%s]", (locale) => {
     let from = 0;
     for (const item of approved(locale)) {
       const at = text.indexOf(item.text, from);
-      expect(at, `missing or out of order: ${item.text}`).toBeGreaterThanOrEqual(
-        from
-      );
+      expect(
+        at,
+        `missing or out of order: ${item.text}`
+      ).toBeGreaterThanOrEqual(from);
       from = at + item.text.length;
     }
   });
@@ -137,7 +140,9 @@ describe("SanityAbout structure", () => {
             _key: "a",
             style: "normal",
             markDefs: [],
-            children: [{ _type: "span", _key: "b", text: "Old intro.", marks: [] }],
+            children: [
+              { _type: "span", _key: "b", text: "Old intro.", marks: [] },
+            ],
           },
         ],
       },
