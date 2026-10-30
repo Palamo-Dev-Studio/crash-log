@@ -26,6 +26,9 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
   Beats leaves the nav; `/beats` and `/beat/[slug]` stay live and get restyled.
 - **Rail label:** "Latest files" until the new series run weekly.
 - **Logo:** keep the chevrons at 16px.
+- **Icon files use the simple mark** (180 apple-touch, 512, OG avatar), not the stamp: the ring legend is
+  unreadable at home-screen size and needs DM Mono at raster time. The stamp mark lives in the masthead.
+  (Nico's call, 2026-10-30; Hector may veto.) Favicon gets a cream fill so it shows on dark tabs.
 - **Old issues' Nico's Transmission and Stack Trace** render below the cases in the new style.
 - **One PR** at the end: `main` deploys straight to production, so a half-restyled site can't ship.
 - **CI:** org Actions billing failing as of 2026-10-30; `scripts/verify.sh` locally is the gate.
@@ -38,6 +41,15 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **Outbound source links** get `?ref=crashlog.ai`.
 - **New `story` fields:** `verdict` (localized), `summary` (localized), `image` with localized alt + `credit`.
   Hand the field names to Steam's Off the Rails pipeline once merged.
+- **Steam handoff must say: set `byline` explicitly.** `issue.byline`'s `initialValue` applies only to
+  documents created in Studio; API-created issues get no byline and render "The Crash Log newsroom".
+
+## Phase 1 follow-ups (Opus PASS 2026-10-30 on `4aa6c51`, branch `field-manual-phase1`; merge after phase 2 fix)
+
+- `getFileCode`: require a non-negative integer (today -3 → `OTR-0-3`, 1.5 → `OTR-1.5`); test the trailing-`?` branch of `withRef`.
+- `exhibit` block: add optional `from` sub-header and `rows[]` of `{lead, text}` (mockup `article.html:75-84`).
+- `replyAsk` block: add `buttonUrl`.
+- Byline default (asked Hector): pin the archive explicitly and default missing bylines to the future case.
 
 ## Phases
 
