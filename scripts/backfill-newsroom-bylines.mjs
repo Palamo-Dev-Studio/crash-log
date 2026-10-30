@@ -1,5 +1,5 @@
 // ABOUTME: Backfills byline "newsroom" on published issues #1-27 that have no byline. Dry run by default.
-// ABOUTME: Writes only with --apply (needs SANITY_API_TOKEN). Run: node scripts/backfill-newsroom-bylines.mjs [--apply]
+// ABOUTME: Writes only with --apply --expect=<n> (needs SANITY_API_TOKEN). Run: node scripts/backfill-newsroom-bylines.mjs [--apply --expect=<n> [--allow-drafts]]
 
 import { createClient } from "@sanity/client";
 import { readFileSync } from "fs";
@@ -8,22 +8,79 @@ import { fileURLToPath, pathToFileURL } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const MAX_ISSUE_NUMBER = 27;
+export const MAX_ISSUE_NUMBER = 27;
 const NEWSROOM_BYLINE = "newsroom";
 
 // Published only (drafts have a "drafts." id prefix); byline missing or empty.
-export const QUERY = `*[_type == "issue" && !(_id in path("drafts.**")) && issueNumber <= $max && (!defined(byline) || byline == "")] | order(issueNumber asc) { _id, issueNumber }`;
+export const QUERY = `*[_type == "issue" && !(_id in path("drafts.**")) && issueNumber <= $max && (!defined(byline) || byline == "")] | order(issueNumber asc) { _id, _rev, issueNumber, byline }`;
 
-export function buildPatches(docs) {
-  return docs.map((doc) => ({
-    id: doc._id,
-    issueNumber: doc.issueNumber,
-    patch: { set: { byline: NEWSROOM_BYLINE } },
-  }));
-}
+// Drafts that shadow a listed issue: a pending draft would publish without the byline.
+export const DRAFTS_QUERY = `*[_type == "issue" && _id in $draftIds]._id`;
 
 export function parseArgs(argv) {
-  return { apply: argv.includes("--apply") };
+  const expectArg = argv.find((a) => a.startsWith("--expect="));
+  const expect = expectArg ? Number(expectArg.slice("--expect=".length)) : null;
+  return {
+    apply: argv.includes("--apply"),
+    allowDrafts: argv.includes("--allow-drafts"),
+    expect: Number.isInteger(expect) && expect >= 0 ? expect : null,
+  };
+}
+
+// Pure decision function. Returns the candidates, the writes to perform
+// (always empty unless apply and error-free) and the reasons it refused.
+export function planBackfill(
+  docs,
+  draftIds = [],
+  { apply = false, expect = null, allowDrafts = false } = {}
+) {
+  const candidates = docs
+    .filter(
+      (d) =>
+        d.issueNumber <= MAX_ISSUE_NUMBER &&
+        (d.byline === undefined || d.byline === null || d.byline === "")
+    )
+    .map((d) => ({
+      id: d._id,
+      rev: d._rev,
+      issueNumber: d.issueNumber,
+      patch: { set: { byline: NEWSROOM_BYLINE } },
+    }));
+
+  const errors = [];
+  if (!apply) return { candidates, writes: [], errors, draftIds };
+
+  if (expect === null) errors.push("--apply requires --expect=<n>.");
+  else if (candidates.length !== expect)
+    errors.push(`expected ${expect} issue(s) but found ${candidates.length}.`);
+  if (draftIds.length > 0 && !allowDrafts)
+    errors.push(
+      `drafts exist for listed issues (${draftIds.join(", ")}); pass --allow-drafts to proceed.`
+    );
+  for (const c of candidates) {
+    if (!c.rev) errors.push(`${c.id} has no _rev; cannot lock the patch.`);
+  }
+  return {
+    candidates,
+    writes: errors.length ? [] : candidates,
+    errors,
+    draftIds,
+  };
+}
+
+// Each patch is locked to the fetched revision: a concurrent edit makes that
+// doc's commit fail instead of being overwritten. Returns the failures.
+export async function applyWrites(client, writes, log = console.log) {
+  const failures = [];
+  for (const { id, rev, patch } of writes) {
+    try {
+      await client.patch(id).ifRevisionId(rev).set(patch.set).commit();
+      log(`patched ${id}`);
+    } catch (err) {
+      failures.push({ id, message: err?.message || String(err) });
+    }
+  }
+  return failures;
 }
 
 function loadToken() {
@@ -45,7 +102,8 @@ function loadToken() {
 }
 
 async function main() {
-  const { apply } = parseArgs(process.argv.slice(2));
+  const opts = parseArgs(process.argv.slice(2));
+  const { apply } = opts;
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "msr24cg4";
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 
@@ -67,25 +125,35 @@ async function main() {
   });
 
   const docs = await client.fetch(QUERY, { max: MAX_ISSUE_NUMBER });
-  const patches = buildPatches(docs);
+  const draftIds = await client.fetch(DRAFTS_QUERY, {
+    draftIds: docs.map((d) => `drafts.${d._id}`),
+  });
+  const { candidates, writes, errors } = planBackfill(docs, draftIds, opts);
 
-  console.log(`${patches.length} published issue(s) with no byline`);
-  console.log(`IDs: ${patches.map((p) => p.id).join(", ") || "(none)"}`);
-  for (const { id, issueNumber, patch } of patches) {
+  console.log(`${candidates.length} published issue(s) with no byline`);
+  console.log(`IDs: ${candidates.map((p) => p.id).join(", ") || "(none)"}`);
+  if (draftIds.length)
+    console.log(`WARNING: drafts exist for: ${draftIds.join(", ")}`);
+  for (const { id, issueNumber, patch } of candidates) {
     console.log(
       `${apply ? "APPLY" : "WOULD APPLY"} #${issueNumber} ${id}: ${JSON.stringify(patch)}`
     );
   }
 
   if (!apply) {
-    console.log("Dry run. Nothing written. Pass --apply to write.");
+    console.log(
+      "Dry run. Nothing written. Pass --apply --expect=<n> to write."
+    );
     return;
   }
-
-  for (const { id, patch } of patches) {
-    await client.patch(id).set(patch.set).commit();
-    console.log(`patched ${id}`);
+  if (errors.length) {
+    for (const e of errors) console.error(`ABORT: ${e}`);
+    process.exit(1);
   }
+
+  const failures = await applyWrites(client, writes);
+  for (const f of failures) console.error(`FAILED ${f.id}: ${f.message}`);
+  if (failures.length) process.exit(1);
 }
 
 if (
