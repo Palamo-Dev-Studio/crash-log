@@ -52,8 +52,8 @@ const arrayFallbackWrappers = [
   },
   { name: "getColumnsForFeed", fn: () => queries.getColumnsForFeed() },
   { name: "getAllColumnsSummary", fn: () => queries.getAllColumnsSummary() },
-  { name: "getHomeFeed", fn: () => queries.getHomeFeed() },
 ];
+// getHomeFeed returns a merged list, so it has its own describe below.
 
 describe("null-fallback wrappers", () => {
   for (const { name, fn } of nullFallbackWrappers) {
@@ -179,20 +179,53 @@ describe("query string exports", () => {
     expect(queries.ALL_COLUMNS_FOR_ARCHIVE_SEARCH_QUERY).toContain("body");
     expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("nicosTransmission");
     expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("category");
-    expect(queries.HOME_FEED_QUERY).toContain('_type in ["issue","column"]');
+    expect(queries.HOME_FEED_QUERY).toContain(
+      '_type in ["issue","column","practical"]'
+    );
+    expect(queries.HOME_FEED_QUERY).toContain("order(publishDate desc)");
+    expect(queries.HOME_FEED_QUERY).toContain('status == "published"');
+    for (const type of ["issue", "column", "practical"]) {
+      expect(queries.HOME_FEED_QUERY).toContain(`_type == "${type}"`);
+    }
+    expect(queries.HOME_FEED_QUERY).toContain("practicalNumber");
+    expect(queries.HOME_FEED_QUERY).toContain("byline");
   });
 });
 
 describe("getHomeFeed", () => {
-  it("returns unified issue/column items when sanityFetch resolves", async () => {
-    const data = [
-      { _id: "issue-1", _type: "issue", number: 27 },
-      { _id: "column-1", _type: "column", number: 9 },
-    ];
-    mockSanityFetch.mockResolvedValueOnce(data);
-    expect(await queries.getHomeFeed()).toEqual(data);
+  it("merges the recent slice and per-series latest, de-duplicated and newest first", async () => {
+    mockSanityFetch.mockResolvedValueOnce({
+      recent: [
+        { _id: "issue-1", _type: "issue", publishDate: "2026-10-20" },
+        { _id: "column-1", _type: "column", publishDate: "2026-10-27" },
+      ],
+      latest: [
+        { _id: "issue-1", _type: "issue", publishDate: "2026-10-20" },
+        { _id: "practical-1", _type: "practical", publishDate: "2026-10-01" },
+        null,
+      ],
+    });
+    const feed = await queries.getHomeFeed();
+    expect(feed.map((d) => d._id)).toEqual([
+      "column-1",
+      "issue-1",
+      "practical-1",
+    ]);
     expect(mockSanityFetch).toHaveBeenCalledWith(
       expect.objectContaining({ query: queries.HOME_FEED_QUERY })
     );
   });
+
+  it("returns [] when sanityFetch throws or returns null", async () => {
+    mockSanityFetch.mockRejectedValueOnce(new Error("Network error"));
+    expect(await queries.getHomeFeed()).toEqual([]);
+    mockSanityFetch.mockResolvedValueOnce(null);
+    expect(await queries.getHomeFeed()).toEqual([]);
+  });
+
+  it("returns [] when the result has no lists", async () => {
+    mockSanityFetch.mockResolvedValueOnce({});
+    expect(await queries.getHomeFeed()).toEqual([]);
+  });
 });
+
