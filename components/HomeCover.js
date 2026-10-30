@@ -1,6 +1,7 @@
 // ABOUTME: Home cover hero: the newest file of any series with a feathered illustration, code chip, byline, H1, dek and read cue.
 // ABOUTME: The whole hero links to the file; with no cover image the text block stands alone.
 
+import { useId } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FileChip, { seriesName } from "@/components/FileChip";
@@ -16,6 +17,7 @@ const IMAGE_WIDTH = 1100;
 const IMAGE_HEIGHT = 635;
 
 export default function HomeCover({ doc, locale }) {
+  const titleId = useId();
   if (!doc) return null;
 
   const labels = HOME_LABELS[locale] || HOME_LABELS.en;
@@ -35,7 +37,11 @@ export default function HomeCover({ doc, locale }) {
 
   return (
     <article className={styles.cover}>
-      <Link href={fileHref(doc, locale)} className={styles.link}>
+      <Link
+        href={fileHref(doc, locale)}
+        className={styles.link}
+        aria-labelledby={titleId}
+      >
         {imageUrl && (
           <div className={styles.art}>
             <Image
@@ -68,7 +74,9 @@ export default function HomeCover({ doc, locale }) {
             )}
           </span>
         </div>
-        <h1 className={styles.title}>{title}</h1>
+        <h1 id={titleId} className={styles.title}>
+          {title}
+        </h1>
         {dek && <p className={styles.dek}>{dek}</p>}
         <span className={styles.cue}>{labels.readFile} →</span>
       </Link>

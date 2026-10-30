@@ -180,6 +180,18 @@ describe("HomeCover", () => {
     );
   });
 
+  it("names the hero link by the title alone, with no nested interactive elements", () => {
+    const { container } = render(<HomeCover doc={COLUMN} locale="en" />);
+    const link = screen.getByRole("link", {
+      name: "All the Powers of an Owner",
+    });
+    expect(link).toBe(screen.getByRole("link"));
+    expect(
+      link.querySelectorAll("a, button, input, select, textarea, [tabindex]")
+    ).toHaveLength(0);
+    expect(container.querySelectorAll("a")).toHaveLength(1);
+  });
+
   it("uses an issue's explicit byline and a column's Nico von Bot", () => {
     const { unmount } = render(<HomeCover doc={ISSUE} locale="en" />);
     expect(screen.getByText("By Hector Luis Alamo")).toBeInTheDocument();
