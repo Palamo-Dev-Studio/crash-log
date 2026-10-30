@@ -295,3 +295,28 @@ test.describe("no weekday labels in chrome", () => {
     await scan(page);
   });
 });
+
+test.describe("masthead buttons", () => {
+  for (const width of [1440, 980]) {
+    test(`Support and Subscribe match in height and top at ${width}px`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto("/en");
+      const rect = (name) =>
+        page
+          .locator("header")
+          .getByRole("link", { name, exact: true })
+          .evaluate((el) => {
+            const r = el.getBoundingClientRect();
+            return { height: r.height, top: r.top };
+          });
+      const support = await rect("Support");
+      const subscribe = await rect("Subscribe");
+      expect(Math.abs(support.height - subscribe.height)).toBeLessThanOrEqual(
+        0.5
+      );
+      expect(Math.abs(support.top - subscribe.top)).toBeLessThanOrEqual(0.5);
+    });
+  }
+});

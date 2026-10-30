@@ -101,7 +101,7 @@
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  min-height: 37.6px;
+  min-height: calc(var(--label) * 1.2 + 22px);
   font-family: var(--mono);
   font-size: var(--label);
   font-weight: 500;
@@ -123,7 +123,7 @@
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  min-height: 37.6px;
+  min-height: calc(var(--label) * 1.2 + 22px);
   font-weight: 500;
   line-height: 1.2;
   color: var(--cream);
