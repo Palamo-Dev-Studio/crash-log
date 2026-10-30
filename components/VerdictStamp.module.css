@@ -1,5 +1,5 @@
 /* ABOUTME: Verdict stamp (ported from mockups/styles.css "stamps"): one ink, double border, rough edge via the page's SVG filter.
-   ABOUTME: --terra text on card is 5.77:1 and on cream 5.26:1, so no -ink swap is needed; nowrap on mobile. */
+   ABOUTME: --terra text on card is 5.77:1 and on cream 5.26:1, so no -ink swap is needed; wraps at spaces only. */
 
 .stamp {
   display: inline-block;
@@ -16,14 +16,14 @@
   text-align: center;
   transform: rotate(var(--rot, -3deg));
   filter: url(#cl-stamp-rough);
-  max-width: 62%;
-  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  max-width: 100%;
 }
 
 @media (max-width: 700px) {
   .stamp {
     font-size: 14px;
-    max-width: none;
-    white-space: nowrap;
   }
 }
