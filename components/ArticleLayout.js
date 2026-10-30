@@ -92,7 +92,7 @@ export default function ArticleLayout({
               alt={coverImageAlt || ""}
               width={1200}
               height={675}
-              sizes="(max-width: 700px) 100vw, 68ch"
+              sizes="(max-width: 700px) 100vw, 680px"
               priority
             />
           </figure>

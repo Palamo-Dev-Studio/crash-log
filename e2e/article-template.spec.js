@@ -170,16 +170,20 @@ test.describe("Nico's Notes column page (article template)", () => {
     });
   }
 
-  test("a Practical page shows the subscribe box at most once", async ({
+  test("a Practical page shows the subscribe box exactly once, inside the article", async ({
     page,
   }) => {
     await page.goto("/en/practical");
     const link = page.locator("main a[href^='/en/practical/']").first();
-    test.skip((await link.count()) === 0, "no published practicals");
+    test.skip(
+      (await link.count()) === 0,
+      "no published Practical exists to open"
+    );
     await page.goto(await link.getAttribute("href"));
-    expect(
-      await page.getByText("New files every week. Free.").count()
-    ).toBeLessThanOrEqual(1);
+    // Scoped to the article: the footer carries its own copy of the line.
+    await expect(
+      page.locator("main article").getByText("New files every week. Free.")
+    ).toHaveCount(1);
   });
 
   test("column cover sits inside the prose column, with reserved height and no overflow at 320/390", async ({
@@ -210,6 +214,15 @@ test.describe("Nico's Notes column page (article template)", () => {
       expect(fig.width).toBeGreaterThan(Math.min(art.width, 300) - 2);
       // Reserved 16:9 box, so no layout shift when the image arrives.
       expect(Math.abs(fig.width / fig.height - 16 / 9)).toBeLessThan(0.05);
+      if (width === 1440) {
+        // At DPR 1 the browser must pick a candidate at least as wide as the column
+        // (sizes must not under-state the ~673px prose column).
+        const served = await img.evaluate(async (el) => {
+          if (!el.complete) await el.decode();
+          return new URL(el.currentSrc).searchParams.get("w");
+        });
+        expect(Number(served)).toBeGreaterThanOrEqual(680);
+      }
       // Sits after the byline block, before the first body paragraph.
       const order = await page.evaluate(() => {
         const a = document.querySelector("main article");
