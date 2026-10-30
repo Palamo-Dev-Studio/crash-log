@@ -94,10 +94,14 @@
   font-size: var(--label);
 }
 
-/* Support: terracotta outline box. Padding is the Subscribe button's minus the
-   1.5px border, so the two boxes are the same height. */
+/* Support: terracotta outline box. Support and Subscribe share border-box sizing
+   and an explicit min-height, so they match even where the 1.5px border rounds
+   to 1px. */
 .support {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 37.6px;
   font-family: var(--mono);
   font-size: var(--label);
   font-weight: 500;
@@ -116,7 +120,10 @@
 
 /* Subscribe: ink button (mockup .btn). A plain link to Substack. */
 .subscribe {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 37.6px;
   font-weight: 500;
   line-height: 1.2;
   color: var(--cream);
