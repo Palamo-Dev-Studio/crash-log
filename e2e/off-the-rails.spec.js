@@ -77,6 +77,22 @@ test.describe("Off the Rails issue page", () => {
     }
   }
 
+  test("kicker row renders in caps, date included", async ({ page }) => {
+    await page.goto(ISSUE_PATH("en"));
+    const kicker = page
+      .locator("h1")
+      .locator("xpath=..")
+      .locator("div")
+      .first();
+    const transform = await kicker.evaluate(
+      (el) => getComputedStyle(el).textTransform
+    );
+    expect(transform).toBe("uppercase");
+    const text = await kicker.innerText();
+    expect(text).toBe(text.toUpperCase());
+    expect(text).toMatch(/[A-Z]{3} \d{1,2}, \d{4}/);
+  });
+
   // Counts the line fragments of every space-separated word in every stamp.
   // A word broken mid-word spans two line boxes, so it yields two client rects.
   const brokenStampWords = (page) =>

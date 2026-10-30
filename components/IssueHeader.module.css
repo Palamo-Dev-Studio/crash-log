@@ -12,6 +12,7 @@
   flex-wrap: wrap;
   font-family: var(--mono);
   font-size: var(--label);
+  text-transform: uppercase;
   color: var(--muted);
   padding-bottom: 10px;
   border-bottom: 1px solid var(--ink);

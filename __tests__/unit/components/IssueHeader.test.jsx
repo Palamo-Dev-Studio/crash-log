@@ -2,6 +2,7 @@
 // ABOUTME: EN and ES copy are both asserted so a missing locale branch fails.
 
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
 import { render, screen } from "@testing-library/react";
 import IssueHeader from "@/components/IssueHeader";
 
@@ -18,6 +19,16 @@ const defaultProps = {
 };
 
 describe("IssueHeader", () => {
+  it("uppercases the whole kicker row in CSS, so the short date reads JUN 11, 2026", () => {
+    const css = readFileSync("components/IssueHeader.module.css", "utf8");
+    const rule = css.match(/\.kicker\s*\{[^}]*\}/)[0];
+    expect(rule).toMatch(/text-transform:\s*uppercase/);
+    render(<IssueHeader {...defaultProps} date="Jun 11, 2026" />);
+    // The date segment sits inside the kicker row, so the rule covers it.
+    const date = screen.getByText("Jun 11, 2026");
+    expect(date.closest("[class*='kicker']")).not.toBeNull();
+  });
+
   it("shows the series and case-file code in the kicker", () => {
     render(<IssueHeader {...defaultProps} />);
     expect(
