@@ -3,6 +3,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { readFileSync } from "node:fs";
+import { inspect } from "node:util";
 import {
   QUERY,
   parseArgs,
@@ -10,6 +11,7 @@ import {
   planRetire,
   applyWrites,
   clientOptions,
+  reportError,
 } from "../../scripts/retire-agents.mjs";
 
 const doc = (id, extra = {}) => ({
@@ -133,6 +135,38 @@ describe("clientOptions", () => {
     expect(dry.useCdn).toBe(true);
     const live = clientOptions({ ...base, apply: true, token: "secret" });
     expect(live.useCdn).toBe(false);
+  });
+});
+
+describe("clientOptions perspective", () => {
+  it("pins the raw perspective for both dry run and apply", () => {
+    for (const apply of [false, true]) {
+      const o = clientOptions({
+        projectId: "p",
+        dataset: "d",
+        apply,
+        token: "t",
+      });
+      expect(o.perspective).toBe("raw");
+    }
+  });
+});
+
+describe("reportError", () => {
+  it("never prints a token carried on the error's request headers", () => {
+    const err = Object.assign(new Error("connect ECONNREFUSED"), {
+      request: { headers: { authorization: "Bearer SECRET123" } },
+    });
+    const out = [];
+    reportError(err, (...a) => out.push(inspect(a, { depth: 6 })));
+    expect(out.join("\n")).toContain("ECONNREFUSED");
+    expect(out.join("\n")).not.toContain("SECRET123");
+  });
+
+  it("handles non-Error throws", () => {
+    const out = [];
+    reportError("boom", (...a) => out.push(a.join(" ")));
+    expect(out).toEqual(["boom"]);
   });
 });
 

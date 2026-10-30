@@ -88,6 +88,9 @@ export function clientOptions({ apply, token, projectId, dataset }) {
     dataset,
     apiVersion: "2024-03-01",
     useCdn: !apply,
+    // Pinned: "raw" sees drafts, which the draft check relies on; a client
+    // default change must not silently flip it.
+    perspective: "raw",
     token: apply ? token : undefined,
   };
 }
@@ -105,6 +108,12 @@ export async function applyWrites(client, writes, log = console.log) {
     }
   }
   return failures;
+}
+
+// Errors from @sanity/client can carry `request.headers.authorization` (the raw
+// Bearer token); only the message is ever printed.
+export function reportError(err, log = console.error) {
+  log(err?.message || String(err));
 }
 
 function loadToken() {
@@ -197,7 +206,7 @@ if (
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
   main().catch((err) => {
-    console.error(err);
+    reportError(err);
     process.exit(1);
   });
 }
