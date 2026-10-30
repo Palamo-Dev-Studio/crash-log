@@ -41,7 +41,6 @@ import HomeCover from "@/components/HomeCover";
 import HomeRail from "@/components/HomeRail";
 import CaseCard from "@/components/CaseCard";
 import IssueContent from "@/components/IssueContent";
-import ColumnContent from "@/components/ColumnContent";
 import ArticleLayout from "@/components/ArticleLayout";
 import RecentFiles from "@/components/RecentFiles";
 import FileRow from "@/components/FileRow";
@@ -160,20 +159,13 @@ const RENDERERS = {
   ArticleLayout: (date, locale) => (
     <ArticleLayout
       locale={locale}
-      doc={{ _type: "practical", practicalNumber: 1, publishDate: date }}
-      title="T"
-      body={[]}
-    />
-  ),
-  ColumnContent: (date, locale) => (
-    <ColumnContent
-      locale={locale}
-      column={{
-        columnNumber: 1,
-        slug: "s",
-        title: { en: "T", es: "T" },
+      doc={{
+        _type: "practical",
+        practicalNumber: 1,
         publishDate: date,
       }}
+      title="T"
+      body={[]}
     />
   ),
   FileRow: (date, locale) => (

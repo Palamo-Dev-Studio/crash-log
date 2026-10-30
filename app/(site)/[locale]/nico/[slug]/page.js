@@ -1,12 +1,13 @@
-// ABOUTME: Individual column page — renders a specific Nico's Notes column by slug.
+// ABOUTME: Individual column page — renders a specific Nico's Notes column by slug with the shared article template.
 // ABOUTME: Provides dynamic metadata, JSON-LD schemas, and static params for all columns.
 
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import { getColumnBySlug, getAllColumnSlugs } from "@/lib/queries";
-import { t, LOCALES, LOCALE_OG } from "@/lib/locale";
+import { t, LOCALES, LOCALE_OG, hasFullTranslation } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
-import ColumnContent from "@/components/ColumnContent";
+import { getReadingMinutes } from "@/lib/readingTime";
+import ArticleLayout from "@/components/ArticleLayout";
 
 const getCachedColumnBySlug = cache(getColumnBySlug);
 
@@ -133,7 +134,18 @@ export default async function ColumnPage({ params }) {
     <>
       <ArticleJsonLd column={column} locale={locale} slug={slug} />
       <BreadcrumbJsonLd column={column} locale={locale} slug={slug} />
-      <ColumnContent column={column} locale={locale} />
+      <ArticleLayout
+        doc={{ ...column, _type: "column" }}
+        locale={locale}
+        title={t(column.title, locale)}
+        subtitle={t(column.subtitle, locale)}
+        body={t(column.body, locale)}
+        minutes={getReadingMinutes(column, locale)}
+        showFallback={
+          locale === "es" &&
+          !hasFullTranslation(column, locale, { bodyField: "body" })
+        }
+      />
     </>
   );
 }
