@@ -181,7 +181,7 @@ describe("SupportContent", () => {
       render(<SupportContent locale="en" />);
 
       // Default is $5, one-time
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       expect(global.fetch).toHaveBeenCalledWith("/api/donate", {
         method: "POST",
@@ -216,7 +216,7 @@ describe("SupportContent", () => {
 
       await user.click(screen.getByRole("button", { name: "Monthly" }));
       await user.click(screen.getByRole("button", { name: "$10" }));
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       const callBody = JSON.parse(global.fetch.mock.calls[0][1].body);
       expect(callBody.frequency).toBe("monthly");
@@ -236,7 +236,7 @@ describe("SupportContent", () => {
       const user = userEvent.setup();
       render(<SupportContent locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       expect(screen.getByText("Processing\u2026")).toBeInTheDocument();
 
@@ -255,7 +255,7 @@ describe("SupportContent", () => {
       const user = userEvent.setup();
       render(<SupportContent locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(screen.getByRole("alert")).toHaveTextContent(
@@ -273,7 +273,7 @@ describe("SupportContent", () => {
       await user.type(input, "2");
 
       const form = screen
-        .getByRole("button", { name: "Feed the Bots" })
+        .getByRole("button", { name: "Feed the Agents" })
         .closest("form");
       fireEvent.submit(form);
 
@@ -305,7 +305,7 @@ describe("SupportContent", () => {
     it("renders Spanish submit button", () => {
       render(<SupportContent locale="es" />);
       expect(
-        screen.getByRole("button", { name: "Alimenta a los Bots" })
+        screen.getByRole("button", { name: "Alimenta a los agentes" })
       ).toBeInTheDocument();
     });
 

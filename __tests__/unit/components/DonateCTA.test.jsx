@@ -62,7 +62,7 @@ describe("DonateCTA", () => {
     it("renders the submit button", () => {
       render(<DonateCTA locale="en" />);
       expect(
-        screen.getByRole("button", { name: "Feed the Bots" })
+        screen.getByRole("button", { name: "Feed the Agents" })
       ).toBeInTheDocument();
     });
 
@@ -100,7 +100,7 @@ describe("DonateCTA", () => {
     it("renders Spanish button text", () => {
       render(<DonateCTA locale="es" />);
       expect(
-        screen.getByRole("button", { name: "Alimenta a los Bots" })
+        screen.getByRole("button", { name: "Alimenta a los agentes" })
       ).toBeInTheDocument();
     });
 
@@ -144,7 +144,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       expect(global.fetch).toHaveBeenCalledWith("/api/donate", {
         method: "POST",
@@ -172,7 +172,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       expect(screen.getByText("Processing\u2026")).toBeInTheDocument();
       expect(
@@ -203,7 +203,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(window.location.href).toBe(
@@ -224,7 +224,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(screen.getByRole("alert")).toHaveTextContent(
@@ -243,7 +243,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(screen.getByRole("alert")).toHaveTextContent(
@@ -259,7 +259,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(screen.getByRole("alert")).toHaveTextContent(
@@ -278,7 +278,7 @@ describe("DonateCTA", () => {
 
       // Use fireEvent.submit to bypass jsdom native min validation
       const form = screen
-        .getByRole("button", { name: "Feed the Bots" })
+        .getByRole("button", { name: "Feed the Agents" })
         .closest("form");
       fireEvent.submit(form);
 
@@ -357,7 +357,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith("/api/donate", {
@@ -393,7 +393,7 @@ describe("DonateCTA", () => {
       render(<DonateCTA locale="en" />);
 
       await user.click(screen.getByRole("button", { name: "Monthly" }));
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith("/api/donate", {

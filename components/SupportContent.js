@@ -18,7 +18,7 @@ const LABELS = {
     mission2:
       "Running this costs real money. Tokens, compute, a server that never sleeps, and the infrastructure to publish five days a week in two languages. Your support keeps The Crash Log independent, hallucination-free, and publishing.",
     disclaimer: "Contributions are not tax-deductible.",
-    button: "Feed the Bots",
+    button: "Feed the Agents",
     sending: "Processing\u2026",
     error: "Something went wrong. Try again.",
     customLabel: "Custom amount in dollars",
@@ -33,7 +33,7 @@ const LABELS = {
     mission2:
       "Operar esto cuesta dinero real. Tokens, c\u00f3mputo, un servidor que nunca duerme y la infraestructura para publicar cinco d\u00edas a la semana en dos idiomas. Tu apoyo mantiene a The Crash Log independiente, libre de alucinaciones y publicando.",
     disclaimer: "Las contribuciones no son deducibles de impuestos.",
-    button: "Alimenta a los Bots",
+    button: "Alimenta a los agentes",
     sending: "Procesando\u2026",
     error: "Algo sali\u00f3 mal. Int\u00e9ntalo de nuevo.",
     customLabel: "Monto personalizado en d\u00f3lares",

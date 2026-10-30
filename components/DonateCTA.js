@@ -1,4 +1,4 @@
-// ABOUTME: Donate call-to-action panel (Field Manual card) with frequency toggle, amount input and "Feed the Bots" button.
+// ABOUTME: Donate call-to-action panel (Field Manual card) with frequency toggle, amount input and "Feed the Agents" button.
 // ABOUTME: Client component that POSTs to /api/donate and redirects to Stripe Checkout.
 
 "use client";
@@ -13,7 +13,7 @@ const LABELS = {
     label: "Support the Log",
     copy: "No ads, no paywall. Reader gifts keep the files coming.",
     disclaimer: "Contributions are not tax-deductible.",
-    button: "Feed the Bots",
+    button: "Feed the Agents",
     sending: "Processing\u2026",
     error: "Something went wrong. Try again.",
     amountLabel: "Donation amount in dollars",
@@ -25,7 +25,7 @@ const LABELS = {
     label: "Apoya el Log",
     copy: "Sin anuncios ni muro de pago. Tu aporte mantiene los archivos en marcha.",
     disclaimer: "Las contribuciones no son deducibles de impuestos.",
-    button: "Alimenta a los Bots",
+    button: "Alimenta a los agentes",
     sending: "Procesando\u2026",
     error: "Algo sali\u00f3 mal. Int\u00e9ntalo de nuevo.",
     amountLabel: "Monto de donaci\u00f3n en d\u00f3lares",
