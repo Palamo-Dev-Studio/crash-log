@@ -267,7 +267,16 @@ const weekdayNames = () => {
 const escapeRe = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 test.describe("no weekday labels in chrome", () => {
-  const pages = ["/en", "/es", "/en/archive", "/es/nico"];
+  const pages = [
+    "/en",
+    "/es",
+    "/en/archive",
+    "/es/nico",
+    "/en/off-the-rails",
+    "/es/off-the-rails",
+    "/en/issue/crash-log-027",
+    "/es/issue/crash-log-027",
+  ];
 
   const scan = async (page) => {
     // Join text nodes with spaces so adjacent elements ("ES" + "MON") never
