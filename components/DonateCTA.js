@@ -1,4 +1,4 @@
-// ABOUTME: Donate call-to-action card with amount input and "Feed the Bots" button.
+// ABOUTME: Donate call-to-action panel (Field Manual card) with frequency toggle, amount input and "Feed the Bots" button.
 // ABOUTME: Client component that POSTs to /api/donate and redirects to Stripe Checkout.
 
 "use client";
@@ -10,7 +10,8 @@ import styles from "./DonateCTA.module.css";
 const LABELS = {
   en: {
     ariaLabel: "Donate",
-    copy: "Nico and the AI team burn through tokens like human newsrooms burn through coffee. Your donation keeps The Crash Log hallucination-free and independent \u2014 and Nico\u2019s context window wide open.",
+    label: "Support the Log",
+    copy: "No ads, no paywall. Reader gifts keep the files coming.",
     disclaimer: "Contributions are not tax-deductible.",
     button: "Feed the Bots",
     sending: "Processing\u2026",
@@ -21,7 +22,8 @@ const LABELS = {
   },
   es: {
     ariaLabel: "Donar",
-    copy: "Nico y el equipo de IA queman tokens como las redacciones humanas queman caf\u00e9. Tu donaci\u00f3n mantiene a The Crash Log libre de alucinaciones e independiente \u2014 y la ventana de contexto de Nico bien abierta.",
+    label: "Apoya el Log",
+    copy: "Sin anuncios ni muro de pago. Tu aporte mantiene los archivos en marcha.",
     disclaimer: "Las contribuciones no son deducibles de impuestos.",
     button: "Alimenta a los Bots",
     sending: "Procesando\u2026",
@@ -103,50 +105,59 @@ function DonateCTAInner({ locale }) {
   return (
     <>
       <section className={styles.card} aria-label={labels.ariaLabel}>
-        <p className={styles.copy}>{labels.copy}</p>
-        <p className={styles.disclaimer}>{labels.disclaimer}</p>
-        <div className={styles.frequencyToggle} role="group">
-          <button
-            type="button"
-            className={`${styles.freqButton} ${frequency === "once" ? styles.freqActive : ""}`}
-            aria-pressed={frequency === "once"}
-            onClick={() => setFrequency("once")}
-          >
-            {labels.once}
-          </button>
-          <button
-            type="button"
-            className={`${styles.freqButton} ${frequency === "monthly" ? styles.freqActive : ""}`}
-            aria-pressed={frequency === "monthly"}
-            onClick={() => setFrequency("monthly")}
-          >
-            {labels.monthly}
-          </button>
+        <div className={styles.intro}>
+          <p className={styles.label}>{labels.label}</p>
+          <p className={styles.copy}>{labels.copy}</p>
+          <p className={styles.disclaimer}>{labels.disclaimer}</p>
         </div>
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.amountWrapper}>
-            <span className={styles.currencySymbol}>$</span>
-            <input
-              type="number"
-              className={styles.amountInput}
-              min="3"
-              max="999"
-              step="1"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+        <div className={styles.controls}>
+          <div className={styles.frequencyToggle} role="group">
+            <button
+              type="button"
+              className={`${styles.freqButton} ${frequency === "once" ? styles.freqActive : ""}`}
+              aria-pressed={frequency === "once"}
+              onClick={() => setFrequency("once")}
+            >
+              {labels.once}
+            </button>
+            <button
+              type="button"
+              className={`${styles.freqButton} ${frequency === "monthly" ? styles.freqActive : ""}`}
+              aria-pressed={frequency === "monthly"}
+              onClick={() => setFrequency("monthly")}
+            >
+              {labels.monthly}
+            </button>
+          </div>
+          <form className={styles.form} onSubmit={handleSubmit}>
+            <div className={styles.amountWrapper}>
+              <span className={styles.currencySymbol}>$</span>
+              <input
+                type="number"
+                className={styles.amountInput}
+                min="3"
+                max="999"
+                step="1"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                disabled={isLoading}
+                aria-label={labels.amountLabel}
+              />
+            </div>
+            <button
+              type="submit"
+              className={styles.button}
               disabled={isLoading}
-              aria-label={labels.amountLabel}
-            />
-          </div>
-          <button type="submit" className={styles.button} disabled={isLoading}>
-            {isLoading ? labels.sending : labels.button}
-          </button>
-        </form>
-        {status === "error" && (
-          <div className={styles.error} role="alert">
-            {errorMessage}
-          </div>
-        )}
+            >
+              {isLoading ? labels.sending : labels.button}
+            </button>
+          </form>
+          {status === "error" && (
+            <div className={styles.error} role="alert">
+              {errorMessage}
+            </div>
+          )}
+        </div>
       </section>
     </>
   );

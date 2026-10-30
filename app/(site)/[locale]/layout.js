@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import LanguageToggle from "@/components/LanguageToggle";
 import SiteNav from "@/components/SiteNav";
 import Footer from "@/components/Footer";
+import DonatePrompt from "@/components/DonatePrompt";
 import DonationThanks from "@/components/DonationThanks";
 
 const instrumentSerif = Instrument_Serif({
@@ -148,6 +149,7 @@ export default async function SiteLayout({ children, params }) {
           <div id="main-content" tabIndex={-1}>
             {children}
           </div>
+          <DonatePrompt locale={locale} />
           <Footer locale={locale} />
         </div>
         <DonationThanks locale={locale} />

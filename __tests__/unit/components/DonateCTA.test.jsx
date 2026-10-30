@@ -66,9 +66,16 @@ describe("DonateCTA", () => {
       ).toBeInTheDocument();
     });
 
-    it("renders copy text about Nico", () => {
+    it("renders the mono label and one line of copy", () => {
       render(<DonateCTA locale="en" />);
-      expect(screen.getByText(/Nico and the AI team/)).toBeInTheDocument();
+      const label = screen.getByText("Support the Log");
+      expect(label.className).toContain("label");
+      expect(screen.getByText(/No ads, no paywall/)).toBeInTheDocument();
+    });
+
+    it("renders the label as a non-heading so page outlines are untouched", () => {
+      render(<DonateCTA locale="en" />);
+      expect(screen.queryByRole("heading")).toBeNull();
     });
 
     it("renders tax disclaimer", () => {
@@ -102,9 +109,12 @@ describe("DonateCTA", () => {
       expect(screen.getByLabelText("Donar")).toBeInTheDocument();
     });
 
-    it("renders Spanish copy", () => {
+    it("renders Spanish label and copy", () => {
       render(<DonateCTA locale="es" />);
-      expect(screen.getByText(/Nico y el equipo de IA/)).toBeInTheDocument();
+      expect(screen.getByText("Apoya el Log")).toBeInTheDocument();
+      expect(
+        screen.getByText(/Sin anuncios ni muro de pago/)
+      ).toBeInTheDocument();
     });
 
     it("renders Spanish disclaimer", () => {
