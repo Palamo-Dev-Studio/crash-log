@@ -259,6 +259,45 @@ describe("formatError", () => {
   });
 });
 
+describe("write-path token scrubbing and total formatError", () => {
+  const failingClient = (error) => ({
+    patch() {
+      const chain = {
+        ifRevisionId: () => chain,
+        set: () => chain,
+        commit: async () => {
+          throw error;
+        },
+      };
+      return chain;
+    },
+  });
+  const oneWrite = [{ id: "d1", rev: "r1", patch: { set: { a: 1 } } }];
+
+  it("applyWrites scrubs a bare token from a commit error", async () => {
+    const failures = await applyWrites(
+      failingClient(new Error("tok SECRET123")),
+      oneWrite,
+      () => {},
+      ["SECRET123"]
+    );
+    expect(JSON.stringify(failures)).not.toContain("SECRET123");
+    expect(failures[0].message).toBe("tok ***");
+  });
+
+  it("formatError never throws on odd inputs", () => {
+    const bare = Object.create(null);
+    expect(() => formatError(bare)).not.toThrow();
+    expect(formatError(bare)).toBe("Unknown error");
+    expect(formatError({ message: 42 })).toBe("42");
+    expect(formatError({ message: { toString: null } })).toBe("Unknown error");
+    expect(formatError(null)).toBe("null");
+    expect(formatError({ message: "x SECRET123" }, ["SECRET123"])).toBe(
+      "x ***"
+    );
+  });
+});
+
 describe("run (top-level failure path)", () => {
   const leakyError = (message) =>
     Object.assign(new Error(message), {

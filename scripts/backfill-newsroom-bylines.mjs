@@ -23,7 +23,12 @@ export const DRAFTS_QUERY = `*[_type == "issue" && _id in $draftIds]._id`;
 // `authorization: Bearer <token>` header. Also scrubs bearer tokens and any
 // known secret value that a message might embed.
 export function formatError(err, secrets = []) {
-  let text = err?.message || String(err);
+  let text;
+  try {
+    text = String(err?.message ?? err);
+  } catch {
+    text = "Unknown error";
+  }
   text = text.replace(/Bearer\s+\S+/gi, "Bearer ***");
   for (const secret of secrets) {
     if (secret) text = text.split(secret).join("***");
@@ -123,14 +128,19 @@ export function applySummary(total, failures) {
 
 // Each patch is locked to the fetched revision: a concurrent edit makes that
 // doc's commit fail instead of being overwritten. Returns the failures.
-export async function applyWrites(client, writes, log = console.log) {
+export async function applyWrites(
+  client,
+  writes,
+  log = console.log,
+  secrets = []
+) {
   const failures = [];
   for (const { id, rev, patch } of writes) {
     try {
       await client.patch(id).ifRevisionId(rev).set(patch.set).commit();
       log(`patched ${id}`);
     } catch (err) {
-      failures.push({ id, message: formatError(err) });
+      failures.push({ id, message: formatError(err, secrets) });
     }
   }
   return failures;
@@ -210,7 +220,7 @@ export async function main(
     process.exit(1);
   }
 
-  const failures = await applyWrites(client, writes);
+  const failures = await applyWrites(client, writes, console.log, secrets);
   for (const f of failures) console.error(`FAILED ${f.id}: ${f.message}`);
   for (const line of applySummary(writes.length, failures)) console.log(line);
   if (failures.length) process.exit(1);
