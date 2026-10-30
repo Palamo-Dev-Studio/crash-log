@@ -258,6 +258,10 @@ describe("query string exports", () => {
     }
     // Story reading never falls back to a bare (object) body.
     expect(q).not.toMatch(/pt::text\(body\)/);
+    // Practical bodies carry custom blocks pt::text drops; project them (minus code) for the shared extractor.
+    expect(q).toContain(
+      '"body": select(_type == "practical" => { "en": body.en[_type != "codeBlock"], "es": body.es[_type != "codeBlock"] })'
+    );
     // recent + one latest per series, every one newest-first.
     expect(q.split("order(publishDate desc)[0]").length - 1).toBe(3);
     // The recent slice itself is ordered by publish date, newest first.
