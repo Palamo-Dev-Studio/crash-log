@@ -3,7 +3,7 @@
 
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./DonationThanks.module.css";
 
@@ -25,10 +25,14 @@ export default function DonationThanks({ locale = "en" }) {
     return null;
   }
 
+  // The live region is in the server HTML and stays mounted; the toast is
+  // inserted into it after hydration, so screen readers announce the change.
   return (
-    <Suspense fallback={null}>
-      <DonationThanksInner locale={locale} />
-    </Suspense>
+    <div className={styles.overlay} role="status" aria-live="polite">
+      <Suspense fallback={null}>
+        <DonationThanksInner locale={locale} />
+      </Suspense>
+    </div>
   );
 }
 
@@ -39,15 +43,42 @@ function DonationThanksInner({ locale }) {
   const donated = searchParams.get("donated") === "true";
 
   const [open, setOpen] = useState(donated);
+  const [mounted, setMounted] = useState(false);
+  const previousFocus = useRef(null);
   const labels = LABELS[locale] || LABELS.en;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (donated) setOpen(true);
   }, [donated]);
 
+  // Remember what had focus before the toast appeared, so Close can hand it back.
+  useEffect(() => {
+    if (open && mounted) {
+      const active = document.activeElement;
+      previousFocus.current =
+        active && active !== document.body ? active : null;
+    }
+  }, [open, mounted]);
+
   function dismiss() {
     setOpen(false);
     router.replace(pathname, { scroll: false });
+  }
+
+  // The Close button unmounts with the toast, so focus would fall to <body>:
+  // return it to where it was, else to the skip-link target.
+  function closeAndRestoreFocus() {
+    const prior = previousFocus.current;
+    dismiss();
+    const target =
+      prior && prior.isConnected
+        ? prior
+        : document.getElementById("main-content");
+    target?.focus();
   }
 
   useEffect(() => {
@@ -57,21 +88,19 @@ function DonationThanksInner({ locale }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
   return (
-    <div className={styles.overlay} role="status" aria-live="polite">
-      <div className={styles.toast}>
-        <p className={styles.thanks}>{labels.thanks}</p>
-        <button
-          type="button"
-          className={styles.close}
-          onClick={dismiss}
-          aria-label={labels.close}
-        >
-          &times;
-        </button>
-      </div>
+    <div className={styles.toast}>
+      <p className={styles.thanks}>{labels.thanks}</p>
+      <button
+        type="button"
+        className={styles.close}
+        onClick={closeAndRestoreFocus}
+        aria-label={labels.close}
+      >
+        &times;
+      </button>
     </div>
   );
 }

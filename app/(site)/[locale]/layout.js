@@ -145,7 +145,9 @@ export default async function SiteLayout({ children, params }) {
             <LanguageToggle locale={locale} />
           </Header>
           <SiteNav locale={locale} />
-          <div id="main-content">{children}</div>
+          <div id="main-content" tabIndex={-1}>
+            {children}
+          </div>
           <Footer locale={locale} />
         </div>
         <DonationThanks locale={locale} />

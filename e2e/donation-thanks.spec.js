@@ -11,7 +11,8 @@ test.describe("donation thank-you toast", () => {
     const toast = page.getByRole("status");
     await expect(toast).toContainText("Thank you for your donation!");
     await page.getByRole("button", { name: "Close" }).click();
-    await expect(toast).toHaveCount(0);
+    await expect(toast).toBeEmpty();
+    await expect(page.locator("#main-content")).toBeFocused();
     await page.waitForURL((url) => !url.searchParams.has("donated"));
     expect(page.url()).toMatch(/\/en\/support$/);
   });
@@ -27,6 +28,6 @@ test.describe("donation thank-you toast", () => {
 
   test("does not show without the param", async ({ page }) => {
     await page.goto("/en/support");
-    await expect(page.getByRole("status")).toHaveCount(0);
+    await expect(page.getByRole("status")).toBeEmpty();
   });
 });

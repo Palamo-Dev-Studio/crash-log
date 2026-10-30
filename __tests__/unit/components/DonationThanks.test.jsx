@@ -3,6 +3,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { act, render, screen } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
 import userEvent from "@testing-library/user-event";
 import {
   setMockPathname,
@@ -44,15 +45,17 @@ describe("DonationThanks", () => {
     expect(screen.getByLabelText("Cerrar")).toBeInTheDocument();
   });
 
-  it("renders nothing without the donated param", () => {
-    const { container } = render(<DonationThanks locale="en" />);
-    expect(container.innerHTML).toBe("");
+  it("renders only an empty live region without the donated param", () => {
+    render(<DonationThanks locale="en" />);
+    const region = screen.getByRole("status");
+    expect(region).toBeEmptyDOMElement();
+    expect(screen.queryByText(EN)).not.toBeInTheDocument();
   });
 
-  it("renders nothing for donated values other than true", () => {
+  it("renders only an empty live region for donated values other than true", () => {
     setMockSearchParams("donated=false");
-    const { container } = render(<DonationThanks locale="en" />);
-    expect(container.innerHTML).toBe("");
+    render(<DonationThanks locale="en" />);
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
   });
 
   it("renders nothing when NEXT_PUBLIC_DONATIONS_ENABLED is not true", () => {
@@ -87,6 +90,85 @@ describe("DonationThanks", () => {
     expect(screen.queryByText(EN)).not.toBeInTheDocument();
     expect(getMockReplace()).toHaveBeenCalledWith("/en/support", {
       scroll: false,
+    });
+  });
+
+  describe("live region", () => {
+    it("is in the server HTML, empty, even when donated=true", () => {
+      setMockSearchParams("donated=true");
+      const html = renderToString(<DonationThanks locale="en" />);
+      expect(html).toMatch(/role="status"/);
+      expect(html).toMatch(/aria-live="polite"/);
+      expect(html).not.toContain(EN);
+    });
+
+    it("is filled after hydration inside the same region element", async () => {
+      setMockSearchParams("donated=true");
+      const container = document.createElement("div");
+      document.body.appendChild(container);
+      container.innerHTML = renderToString(<DonationThanks locale="en" />);
+      const serverRegion = container.querySelector('[role="status"]');
+      expect(serverRegion).not.toBeNull();
+      expect(serverRegion.textContent).toBe("");
+      const { hydrateRoot } = await import("react-dom/client");
+      let root;
+      await act(async () => {
+        root = hydrateRoot(container, <DonationThanks locale="en" />);
+      });
+      const region = container.querySelector('[role="status"]');
+      expect(region).toBe(serverRegion);
+      expect(region.textContent).toContain(EN);
+      act(() => root.unmount());
+      container.remove();
+    });
+  });
+
+  describe("focus on Close", () => {
+    afterEach(() => {
+      document.getElementById("main-content")?.remove();
+    });
+
+    function addMain() {
+      const main = document.createElement("div");
+      main.id = "main-content";
+      main.tabIndex = -1;
+      document.body.appendChild(main);
+      return main;
+    }
+
+    it("moves focus to #main-content when nothing was focused before", async () => {
+      const main = addMain();
+      setMockSearchParams("donated=true");
+      const user = userEvent.setup();
+      render(<DonationThanks locale="en" />);
+      await user.click(screen.getByLabelText("Close"));
+      expect(main).toHaveFocus();
+    });
+
+    it("returns focus to the previously focused element when there was one", async () => {
+      const main = addMain();
+      const prior = document.createElement("button");
+      prior.textContent = "prior";
+      document.body.appendChild(prior);
+      prior.focus();
+      setMockSearchParams("donated=true");
+      const user = userEvent.setup();
+      render(<DonationThanks locale="en" />);
+      await user.click(screen.getByLabelText("Close"));
+      expect(prior).toHaveFocus();
+      expect(main).not.toHaveFocus();
+      prior.remove();
+    });
+
+    it("does not steal focus on auto-dismiss", () => {
+      vi.useFakeTimers();
+      const main = addMain();
+      setMockSearchParams("donated=true");
+      render(<DonationThanks locale="en" />);
+      act(() => {
+        vi.advanceTimersByTime(10000);
+      });
+      expect(main).not.toHaveFocus();
     });
   });
 });

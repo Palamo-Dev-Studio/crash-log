@@ -176,3 +176,8 @@ button {
     scroll-behavior: auto !important;
   }
 }
+
+/* Skip-link target: focused by script only (skip link, toast close), never a tab stop. */
+#main-content:focus {
+  outline: none;
+}
