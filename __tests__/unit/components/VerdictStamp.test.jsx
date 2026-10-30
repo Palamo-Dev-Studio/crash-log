@@ -16,6 +16,26 @@ describe("VerdictStamp", () => {
     expect(screen.getByText("HELD AT THE DOOR")).toBeInTheDocument();
   });
 
+  it("offers a line break after each underscore without changing the text", () => {
+    const { container } = render(
+      <VerdictStamp text="PERMISSION_DENIED_ERROR" index={0} />
+    );
+    const stamp = container.querySelector("span[style*='--rot']");
+    expect(stamp.querySelectorAll("wbr")).toHaveLength(2);
+    // <wbr> carries no text, so the visible and accessible text are unchanged.
+    expect(stamp.textContent).toBe("PERMISSION_DENIED_ERROR");
+    expect(screen.getByText("PERMISSION_DENIED_ERROR")).toBe(stamp);
+    // Each <wbr> directly follows an underscore.
+    for (const w of stamp.querySelectorAll("wbr")) {
+      expect(w.previousSibling.textContent.endsWith("_")).toBe(true);
+    }
+  });
+
+  it("renders no <wbr> for text without underscores", () => {
+    const { container } = render(<VerdictStamp text="HELD AT THE DOOR" />);
+    expect(container.querySelectorAll("wbr")).toHaveLength(0);
+  });
+
   it("renders nothing for empty text", () => {
     const { container } = render(<VerdictStamp text="" index={0} />);
     expect(container).toBeEmptyDOMElement();

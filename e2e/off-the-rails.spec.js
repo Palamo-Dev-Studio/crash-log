@@ -103,7 +103,7 @@ test.describe("Off the Rails issue page", () => {
     );
 
   for (const locale of ["en", "es"]) {
-    for (const width of [360, 390]) {
+    for (const width of [320, 360, 390]) {
       test(`/${locale} at ${width}px: no horizontal overflow and no stamp word broken mid-word, even with a long verdict`, async ({
         browser,
       }) => {
@@ -125,6 +125,43 @@ test.describe("Off the Rails issue page", () => {
         });
         expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
         expect(await brokenStampWords(page)).toEqual([]);
+        await page.close();
+      });
+
+      test(`/${locale} at ${width}px: stamps break after underscores and stay inside the card`, async ({
+        browser,
+      }) => {
+        const page = await browser.newPage({
+          viewport: { width, height: 800 },
+        });
+        await page.goto(ISSUE_PATH(locale));
+        const verdicts =
+          locale === "en"
+            ? ["PERMISSION_DENIED_ERROR", "UNHANDLED_EXCEPTION"]
+            : ["COBRADO POR TERCERA VEZ A TU ABUELA SIN AVISO PREVIO"];
+        for (const verdict of verdicts) {
+          // Same markup VerdictStamp renders: a <wbr> after every underscore.
+          await page.evaluate((text) => {
+            const stamp = document.querySelector(
+              "article span[style*='--rot']"
+            );
+            stamp.innerHTML = text
+              .split("_")
+              .map((part) => part.replace(/&/g, "&amp;"))
+              .join("_<wbr>");
+          }, verdict);
+          expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+          const box = await page.evaluate(() => {
+            const stamp = document.querySelector(
+              "article span[style*='--rot']"
+            );
+            const s = stamp.getBoundingClientRect();
+            const c = stamp.closest("article").getBoundingClientRect();
+            return { left: s.left - c.left, right: c.right - s.right };
+          });
+          expect(box.left).toBeGreaterThanOrEqual(0);
+          expect(box.right).toBeGreaterThanOrEqual(0);
+        }
         await page.close();
       });
 

@@ -1,6 +1,7 @@
 // ABOUTME: Rubber-stamp verdict: mono caps, double terracotta border, tilted per index, inked edge via SVG filter.
 // ABOUTME: Render <StampFilter /> once per page; every stamp references it by STAMP_FILTER_ID from its CSS.
 
+import { Fragment } from "react";
 import styles from "./VerdictStamp.module.css";
 
 // Referenced from VerdictStamp.module.css (`filter: url(#cl-stamp-rough)`).
@@ -65,6 +66,22 @@ export function StampFilter() {
   );
 }
 
+// Break opportunity after each underscore (SNAKE_CASE verdicts). <wbr> adds no text, so
+// the visible and accessible text are unchanged. Residual risk, accepted: one unbreakable
+// word wider than the card still overflows; editorial verdicts are short words.
+function withBreaks(text) {
+  const parts = text.split("_");
+  return parts.map((part, i) =>
+    i < parts.length - 1 ? (
+      <Fragment key={i}>
+        {part}_<wbr />
+      </Fragment>
+    ) : (
+      part
+    )
+  );
+}
+
 export default function VerdictStamp({ text, index = 0, className = "" }) {
   if (!text) return null;
   return (
@@ -72,7 +89,7 @@ export default function VerdictStamp({ text, index = 0, className = "" }) {
       className={`${styles.stamp} ${className}`.trim()}
       style={{ "--rot": `${stampRotation(index)}deg` }}
     >
-      {text}
+      {withBreaks(text)}
     </span>
   );
 }
