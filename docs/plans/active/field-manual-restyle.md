@@ -63,6 +63,9 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
   nicos-notes ×4, locale-switching ×1), same 7 on the branch. SPEC criterion 10 needs e2e green; fix before PR.
 - **Contrast test is a list, not a rule** (`__tests__/unit/contrast.test.js` checks named tokens against fixed
   cream/card). Phase 7: replace with a scan of every CSS rule that sets a colour and a background (incl. `:hover`).
+- **Date formatting is duplicated 7×** (FeedCard, ColumnContent, IssueContent, ArchiveCard, ColumnCard,
+  BeatStoryCard, issue OG image); only FeedCard and the OG image pin `timeZone: "UTC"`, so the others can show a
+  date one day early depending on server timezone. Consolidate into one helper (UTC) when Phases 4–6 touch these.
 - Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
 
 ## Phases
