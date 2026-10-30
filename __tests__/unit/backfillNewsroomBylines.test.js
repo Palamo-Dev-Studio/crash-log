@@ -1,6 +1,7 @@
 // ABOUTME: Unit tests for scripts/backfill-newsroom-bylines.mjs decision logic and write locking.
 // ABOUTME: Pins dry-run default, --expect/draft/rev guards, never-overwrite and the published-only, #1-27 query.
 
+import { format } from "node:util";
 import { describe, it, expect, vi } from "vitest";
 import {
   QUERY,
@@ -11,6 +12,8 @@ import {
   clientOptions,
   draftIdsFor,
   applySummary,
+  formatError,
+  run,
 } from "../../scripts/backfill-newsroom-bylines.mjs";
 
 const doc = (n, extra = {}) => ({
@@ -238,5 +241,126 @@ describe("QUERY", () => {
     expect(QUERY).toContain("!defined(byline)");
     expect(QUERY).toContain('byline == ""');
     expect(QUERY).toContain("_rev");
+  });
+});
+
+describe("formatError", () => {
+  it("returns the message, not the object", () => {
+    expect(formatError(new Error("connect ECONNREFUSED"))).toBe(
+      "connect ECONNREFUSED"
+    );
+    expect(formatError("plain")).toBe("plain");
+  });
+  it("scrubs bearer tokens and known secrets from the message", () => {
+    const err = new Error("failed: Bearer SECRET123 at https://x/?t=SECRET123");
+    const out = formatError(err, ["SECRET123"]);
+    expect(out).not.toContain("SECRET123");
+    expect(formatError(new Error("Bearer abc.def"))).toBe("Bearer ***");
+  });
+});
+
+describe("write-path token scrubbing and total formatError", () => {
+  const failingClient = (error) => ({
+    patch() {
+      const chain = {
+        ifRevisionId: () => chain,
+        set: () => chain,
+        commit: async () => {
+          throw error;
+        },
+      };
+      return chain;
+    },
+  });
+  const oneWrite = [{ id: "d1", rev: "r1", patch: { set: { a: 1 } } }];
+
+  it("applyWrites scrubs a bare token from a commit error", async () => {
+    const failures = await applyWrites(
+      failingClient(new Error("tok SECRET123")),
+      oneWrite,
+      () => {},
+      ["SECRET123"]
+    );
+    expect(JSON.stringify(failures)).not.toContain("SECRET123");
+    expect(failures[0].message).toBe("tok ***");
+  });
+
+  it("formatError never throws on odd inputs", () => {
+    const bare = Object.create(null);
+    expect(() => formatError(bare)).not.toThrow();
+    expect(formatError(bare)).toBe("Unknown error");
+    expect(formatError({ message: 42 })).toBe("42");
+    expect(formatError({ message: { toString: null } })).toBe("Unknown error");
+    expect(formatError(null)).toBe("null");
+    expect(formatError({ message: "x SECRET123" }, ["SECRET123"])).toBe(
+      "x ***"
+    );
+  });
+});
+
+describe("run (top-level failure path)", () => {
+  const leakyError = (message) =>
+    Object.assign(new Error(message), {
+      request: { headers: { authorization: "Bearer SECRET123" } },
+    });
+  const capture = async (argv, deps) => {
+    const out = [];
+    const sink = (...a) => out.push(format(...a));
+    const e = vi.spyOn(console, "error").mockImplementation(sink);
+    const l = vi.spyOn(console, "log").mockImplementation(sink);
+    try {
+      const code = await run(argv, deps);
+      return { code, text: out.join("\n") };
+    } finally {
+      e.mockRestore();
+      l.mockRestore();
+    }
+  };
+  const failingClient = (message) => () => ({
+    fetch: vi.fn().mockRejectedValue(leakyError(message)),
+  });
+
+  it("never prints the token a rejected fetch carries on err.request", async () => {
+    const { code, text } = await capture([], {
+      make: failingClient("connect ECONNREFUSED"),
+    });
+    expect(code).toBe(1);
+    expect(text).toContain("connect ECONNREFUSED");
+    expect(text).not.toContain("SECRET123");
+  });
+
+  it("scrubs a token the message itself mentions when one is passed in options", async () => {
+    const { code, text } = await capture(["--apply", "--expect=1"], {
+      readToken: () => "SECRET123",
+      make: failingClient(
+        "GET-request to https://msr24cg4.api.sanity.io/?token=SECRET123 failed"
+      ),
+    });
+    expect(code).toBe(1);
+    expect(text).toContain("GET-request to https://msr24cg4.api.sanity.io");
+    expect(text).not.toContain("SECRET123");
+  });
+});
+
+describe("clientOptions perspective", () => {
+  it("pins the raw perspective on both read and write paths", () => {
+    const base = { projectId: "p", dataset: "d" };
+    expect(clientOptions({ ...base, apply: false }).perspective).toBe("raw");
+    expect(
+      clientOptions({ ...base, apply: true, token: "t" }).perspective
+    ).toBe("raw");
+  });
+});
+
+describe("parseArgs --expect strictness", () => {
+  it.each(["", "1e1", "0x5", "-1", "0", "1.5", " 5", "5 ", "+5", "abc"])(
+    "rejects %j",
+    (v) => {
+      expect(parseArgs([`--expect=${v}`]).expect).toBeNull();
+    }
+  );
+  it("accepts plain positive decimals", () => {
+    expect(parseArgs(["--expect=1"]).expect).toBe(1);
+    expect(parseArgs(["--expect=88"]).expect).toBe(88);
   });
 });

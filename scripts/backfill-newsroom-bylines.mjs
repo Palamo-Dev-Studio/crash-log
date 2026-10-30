@@ -18,13 +18,35 @@ export const QUERY = `*[_type == "issue" && !(_id in path("drafts.**")) && !(_id
 // Drafts that shadow a listed issue: a pending draft would publish without the byline.
 export const DRAFTS_QUERY = `*[_type == "issue" && _id in $draftIds]._id`;
 
+// Safe one-line text for an error. Never the error object itself: network
+// errors from @sanity/client carry `request`, which holds the raw
+// `authorization: Bearer <token>` header. Also scrubs bearer tokens and any
+// known secret value that a message might embed.
+export function formatError(err, secrets = []) {
+  let text;
+  try {
+    text = String(err?.message ?? err);
+  } catch {
+    text = "Unknown error";
+  }
+  text = text.replace(/Bearer\s+\S+/gi, "Bearer ***");
+  for (const secret of secrets) {
+    if (secret) text = text.split(secret).join("***");
+  }
+  return text;
+}
+
 export function parseArgs(argv) {
   const expectArg = argv.find((a) => a.startsWith("--expect="));
-  const expect = expectArg ? Number(expectArg.slice("--expect=".length)) : null;
+  const expectText = expectArg ? expectArg.slice("--expect=".length) : null;
   return {
     apply: argv.includes("--apply"),
     allowDrafts: argv.includes("--allow-drafts"),
-    expect: Number.isInteger(expect) && expect >= 0 ? expect : null,
+    // Plain decimal digits only (no "", "1e1", "0x5", "-1"); 0 is rejected.
+    expect:
+      expectText !== null && /^[1-9][0-9]*$/.test(expectText)
+        ? Number(expectText)
+        : null,
   };
 }
 
@@ -79,6 +101,9 @@ export function clientOptions({ apply, token, projectId, dataset }) {
     projectId,
     dataset,
     apiVersion: "2024-03-01",
+    // "raw" sees drafts and published docs alike; never "published", which
+    // would blind the draft check.
+    perspective: "raw",
     useCdn: !apply,
     token: apply ? token : undefined,
   };
@@ -103,14 +128,19 @@ export function applySummary(total, failures) {
 
 // Each patch is locked to the fetched revision: a concurrent edit makes that
 // doc's commit fail instead of being overwritten. Returns the failures.
-export async function applyWrites(client, writes, log = console.log) {
+export async function applyWrites(
+  client,
+  writes,
+  log = console.log,
+  secrets = []
+) {
   const failures = [];
   for (const { id, rev, patch } of writes) {
     try {
       await client.patch(id).ifRevisionId(rev).set(patch.set).commit();
       log(`patched ${id}`);
     } catch (err) {
-      failures.push({ id, message: err?.message || String(err) });
+      failures.push({ id, message: formatError(err, secrets) });
     }
   }
   return failures;
@@ -134,8 +164,12 @@ function loadToken() {
   return null;
 }
 
-async function main() {
-  const opts = parseArgs(process.argv.slice(2));
+// `secrets` collects token values so the top-level handler can scrub them.
+export async function main(
+  argv = process.argv.slice(2),
+  { make = createClient, readToken = loadToken, secrets = [] } = {}
+) {
+  const opts = parseArgs(argv);
   const { apply } = opts;
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "msr24cg4";
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
@@ -145,7 +179,7 @@ async function main() {
   try {
     options = clientOptions({
       apply,
-      token: apply ? loadToken() : null,
+      token: apply ? readToken() : null,
       projectId,
       dataset,
     });
@@ -153,7 +187,8 @@ async function main() {
     console.error(err.message);
     process.exit(1);
   }
-  const client = createClient(options);
+  if (options.token) secrets.push(options.token);
+  const client = make(options);
 
   const docs = await client.fetch(QUERY, { max: MAX_ISSUE_NUMBER });
   const draftIds = await client.fetch(DRAFTS_QUERY, {
@@ -185,18 +220,29 @@ async function main() {
     process.exit(1);
   }
 
-  const failures = await applyWrites(client, writes);
+  const failures = await applyWrites(client, writes, console.log, secrets);
   for (const f of failures) console.error(`FAILED ${f.id}: ${f.message}`);
   for (const line of applySummary(writes.length, failures)) console.log(line);
   if (failures.length) process.exit(1);
+}
+
+// Top-level wrapper: prints only a formatted message, never the error object.
+export async function run(argv, deps = {}) {
+  const secrets = [];
+  try {
+    await main(argv, { ...deps, secrets });
+    return 0;
+  } catch (err) {
+    console.error(formatError(err, secrets));
+    return 1;
+  }
 }
 
 if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
-  main().catch((err) => {
-    console.error(err);
-    process.exit(1);
+  run().then((code) => {
+    if (code) process.exit(code);
   });
 }
