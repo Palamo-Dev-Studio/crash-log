@@ -32,6 +32,10 @@ const nullFallbackWrappers = [
     name: "getColumnBySlug",
     fn: () => queries.getColumnBySlug("test-slug"),
   },
+  {
+    name: "getPracticalBySlug",
+    fn: () => queries.getPracticalBySlug("test-slug"),
+  },
 ];
 
 // --- Wrappers that return [] on failure ---
@@ -52,6 +56,12 @@ const arrayFallbackWrappers = [
   },
   { name: "getColumnsForFeed", fn: () => queries.getColumnsForFeed() },
   { name: "getAllColumnsSummary", fn: () => queries.getAllColumnsSummary() },
+  { name: "getAllPracticalSlugs", fn: () => queries.getAllPracticalSlugs() },
+  { name: "getPracticalIndex", fn: () => queries.getPracticalIndex() },
+  {
+    name: "getAllPracticalSummary",
+    fn: () => queries.getAllPracticalSummary(),
+  },
 ];
 // getHomeFeed returns a merged list, so it has its own describe below.
 
@@ -108,6 +118,14 @@ describe("parameter passing", () => {
     await queries.getCategoryWithStories("tech-slug");
     expect(mockSanityFetch).toHaveBeenCalledWith(
       expect.objectContaining({ params: { slug: "tech-slug" } })
+    );
+  });
+
+  it("getPracticalBySlug passes slug param via sanityFetch", async () => {
+    mockSanityFetch.mockResolvedValueOnce(null);
+    await queries.getPracticalBySlug("2026-11-04");
+    expect(mockSanityFetch).toHaveBeenCalledWith(
+      expect.objectContaining({ params: { slug: "2026-11-04" } })
     );
   });
 
@@ -240,6 +258,10 @@ describe("query string exports", () => {
     }
     // Story reading never falls back to a bare (object) body.
     expect(q).not.toMatch(/pt::text\(body\)/);
+    // Practical bodies carry custom blocks pt::text drops; project them (minus code) for the shared extractor.
+    expect(q).toContain(
+      '"body": select(_type == "practical" => { "en": body.en[_type != "codeBlock"], "es": body.es[_type != "codeBlock"] })'
+    );
     // recent + one latest per series, every one newest-first.
     expect(q.split("order(publishDate desc)[0]").length - 1).toBe(3);
     // The recent slice itself is ordered by publish date, newest first.

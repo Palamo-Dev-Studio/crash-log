@@ -6,6 +6,7 @@ import {
   countWords,
   readingMinutes,
   getReadingMinutes,
+  extractReadableText,
 } from "@/lib/readingTime";
 
 const words = (n) => Array.from({ length: n }, () => "word").join(" ");
@@ -67,5 +68,127 @@ describe("getReadingMinutes", () => {
   });
   it("returns null when the doc has no text at all", () => {
     expect(getReadingMinutes({ _type: "column" }, "en")).toBeNull();
+  });
+});
+
+describe("getReadingMinutes for practical articles", () => {
+  const w = (n, tag = "w") => Array.from({ length: n }, () => tag).join(" ");
+  const span = (text) => ({
+    _type: "block",
+    style: "normal",
+    children: [{ _type: "span", text }],
+  });
+  const body = (extra) => ({ en: [span(w(1))].concat(extra) });
+  const count = (blocks) => extractReadableText(blocks);
+
+  it("counts the text of every custom block, and not code", () => {
+    const blocks = [
+      span("alpha"),
+      { _type: "steps", items: [{ title: "stepTitle", text: "stepText" }] },
+      {
+        _type: "exhibit",
+        label: "exLabel",
+        from: "exFrom",
+        caption: "exCaption",
+        rows: [{ lead: "rowLead", text: "rowText" }],
+      },
+      { _type: "callout", title: "callTitle", text: "callText" },
+      { _type: "pullQuote", text: "quoteText" },
+      {
+        _type: "replyAsk",
+        title: "askTitle",
+        text: "askText",
+        buttonLabel: "askButton",
+      },
+      { _type: "codeBlock", language: "js", code: "codeSecret" },
+    ];
+    const text = count(blocks);
+    for (const t of [
+      "alpha",
+      "stepTitle",
+      "stepText",
+      "exLabel",
+      "exFrom",
+      "exCaption",
+      "rowLead",
+      "rowText",
+      "callTitle",
+      "callText",
+      "quoteText",
+      "askTitle",
+      "askText",
+      "askButton",
+    ]) {
+      expect(text).toContain(t);
+    }
+    expect(text).not.toContain("codeSecret");
+  });
+
+  it("lengthens the estimate when custom blocks carry the words", () => {
+    const doc = {
+      _type: "practical",
+      body: body([{ _type: "steps", items: [{ title: "t", text: w(460) }] }]),
+    };
+    expect(getReadingMinutes(doc, "en")).toBe(3);
+  });
+});
+
+describe("getReadingMinutes: one implementation for the home feed and the article page", () => {
+  const w = (n, tag = "w") => Array.from({ length: n }, () => tag).join(" ");
+  const prose = (text) => ({
+    _type: "block",
+    style: "normal",
+    children: [{ _type: "span", text }],
+  });
+  const steps = { _type: "steps", items: [{ title: "t", text: w(460) }] };
+  const code = { _type: "codeBlock", language: "js", code: w(900, "c") };
+  // Article page: the full document. Home feed: the projection's shape, where
+  // `reading` is pt::text (custom blocks dropped) and `body` drops code blocks.
+  const article = {
+    _type: "practical",
+    body: { en: [prose(w(1)), steps, code], es: null },
+  };
+  const homeFeed = {
+    _type: "practical",
+    reading: { en: w(1), es: "" },
+    body: { en: [prose(w(1)), steps], es: null },
+  };
+
+  it("gives a Practical the same minutes on the home cover and its article page", () => {
+    expect(getReadingMinutes(homeFeed, "en")).toBe(3);
+    expect(getReadingMinutes(homeFeed, "en")).toBe(
+      getReadingMinutes(article, "en")
+    );
+  });
+
+  it("shows why the body is projected: pt::text alone undercounts a Practical", () => {
+    const { body, ...withoutBody } = homeFeed;
+    expect(getReadingMinutes(withoutBody, "en")).toBe(1);
+  });
+});
+
+describe("getReadingMinutes for Spanish practical bodies", () => {
+  const w = (n) => Array.from({ length: n }, () => "w").join(" ");
+  const prose = (text) => ({
+    _type: "block",
+    style: "normal",
+    children: [{ _type: "span", text }],
+  });
+
+  it("counts the Spanish body, not the English one, when es is longer", () => {
+    const doc = {
+      _type: "practical",
+      body: { en: [prose(w(230))], es: [prose(w(690))] },
+    };
+    expect(getReadingMinutes(doc, "en")).toBe(1);
+    expect(getReadingMinutes(doc, "es")).toBe(3);
+  });
+
+  it("falls back to the English body when es is missing", () => {
+    const doc = {
+      _type: "practical",
+      body: { en: [prose(w(690))], es: null },
+    };
+    expect(getReadingMinutes(doc, "es")).toBe(3);
   });
 });

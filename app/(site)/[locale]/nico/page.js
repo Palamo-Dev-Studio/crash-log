@@ -1,21 +1,18 @@
-// ABOUTME: Column archive page listing all published Nico's Notes in reverse chronological order.
-// ABOUTME: Uses ColumnCard components with red accent, links to individual columns.
+// ABOUTME: Nico's Notes series index at /[locale]/nico: every published column as a file row, newest first.
+// ABOUTME: Same series-index pattern as Off the Rails and Practical.
 
 import { cache } from "react";
 import { getAllColumnsForArchive } from "@/lib/queries";
-import { t, LOCALE_OG } from "@/lib/locale";
-import ColumnCard from "@/components/ColumnCard";
-import styles from "./nico.module.css";
+import { LOCALE_OG } from "@/lib/locale";
+import { SERIES_INDEX_LABELS } from "@/lib/articleLabels";
+import SeriesIndex from "@/components/SeriesIndex";
 
 const getCachedColumns = cache(getAllColumnsForArchive);
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
-  const title = locale === "es" ? "Notas de Nico" : "Nico\u2019s Notes";
-  const description =
-    locale === "es"
-      ? "La columna semanal de Nico, editor jefe de The Crash Log"
-      : "Nico\u2019s weekly column from the managing editor of The Crash Log";
+  const { title, description } =
+    SERIES_INDEX_LABELS.nicosNotes[locale] || SERIES_INDEX_LABELS.nicosNotes.en;
 
   return {
     title,
@@ -40,32 +37,5 @@ export async function generateMetadata({ params }) {
 export default async function NicoArchivePage({ params }) {
   const { locale } = await params;
   const columns = await getCachedColumns();
-
-  return (
-    <main>
-      <h1 className={styles.heading}>
-        {locale === "es" ? "Notas de Nico" : "Nico\u2019s Notes"}
-      </h1>
-
-      {columns.length === 0 ? (
-        <p className={styles.empty}>
-          {locale === "es"
-            ? "No hay columnas publicadas todav\u00EDa."
-            : "No columns published yet."}
-        </p>
-      ) : (
-        columns.map((column) => (
-          <ColumnCard
-            key={column._id}
-            columnNumber={column.columnNumber}
-            date={column.publishDate}
-            title={t(column.title, locale)}
-            subtitle={t(column.subtitle, locale)}
-            slug={column.slug}
-            locale={locale}
-          />
-        ))
-      )}
-    </main>
-  );
+  return <SeriesIndex series="nicosNotes" docs={columns} locale={locale} />;
 }
