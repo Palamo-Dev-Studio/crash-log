@@ -37,7 +37,7 @@ describe("Footer", () => {
   it("uses h2 for the column headings (no skipped levels) and no h4", () => {
     const { container } = render(<Footer locale="en" />);
     const headings = screen.getAllByRole("heading");
-    expect(headings.map((h) => h.tagName)).toEqual(["H2", "H2"]);
+    expect(headings.map((h) => h.tagName)).toEqual(["H2", "H2", "H2"]);
     expect(container.querySelector("h3, h4, h5, h6")).toBeNull();
   });
 
@@ -106,7 +106,62 @@ describe("Footer", () => {
         new RegExp(`© ${new Date().getFullYear()} The Crash Log`)
       )
     ).toBeInTheDocument();
-    expect(screen.getByText("A Palamo publication")).toBeInTheDocument();
+    const bottom =
+      document.querySelector("footer").lastElementChild.lastElementChild;
+    expect(bottom).toHaveTextContent("A Palamo publication");
+  });
+
+  it("links 'A Palamo publication' to palamo.ai from the Elsewhere column", () => {
+    render(<Footer locale="en" />);
+    const link = screen.getByRole("link", { name: "A Palamo publication" });
+    expect(link).toHaveAttribute("href", "https://palamo.ai");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("renders the Spanish Palamo link", () => {
+    render(<Footer locale="es" />);
+    expect(
+      screen.getByRole("link", { name: "Una publicación de Palamo" })
+    ).toHaveAttribute("href", "https://palamo.ai");
+  });
+
+  describe("Follow column", () => {
+    it("renders the Follow heading and Bluesky and Instagram links", () => {
+      render(<Footer locale="en" />);
+      expect(screen.getByText("Follow")).toBeInTheDocument();
+      const bsky = screen.getByRole("link", { name: "Bluesky" });
+      expect(bsky).toHaveAttribute(
+        "href",
+        "https://bsky.app/profile/hectoralamo.bsky.social"
+      );
+      expect(bsky).toHaveAttribute("rel", "noopener noreferrer");
+      const ig = screen.getByRole("link", { name: "Instagram" });
+      expect(ig).toHaveAttribute(
+        "href",
+        "https://www.instagram.com/crashlognews"
+      );
+      expect(ig).toHaveAttribute("rel", "noopener noreferrer");
+    });
+
+    it("renders the Spanish heading", () => {
+      render(<Footer locale="es" />);
+      expect(screen.getByText("Síguenos")).toBeInTheDocument();
+    });
+
+    it("omits TikTok while the handle is pending", () => {
+      render(<Footer locale="en" />);
+      expect(screen.queryByText("TikTok")).toBeNull();
+    });
+
+    it("renders TikTok when a URL is set", () => {
+      render(
+        <Footer locale="en" tiktokUrl="https://www.tiktok.com/@example" />
+      );
+      expect(screen.getByRole("link", { name: "TikTok" })).toHaveAttribute(
+        "href",
+        "https://www.tiktok.com/@example"
+      );
+    });
   });
 
   it("renders EN and ES links", () => {

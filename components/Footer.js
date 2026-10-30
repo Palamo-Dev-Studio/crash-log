@@ -1,4 +1,4 @@
-// ABOUTME: Site footer: roundel + blurb, the series list with file codes, Elsewhere links, fine print.
+// ABOUTME: Site footer: roundel + blurb, the series list with file codes, Elsewhere links, Follow links, fine print.
 // ABOUTME: Replaces the old DonateCTA + subscribe banner + footer stack (SiteBottom).
 
 import Link from "next/link";
@@ -8,6 +8,11 @@ import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
 import styles from "./Footer.module.css";
 
 const CONTACT_EMAIL = "info@palamo.ai";
+const PALAMO_URL = "https://palamo.ai";
+const BLUESKY_URL = "https://bsky.app/profile/hectoralamo.bsky.social";
+const INSTAGRAM_URL = "https://www.instagram.com/crashlognews";
+// TikTok handle pending from Hector; the link renders only once this is set.
+export const TIKTOK_URL = null;
 
 // Placeholder copy (SPEC): tweak the strings here.
 const LABELS = {
@@ -18,6 +23,7 @@ const LABELS = {
     subscribe: "Subscribe",
     seriesHeading: "The series",
     elsewhereHeading: "Elsewhere",
+    followHeading: "Follow",
     series: {
       offTheRails: "Off the Rails",
       practical: "Practical",
@@ -37,6 +43,7 @@ const LABELS = {
     subscribe: "Suscr\u00edbete",
     seriesHeading: "Las series",
     elsewhereHeading: "Más",
+    followHeading: "Síguenos",
     series: {
       offTheRails: "Fuera de las vías",
       practical: "Práctico",
@@ -57,7 +64,7 @@ const SERIES_LIST = [
   { key: "nicosNotes", code: "NOTE" },
 ];
 
-export default function Footer({ locale }) {
+export default function Footer({ locale, tiktokUrl = TIKTOK_URL }) {
   const labels = LABELS[locale] || LABELS.en;
   const year = new Date().getFullYear();
 
@@ -113,6 +120,33 @@ export default function Footer({ locale }) {
               <li>
                 <a href={`mailto:${CONTACT_EMAIL}`}>{labels.contact}</a>
               </li>
+              <li>
+                <a href={PALAMO_URL} rel="noopener noreferrer">
+                  {labels.publication}
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2 className={styles.heading}>{labels.followHeading}</h2>
+            <ul className={styles.list}>
+              <li>
+                <a href={BLUESKY_URL} rel="noopener noreferrer">
+                  Bluesky
+                </a>
+              </li>
+              <li>
+                <a href={INSTAGRAM_URL} rel="noopener noreferrer">
+                  Instagram
+                </a>
+              </li>
+              {tiktokUrl && (
+                <li>
+                  <a href={tiktokUrl} rel="noopener noreferrer">
+                    TikTok
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>
