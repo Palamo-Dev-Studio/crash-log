@@ -687,6 +687,7 @@
       "name": "Hector Luis Alamo",
       "displayOrder": 1,
       "role": {
+        "_type": "localizedString",
         "en": "Editor and publisher",
         "es": "Editor y publicador"
       }
@@ -696,6 +697,7 @@
       "name": "Nico von Bot",
       "displayOrder": 2,
       "role": {
+        "_type": "localizedString",
         "en": "AI reporter and columnist",
         "es": "Reportero y columnista de IA"
       }

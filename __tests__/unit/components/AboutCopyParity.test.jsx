@@ -119,6 +119,14 @@ describe("About Sanity payload", () => {
     expect(byName["Hector Luis Alamo"]).toBeLessThan(byName["Nico von Bot"]);
   });
 
+  it("types every agent role as a localizedString, matching the stored values", () => {
+    for (const agent of PAYLOAD.agents) {
+      expect(agent.role._type, agent.name).toBe("localizedString");
+      expect(typeof agent.role.en).toBe("string");
+      expect(typeof agent.role.es).toBe("string");
+    }
+  });
+
   it("gives every block a unique _key", () => {
     const keys = [];
     for (const f of ["introParagraph", "workflowSection", "contactCTA"])
