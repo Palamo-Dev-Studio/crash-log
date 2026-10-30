@@ -1,6 +1,7 @@
-// ABOUTME: Shared article template for Practical posts and Nico's Notes: kicker, H1, dek, byline, optional sticky TOC, body.
+// ABOUTME: Shared article template for Practical posts and Nico's Notes: kicker, H1, dek, byline, optional sticky TOC, optional cover image, body.
 // ABOUTME: The TOC column exists only when the body has two or more H2s; without it the 68ch prose column centres on the page.
 
+import Image from "next/image";
 import FileChip, { seriesName } from "@/components/FileChip";
 import ArticleBody from "@/components/ArticleBody";
 import FallbackBanner from "@/components/FallbackBanner";
@@ -8,6 +9,7 @@ import { prepareArticleBody } from "@/lib/articleBody";
 import { ARTICLE_LABELS } from "@/lib/articleLabels";
 import { formatDate } from "@/lib/formatDate";
 import { getByline, getCredit, getSeries } from "@/lib/series";
+import { urlFor } from "@/lib/sanity";
 import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
 import styles from "./ArticleLayout.module.css";
 
@@ -20,6 +22,8 @@ export default function ArticleLayout({
   minutes,
   showFallback = false,
   showSubscribe = false,
+  coverImage = null,
+  coverImageAlt = "",
 }) {
   const labels = ARTICLE_LABELS[locale] || ARTICLE_LABELS.en;
   const series = getSeries(doc);
@@ -76,6 +80,23 @@ export default function ArticleLayout({
             </div>
           )}
         </header>
+
+        {coverImage && (
+          <figure className={styles.cover}>
+            <Image
+              src={urlFor(coverImage)
+                .width(1200)
+                .height(675)
+                .format("webp")
+                .url()}
+              alt={coverImageAlt || ""}
+              width={1200}
+              height={675}
+              sizes="(max-width: 700px) 100vw, 68ch"
+              priority
+            />
+          </figure>
+        )}
 
         {showFallback && <FallbackBanner />}
 

@@ -141,6 +141,9 @@ export default async function ColumnPage({ params }) {
         subtitle={t(column.subtitle, locale)}
         body={t(column.body, locale)}
         minutes={getReadingMinutes(column, locale)}
+        coverImage={column.coverImage}
+        coverImageAlt={t(column.coverImageAlt, locale)}
+        showSubscribe
         showFallback={
           locale === "es" &&
           !hasFullTranslation(column, locale, { bodyField: "body" })

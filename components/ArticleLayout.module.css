@@ -137,6 +137,21 @@
   line-height: 1;
 }
 
+/* Cover: fills the prose column, never wider; the 16:9 box reserves its height before load. */
+.cover {
+  margin: 28px 0 0;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+
+.cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .sub {
   margin: 0;
   background: var(--card);

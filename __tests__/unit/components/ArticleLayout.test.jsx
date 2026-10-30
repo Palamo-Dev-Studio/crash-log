@@ -12,7 +12,9 @@ vi.mock("next/link", () => ({
   ),
 }));
 vi.mock("next/image", () => ({
-  default: ({ src, alt }) => <img src={src} alt={alt} />,
+  default: ({ src, alt, width, height }) => (
+    <img src={src} alt={alt} width={width} height={height} />
+  ),
 }));
 vi.mock("@/lib/sanity", () => ({
   urlFor: () => ({
@@ -190,5 +192,64 @@ describe("ArticleLayout extras", () => {
     expect(screen.getByText(/pr.ximamente/)).toBeInTheDocument();
     rerender(<ArticleLayout doc={PRACTICAL} locale="es" title="T" body={[]} />);
     expect(screen.queryByText(/pr.ximamente/)).toBeNull();
+  });
+});
+
+describe("ArticleLayout cover image", () => {
+  const COVER = { _type: "image", asset: { _ref: "image-abc-1200x675-png" } };
+
+  it("renders the cover between the byline block and the body, with its alt", () => {
+    renderLayout({ coverImage: COVER, coverImageAlt: "A server on fire" });
+    const img = screen.getByRole("img", { name: "A server on fire" });
+    expect(img.getAttribute("src")).toMatch(/cdn\.sanity\.io/);
+    expect(img.getAttribute("width")).toBe("1200");
+    expect(img.getAttribute("height")).toBe("675");
+    const article = img.closest("article");
+    const header = article.querySelector("header");
+    const firstBodyNode = screen.getByText("Intro.");
+    expect(
+      header.compareDocumentPosition(img) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      img.compareDocumentPosition(firstBodyNode) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it("uses a decorative empty alt when no alt text exists", () => {
+    const { container } = renderLayout({ coverImage: COVER });
+    const img = container.querySelector("article img");
+    expect(img).not.toBeNull();
+    expect(img.getAttribute("alt")).toBe("");
+  });
+
+  it("renders no image when there is no cover", () => {
+    const { container } = renderLayout();
+    expect(container.querySelector("article img")).toBeNull();
+  });
+});
+
+describe("ArticleLayout subscribe box", () => {
+  it("renders exactly once, after the last paragraph, in both locales", () => {
+    for (const [locale, line] of [
+      ["en", "New files every week. Free."],
+      ["es", "Expedientes nuevos cada semana. Gratis."],
+    ]) {
+      const { container, unmount } = renderLayout({
+        locale,
+        showSubscribe: true,
+        body: [block("normal", "First."), block("normal", "Last.")],
+      });
+      expect(screen.getAllByText(line)).toHaveLength(1);
+      expect(
+        container.querySelectorAll("article a[href*='substack.com']")
+      ).toHaveLength(1);
+      const last = screen.getByText("Last.");
+      const box = screen.getByText(line);
+      expect(
+        last.compareDocumentPosition(box) & Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
+      unmount();
+    }
   });
 });
