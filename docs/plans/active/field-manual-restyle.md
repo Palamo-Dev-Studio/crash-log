@@ -159,6 +159,9 @@ console.error(err))` prints @sanity/client network errors whole, and `err.reques
   ES "despliegues rotos" → "despliegues fallidos"; final review: one index-head pattern (Archive/Beats use
   kicker+count+rule, Off the Rails index uses H1 + "ALL FILES"). Content cleanup (Sanity, not code): ES category
   names show in English on archive pills; "44%of" headline typo.
+- **Carried into 7e from the 7c PASS:** `twitter-image-parity.test.js:14` should match
+  `/^opengraph-image\.(js|jsx|tsx|png)$/`; `ogTemplate.test.js:142` assert the 40-char word renders as one line
+  below 104px (pins shrink-before-break directly). Declined: wide-caps no-space strings, 90-char no-space orphan.
 - **Unmatched URLs serve Next's bare 404** (no masthead/footer). Phase 7: add a `[locale]/[...rest]` catch-all
   that calls `notFound()` so the branded 404 renders.
 - Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
