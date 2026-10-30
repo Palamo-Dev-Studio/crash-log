@@ -70,9 +70,9 @@ describe("truncateSummary", () => {
     expect(truncateSummary("Short one.")).toBe("Short one.");
   });
   it("cuts at the last sentence end within the word cap", () => {
-    const text = `${words(30)}. ${words(30, "x")}. ${words(40, "y")}.`;
+    const text = `${words(30)}. ${words(30, "X")}. ${words(40, "Y")}.`;
     const out = truncateSummary(text);
-    expect(out.endsWith("x29.")).toBe(true);
+    expect(out.endsWith("X29.")).toBe(true);
     expect(out.split(/\s+/).length).toBeLessThanOrEqual(SUMMARY_MAX_WORDS);
   });
   it("cuts at the cap with an ellipsis when there is no sentence end", () => {
@@ -81,7 +81,69 @@ describe("truncateSummary", () => {
     expect(out.replace("…", "").split(/\s+/)).toHaveLength(SUMMARY_MAX_WORDS);
   });
   it("ignores a sentence end too early to be a useful summary", () => {
-    const out = truncateSummary(`${words(5)}. ${words(120, "z")}`);
+    const out = truncateSummary(`${words(5)}. ${words(120, "Z")}`);
+    expect(out.endsWith("…")).toBe(true);
+  });
+});
+
+describe("truncateSummary sentence ends", () => {
+  // Filler pushes the interesting token to word ~25 so the >=20-word floor is met.
+  const lead = words(24);
+  const tail = words(70, "T");
+  const cut = (mid) => truncateSummary(`${lead} ${mid} ${tail}`);
+
+  it("does not cut inside 'Doe v. Perplexity AI'", () => {
+    const out = cut("the complaint, Doe v. Perplexity AI");
+    expect(out).not.toMatch(/v\.$/);
+    expect(out.endsWith("…")).toBe(true);
+  });
+  it("does not cut inside 'the U.S. Department'", () => {
+    expect(cut("the U.S. Department")).not.toMatch(/U\.S\.$/);
+  });
+  it("does not cut inside a decimal like $13.4 billion", () => {
+    expect(cut("it raised $13.4 billion")).not.toMatch(/\$13\.4$/);
+  });
+  it("does not cut at 'Sept. 5, 2026' (next token is a digit)", () => {
+    expect(cut("on Sept. 5, 2026 it")).not.toMatch(/Sept\.$/);
+  });
+  it("does not cut at 'Dr. Smith said'", () => {
+    expect(cut("Dr. Smith said")).not.toMatch(/Dr\.$/);
+  });
+  it("does not cut inside Spanish 'EE. UU.'", () => {
+    const out = cut("en EE. UU. el");
+    expect(out).not.toMatch(/EE\.$/);
+    expect(out).not.toMatch(/UU\.$/);
+  });
+  it("cuts after a Spanish question ending before an uppercase word", () => {
+    const out = truncateSummary(`${lead} ¿Qué? Luego ${tail}`);
+    expect(out.endsWith("¿Qué?")).toBe(true);
+  });
+  it("cuts after a real sentence end followed by an opening quote", () => {
+    const out = truncateSummary(`${lead} done here. “Then ${tail}`);
+    expect(out.endsWith("done here.")).toBe(true);
+  });
+  it("still splits a normal two-sentence text", () => {
+    const out = truncateSummary(`${lead} ended well. Next ${tail}`);
+    expect(out.endsWith("ended well.")).toBe(true);
+  });
+});
+
+describe("truncateSummary boundaries", () => {
+  it("leaves exactly SUMMARY_MAX_WORDS words untouched (no ellipsis)", () => {
+    const text = words(SUMMARY_MAX_WORDS);
+    expect(truncateSummary(text)).toBe(text);
+  });
+  it("cuts SUMMARY_MAX_WORDS + 1 words to the cap with an ellipsis", () => {
+    const out = truncateSummary(words(SUMMARY_MAX_WORDS + 1));
+    expect(out).toBe(`${words(SUMMARY_MAX_WORDS)}…`);
+  });
+  it("accepts a sentence end at word 20 (the floor)", () => {
+    const out = truncateSummary(`${words(19)} endtwenty. ${words(70, "T")}`);
+    expect(out.endsWith("endtwenty.")).toBe(true);
+    expect(out.split(/\s+/)).toHaveLength(20);
+  });
+  it("rejects a sentence end at word 19", () => {
+    const out = truncateSummary(`${words(18)} endnineteen. ${words(70, "T")}`);
     expect(out.endsWith("…")).toBe(true);
   });
 });
