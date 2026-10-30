@@ -1,10 +1,11 @@
-// ABOUTME: Beats index page listing all content categories.
-// ABOUTME: Shows category name, description, accent color, and story count.
+// ABOUTME: Beats index page listing all content categories as ruled rows.
+// ABOUTME: Shows category name, description and story count; not in the nav, but its route stays live.
 
 import { cache } from "react";
 import Link from "next/link";
 import { getAllCategories } from "@/lib/queries";
 import { t, LOCALE_OG } from "@/lib/locale";
+import { BEAT_LABELS } from "@/lib/beatLabels";
 import styles from "./beats.module.css";
 
 const getCachedCategories = cache(getAllCategories);
@@ -39,45 +40,39 @@ export async function generateMetadata({ params }) {
 
 export default async function BeatsPage({ params }) {
   const { locale } = await params;
+  const labels = BEAT_LABELS[locale] || BEAT_LABELS.en;
   const allCategories = await getCachedCategories();
   const categories = allCategories.filter((cat) => (cat.storyCount || 0) > 0);
 
   return (
     <main>
-      <h1 className={styles.heading}>
-        {locale === "es" ? "Secciones de Cobertura" : "Coverage Beats"}
-      </h1>
+      <section className={styles.head}>
+        <p className={styles.kicker}>
+          <span>{labels.indexKicker}</span>
+          <span>{labels.beatsCaps(categories.length)}</span>
+        </p>
+        <h1 className={styles.title}>{labels.indexTitle}</h1>
+        <p className={styles.dek}>{labels.indexDescription}</p>
+      </section>
 
       {categories.length === 0 ? (
-        <p className={styles.empty}>
-          {locale === "es"
-            ? "No hay secciones configuradas todavía."
-            : "No beats configured yet."}
-        </p>
+        <p className={styles.empty}>{labels.indexEmpty}</p>
       ) : (
-        <div className={styles.grid}>
+        <div className={styles.list}>
           {categories.map((cat) => (
             <Link
               key={cat._id}
               href={`/${locale}/beat/${cat.slug}`}
-              className={styles.card}
-              style={{ borderLeftColor: cat.color || "var(--border)" }}
+              className={styles.row}
             >
-              <h3 className={styles.name}>{t(cat.name, locale)}</h3>
+              <h2 className={styles.name}>{t(cat.name, locale)}</h2>
               {t(cat.description, locale) && (
                 <p className={styles.description}>
                   {t(cat.description, locale)}
                 </p>
               )}
               <span className={styles.count}>
-                {cat.storyCount || 0}{" "}
-                {locale === "es"
-                  ? cat.storyCount === 1
-                    ? "historia"
-                    : "historias"
-                  : cat.storyCount === 1
-                    ? "story"
-                    : "stories"}
+                {labels.stories(cat.storyCount || 0)}
               </span>
             </Link>
           ))}

@@ -5,8 +5,9 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import ArchiveCard from "@/components/ArchiveCard";
-import ColumnCard from "@/components/ColumnCard";
+import FileRow from "@/components/FileRow";
+import { highlightMatches } from "@/lib/highlightMatches";
+import { matchedInLabel } from "@/lib/matchedInLabel";
 import { searchArchive } from "@/lib/searchArchive";
 import styles from "./ArchiveSearch.module.css";
 
@@ -20,6 +21,7 @@ const COPY = {
     clear: "Clear",
     empty: "No results.",
     allCategories: "All beats",
+    filterLabel: "Filter by beat",
     label: "Search",
   },
   es: {
@@ -27,9 +29,16 @@ const COPY = {
     clear: "Limpiar",
     empty: "Sin resultados.",
     allCategories: "Todas las áreas",
+    filterLabel: "Filtrar por sección",
     label: "Buscar",
   },
 };
+
+// Every index entry becomes a FileRow doc: the series comes from the entry's type
+// (issue / column / practical), the file code and byline from its raw fields.
+function toFileDoc(item) {
+  return { ...item.raw, _type: item.type, publishDate: item.publishDate };
+}
 
 export default function ArchiveSearch({ items, categories = [], locale }) {
   const copy = COPY[locale] || COPY.en;
@@ -187,10 +196,13 @@ function ArchiveSearchView({
 }) {
   return (
     <div className={styles.wrapper}>
+      <label className={styles.label} htmlFor="archive-search-input">
+        {copy.label}
+      </label>
       <div className={styles.searchRow}>
         <input
+          id="archive-search-input"
           type="search"
-          aria-label={copy.label}
           className={styles.input}
           placeholder={copy.placeholder}
           value={query}
@@ -208,21 +220,24 @@ function ArchiveSearchView({
       </div>
 
       {categories.length > 0 && (
-        <div className={styles.categoryPills}>
-          {categories.map((cat) => {
-            const active = selectedCats.includes(cat.slug);
-            return (
-              <button
-                key={cat.slug}
-                type="button"
-                className={`${styles.pill} ${active ? styles.pillActive : ""}`}
-                onClick={() => onToggleCat(cat.slug)}
-                aria-pressed={active}
-              >
-                {cat.name}
-              </button>
-            );
-          })}
+        <div className={styles.filters}>
+          <span className={styles.label}>{copy.filterLabel}</span>
+          <div className={styles.categoryPills}>
+            {categories.map((cat) => {
+              const active = selectedCats.includes(cat.slug);
+              return (
+                <button
+                  key={cat.slug}
+                  type="button"
+                  className={`${styles.pill} ${active ? styles.pillActive : ""}`}
+                  onClick={() => onToggleCat(cat.slug)}
+                  aria-pressed={active}
+                >
+                  {cat.name}
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -230,34 +245,19 @@ function ArchiveSearchView({
         <p className={styles.empty}>{copy.empty}</p>
       ) : (
         <div className={styles.results}>
-          {results.map((item) =>
-            item.type === "column" ? (
-              <ColumnCard
-                key={item.id}
-                columnNumber={item.raw.columnNumber}
-                date={item.publishDate}
-                title={item.title}
-                subtitle={item.subtitle}
-                slug={item.raw.slug}
-                locale={locale}
-                query={query}
-                matches={item.matches}
-              />
-            ) : (
-              <ArchiveCard
-                key={item.id}
-                issueNumber={item.raw.issueNumber}
-                date={item.publishDate}
-                title={item.title}
-                subtitle={item.subtitle}
-                severities={item.raw.severities}
-                slug={item.raw.slug}
-                locale={locale}
-                query={query}
-                matches={item.matches}
-              />
-            )
-          )}
+          {results.map((item) => (
+            <FileRow
+              key={item.id}
+              doc={toFileDoc(item)}
+              locale={locale}
+              title={highlightMatches(item.title, query)}
+              titleTag="h3"
+              subtitle={
+                item.subtitle ? highlightMatches(item.subtitle, query) : null
+              }
+              matchedIn={matchedInLabel(item.matches, locale)}
+            />
+          ))}
         </div>
       )}
     </div>

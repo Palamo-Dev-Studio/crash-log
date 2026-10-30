@@ -108,19 +108,19 @@ describe("text token contrast on glows", () => {
 });
 
 describe("search highlight (mark) contrast", () => {
-  it.each([
-    "components/ArchiveCard.module.css",
-    "components/ColumnCard.module.css",
-  ])("%s mark text clears 4.5:1 on its background", (file) => {
-    const body = ruleBody(read(file), "\\.card mark");
-    const bgValue = prop(body, "background");
-    const colorValue = prop(body, "color");
-    expect(colorValue).not.toBe("inherit");
-    for (const surface of [CREAM, CARD]) {
-      const bg = over(parseColor(bgValue), surface);
-      expect(ratio(parseColor(colorValue), bg)).toBeGreaterThanOrEqual(4.5);
+  it.each(["components/FileRow.module.css"])(
+    "%s mark text clears 4.5:1 on its background",
+    (file) => {
+      const body = ruleBody(read(file), "\\.row mark");
+      const bgValue = prop(body, "background");
+      const colorValue = prop(body, "color");
+      expect(colorValue).not.toBe("inherit");
+      for (const surface of [CREAM, CARD]) {
+        const bg = over(parseColor(bgValue), surface);
+        expect(ratio(parseColor(colorValue), bg)).toBeGreaterThanOrEqual(4.5);
+      }
     }
-  });
+  );
 });
 
 describe("donate button hover contrast", () => {

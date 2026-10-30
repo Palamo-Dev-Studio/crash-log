@@ -1,12 +1,13 @@
-// ABOUTME: Beat detail page showing all stories in a specific category.
+// ABOUTME: Beat detail page showing all stories in a specific category as ruled rows.
 // ABOUTME: Fetches category + stories, renders with BeatStoryCard components.
 
 import { cache } from "react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCategoryWithStories, getAllCategories } from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG } from "@/lib/locale";
 import BeatStoryCard from "@/components/BeatStoryCard";
-import { getStoryColorKey } from "@/lib/storyColors";
+import { BEAT_LABELS } from "@/lib/beatLabels";
 import styles from "./beat.module.css";
 
 const getCachedCategoryWithStories = cache(getCategoryWithStories);
@@ -64,38 +65,42 @@ export default async function BeatPage({ params }) {
 
   const name = t(category.name, locale);
   const description = t(category.description, locale);
+  const labels = BEAT_LABELS[locale] || BEAT_LABELS.en;
 
   return (
     <main>
-      <header
-        className={styles.header}
-        style={{ borderLeftColor: category.color || "var(--severity-error)" }}
-      >
-        <h1 className={styles.name}>{name}</h1>
-        {description && <p className={styles.description}>{description}</p>}
-      </header>
+      <section className={styles.head}>
+        <p className={styles.kicker}>
+          <span>
+            {labels.detailKicker} · {labels.storiesCaps(stories.length)}
+          </span>
+          <Link href={`/${locale}/beats`} className={styles.back}>
+            {labels.allBeats}
+          </Link>
+        </p>
+        <h1 className={styles.title}>{name}</h1>
+        {description && <p className={styles.dek}>{description}</p>}
+      </section>
 
       {stories.length === 0 ? (
-        <p className={styles.empty}>
-          {locale === "es"
-            ? "No hay historias en esta sección todavía."
-            : "No stories in this beat yet."}
-        </p>
+        <p className={styles.empty}>{labels.detailEmpty}</p>
       ) : (
-        stories.map((story, index) => (
-          <BeatStoryCard
-            key={story._id}
-            severity={story.severity}
-            colorKey={getStoryColorKey(index)}
-            headline={story.headline}
-            issueMeta={{
-              number: story.issue?.issueNumber,
-              date: story.issue?.publishDate,
-              slug: story.issue?.slug,
-            }}
-            locale={locale}
-          />
-        ))
+        <div className={styles.list}>
+          {stories.map((story) => (
+            <BeatStoryCard
+              key={story._id}
+              severity={story.severity}
+              verdict={story.verdict}
+              headline={story.headline}
+              issueMeta={{
+                number: story.issue?.issueNumber,
+                date: story.issue?.publishDate,
+                slug: story.issue?.slug,
+              }}
+              locale={locale}
+            />
+          ))}
+        </div>
       )}
     </main>
   );

@@ -1,19 +1,22 @@
-// ABOUTME: Archive page listing all published issues + Nico's Notes columns with inline search.
+// ABOUTME: Archive page listing every published file (issues, Nico's Notes columns, Practicals) with inline search.
 // ABOUTME: Server-fetches data, builds a flattened search index, hands off to ArchiveSearch client component.
 
 import { cache } from "react";
 import {
   getAllIssuesForArchive,
   getAllColumnsForArchiveSearch,
+  getAllPracticalsForArchiveSearch,
   getAllCategories,
 } from "@/lib/queries";
 import { t, LOCALE_OG, hasFullTranslation } from "@/lib/locale";
 import { portableTextToPlain } from "@/lib/portableTextToPlain";
 import ArchiveSearch from "@/components/ArchiveSearch";
+import { ARCHIVE_LABELS } from "@/lib/archiveLabels";
 import styles from "./archive.module.css";
 
 const getCachedArchive = cache(getAllIssuesForArchive);
 const getCachedColumns = cache(getAllColumnsForArchiveSearch);
+const getCachedPracticals = cache(getAllPracticalsForArchiveSearch);
 const getCachedCategories = cache(getAllCategories);
 
 export async function generateMetadata({ params }) {
@@ -95,6 +98,7 @@ function buildIssueIndexEntry(issue, locale) {
     raw: {
       issueNumber: issue.issueNumber,
       slug: issue.slug,
+      byline: issue.byline,
       severities: issue.severities,
     },
   };
@@ -130,6 +134,38 @@ function buildColumnIndexEntry(column, locale) {
   };
 }
 
+function buildPracticalIndexEntry(practical, locale) {
+  const title = t(practical.title, locale) || "";
+  const subtitle = t(practical.subtitle, locale) || "";
+  const body = portableTextToPlain(t(practical.body, locale));
+
+  const fields = {
+    titleSubtitle: lower([title, subtitle].join(" ")),
+    transmission: "",
+    headlines: "",
+    bodies: "",
+    stackTrace: "",
+    columnBody: "",
+    practicalBody: lower(body),
+  };
+
+  return {
+    id: practical._id,
+    type: "practical",
+    publishDate: practical.publishDate,
+    title,
+    subtitle,
+    searchText: Object.values(fields).join(" "),
+    fields,
+    categories: [],
+    raw: {
+      practicalNumber: practical.practicalNumber,
+      slug: practical.slug,
+      byline: practical.byline,
+    },
+  };
+}
+
 /**
  * Build the flattened index from raw issues + columns. The listing itself is NOT
  * locale-filtered: an issue or column without a Spanish translation still appears on
@@ -148,9 +184,10 @@ function buildColumnIndexEntry(column, locale) {
  * @param {Array} issues
  * @param {Array} columns
  * @param {string} locale
+ * @param {Array} [practicals]
  * @returns {Array} sorted, publish-date-desc index entries, each with `searchable`
  */
-export function buildArchiveIndex(issues, columns, locale) {
+export function buildArchiveIndex(issues, columns, locale, practicals = []) {
   const issueEntries = (issues || []).map((issue) => ({
     ...buildIssueIndexEntry(issue, locale),
     searchable: hasFullTranslation(issue, locale),
@@ -160,22 +197,31 @@ export function buildArchiveIndex(issues, columns, locale) {
     searchable: hasFullTranslation(column, locale, { bodyField: "body" }),
   }));
 
-  return [...issueEntries, ...columnEntries].sort((a, b) => {
-    const da = a.publishDate || "";
-    const db = b.publishDate || "";
-    return db.localeCompare(da);
-  });
+  const practicalEntries = (practicals || []).map((practical) => ({
+    ...buildPracticalIndexEntry(practical, locale),
+    searchable: hasFullTranslation(practical, locale, { bodyField: "body" }),
+  }));
+
+  return [...issueEntries, ...columnEntries, ...practicalEntries].sort(
+    (a, b) => {
+      const da = a.publishDate || "";
+      const db = b.publishDate || "";
+      return db.localeCompare(da);
+    }
+  );
 }
 
 export default async function ArchivePage({ params }) {
   const { locale } = await params;
-  const [issues, columns, allCategories] = await Promise.all([
+  const [issues, columns, practicals, allCategories] = await Promise.all([
     getCachedArchive(),
     getCachedColumns(),
+    getCachedPracticals(),
     getCachedCategories(),
   ]);
 
-  const items = buildArchiveIndex(issues, columns, locale);
+  const items = buildArchiveIndex(issues, columns, locale, practicals);
+  const labels = ARCHIVE_LABELS[locale] || ARCHIVE_LABELS.en;
 
   // Only surface categories that actually appear in current issues.
   const presentSlugs = new Set();
@@ -190,16 +236,17 @@ export default async function ArchivePage({ params }) {
 
   return (
     <main>
-      <h1 className={styles.heading}>
-        {locale === "es" ? "Archivo de The Crash Log" : "The Crash Log Archive"}
-      </h1>
+      <section className={styles.head}>
+        <p className={styles.kicker}>
+          <span>{labels.kicker}</span>
+          <span>{labels.count(items.length)}</span>
+        </p>
+        <h1 className={styles.title}>{labels.title}</h1>
+        <p className={styles.dek}>{labels.description}</p>
+      </section>
 
       {empty ? (
-        <p className={styles.empty}>
-          {locale === "es"
-            ? "No hay contenido publicado todavía."
-            : "No content published yet."}
-        </p>
+        <p className={styles.empty}>{labels.empty}</p>
       ) : (
         // key={locale} forces a fresh mount on a locale switch rather than reusing the
         // same component instance across it (App Router preserves the instance across
