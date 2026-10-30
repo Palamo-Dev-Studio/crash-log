@@ -6,22 +6,12 @@ import Link from "next/link";
 import { t } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
 import styles from "./FeedCard.module.css";
+import { formatDate } from "@/lib/formatDate";
 
 const LABELS = {
   en: { issue: "Issue", column: "Nico’s Notes" },
   es: { issue: "Edición", column: "Notas de Nico" },
 };
-
-function formatDate(dateString, locale) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return date.toLocaleDateString(locale === "es" ? "es-ES" : "en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  });
-}
 
 export default function FeedCard({ item, locale, variant = "standard" }) {
   if (!item) return null;
@@ -38,7 +28,7 @@ export default function FeedCard({ item, locale, variant = "standard" }) {
   const num = String(item.number).padStart(3, "0");
   const title = t(item.title, locale);
   const dek = t(item.subtitle, locale) || t(item.metaDescription, locale);
-  const date = formatDate(item.publishDate, locale);
+  const date = formatDate(item.publishDate, locale, "long");
 
   const imageWidth = isHero ? 1440 : 640;
   const imageHeight = isHero ? 810 : 360;

@@ -12,16 +12,7 @@ import StoryBlock from "@/components/StoryBlock";
 import { getStoryColorKey } from "@/lib/storyColors";
 import StackTrace from "@/components/StackTrace";
 import styles from "./IssueContent.module.css";
-
-function formatDate(dateString, locale) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return date.toLocaleDateString(locale === "es" ? "es-ES" : "en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
+import { formatDate } from "@/lib/formatDate";
 
 export default function IssueContent({ issue, locale }) {
   if (!issue) {
@@ -54,7 +45,7 @@ export default function IssueContent({ issue, locale }) {
       <IssueHeader
         locale={locale}
         issueNumber={issue.issueNumber}
-        date={formatDate(issue.publishDate, locale)}
+        date={formatDate(issue.publishDate, locale, "long")}
         title={t(issue.title, locale)}
         subtitle={t(issue.subtitle, locale)}
       />

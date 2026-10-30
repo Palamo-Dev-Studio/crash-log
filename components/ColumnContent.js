@@ -7,16 +7,7 @@ import { portableTextComponents } from "@/lib/portableText";
 import CoverImage from "@/components/CoverImage";
 import FallbackBanner from "@/components/FallbackBanner";
 import styles from "./ColumnContent.module.css";
-
-function formatDate(dateString, locale) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return date.toLocaleDateString(locale === "es" ? "es-ES" : "en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
+import { formatDate } from "@/lib/formatDate";
 
 const LABELS = {
   en: { prefix: "Nico\u2019s Notes", empty: "No columns published yet." },
@@ -49,7 +40,7 @@ export default function ColumnContent({ column, locale }) {
           <span className={styles.prefix}>{l.prefix}</span>
           <span className={styles.number}>#{num}</span>
           <span className={styles.date}>
-            {formatDate(column.publishDate, locale)}
+            {formatDate(column.publishDate, locale, "long")}
           </span>
         </p>
         <h1 className={styles.title}>{t(column.title, locale)}</h1>

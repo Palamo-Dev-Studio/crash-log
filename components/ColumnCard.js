@@ -5,16 +5,7 @@ import Link from "next/link";
 import { highlightMatches } from "@/lib/highlightMatches";
 import { matchedInLabel } from "@/lib/matchedInLabel";
 import styles from "./ColumnCard.module.css";
-
-function formatDate(dateString, locale) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return date.toLocaleDateString(locale === "es" ? "es-ES" : "en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
+import { formatDate } from "@/lib/formatDate";
 
 export default function ColumnCard({
   columnNumber,
@@ -33,7 +24,7 @@ export default function ColumnCard({
     <>
       <div className={styles.meta}>
         <span>#{num}</span>
-        <span>{formatDate(date, locale)}</span>
+        <span>{formatDate(date, locale, "short")}</span>
         <span className={styles.kind}>
           {locale === "es" ? "Columna" : "Column"}
         </span>

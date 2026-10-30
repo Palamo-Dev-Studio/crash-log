@@ -5,6 +5,7 @@ import { ImageResponse } from "next/og";
 import { getIssueBySlug } from "@/lib/queries";
 import { t } from "@/lib/locale";
 import { loadInterFonts } from "@/lib/ogFonts";
+import { formatDate } from "@/lib/formatDate";
 
 export const alt = "The Crash Log — Issue";
 
@@ -16,18 +17,7 @@ export const size = {
 export const contentType = "image/png";
 
 function formatPublishDate(dateStr, locale) {
-  if (!dateStr) return null;
-  try {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(locale === "es" ? "es-ES" : "en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      timeZone: "UTC",
-    });
-  } catch {
-    return null;
-  }
+  return formatDate(dateStr, locale, "long") || null;
 }
 
 export default async function IssueOgImage({ params }) {

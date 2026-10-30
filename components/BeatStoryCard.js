@@ -5,16 +5,7 @@ import Link from "next/link";
 import { t } from "@/lib/locale";
 import SeverityBadge from "@/components/SeverityBadge";
 import styles from "./BeatStoryCard.module.css";
-
-function formatDate(dateString, locale) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return date.toLocaleDateString(locale === "es" ? "es-ES" : "en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
+import { formatDate } from "@/lib/formatDate";
 
 export default function BeatStoryCard({
   severity,
@@ -35,7 +26,7 @@ export default function BeatStoryCard({
       <div className={styles.top}>
         <SeverityBadge severity={severity} colorKey={colorKey} />
         <span className={styles.issueMeta}>
-          #{issueNum} · {formatDate(issueMeta.date, locale)}
+          #{issueNum} · {formatDate(issueMeta.date, locale, "short")}
         </span>
       </div>
       <h3 className={styles.headline}>{headlineText}</h3>
