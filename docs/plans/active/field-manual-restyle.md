@@ -150,6 +150,10 @@ console.error(err))` prints @sanity/client network errors whole, and `err.reques
   `field-manual-p7d` for both scripts (safe formatter + leak test); 7b's retire-agents script warned before
   shipping. Lesson: any script that holds a token gets a test that drives its top-level error handler with a
   token-bearing error and asserts the token never prints.
+- **Flaky gate: `__tests__/unit/eslintDateRule.test.js` times out (5s) under load**, 1–2 failures per
+  `verify.sh` run, already at `07dd7b6`. Each case boots a full ESLint with the Next config. Phase 7 site-wide
+  pass: share one ESLint instance per file (`beforeAll`) and/or raise that file's timeout; a gate that flakes gets
+  read as noise.
 - **Unmatched URLs serve Next's bare 404** (no masthead/footer). Phase 7: add a `[locale]/[...rest]` catch-all
   that calls `notFound()` so the branded 404 renders.
 - Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
