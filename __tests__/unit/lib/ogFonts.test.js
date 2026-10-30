@@ -1,10 +1,10 @@
 // ABOUTME: Guards the OG font loader: Satori (next/og) cannot parse WOFF/WOFF2, so only TTF/OTF may be requested.
 // ABOUTME: Also scans every image-route generator for hardcoded .woff/.woff2 font URLs.
 
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import fs from "fs";
 import path from "path";
-import { loadGoogleFont, loadOgFonts } from "@/lib/ogFonts";
+import { loadGoogleFont, loadOgFonts, resetOgFontCache } from "@/lib/ogFonts";
 
 const TTF_CSS = `@font-face {
   font-family: 'Inter';
@@ -37,6 +37,7 @@ function stubFetch(css, fontStatus = 200) {
   return calls;
 }
 
+beforeEach(() => resetOgFontCache());
 afterEach(() => vi.unstubAllGlobals());
 
 describe("loadGoogleFont", () => {
@@ -118,6 +119,45 @@ describe("loadOgFonts", () => {
       "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400",
       "https://fonts.googleapis.com/css2?family=DM+Mono:wght@500",
     ]);
+  });
+
+  it("shares one set of fetches between calls", async () => {
+    const calls = stubFetch(TTF_CSS);
+    const [a, b] = await Promise.all([loadOgFonts(), loadOgFonts()]);
+    await loadOgFonts();
+    expect(a).toBe(b);
+    // 3 fonts x (CSS + file) once, not once per call
+    expect(calls).toHaveLength(6);
+  });
+
+  it("retries on the next call after a failed load", async () => {
+    stubFetch(WOFF2_CSS);
+    await expect(loadOgFonts()).rejects.toThrow(/No TTF\/OTF source/);
+    const calls = stubFetch(TTF_CSS);
+    const fonts = await loadOgFonts();
+    expect(fonts).toHaveLength(3);
+    expect(calls.length).toBeGreaterThan(0);
+  });
+
+  it("passes an abort signal to every request", async () => {
+    const signals = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url, init) => {
+        signals.push(init?.signal);
+        if (String(url).startsWith("https://fonts.googleapis.com/")) {
+          return { ok: true, status: 200, text: async () => TTF_CSS };
+        }
+        return {
+          ok: true,
+          status: 200,
+          arrayBuffer: async () => new ArrayBuffer(8),
+        };
+      })
+    );
+    await loadOgFonts();
+    expect(signals).toHaveLength(6);
+    signals.forEach((sig) => expect(sig).toBeInstanceOf(AbortSignal));
   });
 
   it("rejects when any one font cannot be loaded, so callers fall back", async () => {
