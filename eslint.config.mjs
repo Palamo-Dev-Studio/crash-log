@@ -6,27 +6,38 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import prettier from "eslint-config-prettier/flat";
 
 // Date formatting goes through lib/formatDate.js (UTC, never a weekday).
-// `toLocaleString` is reserved for number and currency formatting, so it is only
-// banned when its options ask for date or time parts.
-// Accepted residual risk: string coercion (`${date}`, `date.toString()`) is not caught.
+// `toLocaleString` is banned outright because it formats dates too; number and
+// currency formatting should use `Intl.NumberFormat`, which is not banned.
+//
+// The real guarantee is lib/formatDate.js and its tests. This lint stops habit,
+// not intent. Accepted residual risk (deliberately NOT caught; do not re-raise):
+//   - `Reflect.get(d, "toLocaleDateString")` and other reflective lookups
+//   - keys computed at runtime or built by concatenation (`d[k]`, `d["toLocale" + "DateString"]`)
+//   - options objects passed in variables (`Intl` options are never inspected)
+//   - string coercion (`${date}`, `String(date)`, `date.toString()`)
+//   - any other indirection that never names a banned member or key literally
+//     (`const I = Intl; new I.DateTimeFormat()` IS caught by the member selector)
 const DATE_MESSAGE = "Format dates with lib/formatDate.js (UTC, no weekday)";
 const DATE_METHODS = [
   "toLocaleDateString",
   "toLocaleTimeString",
+  "toLocaleString",
   "toDateString",
   "toUTCString",
 ];
 // Selectors match member access (not just calls) so `f = d.toLocaleDateString`,
-// `d["toLocaleDateString"]` and destructured/aliased Intl cannot dodge the rule.
-const dateSelectors = (methods) =>
-  [
+// `d["toLocaleDateString"]`, d[`toLocaleDateString`] and destructured/aliased
+// Intl cannot dodge the rule.
+const dateSelectors = (methods) => {
+  const banned = `^(${[...methods, "DateTimeFormat"].join("|")})$`;
+  return [
     `MemberExpression[property.name=/^(${methods.join("|")})$/]`,
-    `MemberExpression[computed=true][property.value=/^(${[...methods, "DateTimeFormat"].join("|")})$/]`,
+    `MemberExpression[computed=true][property.value=/${banned}/]`,
+    `MemberExpression[computed=true] > TemplateLiteral.property[expressions.length=0][quasis.0.value.cooked=/${banned}/]`,
     'MemberExpression[property.name="DateTimeFormat"]',
-    'VariableDeclarator[init.name="Intl"] Property[key.name="DateTimeFormat"]',
-    'VariableDeclarator[init.property.name="Intl"] Property[key.name="DateTimeFormat"]',
-    'CallExpression[callee.property.name="toLocaleString"] ObjectExpression > Property[key.name=/^(weekday|dateStyle|timeStyle)$/]',
+    `ObjectPattern > Property[key.name=/${banned}/]`,
   ].map((selector) => ({ selector, message: DATE_MESSAGE }));
+};
 
 const eslintConfig = defineConfig([
   ...nextVitals,

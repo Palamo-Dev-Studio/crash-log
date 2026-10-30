@@ -104,19 +104,75 @@ describe("date-formatting lint rule", () => {
     }
   });
 
-  it("does not ban toLocaleString (reserved for number and currency formatting)", async () => {
-    for (const code of [
-      "export const f = (n) => n.toLocaleString();",
-      "export const f = (n) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });",
-    ]) {
-      expect(await dateErrors(code, COMPONENT)).toHaveLength(0);
+  const toLocaleStringBans = [
+    "export const f = (n) => n.toLocaleString();",
+    "export const f = (d) => d.toLocaleString('en', { month: 'long' });",
+    "export const f = (d) => d['toLocaleString']();",
+    "export const f = (d) => d[`toLocaleString`]();",
+    "export const f = (d) => { const { toLocaleString } = d; return toLocaleString; };",
+  ];
+
+  it("bans toLocaleString outright (dates go through formatDate)", async () => {
+    for (const code of toLocaleStringBans) {
+      expect(await dateErrors(code, COMPONENT)).toHaveLength(1);
+      expect((await dateErrors(code, FEED)).length).toBeGreaterThan(0);
+      expect(await dateErrors(code, HELPER)).toHaveLength(0);
+    }
+  });
+
+  it("allows Intl.NumberFormat for number and currency formatting", async () => {
+    const code =
+      "export const f = () => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(5);";
+    expect(await dateErrors(code, COMPONENT)).toHaveLength(0);
+  });
+
+  const destructuring = [
+    "export const f = (d) => { const { toLocaleDateString } = d; return toLocaleDateString; };",
+    "export const f = (d) => { const { toLocaleDateString: g } = d; return g; };",
+    "export const f = (I) => { const { DateTimeFormat: X } = I; return X; };",
+    "export const f = (d) => { const { toDateString: g } = d; return g; };",
+  ];
+
+  it("bans destructured date methods and DateTimeFormat (any init, aliased)", async () => {
+    for (const code of destructuring) {
+      const errors = await dateErrors(code, COMPONENT);
+      expect(errors).toHaveLength(1);
+      expect((await dateErrors(code, FEED)).length).toBeGreaterThan(0);
+      expect(await dateErrors(code, HELPER)).toHaveLength(0);
+    }
+  });
+
+  it("allows destructured toUTCString in a feed route only", async () => {
+    const code =
+      "export const f = (d) => { const { toUTCString } = d; return toUTCString; };";
+    expect(await dateErrors(code, FEED)).toHaveLength(0);
+    expect(await dateErrors(code, COMPONENT)).toHaveLength(1);
+  });
+
+  const templateKeys = [
+    "export const f = (d) => d[`toLocaleDateString`]();",
+    "export const f = (d) => d[`toDateString`]();",
+    "export const f = () => Intl[`DateTimeFormat`];",
+  ];
+
+  it("bans backtick computed keys with no expressions", async () => {
+    for (const code of templateKeys) {
+      expect(await dateErrors(code, COMPONENT)).toHaveLength(1);
+      expect((await dateErrors(code, FEED)).length).toBeGreaterThan(0);
+      expect(await dateErrors(code, HELPER)).toHaveLength(0);
     }
     expect(
+      await dateErrors("export const f = (d) => d[`toUTCString`]();", FEED)
+    ).toHaveLength(0);
+  });
+
+  it("catches Intl aliases via the member selector", async () => {
+    expect(
       await dateErrors(
-        "export const f = (n) => n.toLocaleString('en');",
+        "const I = Intl;\nexport const f = () => new I.DateTimeFormat('en');",
         COMPONENT
       )
-    ).toHaveLength(0);
+    ).toHaveLength(1);
   });
 
   it("the real source tree has no violations", async () => {
