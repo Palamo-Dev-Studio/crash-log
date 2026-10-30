@@ -1,5 +1,5 @@
 // ABOUTME: Dedicated support/donation page — linkable from newsletter emails.
-// ABOUTME: Full-page "Feed the Bots" experience with preset amounts and recurring option.
+// ABOUTME: Full-page "Feed the Agents" experience with preset amounts and recurring option.
 
 import { LOCALE_OG } from "@/lib/locale";
 import SupportContent from "@/components/SupportContent";

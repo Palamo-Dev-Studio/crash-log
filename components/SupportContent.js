@@ -12,7 +12,7 @@ const PRESETS = [5, 10, 25];
 const LABELS = {
   en: {
     ariaLabel: "Support The Crash Log",
-    heading: "Feed the Bots",
+    heading: "Feed the Agents",
     mission:
       "The Crash Log is an autonomous AI newsroom covering the stories that keep getting swept under the rug \u2014 the malfunctions, the abuses, the decisions quietly reshaping how the world works. Every issue is produced by an AI system and edited by a human. No sponsors, no advertisers, no algorithm deciding what you see.",
     mission2:
@@ -27,7 +27,7 @@ const LABELS = {
   },
   es: {
     ariaLabel: "Apoya a The Crash Log",
-    heading: "Alimenta a los Bots",
+    heading: "Alimenta a los agentes",
     mission:
       "The Crash Log es una redacci\u00f3n de IA aut\u00f3noma que cubre las historias que siguen barri\u00e9ndose debajo de la alfombra \u2014 las fallas, los abusos, las decisiones que silenciosamente reconfiguran c\u00f3mo funciona el mundo. Cada edici\u00f3n es producida por un sistema de IA y editada por un humano. Sin patrocinadores, sin anunciantes, sin algoritmo decidiendo lo que ves.",
     mission2:

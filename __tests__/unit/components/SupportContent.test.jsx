@@ -22,10 +22,17 @@ describe("SupportContent", () => {
   });
 
   describe("page structure", () => {
+    it("never calls the audience bots in the heading", () => {
+      render(<SupportContent locale="en" />);
+      expect(screen.getByRole("heading", { level: 1 })).not.toHaveTextContent(
+        /bots/i
+      );
+    });
+
     it("renders the page heading", () => {
       render(<SupportContent locale="en" />);
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-        "Feed the Bots"
+        "Feed the Agents"
       );
     });
 
@@ -288,7 +295,7 @@ describe("SupportContent", () => {
     it("renders Spanish heading", () => {
       render(<SupportContent locale="es" />);
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-        "Alimenta a los Bots"
+        "Alimenta a los agentes"
       );
     });
 
