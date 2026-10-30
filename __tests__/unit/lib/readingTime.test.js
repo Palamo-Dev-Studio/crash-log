@@ -6,6 +6,7 @@ import {
   countWords,
   readingMinutes,
   getReadingMinutes,
+  extractReadableText,
 } from "@/lib/readingTime";
 
 const words = (n) => Array.from({ length: n }, () => "word").join(" ");
@@ -67,5 +68,67 @@ describe("getReadingMinutes", () => {
   });
   it("returns null when the doc has no text at all", () => {
     expect(getReadingMinutes({ _type: "column" }, "en")).toBeNull();
+  });
+});
+
+describe("getReadingMinutes for practical articles", () => {
+  const w = (n, tag = "w") => Array.from({ length: n }, () => tag).join(" ");
+  const span = (text) => ({
+    _type: "block",
+    style: "normal",
+    children: [{ _type: "span", text }],
+  });
+  const body = (extra) => ({ en: [span(w(1))].concat(extra) });
+  const count = (blocks) => extractReadableText(blocks);
+
+  it("counts the text of every custom block, and not code", () => {
+    const blocks = [
+      span("alpha"),
+      { _type: "steps", items: [{ title: "stepTitle", text: "stepText" }] },
+      {
+        _type: "exhibit",
+        label: "exLabel",
+        from: "exFrom",
+        caption: "exCaption",
+        rows: [{ lead: "rowLead", text: "rowText" }],
+      },
+      { _type: "callout", title: "callTitle", text: "callText" },
+      { _type: "pullQuote", text: "quoteText" },
+      {
+        _type: "replyAsk",
+        title: "askTitle",
+        text: "askText",
+        buttonLabel: "askButton",
+      },
+      { _type: "codeBlock", language: "js", code: "codeSecret" },
+    ];
+    const text = count(blocks);
+    for (const t of [
+      "alpha",
+      "stepTitle",
+      "stepText",
+      "exLabel",
+      "exFrom",
+      "exCaption",
+      "rowLead",
+      "rowText",
+      "callTitle",
+      "callText",
+      "quoteText",
+      "askTitle",
+      "askText",
+      "askButton",
+    ]) {
+      expect(text).toContain(t);
+    }
+    expect(text).not.toContain("codeSecret");
+  });
+
+  it("lengthens the estimate when custom blocks carry the words", () => {
+    const doc = {
+      _type: "practical",
+      body: body([{ _type: "steps", items: [{ title: "t", text: w(460) }] }]),
+    };
+    expect(getReadingMinutes(doc, "en")).toBe(3);
   });
 });
