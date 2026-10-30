@@ -3,6 +3,7 @@
 
 import Image from "next/image";
 import VerdictStamp from "@/components/VerdictStamp";
+import { formatDate } from "@/lib/formatDate";
 import { t } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
 import { withRef } from "@/lib/series";
@@ -84,6 +85,11 @@ export default function CaseCard({ story, index, locale, fileId }) {
             <b>{source.outlet}</b>
             {source.extra > 0 && ` +${source.extra}`}
           </span>
+          {source.date && (
+            <span className={styles.seg}>
+              {formatDate(source.date, locale, "short")}
+            </span>
+          )}
         </div>
       )}
       {source?.url && (

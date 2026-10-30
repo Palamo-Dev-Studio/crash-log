@@ -141,6 +141,26 @@ describe("CaseCard", () => {
     expect(screen.queryByText(/AP/)).not.toBeInTheDocument();
   });
 
+  it("shows the first source's date in short style when set, in both locales", () => {
+    const story = {
+      ...STORY,
+      sources: [
+        { outlet: "Reuters", url: "https://r.com", date: "2026-06-11" },
+      ],
+    };
+    const { rerender } = render(
+      <CaseCard story={story} index={0} locale="en" />
+    );
+    expect(screen.getByText("Jun 11, 2026")).toBeInTheDocument();
+    rerender(<CaseCard story={story} index={0} locale="es" />);
+    expect(screen.getByText("11 jun 2026")).toBeInTheDocument();
+  });
+
+  it("shows no date segment when the first source has none", () => {
+    render(<CaseCard story={STORY} index={0} locale="en" />);
+    expect(screen.queryByText(/20\d\d/)).not.toBeInTheDocument();
+  });
+
   it("omits +N for a single source", () => {
     render(
       <CaseCard

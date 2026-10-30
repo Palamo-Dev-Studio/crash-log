@@ -176,6 +176,12 @@ describe("Off the Rails queries", () => {
     }
   });
 
+  it("projects the source date on story sources", () => {
+    expect(queries.ISSUE_BY_SLUG_QUERY).toMatch(
+      /sources\[\]\{[^}]*\bdate\b[^}]*\}/
+    );
+  });
+
   it("the index query is published issues newest first with code and byline fields", () => {
     const q = queries.ISSUES_INDEX_QUERY;
     expect(q).toContain('status == "published"');

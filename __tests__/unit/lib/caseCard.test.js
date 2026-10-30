@@ -98,8 +98,15 @@ describe("getSourceInfo", () => {
     expect(info).toEqual({
       outlet: "Reuters",
       url: "https://reuters.com/a",
+      date: null,
       extra: 1,
     });
+  });
+  it("carries the first source's date, or null", () => {
+    expect(
+      getSourceInfo({ sources: [{ outlet: "AP", date: "2026-06-11" }] }).date
+    ).toBe("2026-06-11");
+    expect(getSourceInfo({ sources: [{ outlet: "AP" }] }).date).toBeNull();
   });
   it("falls back to title, then hostname, for the outlet", () => {
     expect(
