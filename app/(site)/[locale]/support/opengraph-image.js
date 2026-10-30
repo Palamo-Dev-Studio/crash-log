@@ -1,4 +1,19 @@
-// ABOUTME: Open Graph image for this route — re-exports the site-level OG image.
-// ABOUTME: A page that sets its own openGraph drops the inherited image, so each such route carries its own.
+// ABOUTME: Open Graph image for the support page, rendered with the shared Field Manual template.
+// ABOUTME: 1200x630 cream card with the stamp roundel and the title in Instrument Serif.
 
-export { default, alt, size, contentType } from "../opengraph-image";
+import { renderOgImage, TitleCard } from "@/lib/ogTemplate";
+
+export const alt = "The Crash Log";
+
+export const size = {
+  width: 1200,
+  height: 630,
+};
+
+export const contentType = "image/png";
+
+export default async function OgImage({ params }) {
+  const { locale } = await params;
+  const title = locale === "es" ? "Apoya" : "Support";
+  return renderOgImage(<TitleCard title={title} />);
+}

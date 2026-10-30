@@ -4,7 +4,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import fs from "fs";
 import path from "path";
-import { loadGoogleFont, loadInterFonts } from "@/lib/ogFonts";
+import { loadGoogleFont, loadOgFonts } from "@/lib/ogFonts";
 
 const TTF_CSS = `@font-face {
   font-family: 'Inter';
@@ -106,14 +106,23 @@ describe("loadGoogleFont", () => {
   });
 });
 
-describe("loadInterFonts", () => {
-  it("requests Inter 700 then 400", async () => {
+describe("loadOgFonts", () => {
+  it("requests Instrument Serif 400, then DM Mono 400 and 500", async () => {
     const calls = stubFetch(TTF_CSS);
-    const [bold, regular] = await loadInterFonts();
-    expect(bold.byteLength).toBe(8);
-    expect(regular.byteLength).toBe(8);
-    expect(calls.filter((u) => u.includes("wght@700"))).toHaveLength(1);
-    expect(calls.filter((u) => u.includes("wght@400"))).toHaveLength(1);
+    const fonts = await loadOgFonts();
+    expect(fonts).toHaveLength(3);
+    fonts.forEach((f) => expect(f.byteLength).toBe(8));
+    const css = calls.filter((u) => u.startsWith("https://fonts.googleapis"));
+    expect(css).toEqual([
+      "https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400",
+      "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400",
+      "https://fonts.googleapis.com/css2?family=DM+Mono:wght@500",
+    ]);
+  });
+
+  it("rejects when any one font cannot be loaded, so callers fall back", async () => {
+    stubFetch(WOFF2_CSS);
+    await expect(loadOgFonts()).rejects.toThrow(/No TTF\/OTF source/);
   });
 });
 
