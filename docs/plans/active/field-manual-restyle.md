@@ -154,6 +154,11 @@ console.error(err))` prints @sanity/client network errors whole, and `err.reques
   `verify.sh` run, already at `07dd7b6`. Each case boots a full ESLint with the Next config. Phase 7 site-wide
   pass: share one ESLint instance per file (`beforeAll`) and/or raise that file's timeout; a gate that flakes gets
   read as noise.
+- **Carried into 7e from the 7a PASS:** beat detail kicker counts `stories.length` but rows drop stories with no
+  published issue — filter once, use for both; `lib/matchedInLabel.js:11` EN "file body" → "practical body";
+  ES "despliegues rotos" → "despliegues fallidos"; final review: one index-head pattern (Archive/Beats use
+  kicker+count+rule, Off the Rails index uses H1 + "ALL FILES"). Content cleanup (Sanity, not code): ES category
+  names show in English on archive pills; "44%of" headline typo.
 - **Unmatched URLs serve Next's bare 404** (no masthead/footer). Phase 7: add a `[locale]/[...rest]` catch-all
   that calls `notFound()` so the branded 404 renders.
 - Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
