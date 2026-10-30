@@ -1,11 +1,11 @@
 // ABOUTME: Guards the OG generators' font fallback: a font-loading failure must not break the image.
-// ABOUTME: When loadInterFonts rejects, ImageResponse is built without a fonts option (built-in font).
+// ABOUTME: When loadOgFonts rejects, ImageResponse is built without a fonts option (built-in font).
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { imageResponse, loadInterFonts } = vi.hoisted(() => ({
+const { imageResponse, loadOgFonts } = vi.hoisted(() => ({
   imageResponse: vi.fn(),
-  loadInterFonts: vi.fn(),
+  loadOgFonts: vi.fn(),
 }));
 
 vi.mock("next/og", () => ({
@@ -15,7 +15,7 @@ vi.mock("next/og", () => ({
     }
   },
 }));
-vi.mock("@/lib/ogFonts", () => ({ loadInterFonts }));
+vi.mock("@/lib/ogFonts", () => ({ loadOgFonts }));
 vi.mock("@/lib/queries", () => ({
   getIssueBySlug: vi.fn(async () => ({
     issueNumber: 1,
@@ -38,12 +38,12 @@ const generators = [
 
 beforeEach(() => {
   imageResponse.mockClear();
-  loadInterFonts.mockReset();
+  loadOgFonts.mockReset();
 });
 
 describe.each(generators)("%s OG generator", (_name, run) => {
   it("still renders an image, without a fonts option, when font loading rejects", async () => {
-    loadInterFonts.mockRejectedValue(new Error("network down"));
+    loadOgFonts.mockRejectedValue(new Error("network down"));
     await run();
     expect(imageResponse).toHaveBeenCalledTimes(1);
     const options = imageResponse.mock.calls[0][1];
@@ -51,13 +51,18 @@ describe.each(generators)("%s OG generator", (_name, run) => {
     expect(options).not.toHaveProperty("fonts");
   });
 
-  it("passes Inter 700 and 400 when font loading succeeds", async () => {
-    loadInterFonts.mockResolvedValue([new ArrayBuffer(1), new ArrayBuffer(2)]);
+  it("passes Instrument Serif 400 and DM Mono 400/500 when font loading succeeds", async () => {
+    loadOgFonts.mockResolvedValue([
+      new ArrayBuffer(1),
+      new ArrayBuffer(2),
+      new ArrayBuffer(3),
+    ]);
     await run();
     const { fonts } = imageResponse.mock.calls[0][1];
     expect(fonts.map((f) => [f.name, f.weight, f.data.byteLength])).toEqual([
-      ["Inter", 700, 1],
-      ["Inter", 400, 2],
+      ["Instrument Serif", 400, 1],
+      ["DM Mono", 400, 2],
+      ["DM Mono", 500, 3],
     ]);
   });
 });
