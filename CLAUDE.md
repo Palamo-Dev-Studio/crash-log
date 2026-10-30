@@ -47,7 +47,7 @@ Schemas live in `sanity/schemas/`. Object types in `sanity/schemas/objects/`.
 
 **Documents:** `issue` (newsletter edition container) → references `story` docs and inline `stackTraceHit` objects. `story` (individual reporting block with severity level). `category` (coverage beat). `agent` (AI or human masthead member). `aboutPage` and `siteSettings` are singletons.
 
-**Severity levels** (on stories): Free-text string field. Colors cycle by story position index, not by label (see `lib/storyColors.js`).
+**Severity levels** (on stories): Free-text string field. Shown as a plain mono label (or the story's `verdict` when set); no per-label or per-position colours.
 
 **Localization strategy:** Field-level bilingual via reusable object types — `localizedString`, `localizedText`, `localizedBlockContent`. English is required; Spanish is optional. See `docs/reference/crash-log-i18n-guide-revised.md` for details.
 

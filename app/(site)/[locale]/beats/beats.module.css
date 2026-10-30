@@ -1,69 +1,123 @@
-/* ABOUTME: Styles for the beats index page.
-   ABOUTME: Section heading, category card grid with accent border and story count. */
+/* ABOUTME: Styles for the beats index page: mono kicker, serif H1 and dek, ruled list of beats with story counts.
+   ABOUTME: Same head scale as the archive and series indexes; rows stack at 700px and below. */
 
-.heading {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-muted);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 32px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--surface);
+.head {
+  padding: 34px 0 28px;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.title {
+  margin: 22px 0 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 58px;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.dek {
+  margin: 14px 0 0;
+  max-width: 46ch;
+  font-size: 21px;
+  line-height: 1.45;
+  color: #463c32;
+  text-wrap: pretty;
 }
 
 .empty {
-  font-family: var(--font-body);
-  font-size: 17px;
-  color: var(--text-tertiary);
-  padding: 48px 0;
-  text-align: center;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+  padding: 32px 0 56px;
 }
 
-.grid {
+.list {
+  padding-bottom: 56px;
+  border-top: 1px solid var(--ink);
+}
+
+.row {
   display: grid;
-  gap: 16px;
-}
-
-.card {
-  display: block;
-  padding: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid;
-  border-radius: 4px;
-  text-decoration: none;
-  color: inherit;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-}
-
-.card:hover {
-  border-color: var(--border-accent);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 20px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
 }
 
 .name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 6px;
+  margin: 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.row:hover .name {
+  color: var(--terra-ink);
+}
+
+.row:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
 }
 
 .description {
-  font-family: var(--font-body);
-  font-size: 15px;
-  color: var(--text-tertiary);
-  line-height: 1.6;
-  margin-bottom: 12px;
+  grid-column: 1;
+  margin: 0;
+  max-width: 60ch;
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--muted);
 }
 
 .count {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-faint);
-  letter-spacing: 0.05em;
+  grid-row: 1;
+  grid-column: 2;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
   text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .head {
+    padding-top: 24px;
+  }
+
+  .title {
+    font-size: 42px;
+  }
+
+  .dek {
+    font-size: 19px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .name {
+    font-size: 25px;
+  }
+
+  .count {
+    grid-row: auto;
+    grid-column: 1;
+  }
 }
