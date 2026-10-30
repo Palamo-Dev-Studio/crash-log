@@ -18,22 +18,23 @@ test.describe("Nico's Notes", () => {
     await expect(page.locator("h1")).toHaveText("Notas de Nico");
   });
 
-  // The old test assumed an empty dataset; production Sanity now has columns, so
-  // assert whichever state the data is in. The empty state itself is covered by
-  // __tests__/unit/components/SeriesIndex.test.jsx.
-  test("archive lists columns as NOTE file rows, or shows the empty state", async ({
-    page,
-  }) => {
-    await page.goto("/en/nico");
-    const rows = page.locator("main a[href^='/en/nico/']");
-    if ((await rows.count()) === 0) {
-      await expect(page.getByText("No columns published yet.")).toBeVisible();
-      return;
-    }
-    await expect(rows.first()).toContainText(/NOTE-\d{3}/);
-    await expect(rows.first()).toContainText("By Nico von Bot");
-    await expect(page.getByText("No columns published yet.")).toHaveCount(0);
-  });
+  // Requires live Sanity data (e2e is not run in CI), so an outage that returns []
+  // fails here instead of passing as an empty state. The empty state itself is
+  // covered by __tests__/unit/components/SeriesIndex.test.jsx.
+  for (const [locale, by] of [
+    ["en", "By Nico von Bot"],
+    ["es", null],
+  ]) {
+    test(`archive lists at least one NOTE file row (${locale.toUpperCase()})`, async ({
+      page,
+    }) => {
+      await page.goto(`/${locale}/nico`);
+      const rows = page.locator(`main a[href^='/${locale}/nico/']`);
+      expect(await rows.count()).toBeGreaterThan(0);
+      await expect(rows.first()).toContainText(/NOTE-\d{3}/);
+      if (by) await expect(rows.first()).toContainText(by);
+    });
+  }
 
   test("nav link navigates to /en/nico", async ({ page }) => {
     await page.goto("/en");
