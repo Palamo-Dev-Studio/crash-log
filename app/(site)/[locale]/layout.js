@@ -127,14 +127,15 @@ export default async function SiteLayout({ children, params }) {
   if (!LOCALES.includes(locale)) notFound();
 
   return (
-    <html lang={locale}>
+    <html
+      lang={locale}
+      className={`${instrumentSerif.variable} ${newsreader.variable} ${dmMono.variable}`}
+    >
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <WebSiteJsonLd />
       </head>
-      <body
-        className={`${instrumentSerif.variable} ${newsreader.variable} ${dmMono.variable}`}
-      >
+      <body>
         <a href="#main-content" className="skip-to-content">
           {locale === "es" ? "Saltar al contenido" : "Skip to content"}
         </a>
