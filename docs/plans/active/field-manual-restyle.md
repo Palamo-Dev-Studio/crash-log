@@ -50,14 +50,24 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - `exhibit` block: add optional `from` sub-header and `rows[]` of `{lead, text}` (mockup `article.html:75-84`).
 - `replyAsk` block: add `buttonUrl`.
 - Byline default (asked Hector): pin the archive explicitly and default missing bylines to the future case.
+- `sharp` is imported by `scripts/build-favicons.mjs` and `__tests__/unit/favicon.test.js` but is only a
+  transitive dep of `next`: add it as an explicit devDependency (`sharp@0.34.5`, the installed version).
+
+## Known issues
+
+- **`main`'s e2e suite is red before this branch:** 7 Playwright failures at `1f133a3` (archive-search ×2,
+  nicos-notes ×4, locale-switching ×1), same 7 on the branch. SPEC criterion 10 needs e2e green; fix before PR.
+- **Contrast test is a list, not a rule** (`__tests__/unit/contrast.test.js` checks named tokens against fixed
+  cream/card). Phase 7: replace with a scan of every CSS rule that sets a colour and a background (incl. `:hover`).
+- Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
 
 ## Phases
 
 | #   | Phase                                                                                       | Status           |
 | --- | ------------------------------------------------------------------------------------------- | ---------------- |
-| 1   | Schema: `story.verdict`, `story.summary`, `story.image` (+credit), author, `practical` type | next             |
-| 2   | Tokens, fonts (`next/font`), roundel SVGs, favicon set                                      | built, in review |
-| 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | —                |
+| 1   | Schema: `story.verdict`, `story.summary`, `story.image` (+credit), author, `practical` type | merged `e2532e3` |
+| 2   | Tokens, fonts (`next/font`), roundel SVGs, favicon set                                      | PASS `1e65711`   |
+| 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | building         |
 | 4   | Home: cover hero, rail, recent files                                                        | —                |
 | 5   | Off the Rails issue page: case cards, verdict stamps                                        | —                |
 | 6   | Practical article template + Nico's Notes column page                                       | —                |
