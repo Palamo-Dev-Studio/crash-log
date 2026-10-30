@@ -99,7 +99,7 @@ describe("Footer", () => {
     );
   });
 
-  it("renders the copyright with the current year and Palamo credit", () => {
+  it("renders the copyright with the current year and no Palamo credit in the bottom row", () => {
     render(<Footer locale="en" />);
     expect(
       screen.getByText(
@@ -108,7 +108,7 @@ describe("Footer", () => {
     ).toBeInTheDocument();
     const bottom =
       document.querySelector("footer").lastElementChild.lastElementChild;
-    expect(bottom).toHaveTextContent("A Palamo publication");
+    expect(bottom).not.toHaveTextContent("Palamo");
   });
 
   it("links 'A Palamo publication' to palamo.ai from the Elsewhere column", () => {
@@ -152,7 +152,7 @@ describe("Footer", () => {
       render(<Footer locale="en" />);
       expect(screen.getByRole("link", { name: "TikTok" })).toHaveAttribute(
         "href",
-        "https://www.tiktok.com/@hectorluislamo"
+        "https://www.tiktok.com/@hectorluisalamo"
       );
     });
 

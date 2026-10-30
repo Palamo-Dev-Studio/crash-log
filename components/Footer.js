@@ -150,7 +150,6 @@ export default function Footer({ locale, tiktokUrl = TIKTOK_URL }) {
         <div className={styles.fine}>
           <span className={styles.segs}>
             <span className={styles.seg}>&copy; {year} The Crash Log</span>
-            <span className={styles.seg}>{labels.publication}</span>
           </span>
           <span role="group" aria-label={labels.languages}>
             <Link href="/en" hrefLang="en" lang="en">
