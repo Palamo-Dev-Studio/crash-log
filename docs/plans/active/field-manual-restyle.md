@@ -30,23 +30,27 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **One PR** at the end: `main` deploys straight to production, so a half-restyled site can't ship.
 - **CI:** org Actions billing failing as of 2026-10-30; `scripts/verify.sh` locally is the gate.
 
-## Open (asked 2026-10-30)
-
-- "4x4 grid": four columns, or the 2×2 grid shown in the render?
-- Old stories have full-length bodies and no summary. Under the card-only format, where do those bodies go?
+- **Case card (modeled on the MyClaw newsletter item):** case number + verdict stamp, headline, image with a
+  credit line, ~60–75-word summary, source line (outlet + date), "Read the file →" to the source.
+- **Grid:** two columns on desktop, one on mobile.
+- **Archive issues:** same cards, summary falls back to the story body's first paragraph, and the full story
+  bodies stay below the grid so no published writing disappears.
+- **Outbound source links** get `?ref=crashlog.ai`.
+- **New `story` fields:** `verdict` (localized), `summary` (localized), `image` with localized alt + `credit`.
+  Hand the field names to Steam's Off the Rails pipeline once merged.
 
 ## Phases
 
-| # | Phase | Status |
-|---|---|---|
-| 1 | Schema: `story.verdict`, `story.summary` + `story.image` (pending the open questions), author, `practical` type | waiting on answers |
-| 2 | Tokens, fonts (`next/font`), roundel SVGs, favicon set | in progress |
-| 3 | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer | — |
-| 4 | Home: cover hero, rail, recent files | — |
-| 5 | Off the Rails issue page: case cards, verdict stamps | — |
-| 6 | Practical article template + Nico's Notes column page | — |
-| 7 | Every other page (archive, beats, about, support, 404, OG images) + legacy token removal | — |
-| 8 | Whole-branch Fable review → CodeRabbit → PR | — |
+| #   | Phase                                                                                       | Status           |
+| --- | ------------------------------------------------------------------------------------------- | ---------------- |
+| 1   | Schema: `story.verdict`, `story.summary`, `story.image` (+credit), author, `practical` type | next             |
+| 2   | Tokens, fonts (`next/font`), roundel SVGs, favicon set                                      | built, in review |
+| 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | —                |
+| 4   | Home: cover hero, rail, recent files                                                        | —                |
+| 5   | Off the Rails issue page: case cards, verdict stamps                                        | —                |
+| 6   | Practical article template + Nico's Notes column page                                       | —                |
+| 7   | Every other page (archive, beats, about, support, 404, OG images) + legacy token removal    | —                |
+| 8   | Whole-branch Fable review → CodeRabbit → PR                                                 | —                |
 
 ## Acceptance criteria
 
