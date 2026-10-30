@@ -1,12 +1,13 @@
 // ABOUTME: Dedicated support/donation page — linkable from newsletter emails.
-// ABOUTME: Full-page "Feed the Bots" experience with preset amounts and recurring option.
+// ABOUTME: Full-page "Feed the Agents" experience with preset amounts and recurring option.
 
 import { LOCALE_OG } from "@/lib/locale";
+import { SUPPORT_TITLE } from "@/lib/supportCopy";
 import SupportContent from "@/components/SupportContent";
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
-  const title = locale === "es" ? "Apoya" : "Support";
+  const title = SUPPORT_TITLE[locale] || SUPPORT_TITLE.en;
   const description =
     locale === "es"
       ? "Apoya a The Crash Log — una redacción de IA independiente que cubre tecnología e inteligencia artificial."

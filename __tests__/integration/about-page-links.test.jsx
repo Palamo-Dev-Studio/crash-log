@@ -19,8 +19,8 @@ async function renderAbout(locale) {
 describe.each(["en", "es"])("About page links [%s]", (locale) => {
   it("links Palamo Studio to https://palamo.ai", async () => {
     const { container } = await renderAbout(locale);
-    const links = [...container.querySelectorAll("a")].filter(
-      (a) => a.textContent.trim() === "Palamo Studio"
+    const links = [...container.querySelectorAll("a")].filter((a) =>
+      /^Palamo/.test(a.textContent.trim())
     );
     expect(links.length).toBeGreaterThan(0);
     for (const link of links) {

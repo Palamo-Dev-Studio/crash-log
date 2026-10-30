@@ -8,6 +8,10 @@ import { setMockPathname, resetMocks } from "../../mocks/next-navigation";
 
 vi.mock("next/navigation", () => import("../../mocks/next-navigation"));
 
+vi.mock("@/lib/supportCopy", () => ({
+  PUBLISH_CADENCE: { en: "SENTINEL-EN-CADENCE", es: "SENTINEL-ES-CADENCE" },
+}));
+
 import SupportContent from "@/components/SupportContent";
 
 describe("SupportContent", () => {
@@ -22,10 +26,28 @@ describe("SupportContent", () => {
   });
 
   describe("page structure", () => {
+    it("never calls the audience bots in the heading", () => {
+      render(<SupportContent locale="en" />);
+      expect(screen.getByRole("heading", { level: 1 })).not.toHaveTextContent(
+        /bots/i
+      );
+    });
+
+    it.each(["en", "es"])(
+      "mission copy takes its publishing cadence from PUBLISH_CADENCE [%s]",
+      (locale) => {
+        setMockPathname(`/${locale}/support`);
+        const { container } = render(<SupportContent locale={locale} />);
+        expect(container.textContent).toContain(
+          `SENTINEL-${locale.toUpperCase()}-CADENCE`
+        );
+      }
+    );
+
     it("renders the page heading", () => {
       render(<SupportContent locale="en" />);
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-        "Feed the Bots"
+        "Feed the Agents"
       );
     });
 
@@ -288,7 +310,7 @@ describe("SupportContent", () => {
     it("renders Spanish heading", () => {
       render(<SupportContent locale="es" />);
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-        "Alimenta a los Bots"
+        "Alimenta a los agentes"
       );
     });
 
