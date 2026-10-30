@@ -1,10 +1,8 @@
 // ABOUTME: Property tests for Hector's rule that displayed dates never carry a weekday.
-// ABOUTME: Weekday names come from Intl (not typed); checks rendered cards for 7 days x en/es plus a source scan of every date-format call.
+// ABOUTME: Weekday names come from Intl (not typed); checks rendered cards for 7 days x en/es. Source-level enforcement is the ESLint rule.
 
 import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
-import fs from "node:fs";
-import path from "node:path";
 
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }) => (
@@ -38,16 +36,14 @@ import FeedCard from "@/components/FeedCard";
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-// Every weekday name Intl knows for en and es, long and short, generated.
+// Every long weekday name Intl knows for en and es, generated (short es names collide with month abbreviations).
 function weekdayNames() {
   const names = new Set();
   for (const locale of ["en", "es"]) {
-    for (const weekday of ["long", "short"]) {
+    for (const weekday of ["long"]) {
       const fmt = new Intl.DateTimeFormat(locale, { weekday, timeZone: "UTC" });
       for (let d = 1; d <= 7; d++) {
-        names.add(
-          fmt.format(new Date(Date.UTC(2026, 0, d))).replace(/\.$/, "")
-        );
+        names.add(fmt.format(new Date(Date.UTC(2026, 0, d))));
       }
     }
   }
@@ -127,35 +123,4 @@ describe("displayed dates never carry a weekday", () => {
       });
     }
   }
-
-  // Covers every date helper, including the ones whose components need heavy
-  // fixtures (IssueContent, ColumnContent, the OG image).
-  it("no date-format call in app/, components/ or lib/ asks for a weekday", () => {
-    const roots = ["app", "components", "lib"].map((r) =>
-      path.join(process.cwd(), r)
-    );
-    const files = [];
-    const walk = (dir) => {
-      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-        const full = path.join(dir, entry.name);
-        if (entry.isDirectory()) walk(full);
-        else if (/\.(js|jsx|mjs)$/.test(entry.name)) files.push(full);
-      }
-    };
-    roots.forEach(walk);
-
-    const callRe =
-      /(toLocale(Date|Time)?String|DateTimeFormat)\s*\(([\s\S]*?)\)\s*;?/g;
-    let calls = 0;
-    for (const file of files) {
-      const src = fs.readFileSync(file, "utf8");
-      for (const m of src.matchAll(callRe)) {
-        calls += 1;
-        const args = m[3];
-        expect(args, `${file}`).not.toMatch(/weekday/);
-        expect(args, `${file}`).not.toMatch(/dateStyle\s*:\s*["']full["']/);
-      }
-    }
-    expect(calls).toBeGreaterThanOrEqual(7);
-  });
 });

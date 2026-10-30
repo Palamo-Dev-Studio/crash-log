@@ -217,18 +217,18 @@ test.describe("language toggle", () => {
   });
 });
 
-// Hector's rule: no weekday names or MON/WED/FRI labels in the chrome or in
-// dates. Names come from Intl, so every weekday in both locales is covered.
+// Hector's rule: no weekday names or MON/WED/FRI labels in the chrome. Names
+// come from Intl (long only: short es names collide with month abbreviations).
+// Dates are covered by lib/formatDate tests and the ESLint ban.
 const weekdayNames = () => {
   const names = new Set();
   for (const locale of ["en", "es"]) {
-    for (const weekday of ["long", "short"]) {
-      const fmt = new Intl.DateTimeFormat(locale, { weekday, timeZone: "UTC" });
-      for (let d = 1; d <= 7; d++) {
-        names.add(
-          fmt.format(new Date(Date.UTC(2026, 0, d))).replace(/\.$/, "")
-        );
-      }
+    const fmt = new Intl.DateTimeFormat(locale, {
+      weekday: "long",
+      timeZone: "UTC",
+    });
+    for (let d = 1; d <= 7; d++) {
+      names.add(fmt.format(new Date(Date.UTC(2026, 0, d))));
     }
   }
   return [...names];
@@ -236,21 +236,21 @@ const weekdayNames = () => {
 
 const escapeRe = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-test.describe("no weekday labels in chrome or dates", () => {
+test.describe("no weekday labels in chrome", () => {
   const pages = ["/en", "/es", "/en/archive", "/es/nico"];
 
   const scan = async (page) => {
     // Join text nodes with spaces so adjacent elements ("ES" + "MON") never
     // fuse into one word and slip past the word-boundary match.
     const texts = await page.evaluate(() =>
-      [
-        ...document.querySelectorAll("header, nav[aria-label], footer, time"),
-      ].map((el) => {
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-        const parts = [];
-        while (walker.nextNode()) parts.push(walker.currentNode.nodeValue);
-        return parts.join(" ");
-      })
+      [...document.querySelectorAll("header, nav[aria-label], footer")].map(
+        (el) => {
+          const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+          const parts = [];
+          while (walker.nextNode()) parts.push(walker.currentNode.nodeValue);
+          return parts.join(" ");
+        }
+      )
     );
     const text = texts.join("\n");
     const names = weekdayNames();
