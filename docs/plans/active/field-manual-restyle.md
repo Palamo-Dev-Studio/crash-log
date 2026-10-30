@@ -50,6 +50,15 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
   banning date formatting elsewhere. RSS feeds keep `toUTCString` (RFC 822 pubDate). Replaces output word-scans.
 - **Masthead Support link** sits in a terracotta outline box (Hector, 2026-10-30).
 
+- **Donation prompt on every page** (Hector, 2026-10-30): restyle `DonateCTA` in Field Manual tokens and render
+  it site-wide above the footer, still gated by `NEXT_PUBLIC_DONATIONS_ENABLED`.
+- **Footer "Follow" column** (Hector, 2026-10-30): Bluesky `@hectoralamo.bsky.social`, Instagram `@crashlognews`,
+  TikTok (handle pending). "A Palamo publication" → palamo.ai, listed in the Elsewhere column.
+- **Wordmark stays "The Crash Log"** (Hector, 2026-10-30).
+- **Byline flip approved** (Hector, 2026-10-30): `getByline` treats a missing issue byline as "Hector Luis Alamo"
+  and the sentinel `byline: "newsroom"` as the localized newsroom name. At ship time, with Hector's go on the
+  write, set `byline: "newsroom"` on issues #1–27 in production Sanity. Steam's pipeline still sets bylines.
+
 ## Phase 1 follow-ups (Opus PASS 2026-10-30 on `4aa6c51`, branch `field-manual-phase1`; merge after phase 2 fix)
 
 - `getFileCode`: require a non-negative integer (today -3 → `OTR-0-3`, 1.5 → `OTR-1.5`); test the trailing-`?` branch of `withRef`.
