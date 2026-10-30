@@ -12,6 +12,16 @@ import blockContent from "./sanity/schemas/objects/blockContent";
 import localizedString from "./sanity/schemas/objects/localizedString";
 import localizedText from "./sanity/schemas/objects/localizedText";
 import localizedBlockContent from "./sanity/schemas/objects/localizedBlockContent";
+import localizedPracticalContent from "./sanity/schemas/objects/localizedPracticalContent";
+import practicalBlockContent from "./sanity/schemas/objects/practicalBlockContent";
+import {
+  steps,
+  exhibit,
+  callout,
+  pullQuote,
+  codeBlock,
+  replyAsk,
+} from "./sanity/schemas/objects/practicalBlocks";
 import stackTraceHit from "./sanity/schemas/objects/stackTraceHit";
 import sourceLink from "./sanity/schemas/objects/sourceLink";
 
@@ -23,6 +33,7 @@ import agent from "./sanity/schemas/agent";
 import aboutPage from "./sanity/schemas/aboutPage";
 import siteSettings from "./sanity/schemas/siteSettings";
 import column from "./sanity/schemas/column";
+import practical from "./sanity/schemas/practical";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
@@ -43,6 +54,14 @@ export default defineConfig({
       localizedBlockContent,
       stackTraceHit,
       sourceLink,
+      practicalBlockContent,
+      localizedPracticalContent,
+      steps,
+      exhibit,
+      callout,
+      pullQuote,
+      codeBlock,
+      replyAsk,
       // Documents
       issue,
       story,
@@ -51,6 +70,7 @@ export default defineConfig({
       aboutPage,
       siteSettings,
       column,
+      practical,
     ],
   },
 });
