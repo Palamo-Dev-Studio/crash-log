@@ -138,7 +138,7 @@ describe("Footer", () => {
       const ig = screen.getByRole("link", { name: "Instagram" });
       expect(ig).toHaveAttribute(
         "href",
-        "https://www.instagram.com/crashlognews"
+        "https://www.instagram.com/hectoralamo.ai"
       );
       expect(ig).toHaveAttribute("rel", "noopener noreferrer");
     });
@@ -148,8 +148,16 @@ describe("Footer", () => {
       expect(screen.getByText("Síguenos")).toBeInTheDocument();
     });
 
-    it("omits TikTok while the handle is pending", () => {
+    it("renders the TikTok link from the shared constant by default", () => {
       render(<Footer locale="en" />);
+      expect(screen.getByRole("link", { name: "TikTok" })).toHaveAttribute(
+        "href",
+        "https://www.tiktok.com/@hectorluislamo"
+      );
+    });
+
+    it("omits TikTok when no URL is set", () => {
+      render(<Footer locale="en" tiktokUrl={null} />);
       expect(screen.queryByText("TikTok")).toBeNull();
     });
 

@@ -5,14 +5,11 @@ import Link from "next/link";
 import Roundel from "./Roundel";
 import { SERIES_COLOR_KEYS } from "@/lib/series";
 import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
+import { BLUESKY_URL, INSTAGRAM_URL, TIKTOK_URL } from "@/lib/social";
 import styles from "./Footer.module.css";
 
 const CONTACT_EMAIL = "info@palamo.ai";
 const PALAMO_URL = "https://palamo.ai";
-const BLUESKY_URL = "https://bsky.app/profile/hectoralamo.bsky.social";
-const INSTAGRAM_URL = "https://www.instagram.com/crashlognews";
-// TikTok handle pending from Hector; the link renders only once this is set.
-export const TIKTOK_URL = null;
 
 // Placeholder copy (SPEC): tweak the strings here.
 const LABELS = {

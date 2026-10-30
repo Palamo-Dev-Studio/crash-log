@@ -6,6 +6,7 @@ import { PortableText } from "@portabletext/react";
 import { getAboutPage } from "@/lib/queries";
 import { t, LOCALE_OG } from "@/lib/locale";
 import { portableTextComponents } from "@/lib/portableText";
+import { SAME_AS } from "@/lib/social";
 import AgentCard from "@/components/AgentCard";
 import styles from "./about.module.css";
 
@@ -436,10 +437,7 @@ function NewsMediaOrganizationJsonLd() {
     name: "The Crash Log",
     url: "https://crashlog.ai",
     logo: "https://crashlog.ai/icon.png",
-    sameAs: [
-      "https://x.com/crashLogNews",
-      "https://www.instagram.com/crashlognews/",
-    ],
+    sameAs: SAME_AS,
     description:
       "AI accountability journalism produced by a governed agentic AI system and edited by a human.",
     founder: {

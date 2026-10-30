@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import LanguageToggle from "@/components/LanguageToggle";
 import SiteNav from "@/components/SiteNav";
 import Footer from "@/components/Footer";
+import { SAME_AS } from "@/lib/social";
 import DonatePrompt from "@/components/DonatePrompt";
 import DonationThanks from "@/components/DonationThanks";
 
@@ -72,7 +73,6 @@ export async function generateMetadata({ params }) {
     },
     twitter: {
       card: "summary_large_image",
-      site: "@crashLogNews",
     },
     robots: {
       index: true,
@@ -108,10 +108,7 @@ function WebSiteJsonLd() {
       "@type": "Organization",
       name: "The Crash Log",
       url: "https://crashlog.ai",
-      sameAs: [
-        "https://x.com/crashLogNews",
-        "https://www.instagram.com/crashlognews",
-      ],
+      sameAs: SAME_AS,
     },
     inLanguage: ["en-US", "es-ES"],
   };
