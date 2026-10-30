@@ -33,8 +33,6 @@ vi.mock("@/lib/sanity", () => ({
   }),
 }));
 
-import ArchiveCard from "@/components/ArchiveCard";
-import ColumnCard from "@/components/ColumnCard";
 import BeatStoryCard from "@/components/BeatStoryCard";
 import { formatDate } from "@/lib/formatDate";
 import HomeCover from "@/components/HomeCover";
@@ -76,24 +74,6 @@ const WEEK = Array.from(
 );
 
 const RENDERERS = {
-  ArchiveCard: (date, locale) => (
-    <ArchiveCard
-      issueNumber={1}
-      date={date}
-      title="T"
-      slug="s"
-      locale={locale}
-    />
-  ),
-  ColumnCard: (date, locale) => (
-    <ColumnCard
-      columnNumber={1}
-      date={date}
-      title="T"
-      slug="s"
-      locale={locale}
-    />
-  ),
   BeatStoryCard: (date, locale) => (
     <BeatStoryCard
       severity="x"

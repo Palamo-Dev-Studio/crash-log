@@ -1,21 +1,58 @@
-/* ABOUTME: Styles for the archive listing page.
-   ABOUTME: Section heading in mono uppercase and empty state message. */
+/* ABOUTME: Styles for the archive page head (mono kicker, serif H1, dek) and empty state.
+   ABOUTME: Same scale as the series indexes so every index page reads as one family. */
 
-.heading {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-muted);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 32px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--surface);
+.head {
+  padding: 34px 0 28px;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.title {
+  margin: 22px 0 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 58px;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.dek {
+  margin: 14px 0 0;
+  max-width: 46ch;
+  font-size: 21px;
+  line-height: 1.45;
+  color: #463c32;
+  text-wrap: pretty;
 }
 
 .empty {
-  font-family: var(--font-body);
-  font-size: 17px;
-  color: var(--text-tertiary);
-  padding: 48px 0;
-  text-align: center;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+  padding: 32px 0 56px;
+}
+
+@media (max-width: 700px) {
+  .head {
+    padding-top: 24px;
+  }
+
+  .title {
+    font-size: 42px;
+  }
+
+  .dek {
+    font-size: 19px;
+  }
 }

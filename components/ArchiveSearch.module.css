@@ -1,105 +1,125 @@
-/* ABOUTME: Styles for the archive search/filter UI: input, category pills, results area. */
+/* ABOUTME: Styles for the archive search/filter UI: mono labels, ink-outline input, beat pills, results list.
+   ABOUTME: Focus uses the same teal ring as file rows; pills and clear button keep 44px touch height. */
 
 .wrapper {
   margin-bottom: 16px;
 }
 
+.label {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--label);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .searchRow {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin: 8px 0 22px;
 }
 
 .input {
   flex: 1;
-  background: var(--surface);
-  border: 1px solid var(--surface);
-  border-radius: 4px;
-  padding: 12px 14px;
-  font-family: var(--font-body);
+  min-width: 0;
+  min-height: 48px;
+  background: var(--card);
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
+  padding: 10px 14px;
+  font-family: var(--mono);
   font-size: 15px;
-  color: var(--text-primary);
-  transition: border-color 0.2s;
+  color: var(--ink);
 }
 
-.input:focus {
-  outline: none;
-  border-color: var(--severity-error);
+.input:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
 }
 
 .input::placeholder {
-  color: var(--text-faint);
+  color: var(--muted);
 }
 
 .clearBtn {
+  min-height: 48px;
   background: transparent;
-  border: 1px solid var(--surface);
-  border-radius: 4px;
-  padding: 0 14px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
+  padding: 0 16px;
+  font-family: var(--mono);
+  font-size: var(--label);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  color: var(--ink);
   cursor: pointer;
-  transition:
-    border-color 0.2s,
-    color 0.2s;
 }
 
 .clearBtn:hover {
-  border-color: var(--severity-error);
-  color: var(--text-primary);
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.clearBtn:focus-visible,
+.pill:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.filters {
+  margin-bottom: 30px;
 }
 
 .categoryPills {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 24px;
+  margin-top: 8px;
 }
 
 .pill {
+  min-height: 44px;
   background: transparent;
-  border: 1px solid var(--surface);
-  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
   padding: 6px 12px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--mono);
+  font-size: var(--label);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  color: var(--ink);
   cursor: pointer;
-  transition:
-    border-color 0.2s,
-    color 0.2s,
-    background 0.2s;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .pill:hover {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
+  border-color: var(--terra);
+  color: var(--terra-ink);
 }
 
-.pillActive {
-  background: var(--severity-error);
-  border-color: var(--severity-error);
-  color: var(--bg);
-}
-
+/* Active: filled ink with cream text, the same state as the EN | ES toggle. */
+.pillActive,
 .pillActive:hover {
-  color: var(--bg);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--cream);
 }
 
 .empty {
-  font-family: var(--font-body);
-  font-size: 17px;
-  color: var(--text-tertiary);
-  padding: 48px 0;
-  text-align: center;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+  padding: 32px 0;
 }
 
 .results {
-  display: flex;
-  flex-direction: column;
+  border-top: 1px solid var(--ink);
+}
+
+@media (max-width: 700px) {
+  .searchRow {
+    margin-bottom: 18px;
+  }
 }

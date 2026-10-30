@@ -17,10 +17,44 @@
   color: var(--muted);
 }
 
+.main {
+  display: block;
+  min-width: 0;
+}
+
 .title {
+  display: block;
+  margin: 0;
   font-family: var(--serif-d);
+  font-weight: 400;
   font-size: 26px;
   line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.matched {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+/* Search highlight: AA tint (ink on 18% terracotta over cream/card). */
+.row mark {
+  background: color-mix(in srgb, var(--terra) 18%, transparent);
+  color: var(--ink);
+  padding: 0 2px;
+  border-radius: 2px;
 }
 
 .row:hover .title {
