@@ -81,6 +81,17 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
   awaiting Hector) plain-English `verdict` EN/ES for the ~80 archive stories, drafted by Nico as one table for
   Hector's approval and written by a guarded script like the byline one. Needs `SANITY_API_TOKEN` or a
   re-authenticated Sanity MCP.
+- **Card summaries (Hector, 2026-10-30, after two review rounds on sentence detection):** no code-side
+  truncation. Authored `summary` when present; otherwise the body's first paragraph, capped visually at 5 lines
+  with CSS line-clamp. The sentence splitter is deleted.
+- **Stamps:** line-break opportunity after each `_` in severity codes; e2e down to 320px.
+- **Sources get an optional `date`** (Hector, 2026-10-30): source line reads "SOURCE · Outlet · date" when set.
+  Steam handoff: fill it.
+- **Issue kicker dates: US style in caps** ("JUN 11, 2026"), via `formatDate` (Hector, 2026-10-30).
+- **Card keeps both links** (Hector, 2026-10-30): "Read the file →" out to the source; "CASE 0N" down to the full
+  story on archive issues.
+- **Archive verdicts approved** (Hector, 2026-10-30): Nico drafts EN/ES verdicts for the archive stories as one
+  table; Hector approves; written at ship time (before deploy) by a guarded script.
 - **Newsletter move** (Hector, 2026-10-30): after the restyle ships, write a short plan for Ghost(Pro) on
   `newsletter.crashlog.ai` as the sender (email-only posts pushed from Sanity). Substack has no subscribers yet,
   so there's nothing to migrate. `newsletter.palamo.ai` is not needed: palamo.ai links to crashlog.ai.
