@@ -41,6 +41,8 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **Outbound source links** get `?ref=crashlog.ai`.
 - **New `story` fields:** `verdict` (localized), `summary` (localized), `image` with localized alt + `credit`.
   Hand the field names to Steam's Off the Rails pipeline once merged.
+- **Steam handoff must say: every Off the Rails and Practical post ships with a cover image.** The home hero
+  without art ends above the rail (accepted by Hector 2026-10-30, not designed for).
 - **Steam handoff must say: set `byline` explicitly.** `issue.byline`'s `initialValue` applies only to
   documents created in Studio; API-created issues get no byline and render "The Crash Log newsroom".
 
