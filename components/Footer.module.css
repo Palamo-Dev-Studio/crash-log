@@ -1,5 +1,5 @@
 /* ABOUTME: Styles for the site footer.
-   ABOUTME: Double-rule top edge, three-column grid (brand, series, elsewhere) and a fine-print row. */
+   ABOUTME: Double-rule top edge, four-column grid (brand, series, elsewhere, follow) and a fine-print row. */
 
 .foot {
   margin-top: 8px;
@@ -13,7 +13,9 @@
 
 .grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns:
+    minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr)
+    minmax(0, 1fr);
   gap: 40px;
   font-family: var(--mono);
   font-size: var(--label);
@@ -129,7 +131,7 @@
 
 @media (max-width: 980px) {
   .grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .brand {

@@ -106,20 +106,47 @@ describe("getByline", () => {
   it("falls back to Hector Luis Alamo for practicals", () => {
     expect(getByline({ _type: "practical" }, "es")).toBe("Hector Luis Alamo");
   });
-  it("falls back to the newsroom for issues without a byline (EN)", () => {
-    expect(getByline({ _type: "issue" }, "en")).toBe("The Crash Log newsroom");
+  it("defaults issues without a byline to Hector Luis Alamo", () => {
+    expect(getByline({ _type: "issue" }, "en")).toBe("Hector Luis Alamo");
+    expect(getByline({ _type: "issue" }, "es")).toBe("Hector Luis Alamo");
   });
-  it("falls back to the Spanish newsroom string for issues (ES)", () => {
-    expect(getByline({ _type: "issue" }, "es")).toBe(
+  it('maps the "newsroom" sentinel to the newsroom name (EN)', () => {
+    expect(getByline({ _type: "issue", byline: "newsroom" }, "en")).toBe(
+      "The Crash Log newsroom"
+    );
+  });
+  it('maps the "newsroom" sentinel to the Spanish newsroom name (ES)', () => {
+    expect(getByline({ _type: "issue", byline: "newsroom" }, "es")).toBe(
       "la redacción de The Crash Log"
+    );
+  });
+  it("matches the sentinel case-insensitively and trimmed", () => {
+    expect(getByline({ _type: "issue", byline: "  NewsRoom " }, "en")).toBe(
+      "The Crash Log newsroom"
+    );
+  });
+  it("does not treat a longer byline containing newsroom as the sentinel", () => {
+    expect(
+      getByline({ _type: "issue", byline: "Guest newsroom desk" }, "en")
+    ).toBe("Guest newsroom desk");
+  });
+  it("trims an explicit byline", () => {
+    expect(getByline({ _type: "issue", byline: "  Guest Writer " }, "en")).toBe(
+      "Guest Writer"
     );
   });
   it("treats an empty or whitespace byline as unset", () => {
     expect(getByline({ _type: "issue", byline: "" }, "en")).toBe(
-      "The Crash Log newsroom"
+      "Hector Luis Alamo"
+    );
+    expect(getByline({ _type: "issue", byline: "   " }, "es")).toBe(
+      "Hector Luis Alamo"
     );
     expect(getByline({ _type: "practical", byline: "   " }, "en")).toBe(
       "Hector Luis Alamo"
+    );
+    expect(getByline({ _type: "column", byline: " " }, "en")).toBe(
+      "Nico von Bot"
     );
   });
   it("returns null for unknown types without a byline", () => {

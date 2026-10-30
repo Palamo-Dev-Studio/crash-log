@@ -1,81 +1,95 @@
-/* ABOUTME: Styles for the donate call-to-action card.
-   ABOUTME: Raised surface with centered copy, amount input, and red "Feed the Bots" button. */
+/* ABOUTME: Styles for the donate call-to-action panel (Field Manual card language).
+   ABOUTME: Card surface (its own 1px border only), mono label, serif line, terra-ink Donate button. */
 
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border-accent);
+  background: var(--card);
+  border: 1px solid var(--rule);
   border-radius: 4px;
-  padding: 36px;
-  text-align: center;
-  margin-bottom: 40px;
+  padding: 24px 28px;
+  /* Bottom margin collapses with the footer's 8px top margin, so it sets the gap itself. */
+  margin: 40px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px 40px;
+  align-items: center;
+}
+
+.intro {
+  min-width: 0;
+}
+
+.label {
+  margin: 0 0 8px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--terra-ink);
 }
 
 .copy {
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-  max-width: 520px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0;
+  font-family: var(--serif-b);
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--ink);
+  text-wrap: pretty;
 }
 
 .disclaimer {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-bottom: 16px;
+  margin: 8px 0 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .frequencyToggle {
   display: flex;
-  justify-content: center;
-  gap: 0;
-  margin-bottom: 16px;
 }
 
 .freqButton {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink);
   background: transparent;
-  border: 1px solid var(--border);
-  padding: 6px 16px;
+  border: 1.5px solid var(--ink);
+  padding: 8px 14px;
   cursor: pointer;
-  transition:
-    color 0.2s,
-    border-color 0.2s,
-    background 0.2s;
 }
 
 .freqButton:first-child {
-  border-radius: 2px 0 0 2px;
+  border-radius: 4px 0 0 4px;
 }
 
 .freqButton:last-child {
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 4px 4px 0;
   border-left: none;
 }
 
-.freqActive {
-  color: var(--text-primary);
-  border-color: var(--severity-error);
-  background: rgba(232, 69, 62, 0.1);
+.freqButton:hover {
+  color: var(--terra-ink);
 }
 
-.freqActive + .freqButton {
-  border-left: none;
+.freqActive,
+.freqActive:hover {
+  color: var(--cream);
+  background: var(--ink);
 }
 
 .form {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -83,26 +97,25 @@
 .amountWrapper {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .currencySymbol {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 18px;
-  color: var(--text-primary);
+  color: var(--ink);
 }
 
 .amountInput {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 18px;
   width: 80px;
   text-align: center;
-  background: var(--bg);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
-  border-radius: 2px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
   padding: 8px 4px;
-  transition: border-color 0.2s;
   /* Hide spinner arrows */
   -moz-appearance: textfield;
   appearance: textfield;
@@ -114,33 +127,29 @@
   margin: 0;
 }
 
-.amountInput:focus {
-  outline: 2px solid var(--severity-error);
-  outline-offset: 2px;
-  border-color: var(--severity-error);
-}
-
 .button {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--bg);
-  background: var(--severity-error);
-  border: none;
-  padding: 12px 32px;
-  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--cream);
+  background: var(--terra-ink);
+  border: 0;
+  padding: 12px 20px;
+  border-radius: 4px;
   cursor: pointer;
-  text-decoration: none;
-  transition:
-    background 0.2s,
-    box-shadow 0.2s;
 }
 
 .button:hover {
-  background: var(--terra-ink);
+  background: var(--ink);
+}
+
+.freqButton:focus-visible,
+.amountInput:focus-visible,
+.button:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
 }
 
 .button:disabled {
@@ -149,14 +158,46 @@
 }
 
 .error {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--severity-error);
-  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--terra-ink);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 800px) {
   .card {
-    padding: 24px 20px;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 22px 20px;
+    margin-top: 32px;
+    margin-bottom: 28px;
+  }
+
+  .copy {
+    font-size: 19px;
+  }
+
+  .controls {
+    align-items: stretch;
+  }
+
+  .frequencyToggle {
+    width: 100%;
+  }
+
+  .freqButton {
+    flex: 1;
+  }
+
+  .form {
+    flex-wrap: nowrap;
+  }
+
+  .amountWrapper {
+    flex: none;
+  }
+
+  .button {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 10px;
   }
 }

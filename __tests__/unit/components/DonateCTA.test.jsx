@@ -62,13 +62,20 @@ describe("DonateCTA", () => {
     it("renders the submit button", () => {
       render(<DonateCTA locale="en" />);
       expect(
-        screen.getByRole("button", { name: "Feed the Bots" })
+        screen.getByRole("button", { name: "Feed the Agents" })
       ).toBeInTheDocument();
     });
 
-    it("renders copy text about Nico", () => {
+    it("renders the mono label and one line of copy", () => {
       render(<DonateCTA locale="en" />);
-      expect(screen.getByText(/Nico and the AI team/)).toBeInTheDocument();
+      const label = screen.getByText("Support the Log");
+      expect(label.className).toContain("label");
+      expect(screen.getByText(/No ads, no paywall/)).toBeInTheDocument();
+    });
+
+    it("renders the label as a non-heading so page outlines are untouched", () => {
+      render(<DonateCTA locale="en" />);
+      expect(screen.queryByRole("heading")).toBeNull();
     });
 
     it("renders tax disclaimer", () => {
@@ -93,7 +100,7 @@ describe("DonateCTA", () => {
     it("renders Spanish button text", () => {
       render(<DonateCTA locale="es" />);
       expect(
-        screen.getByRole("button", { name: "Alimenta a los Bots" })
+        screen.getByRole("button", { name: "Alimenta a los agentes" })
       ).toBeInTheDocument();
     });
 
@@ -102,9 +109,12 @@ describe("DonateCTA", () => {
       expect(screen.getByLabelText("Donar")).toBeInTheDocument();
     });
 
-    it("renders Spanish copy", () => {
+    it("renders Spanish label and copy", () => {
       render(<DonateCTA locale="es" />);
-      expect(screen.getByText(/Nico y el equipo de IA/)).toBeInTheDocument();
+      expect(screen.getByText("Apoya el Log")).toBeInTheDocument();
+      expect(
+        screen.getByText(/Sin anuncios ni muro de pago/)
+      ).toBeInTheDocument();
     });
 
     it("renders Spanish disclaimer", () => {
@@ -134,7 +144,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       expect(global.fetch).toHaveBeenCalledWith("/api/donate", {
         method: "POST",
@@ -162,7 +172,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       expect(screen.getByText("Processing\u2026")).toBeInTheDocument();
       expect(
@@ -193,7 +203,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(window.location.href).toBe(
@@ -214,7 +224,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(screen.getByRole("alert")).toHaveTextContent(
@@ -233,7 +243,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(screen.getByRole("alert")).toHaveTextContent(
@@ -249,7 +259,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(screen.getByRole("alert")).toHaveTextContent(
@@ -268,7 +278,7 @@ describe("DonateCTA", () => {
 
       // Use fireEvent.submit to bypass jsdom native min validation
       const form = screen
-        .getByRole("button", { name: "Feed the Bots" })
+        .getByRole("button", { name: "Feed the Agents" })
         .closest("form");
       fireEvent.submit(form);
 
@@ -347,7 +357,7 @@ describe("DonateCTA", () => {
       const user = userEvent.setup();
       render(<DonateCTA locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith("/api/donate", {
@@ -383,7 +393,7 @@ describe("DonateCTA", () => {
       render(<DonateCTA locale="en" />);
 
       await user.click(screen.getByRole("button", { name: "Monthly" }));
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith("/api/donate", {
