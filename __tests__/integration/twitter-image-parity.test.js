@@ -79,9 +79,9 @@ describe("twitter-image parity checker", () => {
 
   it("flags a .png OG image with no twitter image, accepts a .png twitter image", () => {
     const bare = fixture({ "opengraph-image.png": "" });
-    expect(parityViolations(path.join(bare, "opengraph-image.png"))).not.toEqual(
-      []
-    );
+    expect(
+      parityViolations(path.join(bare, "opengraph-image.png"))
+    ).not.toEqual([]);
     const paired = fixture({
       "opengraph-image.png": "",
       "twitter-image.png": "",
@@ -100,9 +100,9 @@ describe("twitter-image parity checker", () => {
       "opengraph-image.js": "",
       "twitter-image.js": "export default function T() {}",
     });
-    expect(parityViolations(path.join(wrong, "opengraph-image.js"))).not.toEqual(
-      []
-    );
+    expect(
+      parityViolations(path.join(wrong, "opengraph-image.js"))
+    ).not.toEqual([]);
     const ok = fixture({
       "opengraph-image.js": "",
       "twitter-image.js":

@@ -185,13 +185,17 @@ describe("date-formatting lint rule", () => {
     ).toHaveLength(1);
   });
 
-  it("the real source tree has no violations", async () => {
-    const results = await eslint.lintFiles(["app", "components", "lib"]);
-    const hits = results.flatMap((r) =>
-      r.messages
-        .filter((m) => m.ruleId === "no-restricted-syntax")
-        .map((m) => `${r.filePath}:${m.line}`)
-    );
-    expect(hits).toEqual([]);
-  }, SLOW_MS);
+  it(
+    "the real source tree has no violations",
+    async () => {
+      const results = await eslint.lintFiles(["app", "components", "lib"]);
+      const hits = results.flatMap((r) =>
+        r.messages
+          .filter((m) => m.ruleId === "no-restricted-syntax")
+          .map((m) => `${r.filePath}:${m.line}`)
+      );
+      expect(hits).toEqual([]);
+    },
+    SLOW_MS
+  );
 });
