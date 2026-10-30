@@ -53,6 +53,10 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - `sharp` is imported by `scripts/build-favicons.mjs` and `__tests__/unit/favicon.test.js` but is only a
   transitive dep of `next`: add it as an explicit devDependency (`sharp@0.34.5`, the installed version).
 
+**Status:** follow-ups built on `field-manual-phase1b` (`a4beb75`, worktree `.claude/worktrees/agent-a22ef2594b9757de5`), Opus PASS; merge after phase 3 lands. Byline default still open.
+
+**Declined for the PR body:** the lockfile's `node_modules/sharp`, `@img/colour` and `detect-libc` entries stay `"optional": true` rather than `"devOptional": true`. Only `npm ci --omit=optional` drops sharp, and neither CI nor Vercel uses that mode; the site build doesn't import sharp.
+
 ## Known issues
 
 - **`main`'s e2e suite is red before this branch:** 7 Playwright failures at `1f133a3` (archive-search ×2,
