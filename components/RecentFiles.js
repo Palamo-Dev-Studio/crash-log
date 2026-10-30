@@ -1,12 +1,9 @@
-// ABOUTME: Home "Recent files" list: code, date, serif title and byline per row, then a link to the archive.
-// ABOUTME: Rows stack (code, date, title, byline) on mobile.
+// ABOUTME: Home "Recent files" list: one FileRow per file, then a link to the archive.
+// ABOUTME: Row layout and its mobile stacking live in FileRow.
 
 import Link from "next/link";
-import FileChip from "@/components/FileChip";
-import { t } from "@/lib/locale";
-import { formatDate } from "@/lib/formatDate";
-import { getByline } from "@/lib/series";
-import { HOME_LABELS, fileHref } from "@/lib/homeLabels";
+import FileRow from "@/components/FileRow";
+import { HOME_LABELS } from "@/lib/homeLabels";
 import styles from "./RecentFiles.module.css";
 
 export default function RecentFiles({ docs, locale }) {
@@ -23,20 +20,7 @@ export default function RecentFiles({ docs, locale }) {
             {labels.recentHeading}
           </h2>
           {docs.map((doc) => (
-            <Link
-              key={doc._id}
-              href={fileHref(doc, locale)}
-              className={styles.row}
-            >
-              <FileChip doc={doc} variant="plain" />
-              <span className={styles.when}>
-                {formatDate(doc.publishDate, locale, "short")}
-              </span>
-              <span className={styles.title}>{t(doc.title, locale)}</span>
-              <span className={styles.by}>
-                {labels.byPrefix} {getByline(doc, locale)}
-              </span>
-            </Link>
+            <FileRow key={doc._id} doc={doc} locale={locale} />
           ))}
         </>
       )}

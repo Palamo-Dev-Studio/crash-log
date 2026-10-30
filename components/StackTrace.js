@@ -3,6 +3,7 @@
 
 import { PortableText } from "@portabletext/react";
 import { portableTextComponents } from "@/lib/portableText";
+import { withRef } from "@/lib/series";
 import styles from "./StackTrace.module.css";
 
 const LABELS = {
@@ -42,7 +43,7 @@ export default function StackTrace({ locale, items }) {
                     {j > 0 && <span className={styles.sourceSep}> · </span>}
                     {source.url ? (
                       <a
-                        href={source.url}
+                        href={withRef(source.url)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={styles.sourceLink}

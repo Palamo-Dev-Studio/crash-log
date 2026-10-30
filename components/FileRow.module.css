@@ -1,0 +1,44 @@
+/* ABOUTME: Styles for a file row (ported from mockups/styles.css "recent files"): four columns on desktop.
+   ABOUTME: A single stacked column at 700px and below. */
+
+.row {
+  display: grid;
+  grid-template-columns: 96px 120px minmax(0, 1fr) auto;
+  gap: 8px 20px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.when,
+.by {
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.title {
+  font-family: var(--serif-d);
+  font-size: 26px;
+  line-height: 1.15;
+}
+
+.row:hover .title {
+  color: var(--terra-ink);
+}
+
+.row:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .title {
+    font-size: 25px;
+  }
+}

@@ -39,9 +39,11 @@ import BeatStoryCard from "@/components/BeatStoryCard";
 import { formatDate } from "@/lib/formatDate";
 import HomeCover from "@/components/HomeCover";
 import HomeRail from "@/components/HomeRail";
+import CaseCard from "@/components/CaseCard";
 import IssueContent from "@/components/IssueContent";
 import ColumnContent from "@/components/ColumnContent";
 import RecentFiles from "@/components/RecentFiles";
+import FileRow from "@/components/FileRow";
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -131,6 +133,17 @@ const RENDERERS = {
       ]}
     />
   ),
+  CaseCard: (date, locale) => (
+    <CaseCard
+      locale={locale}
+      index={0}
+      story={{
+        _id: "s",
+        headline: { en: "H", es: "H" },
+        sources: [{ outlet: "O", date }],
+      }}
+    />
+  ),
   IssueContent: (date, locale) => (
     <IssueContent
       locale={locale}
@@ -149,6 +162,19 @@ const RENDERERS = {
       column={{
         columnNumber: 1,
         slug: "s",
+        title: { en: "T", es: "T" },
+        publishDate: date,
+      }}
+    />
+  ),
+  FileRow: (date, locale) => (
+    <FileRow
+      locale={locale}
+      doc={{
+        _id: "i",
+        _type: "issue",
+        slug: "s",
+        issueNumber: 1,
         title: { en: "T", es: "T" },
         publishDate: date,
       }}

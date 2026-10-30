@@ -8,6 +8,7 @@ import practical from "@/sanity/schemas/practical";
 import practicalBlockContent from "@/sanity/schemas/objects/practicalBlockContent";
 import localizedPracticalContent from "@/sanity/schemas/objects/localizedPracticalContent";
 import * as practicalBlocks from "@/sanity/schemas/objects/practicalBlocks";
+import sourceLink from "@/sanity/schemas/objects/sourceLink";
 import config from "@/sanity.config";
 
 const field = (doc, name) => doc.fields.find((f) => f.name === name);
@@ -38,6 +39,18 @@ describe("story schema", () => {
       "body",
     ]) {
       expect(field(story, name), name).toBeDefined();
+    }
+  });
+});
+
+describe("sourceLink schema", () => {
+  it("adds an optional date field and keeps outlet, title and url", () => {
+    const f = field(sourceLink, "date");
+    expect(f.type).toBe("date");
+    expect(f.description).toBe("Publication date of the source article");
+    expect(f.validation).toBeUndefined();
+    for (const name of ["outlet", "title", "url"]) {
+      expect(field(sourceLink, name), name).toBeDefined();
     }
   });
 });

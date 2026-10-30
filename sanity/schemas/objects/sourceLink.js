@@ -22,6 +22,12 @@ export default {
       title: "URL",
       type: "url",
     },
+    {
+      name: "date",
+      title: "Date",
+      type: "date",
+      description: "Publication date of the source article",
+    },
   ],
   preview: {
     select: { outlet: "outlet", title: "title" },

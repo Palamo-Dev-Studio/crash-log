@@ -1,31 +1,61 @@
-// ABOUTME: Issue header displaying issue number, date, title, and subtitle.
-// ABOUTME: Red dot indicator, mono meta line, display font title, serif subtitle.
+// ABOUTME: Off the Rails page head: file-code kicker with date, case count and reading time, H1, dek, byline + credit, stamp legend.
+// ABOUTME: Ported from mockups/off-the-rails.html ".page-head"; the legend stamp uses the page's shared SVG filter.
 
+import VerdictStamp from "@/components/VerdictStamp";
+import { OTR_LABELS } from "@/lib/offTheRailsLabels";
 import styles from "./IssueHeader.module.css";
-
-const LABELS = {
-  en: { issuePrefix: "Issue #" },
-  es: { issuePrefix: "Edición #" },
-};
 
 export default function IssueHeader({
   locale,
-  issueNumber,
+  code,
   date,
+  caseCount,
+  minutes,
   title,
   subtitle,
+  byline,
+  credit,
 }) {
-  const labels = LABELS[locale] || LABELS.en;
+  const labels = OTR_LABELS[locale] || OTR_LABELS.en;
+  const kicker = [
+    labels.seriesName.toUpperCase(),
+    code && `${labels.kickerFile} ${code}`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
-    <section className={styles.header}>
-      <div className={styles.meta}>
-        <span className={styles.dot} aria-hidden="true" />
-        {labels.issuePrefix}
-        {String(issueNumber).padStart(3, "0")} &middot; {date}
+    <section className={styles.head}>
+      <div className={styles.kicker}>
+        <span>{kicker}</span>
+        <span className={styles.segs}>
+          {date && <span className={styles.seg}>{date}</span>}
+          {caseCount > 0 && (
+            <span className={styles.seg}>{labels.cases(caseCount)}</span>
+          )}
+          {minutes && (
+            <span className={styles.seg}>{labels.minRead(minutes)}</span>
+          )}
+        </span>
       </div>
       <h1 className={styles.title}>{title}</h1>
-      {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+      {subtitle && <p className={styles.dek}>{subtitle}</p>}
+      {byline && (
+        <p className={styles.byline}>
+          <span className={styles.seg}>
+            {labels.byPrefix} <strong>{byline}</strong>
+          </span>
+          {credit && <span className={styles.seg}>{credit}</span>}
+        </p>
+      )}
+      <p className={styles.legend}>
+        <VerdictStamp
+          text={labels.legendStamp}
+          index={2}
+          className={styles.legendStamp}
+        />
+        {labels.legendText}
+      </p>
     </section>
   );
 }

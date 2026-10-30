@@ -7,6 +7,7 @@ import {
   getSeries,
   getFileCode,
   getByline,
+  getCredit,
   withRef,
 } from "@/lib/series";
 
@@ -199,5 +200,35 @@ describe("withRef", () => {
   it("returns non-strings unchanged", () => {
     expect(withRef(null)).toBeNull();
     expect(withRef(undefined)).toBeUndefined();
+  });
+});
+
+describe("getCredit", () => {
+  it("credits an issue with no byline (defaults to Hector), EN and ES", () => {
+    expect(getCredit({ _type: "issue" }, "en")).toBe("Reported with Nico");
+    expect(getCredit({ _type: "issue" }, "es")).toBe("Con reportería de Nico");
+  });
+  it("credits an explicit Hector byline", () => {
+    expect(
+      getCredit({ _type: "issue", byline: "Hector Luis Alamo" }, "en")
+    ).toBe("Reported with Nico");
+  });
+  it("credits a practical post bylined to Hector", () => {
+    expect(getCredit({ _type: "practical" }, "en")).toBe("Reported with Nico");
+  });
+  it("gives the newsroom sentinel no credit", () => {
+    expect(getCredit({ _type: "issue", byline: "newsroom" }, "en")).toBeNull();
+  });
+  it("gives another named author no credit", () => {
+    expect(
+      getCredit({ _type: "issue", byline: "Rocio Alamo" }, "en")
+    ).toBeNull();
+  });
+  it("gives a column no credit, even with no byline", () => {
+    expect(getCredit({ _type: "column" }, "en")).toBeNull();
+  });
+  it("returns null for a non-series doc", () => {
+    expect(getCredit({ _type: "story" }, "en")).toBeNull();
+    expect(getCredit(null, "en")).toBeNull();
   });
 });

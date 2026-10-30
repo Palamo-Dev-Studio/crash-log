@@ -1,46 +1,111 @@
-/* ABOUTME: Styles for the issue header section.
-   ABOUTME: Meta line with red dot, display title, and serif subtitle. */
+/* ABOUTME: Off the Rails page head styles (ported from mockups/styles.css ".page-head", ".byline-line", ".legend").
+   ABOUTME: Kicker rule, 58px serif H1 (42px mobile), mono byline and legend lines. */
 
-.header {
-  margin-bottom: 44px;
+.head {
+  padding: 34px 0 8px;
 }
 
-.meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 22px;
+.kicker {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: var(--label);
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
 }
 
-.dot {
-  width: 9px;
-  height: 9px;
-  background: var(--severity-error);
-  border-radius: 50%;
-  display: inline-block;
+.segs,
+.byline {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.seg {
+  white-space: nowrap;
+}
+
+.seg + .seg::before {
+  content: "·";
+  margin: 0 0.6em 0 0.5em;
 }
 
 .title {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 7vw, 48px);
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.12;
-  margin-bottom: 28px;
-  letter-spacing: -0.02em;
+  margin: 22px 0 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 58px;
+  line-height: 1.02;
+  text-wrap: balance;
 }
 
-.subtitle {
-  font-family: var(--font-body);
-  font-size: 18px;
-  font-weight: 400;
-  font-style: italic;
-  color: var(--text-dek);
-  line-height: 1.65;
-  max-width: 600px;
+.dek {
+  margin: 14px 0 0;
+  max-width: 46ch;
+  font-size: 21px;
+  line-height: 1.45;
+  color: #463c32;
+  text-wrap: pretty;
+}
+
+.byline {
+  margin: 16px 0 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.byline strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.legend {
+  margin: 18px 0 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.legend .legendStamp {
+  max-width: none;
+}
+
+@media (max-width: 700px) {
+  .head {
+    padding-top: 24px;
+  }
+
+  .title {
+    font-size: 42px;
+  }
+
+  /* Kicker segments wrap on a gap, with no separator dot to strand. */
+  .segs {
+    gap: 2px 14px;
+  }
+
+  .segs .seg + .seg::before {
+    display: none;
+  }
+
+  /* Byline and credit stack instead of wrapping with a stranded dot. */
+  .byline {
+    flex-direction: column;
+  }
+
+  .byline .seg + .seg::before {
+    display: none;
+  }
+
+  .dek {
+    font-size: 19px;
+  }
 }
