@@ -8,12 +8,12 @@ import { portableTextComponents } from "@/lib/portableText";
 import {
   ABOUT_COPY,
   ABOUT_EMAIL,
+  ABOUT_TITLE,
   FALLBACK_MASTHEAD,
 } from "@/lib/aboutFallback";
 import AgentCard from "@/components/AgentCard";
 import styles from "./AboutSections.module.css";
 
-const TITLES = { en: "About", es: "Acerca de" };
 const SANITY_HEADINGS = {
   en: { masthead: "Masthead", workflow: "How it works", contact: "Contact" },
   es: { masthead: "Redacción", workflow: "Cómo funciona", contact: "Contacto" },
@@ -73,7 +73,7 @@ export function FallbackAbout({ locale, about }) {
         <div className={styles.masthead}>
           {FALLBACK_MASTHEAD.map((person) => {
             const sanityAgent = about?.masthead?.find(
-              (a) => a.name === (person.sanityName || person.name)
+              (a) => a.name === person.name
             );
             return (
               <AgentCard
@@ -81,7 +81,6 @@ export function FallbackAbout({ locale, about }) {
                 name={person.name}
                 role={person.role}
                 agentType={person.agentType}
-                bio={person.bio}
                 image={sanityAgent?.avatar}
                 locale={lang}
               />
@@ -114,7 +113,118 @@ export function FallbackAbout({ locale, about }) {
   );
 }
 
+const blockText = (block) =>
+  (block.children || []).map((c) => c.text || "").join("");
+const isHeading = (block) => block._type === "block" && block.style === "h2";
+
+// Splits Portable Text at its H2 blocks: `preamble` is everything before the
+// first H2, each section is an H2's text plus the blocks that follow it.
+function splitSections(blocks) {
+  const preamble = [];
+  const sections = [];
+  for (const block of blocks || []) {
+    if (isHeading(block)) {
+      sections.push({ heading: blockText(block), body: [] });
+    } else if (sections.length) {
+      sections[sections.length - 1].body.push(block);
+    } else {
+      preamble.push(block);
+    }
+  }
+  return { preamble, sections };
+}
+
+function Prose({ blocks }) {
+  if (!blocks.length) return null;
+  return (
+    <div className={styles.prose}>
+      <PortableText value={blocks} components={portableTextComponents} />
+    </div>
+  );
+}
+
+function Masthead({ people, locale }) {
+  return (
+    <div className={styles.masthead}>
+      {people.map((agent) => (
+        <AgentCard
+          key={agent._id}
+          name={agent.name}
+          role={agent.role}
+          agentType={agent.agentType}
+          image={agent.avatar}
+          locale={locale}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Sanity-driven page in the fallback's structure. Mapping:
+//   introParagraph:  first plain block = lead (H1); each H2 opens a section
+//   workflowSection: each H2 opens a section; the masthead cards sit after the
+//                    first block of the first section ("Two of us.")
+//   contactCTA:      each H2 opens a section
+// An intro with no H2 is older content and renders as LegacySanityAbout.
 export function SanityAbout({ about, locale }) {
+  const intro = splitSections(t(about.introParagraph, locale));
+  if (!intro.sections.length) {
+    return <LegacySanityAbout about={about} locale={locale} />;
+  }
+  const [leadBlock, ...restPreamble] = intro.preamble;
+  const workflow = splitSections(t(about.workflowSection, locale));
+  const contact = splitSections(t(about.contactCTA, locale));
+  const people = about.masthead || [];
+  const cardsAt = workflow.sections.length ? 0 : -1;
+  const sections = [
+    ...intro.sections,
+    ...workflow.sections,
+    ...contact.sections,
+  ];
+  const offset = intro.sections.length;
+
+  return (
+    <main>
+      <header className={styles.head}>
+        <p className={styles.kicker}>{ABOUT_TITLE[locale] || ABOUT_TITLE.en}</p>
+        {leadBlock && <h1 className={styles.title}>{blockText(leadBlock)}</h1>}
+      </header>
+      <Prose blocks={restPreamble} />
+      {sections.map((section, i) => {
+        const withCards = i - offset === cardsAt && people.length > 0;
+        const [first, ...rest] = section.body;
+        return (
+          <section key={i} className={styles.section}>
+            <h2 className={styles.heading}>{section.heading}</h2>
+            {withCards ? (
+              <>
+                {first && (
+                  <div className={styles.mastheadIntro}>
+                    <PortableText
+                      value={[first]}
+                      components={portableTextComponents}
+                    />
+                  </div>
+                )}
+                <Masthead people={people} locale={locale} />
+                <Prose blocks={rest} />
+              </>
+            ) : (
+              <Prose blocks={section.body} />
+            )}
+          </section>
+        );
+      })}
+      {cardsAt === -1 && people.length > 0 && (
+        <section className={styles.section}>
+          <Masthead people={people} locale={locale} />
+        </section>
+      )}
+    </main>
+  );
+}
+
+function LegacySanityAbout({ about, locale }) {
   const intro = t(about.introParagraph, locale);
   const workflow = t(about.workflowSection, locale);
   const contactCTA = t(about.contactCTA, locale);
@@ -123,7 +233,7 @@ export function SanityAbout({ about, locale }) {
   return (
     <main>
       <header className={styles.head}>
-        <h1 className={styles.title}>{TITLES[locale] || TITLES.en}</h1>
+        <h1 className={styles.title}>{ABOUT_TITLE[locale] || ABOUT_TITLE.en}</h1>
       </header>
       {intro && (
         <section className={styles.section}>

@@ -41,10 +41,10 @@ describe("FallbackAbout", () => {
     const names = screen
       .getAllByRole("heading", { level: 3 })
       .map((h) => h.textContent);
-    expect(names).toEqual(["Hector Luis Alamo", "Nico"]);
+    expect(names).toEqual(["Hector Luis Alamo", "Nico von Bot"]);
   });
 
-  it.each(["Scoop", "Root", "Gabo", "Lupe", "Nico von Bot"])(
+  it.each(["Scoop", "Root", "Gabo", "Lupe"])(
     "does not mention retired masthead member %s",
     (name) => {
       const { container } = render(<FallbackAbout locale="en" about={null} />);
@@ -60,7 +60,16 @@ describe("FallbackAbout", () => {
     };
     render(<FallbackAbout locale="en" about={about} />);
     expect(screen.getByAltText("Hector Luis Alamo")).toBeInTheDocument();
-    expect(screen.queryByAltText("Nico")).not.toBeInTheDocument();
+    expect(screen.queryByAltText("Nico von Bot")).not.toBeInTheDocument();
+  });
+
+  it("borrows Nico's avatar from the 'Nico von Bot' agent document", () => {
+    const about = {
+      masthead: [{ name: "Nico von Bot", avatar: { asset: { _ref: "n" } } }],
+    };
+    render(<FallbackAbout locale="en" about={about} />);
+    expect(screen.getByAltText("Nico von Bot")).toBeInTheDocument();
+    expect(screen.queryByAltText("Hector Luis Alamo")).not.toBeInTheDocument();
   });
 
   it("keeps info@palamo.ai as the mailto contact", () => {

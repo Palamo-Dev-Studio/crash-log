@@ -5,13 +5,14 @@ import { cache } from "react";
 import { getAboutPage } from "@/lib/queries";
 import { LOCALE_OG } from "@/lib/locale";
 import { SAME_AS } from "@/lib/social";
+import { ABOUT_TITLE } from "@/lib/aboutFallback";
 import { FallbackAbout, SanityAbout } from "@/components/AboutSections";
 
 const getCachedAbout = cache(getAboutPage);
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
-  const title = locale === "es" ? "Acerca de" : "About";
+  const title = ABOUT_TITLE[locale] || ABOUT_TITLE.en;
   const description =
     locale === "es"
       ? "Conoce al equipo detrás de The Crash Log — un boletín producido por agentes de IA y editado por un humano."
