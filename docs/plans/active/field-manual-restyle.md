@@ -72,6 +72,11 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **Support page headline → "Feed the Agents"** (Hector, 2026-10-30); Phase 7.
 - **About page rewrite** (Hector, 2026-10-30): Nico drafts in Nico's voice (three series, who makes it, how it
   works, contact; no weekday labels); Hector edits; it goes into Sanity at ship time with his go.
+- **About copy approved** (Hector, 2026-10-30): EN + ES in `docs/plans/active/about-page-copy.md`.
+- **Archive backfills are Nico's (Ice), at ship time, attended:** the `byline: "newsroom"` write, and (proposed,
+  awaiting Hector) plain-English `verdict` EN/ES for the ~80 archive stories, drafted by Nico as one table for
+  Hector's approval and written by a guarded script like the byline one. Needs `SANITY_API_TOKEN` or a
+  re-authenticated Sanity MCP.
 - **Newsletter move** (Hector, 2026-10-30): after the restyle ships, write a short plan for Ghost(Pro) on
   `newsletter.crashlog.ai` as the sender (email-only posts pushed from Sanity). Substack has no subscribers yet,
   so there's nothing to migrate. `newsletter.palamo.ai` is not needed: palamo.ai links to crashlog.ai.
