@@ -6,7 +6,13 @@ import { defineConfig } from "@playwright/test";
 // reuseExistingServer attaches to whatever already listens on this port, so a
 // second checkout (e.g. an agent worktree) must pick its own E2E_PORT or it
 // will silently test the other checkout's code.
-const PORT = Number(process.env.E2E_PORT) || 3000;
+const rawPort = process.env.E2E_PORT;
+const PORT = rawPort === undefined ? 3000 : Number(rawPort);
+if (!Number.isInteger(PORT) || PORT < 1024 || PORT > 65535) {
+  throw new Error(
+    `E2E_PORT must be an integer from 1024 to 65535, got "${rawPort}"`
+  );
+}
 
 export default defineConfig({
   testDir: "e2e",
