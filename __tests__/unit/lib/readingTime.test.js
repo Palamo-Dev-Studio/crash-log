@@ -7,7 +7,10 @@ import {
   readingMinutes,
   getReadingMinutes,
   extractReadableText,
+  issueReadingText,
 } from "@/lib/readingTime";
+import { HOME_FEED_QUERY } from "@/lib/queries";
+import { readFileSync } from "fs";
 
 const words = (n) => Array.from({ length: n }, () => "word").join(" ");
 const block = (text) => ({
@@ -55,14 +58,11 @@ describe("getReadingMinutes", () => {
     };
     expect(getReadingMinutes(es, "es")).toBe(2);
   });
-  it("adds issue story bodies to the issue's own text", () => {
+  it("reads an issue through issueReadingText (transmission, bodies, summaries, Stack Trace)", () => {
     const doc = {
       _type: "issue",
-      reading: { en: words(230), es: null },
-      storyReading: [
-        { en: words(230), es: null },
-        { en: words(230), es: null },
-      ],
+      nicosTransmission: { en: words(230) },
+      stories: [{ body: { en: words(230) } }, { body: { en: words(230) } }],
     };
     expect(getReadingMinutes(doc, "en")).toBe(3);
   });
@@ -190,5 +190,101 @@ describe("getReadingMinutes for Spanish practical bodies", () => {
       body: { en: [prose(w(690))], es: null },
     };
     expect(getReadingMinutes(doc, "es")).toBe(3);
+  });
+});
+
+describe("one reading time for an issue: home cover and issue page", () => {
+  const w = (n, tag = "w") => Array.from({ length: n }, () => tag).join(" ");
+  const prose = (text) => ({
+    _type: "block",
+    style: "normal",
+    children: [{ _type: "span", text }],
+  });
+  const image = (alt) => ({ _type: "image", alt });
+  // Issue page: the full document, portable text everywhere.
+  const page = {
+    _type: "issue",
+    nicosTransmission: { en: [prose(w(100))], es: [prose(w(100, "t"))] },
+    stories: [
+      {
+        body: { en: [prose(w(60)), image(w(500, "alt"))], es: [prose(w(60))] },
+        summary: { en: w(40), es: w(40) },
+      },
+      { body: { en: [prose(w(50))], es: null }, summary: null },
+    ],
+    stackTrace: [
+      { text: { en: [prose(w(30))], es: [prose(w(30))] } },
+      { text: { en: [prose(w(20))], es: null } },
+    ],
+  };
+  // Home feed: what HOME_FEED_PROJECTION returns (pt::text strings, same keys).
+  const home = {
+    _type: "issue",
+    nicosTransmission: { en: w(100), es: w(100, "t") },
+    stories: [
+      { body: { en: w(60), es: w(60) }, summary: { en: w(40), es: w(40) } },
+      { body: { en: w(50), es: null }, summary: null },
+    ],
+    stackTrace: [
+      { text: { en: w(30), es: w(30) } },
+      { text: { en: w(20), es: null } },
+    ],
+  };
+
+  it("home path and page path agree, EN and ES", () => {
+    for (const locale of ["en", "es"]) {
+      expect(getReadingMinutes(home, locale)).toBe(
+        getReadingMinutes(page, locale)
+      );
+    }
+  });
+
+  it("counts transmission, bodies, authored summaries and Stack Trace; not image alt", () => {
+    // EN words: 100 + (60 + 40) + 50 + (30 + 20) = 300 -> 2 min.
+    // Without the Stack Trace 250 -> 2, so the boundary is checked below.
+    expect(countWords(issueReadingText(page, "en").join(" "))).toBe(300);
+    expect(getReadingMinutes(page, "en")).toBe(2);
+  });
+
+  it("Stack Trace text moves the estimate across a minute boundary", () => {
+    const bare = {
+      ...page,
+      stackTrace: [{ text: { en: [prose(w(40))] } }],
+      stories: [],
+      nicosTransmission: { en: [prose(w(200))] },
+    };
+    expect(getReadingMinutes(bare, "en")).toBe(2); // 240 words
+    expect(getReadingMinutes({ ...bare, stackTrace: [] }, "en")).toBe(1); // 200
+  });
+
+  it("falls back to English per field like t()", () => {
+    // ES: second story body and second Stack Trace item fall back to EN.
+    expect(countWords(issueReadingText(page, "es").join(" "))).toBe(
+      100 + 60 + 40 + 50 + 30 + 20
+    );
+  });
+
+  it("returns no text for an empty issue", () => {
+    expect(issueReadingText({ _type: "issue" }, "en").join("").trim()).toBe("");
+    expect(getReadingMinutes({ _type: "issue" }, "en")).toBeNull();
+  });
+
+  it("the home projection carries every field issueReadingText reads", () => {
+    for (const locale of ["en", "es"]) {
+      expect(HOME_FEED_QUERY).toContain(
+        `"nicosTransmission": select(_type == "issue" => { "en": pt::text(nicosTransmission.en), "es": pt::text(nicosTransmission.es) })`
+      );
+      expect(HOME_FEED_QUERY).toContain(
+        `"${locale}": pt::text(text.${locale})`
+      );
+    }
+    expect(HOME_FEED_QUERY).toMatch(/"stories": stories\[\]->\{.*\bsummary \}/);
+    expect(HOME_FEED_QUERY).toContain("stackTrace[]");
+  });
+
+  it("IssueContent computes minutes through the shared function", () => {
+    const src = readFileSync("components/IssueContent.js", "utf-8");
+    expect(src).toContain("issueReadingText(issue, locale)");
+    expect(src).not.toContain("hasOwnSummary(story, locale) ? t(story.summary");
   });
 });

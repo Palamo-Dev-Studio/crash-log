@@ -6,10 +6,9 @@ import { t, hasFullTranslation } from "@/lib/locale";
 import { portableTextComponents } from "@/lib/portableText";
 import { formatDate } from "@/lib/formatDate";
 import { getByline, getCredit, getFileCode } from "@/lib/series";
-import { readingMinutes } from "@/lib/readingTime";
-import { portableTextToPlain } from "@/lib/portableTextToPlain";
+import { issueReadingText, readingMinutes } from "@/lib/readingTime";
 import { caseNumber, OTR_LABELS } from "@/lib/offTheRailsLabels";
-import { getVerdict, hasFullBody, hasOwnSummary } from "@/lib/caseCard";
+import { getVerdict, hasFullBody } from "@/lib/caseCard";
 import IssueHeader from "@/components/IssueHeader";
 import CaseCard from "@/components/CaseCard";
 import VerdictStamp, { StampFilter } from "@/components/VerdictStamp";
@@ -46,20 +45,10 @@ export default function IssueContent({ issue, locale }) {
     hasFullBody(story, locale) ? `case-file-${caseNumber(index)}` : undefined;
   const hasFullFiles = stories.some((story) => hasFullBody(story, locale));
 
-  const minutes = (() => {
-    const parts = [
-      transmission,
-      // A summary counts only when authored; the fallback is a slice of the body.
-      ...stories.flatMap((story) => [
-        t(story.body, locale),
-        hasOwnSummary(story, locale) ? t(story.summary, locale) : "",
-      ]),
-      ...(stackTraceItems || []).map((item) => item.body),
-    ].map((part) =>
-      Array.isArray(part) ? portableTextToPlain(part) : part || ""
-    );
-    return parts.some((p) => p.trim()) ? readingMinutes(parts) : null;
-  })();
+  const readingParts = issueReadingText(issue, locale);
+  const minutes = readingParts.some((p) => p.trim())
+    ? readingMinutes(readingParts)
+    : null;
 
   return (
     <main>
