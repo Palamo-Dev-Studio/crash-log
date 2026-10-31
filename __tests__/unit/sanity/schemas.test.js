@@ -81,6 +81,19 @@ describe("practical schema", () => {
     expect(field(practical, "metaDescription").type).toBe("localizedText");
     expect(field(practical, "body").type).toBe("localizedPracticalContent");
   });
+  it("requires the body object itself, not only body.en", () => {
+    const calls = [];
+    const rule = {
+      required() {
+        calls.push("required");
+        return rule;
+      },
+    };
+    const validate = field(practical, "body").validation;
+    expect(typeof validate).toBe("function");
+    validate(rule);
+    expect(calls).toContain("required");
+  });
   it("defaults byline to Hector Luis Alamo", () => {
     expect(field(practical, "byline").initialValue).toBe("Hector Luis Alamo");
   });

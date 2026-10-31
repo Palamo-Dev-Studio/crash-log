@@ -85,6 +85,7 @@ export default {
       title: "Body",
       type: "localizedPracticalContent",
       group: "english",
+      validation: (Rule) => Rule.required(),
     },
     {
       name: "metaDescription",
