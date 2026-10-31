@@ -152,6 +152,17 @@ to a file in the scratchpad; the dry run truncates values to 70 characters and t
 - Date-lint residual risk documented in `eslint.config.mjs` (runtime-computed keys, `Reflect.get`, coercion).
 - e2e stamp markup is synthetic (the unit test covers the component); source date not wrapped in `<time>`.
 - OG: wide-caps no-space strings; 90-char no-space title orphan line.
+- CodeRabbit (2026-10-31), premise false: Practical "not registered" (`sanity.config.js` registers it and its
+  blocks; the `--dir sanity` run couldn't see the config); `HOME_FEED_QUERY` assertion (already asserts the full
+  type list, `queries.test.js:239`); "count evaluates to 0" (the test passes with 3); `locale-switching.spec.js`
+  nav strict mode (only `SiteNav` renders a `<nav>`).
+- CodeRabbit, declined on scope: empty Español tab on `practical` (same as `issue`/`column`: EN/ES inputs live
+  inside each localized field; a Studio-wide redesign); `import.meta.dirname` in `build-favicons.mjs` (CI's
+  `node-version: "20"` resolves to the latest 20.x; the script runs by hand).
+- Practical search property test, known limits (Hector: "keep the test, but stop chasing"): it proves every
+  reader-visible field reaches search, not that hidden values (URLs, `_key`, language hints) stay out — the helper
+  indexes none today; `nestedBlockText` covers rich text inside custom blocks, which today's schema doesn't use.
+- `practical.body` required is Studio validation only; API writes (Steam's uploader) bypass it.
 
 ## Phases
 
@@ -164,7 +175,7 @@ to a file in the scratchpad; the dry run truncates values to 70 characters and t
 | 5   | Off the Rails issue page: case cards, verdict stamps                                        | merged           |
 | 6   | Practical article template + Nico's Notes column page                                       | merged           |
 | 7   | Archive, beats, about, support, 404, OG images, site-wide crawl/contrast, legacy tokens     | merged `6f1b23b` |
-| 8   | Whole-branch Fable review (REVISE 2026-10-31) → fixes → re-review → CodeRabbit → PR         | in progress      |
+| 8   | Whole-branch Fable review (REVISE 2026-10-31) → fixes → re-review → CodeRabbit → PR         | PR open          |
 
 ## Acceptance criteria
 
