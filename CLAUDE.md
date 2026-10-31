@@ -15,7 +15,7 @@ The Crash Log is a bilingual (EN/ES) newsletter website about AI and tech failur
 - `npm test` — Run Vitest unit/component/integration tests
 - `npm run test:watch` — Run Vitest in watch mode
 - `npm run test:coverage` — Run tests with coverage report
-- `npm run test:e2e` — Run Playwright e2e tests (auto-starts dev server)
+- `npm run test:e2e` — Run Playwright e2e tests (auto-starts the dev server; `E2E_PROD=1` builds and runs a production server instead, which is what full runs should use; `E2E_PORT` picks the port)
 
 - `scripts/verify.sh` — Build-gate verification (runs lint, format check, tests, then build; exits non-zero on failure)
 
@@ -39,13 +39,17 @@ The Crash Log is a bilingual (EN/ES) newsletter website about AI and tech failur
 
 **Sanity Studio config** (`sanity.config.js`): Registers all schemas, uses `structureTool` + `visionTool` plugins.
 
-**Styling:** Global design tokens in `app/globals.css` (colors, typography, severity levels, agent accents). Components use CSS modules. Dark theme by default. No CSS framework.
+**Styling:** "Field Manual" design (cream paper, ink type, stamp roundel). Design tokens in `app/globals.css` (`--cream`, `--card`, `--ink`, `--rule`, `--terra(-ink)`, `--teal(-ink)`, `--muted`, `--label`, `--wrap`, `--gutter`, font aliases). Components use CSS modules. No CSS framework. Spec and mockups: `docs/reference/field-manual/`.
+
+**Series:** come from the document type — `issue` = Off the Rails (OTR-###), `practical` = Practical (FIX-###), `column` = Nico's Notes (NOTE-###). Codes, bylines (`getByline`), the "Reported with Nico" credit (`getCredit`) and series colours live in `lib/series.js`.
+
+**Dates:** every displayed date goes through `lib/formatDate.js` (UTC, never a weekday); an ESLint rule bans date formatting elsewhere (RSS routes may use `toUTCString`).
 
 ## Content Model (Sanity Schemas)
 
 Schemas live in `sanity/schemas/`. Object types in `sanity/schemas/objects/`.
 
-**Documents:** `issue` (newsletter edition container) → references `story` docs and inline `stackTraceHit` objects. `story` (individual reporting block with severity level). `category` (coverage beat). `agent` (AI or human masthead member). `aboutPage` and `siteSettings` are singletons.
+**Documents:** `issue` (Off the Rails edition) → references `story` docs and inline `stackTraceHit` objects; optional `byline` (`"newsroom"` sentinel for archive issues #1–27). `story` (one case: headline, `verdict`, `summary`, `image` + credit, sources with optional date, body, legacy `severity`). `practical` (Practical article with custom blocks: steps, exhibit, callout, pullQuote, codeBlock, replyAsk). `column` (Nico's Notes). `category` (coverage beat). `agent` (AI or human masthead member). `aboutPage` and `siteSettings` are singletons.
 
 **Severity levels** (on stories): Free-text string field. Shown as a plain mono label (or the story's `verdict` when set); no per-label or per-position colours.
 
@@ -90,19 +94,19 @@ Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` 
 
 ## Current State
 
-Phases 1–8 complete. Sanity schemas, Studio, React components, issue pages, locale infrastructure, SEO foundation, content seeding, test framework, ESLint + Prettier, CI pipeline, RSS feeds, dynamic OG images, Substack subscribe handoff, Stripe donations, and on-demand revalidation are all in place. The subscribe form sends readers to Substack's own subscribe page with their email pre-filled; Substack handles confirmation and delivery. `scripts/verify.sh` passes. Deployed to Vercel at `crashlog.ai`.
+The "Field Manual" restyle is on `feature/field-manual-restyle` (living plan and ship runbook: `docs/plans/active/field-manual-restyle.md`). Subscribe buttons are plain links to Substack's subscribe page; Substack handles confirmation and delivery. Stripe donations (prompt on every page except `/support`), on-demand revalidation, RSS feeds and per-route OG/Twitter images are in place. Ship-time Sanity writes use guarded scripts in `scripts/` (dry run by default). Deployed to Vercel at `crashlog.ai`.
 
 ## Testing
 
 **Vitest** for unit, component, and integration tests. **Playwright** for e2e.
 
 - Config: `vitest.config.mjs` — jsdom environment, `@` path alias, CSS module proxy, custom JSX-in-`.js` plugin
-- Config: `playwright.config.mjs` — Chromium, auto-starts dev server on port 3000
+- Config: `playwright.config.mjs` — Chromium; dev server by default, production build with `E2E_PROD=1`; port from `E2E_PORT` (default 3000)
 - Setup: `__tests__/setup.js` — jest-dom matchers, DOM cleanup
 - Mocks: `__tests__/mocks/` — next/image, next/link, next/navigation stubs
-- Unit tests: `__tests__/unit/lib/` — locale, sanity, queries, portableText
+- Unit tests: `__tests__/unit/lib/` (series, formatDate, readingTime, queries, …), `__tests__/unit/` (token/contrast/lint-rule property tests, backfill script guards)
 - Component tests: `__tests__/unit/components/`
-- Integration tests: `__tests__/integration/` — middleware, robots, rss-feed, donate, revalidate
-- E2E tests: `e2e/` — home, navigation, locale-switching, empty-state
+- Integration tests: `__tests__/integration/` — middleware, robots, rss-feed, donate, revalidate, OG/twitter image coverage and parity
+- E2E tests: `e2e/` — page specs per route family, plus site-wide crawls: `site-overflow.spec.js` (every sitemap route at 320/360/390) and `site-contrast.spec.js` (WCAG AA on rendered text and hover states)
 
 **JSX in .js files:** The project uses JSX in `.js` files (Next.js convention). A custom Vite plugin in `vitest.config.mjs` (`jsxInJsPlugin`) transforms these via esbuild before Vite's import analysis.
