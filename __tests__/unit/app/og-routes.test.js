@@ -202,8 +202,8 @@ describe("OG image routes", () => {
   );
 
   it.each([
-    ["about", "About", "Acerca de"],
-    ["support", "Support", "Apoya"],
+    ["about", "About", "Sobre el Log"],
+    ["support", "Support", "Apoya el Log"],
     ["archive", "Archive", "Archivo"],
     ["beats", "Beats", "Secciones"],
   ])("%s page uses its page title in EN and ES", async (dir, en, es) => {

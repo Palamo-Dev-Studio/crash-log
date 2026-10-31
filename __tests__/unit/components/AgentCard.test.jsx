@@ -51,7 +51,7 @@ describe("AgentCard", () => {
 
   it("renders type label for lead_agent", () => {
     render(<AgentCard {...baseProps} />);
-    expect(screen.getByText(/LEAD AGENT/)).toBeInTheDocument();
+    expect(screen.getByText(/AI COLLABORATOR/)).toBeInTheDocument();
   });
 
   it("renders type label for sub_agent", () => {
@@ -88,7 +88,7 @@ describe("AgentCard", () => {
 
   it("omits model from tag when model is absent", () => {
     render(<AgentCard {...baseProps} model={undefined} />);
-    const tag = screen.getByText("LEAD AGENT");
+    const tag = screen.getByText("AI COLLABORATOR");
     expect(tag.textContent).not.toContain("·");
   });
 

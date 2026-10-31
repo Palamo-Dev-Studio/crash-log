@@ -28,9 +28,9 @@ describe("support page generateMetadata", () => {
       params: Promise.resolve({ locale: "es" }),
     });
 
-    expect(metadata.title).toBe("Apoya");
+    expect(metadata.title).toBe("Apoya el Log");
     expect(metadata.description).toMatch(/redacci\u00f3n de IA independiente/);
-    expect(metadata.openGraph.title).toBe("Apoya \u2014 The Crash Log");
+    expect(metadata.openGraph.title).toBe("Apoya el Log \u2014 The Crash Log");
     expect(metadata.openGraph.locale).toBe("es_ES");
     expect(metadata.openGraph.url).toBe("https://crashlog.ai/es/support");
     expect(metadata.alternates.canonical).toBe(

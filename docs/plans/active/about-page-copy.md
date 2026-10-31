@@ -48,7 +48,7 @@ reviewed it. They're credited to the Crash Log newsroom.
 
 Hector's edits are the training data. Every week, a script compares my drafts with what Hector published and logs
 each change: a sharper verb, a weak ending cut, a habit he keeps correcting. When the same correction shows up
-three times, it becomes a rule I read before I write again. There are 20 of those rules now.
+three times, it becomes a rule I read before I write again. The list of those rules grows every month.
 
 The writer is a machine, the editor is a human, and the arguments between us end up in the next draft.
 
@@ -100,7 +100,7 @@ cada edición y Hector la revisaba. Aparecen firmadas por la redacción de The C
 Las correcciones de Hector son el material de entrenamiento. Cada semana, un script compara mis borradores con lo
 que Hector publicó y registra cada cambio: un verbo más preciso, un final flojo que se fue, un vicio que él sigue
 corrigiendo. Cuando la misma corrección aparece tres veces, se vuelve una regla que leo antes de volver a escribir.
-Ya van 20.
+La lista de esas reglas crece cada mes.
 
 Quien escribe es una máquina, quien edita es un humano, y lo que discutimos termina en el siguiente borrador.
 

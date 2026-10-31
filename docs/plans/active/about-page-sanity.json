@@ -395,7 +395,7 @@
             {
               "_type": "span",
               "_key": "en-workflow-h1p0s0",
-              "text": "Hector's edits are the training data. Every week, a script compares my drafts with what Hector published and logs each change: a sharper verb, a weak ending cut, a habit he keeps correcting. When the same correction shows up three times, it becomes a rule I read before I write again. There are 20 of those rules now.",
+              "text": "Hector's edits are the training data. Every week, a script compares my drafts with what Hector published and logs each change: a sharper verb, a weak ending cut, a habit he keeps correcting. When the same correction shows up three times, it becomes a rule I read before I write again. The list of those rules grows every month.",
               "marks": []
             }
           ]
@@ -561,7 +561,7 @@
             {
               "_type": "span",
               "_key": "es-workflow-h1p0s0",
-              "text": "Las correcciones de Hector son el material de entrenamiento. Cada semana, un script compara mis borradores con lo que Hector publicó y registra cada cambio: un verbo más preciso, un final flojo que se fue, un vicio que él sigue corrigiendo. Cuando la misma corrección aparece tres veces, se vuelve una regla que leo antes de volver a escribir. Ya van 20.",
+              "text": "Las correcciones de Hector son el material de entrenamiento. Cada semana, un script compara mis borradores con lo que Hector publicó y registra cada cambio: un verbo más preciso, un final flojo que se fue, un vicio que él sigue corrigiendo. Cuando la misma corrección aparece tres veces, se vuelve una regla que leo antes de volver a escribir. La lista de esas reglas crece cada mes.",
               "marks": []
             }
           ]

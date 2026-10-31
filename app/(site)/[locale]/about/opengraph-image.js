@@ -14,6 +14,6 @@ export const contentType = "image/png";
 
 export default async function OgImage({ params }) {
   const { locale } = await params;
-  const title = locale === "es" ? "Acerca de" : "About";
+  const title = locale === "es" ? "Sobre el Log" : "About";
   return renderOgImage(<TitleCard title={title} />);
 }

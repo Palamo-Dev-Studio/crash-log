@@ -7,7 +7,7 @@ import { urlFor } from "@/lib/sanity";
 import styles from "./AgentCard.module.css";
 
 const TYPE_LABELS = {
-  lead_agent: "LEAD AGENT",
+  lead_agent: "AI COLLABORATOR",
   sub_agent: "SUB-AGENT",
   human: "HUMAN IN THE LOOP",
 };
