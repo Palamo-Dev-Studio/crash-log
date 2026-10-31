@@ -139,6 +139,13 @@ describe("ArticleBody custom blocks", () => {
     expect(screen.getByText("Revisa antes de actuar")).toBeInTheDocument();
   });
 
+  it("uses the Spanish replyAsk default heading when no title is set", () => {
+    renderBody([{ _type: "replyAsk", text: "x" }], "es");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Tu turno" })
+    ).toBeInTheDocument();
+  });
+
   it("renders the pull quote as a blockquote", () => {
     const { container } = renderBody(FULL);
     expect(container.querySelector("blockquote").textContent).toContain(

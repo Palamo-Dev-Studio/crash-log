@@ -151,11 +151,22 @@ describe("practical body", () => {
     expect(registered).toContain("localizedPracticalContent");
   });
 
-  it("gives callout and replyAsk their default titles", () => {
-    const initial = (obj) =>
-      obj.fields.find((f) => f.name === "title").initialValue;
-    expect(initial(practicalBlocks.callout)).toBe("Check before you act");
-    expect(initial(practicalBlocks.replyAsk)).toBe("Your turn");
+  // The same blocks fill body.en and body.es, so a schema default would save one
+  // language into both; ArticleBody supplies the per-locale default title instead.
+  it("gives no block field a default value (titles default per locale at render)", () => {
+    const withDefaults = [];
+    const walk = (fields, path) => {
+      for (const f of fields || []) {
+        const p = `${path}.${f.name}`;
+        if (f.initialValue !== undefined) withDefaults.push(p);
+        walk(f.fields, p);
+        for (const m of f.of || []) walk(m.fields, `${p}[]`);
+      }
+    };
+    for (const [name, block] of Object.entries(practicalBlocks)) {
+      walk(block.fields, name);
+    }
+    expect(withDefaults).toEqual([]);
   });
 
   it("models steps as items of {title, text} and exhibit with label, tag, image, from, rows, caption", () => {
