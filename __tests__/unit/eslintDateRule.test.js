@@ -1,10 +1,20 @@
 // ABOUTME: Lints small code strings through the project's ESLint config to prove the date-formatting ban.
 // ABOUTME: Banned everywhere except lib/formatDate.js; RSS feed routes may call toUTCString (RFC 822) and nothing else.
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import { ESLint } from "eslint";
 
-const eslint = new ESLint({ cwd: process.cwd() });
+// One ESLint instance per file: booting the Next config is the slow part, so every case reuses it.
+// The warm-up lint in beforeAll pays the config-load cost once, outside any test's own timeout.
+let eslint;
+const SLOW_MS = 30_000;
+
+beforeAll(async () => {
+  eslint = new ESLint({ cwd: process.cwd() });
+  await eslint.lintText("export const warm = 1;", {
+    filePath: "components/Example.js",
+  });
+}, SLOW_MS);
 
 async function dateErrors(code, filePath) {
   const [result] = await eslint.lintText(code, { filePath });
@@ -175,13 +185,17 @@ describe("date-formatting lint rule", () => {
     ).toHaveLength(1);
   });
 
-  it("the real source tree has no violations", async () => {
-    const results = await eslint.lintFiles(["app", "components", "lib"]);
-    const hits = results.flatMap((r) =>
-      r.messages
-        .filter((m) => m.ruleId === "no-restricted-syntax")
-        .map((m) => `${r.filePath}:${m.line}`)
-    );
-    expect(hits).toEqual([]);
-  });
+  it(
+    "the real source tree has no violations",
+    async () => {
+      const results = await eslint.lintFiles(["app", "components", "lib"]);
+      const hits = results.flatMap((r) =>
+        r.messages
+          .filter((m) => m.ruleId === "no-restricted-syntax")
+          .map((m) => `${r.filePath}:${m.line}`)
+      );
+      expect(hits).toEqual([]);
+    },
+    SLOW_MS
+  );
 });

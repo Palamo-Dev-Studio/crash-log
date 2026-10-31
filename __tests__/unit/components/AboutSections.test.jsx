@@ -105,3 +105,72 @@ describe("SanityAbout", () => {
     expect(screen.queryByText("Masthead")).not.toBeInTheDocument();
   });
 });
+
+const blk = (text, style = "normal") => ({
+  _type: "block",
+  _key: `${style}-${text}`,
+  style,
+  markDefs: [],
+  children: [{ _type: "span", _key: "s", text, marks: [] }],
+});
+const field = (...blocks) => ({ en: blocks });
+const people = [
+  { _id: "1", name: "Hector Luis Alamo", agentType: "human" },
+  { _id: "2", name: "Nico von Bot", agentType: "lead_agent" },
+];
+
+describe("SanityAbout structured fields", () => {
+  it("renders workflow and contact preambles ahead of that field's sections", () => {
+    const about = {
+      introParagraph: field(blk("Lead line."), blk("Intro H2", "h2")),
+      workflowSection: field(
+        blk("Workflow preamble text."),
+        blk("Workflow H2", "h2"),
+        blk("Workflow body.")
+      ),
+      contactCTA: field(
+        blk("Contact preamble text."),
+        blk("Contact H2", "h2"),
+        blk("Contact body.")
+      ),
+      masthead: [],
+    };
+    const { container } = render(<SanityAbout about={about} locale="en" />);
+    const text = container.textContent;
+    for (const s of ["Workflow preamble text.", "Contact preamble text."])
+      expect(text).toContain(s);
+    const at = (s) => text.indexOf(s);
+    expect(at("Intro H2")).toBeLessThan(at("Workflow preamble text."));
+    expect(at("Workflow preamble text.")).toBeLessThan(at("Workflow H2"));
+    expect(at("Workflow body.")).toBeLessThan(at("Contact preamble text."));
+    expect(at("Contact preamble text.")).toBeLessThan(at("Contact H2"));
+  });
+
+  it("puts the cards at the end when the workflow field has no H2", () => {
+    const about = {
+      introParagraph: field(blk("Lead line."), blk("Intro H2", "h2")),
+      workflowSection: field(blk("Plain workflow prose.")),
+      contactCTA: field(blk("Contact H2", "h2"), blk("Contact body.")),
+      masthead: people,
+    };
+    render(<SanityAbout about={about} locale="en" />);
+    expect(
+      screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)
+    ).toEqual(["Hector Luis Alamo", "Nico von Bot"]);
+    expect(screen.getByTestId("masthead")).toBeInTheDocument();
+  });
+
+  it("falls back to the page title as H1 when the intro opens with an H2", () => {
+    const about = {
+      introParagraph: field(blk("First H2", "h2"), blk("Body.")),
+      masthead: [],
+    };
+    render(<SanityAbout about={about} locale="en" />);
+    const h1s = screen.getAllByRole("heading", { level: 1 });
+    expect(h1s).toHaveLength(1);
+    expect(h1s[0]).toHaveTextContent("About");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "First H2" })
+    ).toBeInTheDocument();
+  });
+});

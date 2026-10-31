@@ -100,7 +100,7 @@ describe("ArchiveSearch file rows", () => {
     fireEvent.change(screen.getByLabelText("Search"), {
       target: { value: "rotate" },
     });
-    expect(screen.getByText("matched in: file body")).toBeInTheDocument();
+    expect(screen.getByText("matched in: practical body")).toBeInTheDocument();
   });
 
   it("labels the search box and the beat filter visibly", () => {

@@ -171,27 +171,43 @@ export function SanityAbout({ about, locale }) {
   if (!intro.sections.length) {
     return <LegacySanityAbout about={about} locale={locale} />;
   }
+  // No lead block (the intro opens with an H2): the page title becomes the H1.
   const [leadBlock, ...restPreamble] = intro.preamble;
   const workflow = splitSections(t(about.workflowSection, locale));
   const contact = splitSections(t(about.contactCTA, locale));
   const people = about.masthead || [];
-  const cardsAt = workflow.sections.length ? 0 : -1;
-  const sections = [
-    ...intro.sections,
-    ...workflow.sections,
-    ...contact.sections,
+  const title = ABOUT_TITLE[locale] || ABOUT_TITLE.en;
+  const cardsInWorkflow = workflow.sections.length > 0 && people.length > 0;
+  // Page order: each field's preamble (prose before its first H2), then its sections.
+  // The masthead cards sit inside the first workflow section, or at the end when the
+  // workflow field has no H2.
+  const items = [
+    { prose: restPreamble },
+    ...intro.sections.map((section) => ({ section })),
+    { prose: workflow.preamble },
+    ...workflow.sections.map((section, i) => ({
+      section,
+      withCards: cardsInWorkflow && i === 0,
+    })),
+    { prose: contact.preamble },
+    ...contact.sections.map((section) => ({ section })),
   ];
-  const offset = intro.sections.length;
 
   return (
     <main>
       <header className={styles.head}>
-        <p className={styles.kicker}>{ABOUT_TITLE[locale] || ABOUT_TITLE.en}</p>
-        {leadBlock && <h1 className={styles.title}>{blockText(leadBlock)}</h1>}
+        {leadBlock ? (
+          <>
+            <p className={styles.kicker}>{title}</p>
+            <h1 className={styles.title}>{blockText(leadBlock)}</h1>
+          </>
+        ) : (
+          <h1 className={styles.title}>{title}</h1>
+        )}
       </header>
-      <Prose blocks={restPreamble} />
-      {sections.map((section, i) => {
-        const withCards = i - offset === cardsAt && people.length > 0;
+      {items.map((item, i) => {
+        if (!item.section) return <Prose key={i} blocks={item.prose} />;
+        const { section, withCards } = item;
         const [first, ...rest] = section.body;
         return (
           <section key={i} className={styles.section}>
@@ -215,7 +231,7 @@ export function SanityAbout({ about, locale }) {
           </section>
         );
       })}
-      {cardsAt === -1 && people.length > 0 && (
+      {!cardsInWorkflow && people.length > 0 && (
         <section className={styles.section}>
           <Masthead people={people} locale={locale} />
         </section>
