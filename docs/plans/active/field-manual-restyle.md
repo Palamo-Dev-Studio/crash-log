@@ -122,8 +122,10 @@ code renders today's About copy correctly through its legacy path).
 5. Steam handoff note: new `story` fields (`verdict`, `summary`, `image`, `imageAlt`, `imageCredit`), source `date`,
    explicit `byline`, cover image on every OTR/Practical post, no repeated H2 titles in a Practical post.
 
-Rollback: the deploy reverts in Vercel. Steps 1–2 need no rollback (old code ignores the fields). Step 4: re-run
-with the previous field values (the dry run prints them) if the new About must be undone.
+Rollback: the deploy reverts in Vercel. Steps 1–2 need no rollback (old code ignores the fields). Step 4: before
+`--apply`, save the three docs in full with a read-only query (`*[_id in $ids]`, with the three `_id`s from `about-page-sanity.json`)
+to a file in the scratchpad; the dry run truncates values to 70 characters and the script writes only from
+`about-page-sanity.json`, so neither can undo it. To undo, restore each doc's previous revision from Studio History.
 
 ## Known issues (open)
 
