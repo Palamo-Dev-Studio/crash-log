@@ -56,6 +56,8 @@ vi.mock("@/lib/queries", () => ({
 }));
 
 import { SiteCard, TitleCard } from "@/lib/ogTemplate";
+import { ABOUT_TITLE } from "@/lib/aboutFallback";
+import { SUPPORT_TITLE } from "@/lib/supportCopy";
 
 // `[locale]` is a character class in glob syntax, so glob broadly and filter by prefix.
 const ROUTES = Object.fromEntries(
@@ -213,8 +215,8 @@ describe("OG image routes", () => {
   );
 
   it.each([
-    ["about", "About", "Sobre el Log"],
-    ["support", "Support", "Apoya el Log"],
+    ["about", ABOUT_TITLE.en, ABOUT_TITLE.es],
+    ["support", SUPPORT_TITLE.en, SUPPORT_TITLE.es],
     ["archive", "Archive", "Archivo"],
     ["beats", "Beats", "Secciones"],
   ])("%s page uses its page title in EN and ES", async (dir, en, es) => {

@@ -4,7 +4,7 @@
 import Link from "next/link";
 import Roundel from "./Roundel";
 import { SERIES_COLOR_KEYS } from "@/lib/series";
-import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
+import { SUBSTACK_SUBSCRIBE_URL, SUBSCRIBE_LINE } from "@/lib/substack";
 import { BLUESKY_URL, INSTAGRAM_URL, TIKTOK_URL } from "@/lib/social";
 import styles from "./Footer.module.css";
 
@@ -16,7 +16,7 @@ const LABELS = {
   en: {
     blurb:
       "Incident reports on AI, read closely, with what to do next. Written for people who run things.",
-    subscribeLine: "New files every week. Free.",
+    subscribeLine: SUBSCRIBE_LINE.en,
     subscribe: "Subscribe",
     seriesHeading: "The series",
     elsewhereHeading: "Elsewhere",
@@ -36,7 +36,7 @@ const LABELS = {
   es: {
     blurb:
       "Informes de incidentes de IA, leídos con atención, y qué hacer después. Para quienes dirigen un negocio.",
-    subscribeLine: "Expedientes nuevos cada semana. Gratis.",
+    subscribeLine: SUBSCRIBE_LINE.es,
     subscribe: "Suscr\u00edbete",
     seriesHeading: "Las series",
     elsewhereHeading: "Más",
