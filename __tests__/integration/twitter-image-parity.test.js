@@ -8,8 +8,8 @@ import path from "path";
 
 const APP_ROOT = path.resolve(import.meta.dirname, "../../app");
 
-const OG_PATTERN = /^opengraph-image\.(js|jsx|tsx|png|jpg)$/;
-const CODE_EXT = new Set(["js", "jsx", "tsx"]);
+const OG_PATTERN = /^opengraph-image\.(js|jsx|ts|tsx|png|jpe?g|gif)$/;
+const CODE_EXT = new Set(["js", "jsx", "ts", "tsx"]);
 const REEXPORT =
   /export\s*\{\s*default\s*,\s*alt\s*,\s*size\s*,\s*contentType\s*\}\s*from\s*["']\.\/opengraph-image["']/;
 
@@ -26,7 +26,7 @@ function parityViolations(ogFile) {
   const dir = path.dirname(ogFile);
   const ext = path.extname(ogFile).slice(1);
   if (CODE_EXT.has(ext)) {
-    const twitter = ["js", "jsx", "tsx"]
+    const twitter = ["js", "jsx", "ts", "tsx"]
       .map((e) => path.join(dir, `twitter-image.${e}`))
       .find((f) => fs.existsSync(f));
     if (!twitter) return ["no sibling twitter-image code file"];
@@ -35,10 +35,10 @@ function parityViolations(ogFile) {
       : ["twitter-image does not re-export ./opengraph-image"];
   }
   // A static OG image cannot be re-exported, so it needs its own static twitter image.
-  const hasStatic = ["png", "jpg", "jpeg"].some((e) =>
+  const hasStatic = ["png", "jpg", "jpeg", "gif"].some((e) =>
     fs.existsSync(path.join(dir, `twitter-image.${e}`))
   );
-  return hasStatic ? [] : ["no sibling static twitter-image (png/jpg)"];
+  return hasStatic ? [] : ["no sibling static twitter-image (png/jpg/gif)"];
 }
 
 const ogImages = findOgImages(APP_ROOT);
@@ -71,10 +71,10 @@ describe("twitter-image parity checker", () => {
       "x.txt": "",
     });
     expect(findOgImages(dir)).toEqual([path.join(dir, "opengraph-image.png")]);
-    for (const ext of ["js", "jsx", "tsx", "png", "jpg"]) {
+    for (const ext of ["js", "jsx", "ts", "tsx", "png", "jpg", "jpeg", "gif"]) {
       expect(OG_PATTERN.test(`opengraph-image.${ext}`)).toBe(true);
     }
-    expect(OG_PATTERN.test("opengraph-image.gif")).toBe(false);
+    expect(OG_PATTERN.test("opengraph-image.webp")).toBe(false);
   });
 
   it("flags a .png OG image with no twitter image, accepts a .png twitter image", () => {
