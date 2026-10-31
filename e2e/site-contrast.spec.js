@@ -135,7 +135,8 @@ async function pickRoutes(request) {
   return [...new Set(routes.filter(Boolean))];
 }
 
-test.describe.configure({ mode: "parallel" });
+// Serial: each file holds one worker so the crawl does not starve the dev server for the rest of the suite.
+test.describe.configure({ mode: "serial" });
 
 for (const locale of LOCALES) {
   test(`text meets WCAG AA at rest and on hover (${locale})`, async ({
@@ -157,7 +158,13 @@ for (const locale of LOCALES) {
     let elementsChecked = 0;
     for (const route of routes) {
       await page.goto(route, { waitUntil: "load" });
-      const rest = await page.evaluate(scan, { label: route });
+      let rest = await page.evaluate(scan, { label: route });
+      // A dev server that is still compiling can serve an empty shell: retry before judging.
+      for (let retry = 0; retry < 3 && rest.checked <= 5; retry++) {
+        await page.waitForTimeout(1500);
+        await page.reload({ waitUntil: "load" });
+        rest = await page.evaluate(scan, { label: route });
+      }
       failures.push(...rest.failures);
       elementsChecked += rest.checked;
       expect(rest.checked, `${route} had no text to scan`).toBeGreaterThan(5);

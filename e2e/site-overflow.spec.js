@@ -16,7 +16,8 @@ async function crawlRoutes(request) {
   return [...new Set([...paths, ...EXTRA_ROUTES])];
 }
 
-test.describe.configure({ mode: "parallel" });
+// Serial: each file holds one worker so the crawl does not starve the dev server for the rest of the suite.
+test.describe.configure({ mode: "serial" });
 
 for (const width of WIDTHS) {
   test(`no horizontal overflow at ${width}px on every route`, async ({
