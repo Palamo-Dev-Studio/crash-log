@@ -320,3 +320,32 @@ describe("getHomeFeed", () => {
     expect(await queries.getHomeFeed()).toEqual([]);
   });
 });
+
+describe("ALL_CATEGORIES_QUERY storyCount", () => {
+  it("counts only stories that belong to a published issue", async () => {
+    const { parse, evaluate } = await import("groq-js");
+    const dataset = [
+      { _id: "cat1", _type: "category", slug: { current: "beat" } },
+      { _id: "s-live", _type: "story", category: { _ref: "cat1" } },
+      { _id: "s-draft", _type: "story", category: { _ref: "cat1" } },
+      { _id: "s-orphan", _type: "story", category: { _ref: "cat1" } },
+      {
+        _id: "i-pub",
+        _type: "issue",
+        status: "published",
+        stories: [{ _ref: "s-live" }],
+      },
+      {
+        _id: "i-draft",
+        _type: "issue",
+        status: "draft",
+        stories: [{ _ref: "s-draft" }],
+      },
+    ];
+    const result = await (
+      await evaluate(parse(queries.ALL_CATEGORIES_QUERY), { dataset })
+    ).get();
+    expect(result).toHaveLength(1);
+    expect(result[0].storyCount).toBe(1);
+  });
+});
