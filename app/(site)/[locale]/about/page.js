@@ -7,6 +7,7 @@ import { LOCALE_OG } from "@/lib/locale";
 import { SAME_AS } from "@/lib/social";
 import { ABOUT_TITLE } from "@/lib/aboutFallback";
 import { FallbackAbout, SanityAbout } from "@/components/AboutSections";
+import JsonLd from "@/components/JsonLd";
 
 const getCachedAbout = cache(getAboutPage);
 
@@ -59,12 +60,7 @@ function NewsMediaOrganizationJsonLd() {
     },
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLd data={jsonLd} />;
 }
 
 export default async function AboutPage({ params }) {

@@ -6,8 +6,10 @@ import { notFound } from "next/navigation";
 import { getColumnBySlug, getAllColumnSlugs } from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG, hasFullTranslation } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
+import { getJsonLdAuthor } from "@/lib/series";
 import { getReadingMinutes } from "@/lib/readingTime";
 import ArticleLayout from "@/components/ArticleLayout";
+import JsonLd from "@/components/JsonLd";
 
 const getCachedColumnBySlug = cache(getColumnBySlug);
 
@@ -76,18 +78,10 @@ function ArticleJsonLd({ column, locale, slug }) {
       name: "The Crash Log",
       url: "https://crashlog.ai",
     },
-    author: {
-      "@type": "Person",
-      name: "Nico",
-    },
+    author: getJsonLdAuthor(column),
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLd data={jsonLd} />;
 }
 
 function BreadcrumbJsonLd({ column, locale, slug }) {
@@ -116,12 +110,7 @@ function BreadcrumbJsonLd({ column, locale, slug }) {
     ],
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLd data={jsonLd} />;
 }
 
 export default async function ColumnPage({ params }) {

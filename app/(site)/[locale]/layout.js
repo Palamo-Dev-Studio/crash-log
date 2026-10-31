@@ -10,6 +10,7 @@ import LanguageToggle from "@/components/LanguageToggle";
 import SiteNav from "@/components/SiteNav";
 import Footer from "@/components/Footer";
 import { SAME_AS } from "@/lib/social";
+import JsonLd from "@/components/JsonLd";
 import DonatePrompt from "@/components/DonatePrompt";
 import DonationThanks from "@/components/DonationThanks";
 
@@ -113,12 +114,7 @@ function WebSiteJsonLd() {
     inLanguage: ["en-US", "es-ES"],
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLd data={jsonLd} />;
 }
 
 export default async function SiteLayout({ children, params }) {

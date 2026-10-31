@@ -6,10 +6,11 @@ import { notFound } from "next/navigation";
 import { getPracticalBySlug, getAllPracticalSlugs } from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG, hasFullTranslation } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
-import { getByline } from "@/lib/series";
+import { getByline, getJsonLdAuthor } from "@/lib/series";
 import { getReadingMinutes } from "@/lib/readingTime";
 import { SERIES_INDEX_LABELS } from "@/lib/articleLabels";
 import ArticleLayout from "@/components/ArticleLayout";
+import JsonLd from "@/components/JsonLd";
 
 const getCachedPracticalBySlug = cache(getPracticalBySlug);
 
@@ -56,7 +57,7 @@ export async function generateStaticParams() {
   );
 }
 
-function JsonLd({ doc, locale, slug }) {
+function PracticalJsonLd({ doc, locale, slug }) {
   const canonicalUrl = `https://crashlog.ai/${locale}/practical/${slug}`;
   const title = t(doc.title, locale);
   const imageUrl = doc.coverImage
@@ -80,7 +81,7 @@ function JsonLd({ doc, locale, slug }) {
       name: "The Crash Log",
       url: "https://crashlog.ai",
     },
-    author: { "@type": "Person", name: getByline(doc, "en") },
+    author: getJsonLdAuthor(doc),
   };
 
   const breadcrumb = {
@@ -105,14 +106,8 @@ function JsonLd({ doc, locale, slug }) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(article) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
-      />
+      <JsonLd data={article} />
+      <JsonLd data={breadcrumb} />
     </>
   );
 }
@@ -125,7 +120,7 @@ export default async function PracticalPage({ params }) {
 
   return (
     <>
-      <JsonLd doc={doc} locale={locale} slug={slug} />
+      <PracticalJsonLd doc={doc} locale={locale} slug={slug} />
       <ArticleLayout
         doc={doc}
         locale={locale}
