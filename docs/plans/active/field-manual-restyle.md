@@ -134,6 +134,13 @@ risk)? Backfill script — keep, one final test round (count `<` mutant, `main()
   nicos-notes ×4, locale-switching ×1), same 7 on the branch. SPEC criterion 10 needs e2e green; fix before PR.
 - **Contrast test is a list, not a rule** (`__tests__/unit/contrast.test.js` checks named tokens against fixed
   cream/card). Phase 7: replace with a scan of every CSS rule that sets a colour and a background (incl. `:hover`).
+- **Practical "subscribe line exactly once" e2e always skips** until a Practical post exists in Sanity; it
+  proves nothing in the meantime. Un-skip it (or seed a fixture) when the first Practical post is published.
+- **Next 16.1.6 dev-server manifest race:** under parallel load `next-dev-server.js` can corrupt
+  `.next/dev/prerender-manifest.json`, which is the cause of the earlier intermittent JSON parse errors. Use
+  `E2E_PROD=1` (build + start, 60s per-test timeout, 2 workers) for full Playwright runs.
+- **Final gate before the PR** includes a full `E2E_PROD=1 npx playwright test` run, green, besides `scripts/verify.sh`.
+  The static CSS contrast unit test is a partial guard (same-rule pairs only); the e2e contrast scan is the full check.
 - **Date formatting is duplicated 7×** (FeedCard, ColumnContent, IssueContent, ArchiveCard, ColumnCard,
   BeatStoryCard, issue OG image); only FeedCard and the OG image pin `timeZone: "UTC"`, so the others can show a
   date one day early depending on server timezone. Consolidate into one helper (UTC) when Phases 4–6 touch these.
