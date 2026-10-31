@@ -1,5 +1,5 @@
 // ABOUTME: Static WCAG AA guard: every CSS rule whose text colour and background are both known tokens or hex literals.
-// ABOUTME: Partial by design (cannot see inherited backgrounds); e2e/site-contrast.spec.js is the full rendered check.
+// ABOUTME: Partial by design; skips @layer, var(--x, fallback), multi-value background shorthand, chained tokens, :focus-within, inherited backgrounds, rgba/color-mix/gradients. e2e/site-contrast.spec.js is the full rendered check.
 
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -21,8 +21,9 @@ function matchingBrace(css, open) {
   throw new Error("Unbalanced braces in CSS");
 }
 
-// Flattens nested at-rules (@media, @supports) into [{ selector, body }] in source order.
-function rules(css, out = []) {
+// Flattens nested at-rules (@media, @supports) into [{ ctx, selector, body }] in source order.
+// ctx is the at-rule chain the rule sits in ("" for base rules).
+function rules(css, out = [], ctx = "") {
   let i = 0;
   while (i < css.length) {
     const open = css.indexOf("{", i);
@@ -31,9 +32,9 @@ function rules(css, out = []) {
     const close = matchingBrace(css, open);
     const body = css.slice(open + 1, close);
     if (prelude.startsWith("@media") || prelude.startsWith("@supports")) {
-      rules(body, out);
+      rules(body, out, ctx ? `${ctx} ${prelude}` : prelude);
     } else if (!prelude.startsWith("@")) {
-      out.push({ selector: prelude, body });
+      out.push({ ctx, selector: prelude, body });
     }
     i = close + 1;
   }
@@ -90,28 +91,39 @@ function declarations(body) {
 // Returns violations for one stylesheet. Exported shape is exercised by the fixtures below.
 export function contrastViolations(source, file, tokens) {
   const flat = rules(stripComments(source));
-  // selector -> merged declarations, later rules winning, so a :hover rule inherits its base rule's colours.
-  const bySelector = new Map();
-  for (const { selector, body } of flat) {
-    for (const sel of selector.split(",").map((s) => s.trim())) {
-      bySelector.set(sel, { ...bySelector.get(sel), ...declarations(body) });
-    }
-  }
+  const contexts = [...new Set(flat.map((r) => r.ctx))];
   const violations = [];
-  for (const [sel, own] of bySelector) {
-    if (/:disabled|::selection|::placeholder/.test(sel)) continue;
-    const base = sel.replace(STATE, "");
-    const merged = base === sel ? own : { ...bySelector.get(base), ...own };
-    if (!merged.color || !merged.background) continue;
-    const fg = resolveColor(merged.color, tokens);
-    const bg = resolveColor(merged.background, tokens);
-    if (!fg || !bg) continue;
-    const got = contrastRatio(fg, bg);
-    checkedPairs++;
-    if (got < AA) {
-      violations.push(
-        `${file} ${sel}: ${merged.color} on ${merged.background} = ${got.toFixed(2)}:1 < ${AA}:1`
-      );
+  // Each at-rule context is evaluated on its own: base rules apply inside it, then its own rules win.
+  for (const ctx of contexts) {
+    // selector -> merged declarations, later rules winning, so a :hover rule inherits its base rule's colours.
+    const bySelector = new Map();
+    const inCtx = new Set();
+    for (const { ctx: c, selector, body } of flat) {
+      if (c !== "" && c !== ctx) continue;
+      for (const sel of selector.split(",").map((x) => x.trim())) {
+        bySelector.set(sel, { ...bySelector.get(sel), ...declarations(body) });
+        if (c === ctx) inCtx.add(sel);
+      }
+    }
+    for (const [sel, own] of bySelector) {
+      if (!inCtx.has(sel)) continue;
+      // :disabled is skipped only when it is not merely negated by :not(...).
+      const unnegated = sel.replace(/:not\([^)]*\)/g, "");
+      if (/:disabled|::selection|::placeholder/.test(unnegated)) continue;
+      const base = sel.replace(STATE, "");
+      const merged = base === sel ? own : { ...bySelector.get(base), ...own };
+      if (!merged.color || !merged.background) continue;
+      const fg = resolveColor(merged.color, tokens);
+      const bg = resolveColor(merged.background, tokens);
+      if (!fg || !bg) continue;
+      const got = contrastRatio(fg, bg);
+      checkedPairs++;
+      if (got < AA) {
+        const where = ctx ? ` [${ctx}]` : "";
+        violations.push(
+          `${file}${where} ${sel}: ${merged.color} on ${merged.background} = ${got.toFixed(2)}:1 < ${AA}:1`
+        );
+      }
     }
   }
   return violations;
@@ -186,6 +198,32 @@ describe("static CSS contrast checker", () => {
         t
       )
     ).toHaveLength(1);
+  });
+
+  it("checks :hover:not(:disabled) rules", () => {
+    const v = contrastViolations(
+      ".btn:hover:not(:disabled){color:#fff;background:var(--rule)}",
+      "f.css",
+      t
+    );
+    expect(v).toHaveLength(1);
+  });
+
+  it("does not let a passing @media override hide a failing desktop hover", () => {
+    const css = `.b { color: var(--cream); background: var(--ink); }
+      .b:hover { background: var(--rule); }
+      @media (max-width:700px) { .b:hover { background: var(--ink); } }`;
+    const v = contrastViolations(css, "f.css", t);
+    expect(v).toHaveLength(1);
+    expect(v[0]).not.toContain("@media");
+  });
+
+  it("evaluates @media rules against inherited base colours", () => {
+    const css = `.b { color: var(--cream); background: var(--ink); }
+      @media (max-width:700px) { .b:hover { background: var(--rule); } }`;
+    const v = contrastViolations(css, "f.css", t);
+    expect(v).toHaveLength(1);
+    expect(v[0]).toContain("@media");
   });
 
   it("passes good pairs, skips unresolvable values and disabled states", () => {
