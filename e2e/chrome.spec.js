@@ -247,24 +247,40 @@ test.describe("language toggle", () => {
   });
 });
 
-// Hector's rule: no weekday names or MON/WED/FRI labels in the chrome. Names
-// come from Intl (long only: short es names collide with month abbreviations).
+// Hector's rule: no weekday names or weekday abbreviations in the chrome. Names
+// come from Intl. Short names that equal a month abbreviation in either locale
+// (es "mar" is Tuesday and March) are dropped, so a date label cannot trip the scan.
 // Dates are covered by lib/formatDate tests and the ESLint ban.
-const weekdayNames = () => {
+const intlNames = (kind, style, count, start) => {
   const names = new Set();
   for (const locale of ["en", "es"]) {
     const fmt = new Intl.DateTimeFormat(locale, {
-      weekday: "long",
+      [kind]: style,
       timeZone: "UTC",
     });
-    for (let d = 1; d <= 7; d++) {
-      names.add(fmt.format(new Date(Date.UTC(2026, 0, d))));
+    for (let i = 0; i < count; i++) {
+      const date =
+        kind === "weekday"
+          ? new Date(Date.UTC(2026, 0, start + i))
+          : new Date(Date.UTC(2026, i, 1));
+      names.add(fmt.format(date).replace(/\.$/, ""));
     }
   }
   return [...names];
 };
+const weekdayNames = () => intlNames("weekday", "long", 7, 1);
+const shortWeekdayNames = () => {
+  const months = new Set(
+    intlNames("month", "short", 12, 0).map((m) => m.toLowerCase())
+  );
+  return intlNames("weekday", "short", 7, 1).filter(
+    (name) => !months.has(name.toLowerCase())
+  );
+};
 
 const escapeRe = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const wordRe = (name) =>
+  new RegExp(`(?<![\\p{L}])${escapeRe(name)}(?![\\p{L}])`, "iu");
 
 test.describe("no weekday labels in chrome", () => {
   const pages = [
@@ -281,26 +297,41 @@ test.describe("no weekday labels in chrome", () => {
   const scan = async (page) => {
     // Join text nodes with spaces so adjacent elements ("ES" + "MON") never
     // fuse into one word and slip past the word-boundary match.
+    // `rendered` is innerText: what the reader sees after text-transform
+    // (so "Mon" in the source shows as "MON"). Matching is case-insensitive on both.
     const texts = await page.evaluate(() =>
       [...document.querySelectorAll("header, nav[aria-label], footer")].map(
         (el) => {
           const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
           const parts = [];
           while (walker.nextNode()) parts.push(walker.currentNode.nodeValue);
-          return parts.join(" ");
+          return { source: parts.join(" "), rendered: el.innerText };
         }
       )
     );
-    const text = texts.join("\n");
+    const text = texts.map((t) => `${t.source}\n${t.rendered}`).join("\n");
     const names = weekdayNames();
     expect(names.length).toBeGreaterThan(10);
     for (const name of names) {
-      expect(text, `weekday "${name}"`).not.toMatch(
-        new RegExp(`(?<![\\p{L}])${escapeRe(name)}(?![\\p{L}])`, "iu")
-      );
+      expect(text, `weekday "${name}"`).not.toMatch(wordRe(name));
     }
-    expect(text).not.toMatch(/\b(MON|WED|FRI)\b/);
+    const shortNames = shortWeekdayNames();
+    expect(shortNames.length).toBeGreaterThan(8);
+    for (const name of shortNames) {
+      expect(text, `short weekday "${name}"`).not.toMatch(wordRe(name));
+    }
   };
+
+  test("the short-name matcher sees uppercased and lowercased labels", () => {
+    const names = shortWeekdayNames();
+    for (const probe of ["MON", "mon", "Wed", "FRI", "vie", "SÁB", "jue"]) {
+      expect(
+        names.some((n) => wordRe(n).test(`ES ${probe} 12`)),
+        probe
+      ).toBe(true);
+    }
+    expect(names.some((n) => wordRe(n).test("MAR 12"))).toBe(false);
+  });
 
   for (const path of pages) {
     test(`${path}`, async ({ page }) => {
