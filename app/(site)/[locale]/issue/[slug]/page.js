@@ -10,8 +10,10 @@ import {
 } from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
+import { getJsonLdAuthor } from "@/lib/series";
 import IssueContent from "@/components/IssueContent";
 import IssueNav from "@/components/IssueNav";
+import JsonLd from "@/components/JsonLd";
 
 const getCachedIssueBySlug = cache(getIssueBySlug);
 
@@ -83,20 +85,10 @@ function NewsArticleJsonLd({ issue, locale, slug }) {
         url: "https://crashlog.ai/icon.png",
       },
     },
-    author: {
-      "@type": "Person",
-      name: "Hector Luis Alamo",
-      url: "https://www.linkedin.com/in/hector-luis-alamo-90432941/",
-      jobTitle: "Editor & Publisher",
-    },
+    author: getJsonLdAuthor(issue),
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLd data={jsonLd} />;
 }
 
 function BreadcrumbJsonLd({ issue, locale, slug }) {
@@ -119,12 +111,7 @@ function BreadcrumbJsonLd({ issue, locale, slug }) {
     ],
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLd data={jsonLd} />;
 }
 
 export default async function IssuePage({ params }) {

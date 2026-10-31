@@ -29,7 +29,7 @@ const practical = {
   practicalNumber: 1,
   slug: "audit-your-agent",
   publishDate: "2026-04-05",
-  byline: "Hector Luis Alamo",
+  byline: "Ada Lovelace",
   title: { en: "Audit Your Agent", es: "Audita a tu agente" },
   subtitle: { en: "Five checks", es: "Cinco verificaciones" },
   body: {
@@ -63,7 +63,7 @@ describe("buildArchiveIndex with Practicals", () => {
     expect(entry.raw).toEqual({
       practicalNumber: 1,
       slug: "audit-your-agent",
-      byline: "Hector Luis Alamo",
+      byline: "Ada Lovelace",
     });
   });
 

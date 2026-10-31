@@ -249,14 +249,14 @@ describe("query string exports", () => {
 
   it("HOME_FEED_QUERY projects locale-specific reading text and orders each latest by newest", () => {
     const q = queries.HOME_FEED_QUERY;
-    // Issues read from the transmission, everything else from body, per locale.
+    // Columns and practicals read from body, per locale; issues read through the
+    // transmission / stories / stackTrace projections (see readingTime.test.js).
     for (const locale of ["en", "es"]) {
       expect(q).toContain(
-        `"${locale}": select(_type == "issue" => pt::text(nicosTransmission.${locale}), pt::text(body.${locale}))`
+        `"${locale}": select(_type != "issue" => pt::text(body.${locale}))`
       );
-      expect(q).toContain(`"${locale}": pt::text(body.${locale})`);
     }
-    // Story reading never falls back to a bare (object) body.
+    // Reading text never falls back to a bare (object) body.
     expect(q).not.toMatch(/pt::text\(body\)/);
     // Practical bodies carry custom blocks pt::text drops; project them (minus code) for the shared extractor.
     expect(q).toContain(

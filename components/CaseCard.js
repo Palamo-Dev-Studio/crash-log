@@ -7,6 +7,7 @@ import { formatDate } from "@/lib/formatDate";
 import { t } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
 import { withRef } from "@/lib/series";
+import { safeExternalHref } from "@/lib/safeHref";
 import { caseNumber, OTR_LABELS } from "@/lib/offTheRailsLabels";
 import {
   getCaseSummary,
@@ -25,6 +26,7 @@ export default function CaseCard({ story, index, locale, fileId }) {
   const number = `${labels.caseWord} ${caseNumber(index)}`;
   const summary = getCaseSummary(story, locale);
   const source = getSourceInfo(story);
+  const href = withRef(safeExternalHref(source?.url));
   const imageUrl = story.image
     ? urlFor(story.image)
         .width(IMAGE_WIDTH)
@@ -92,9 +94,9 @@ export default function CaseCard({ story, index, locale, fileId }) {
           )}
         </div>
       )}
-      {source?.url && (
+      {href && (
         <a
-          href={withRef(source.url)}
+          href={href}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.read}

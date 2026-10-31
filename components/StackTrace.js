@@ -4,6 +4,7 @@
 import { PortableText } from "@portabletext/react";
 import { portableTextComponents } from "@/lib/portableText";
 import { withRef } from "@/lib/series";
+import { safeExternalHref } from "@/lib/safeHref";
 import styles from "./StackTrace.module.css";
 
 const LABELS = {
@@ -38,23 +39,27 @@ export default function StackTrace({ locale, items }) {
             {item.sources && item.sources.length > 0 && (
               <div className={styles.itemSources}>
                 <span className={styles.sourceLabel}>{labels.source}: </span>
-                {item.sources.map((source, j) => (
-                  <span key={j}>
-                    {j > 0 && <span className={styles.sourceSep}> · </span>}
-                    {source.url ? (
-                      <a
-                        href={withRef(source.url)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.sourceLink}
-                      >
-                        {source.outlet || source.title || source.url}
-                      </a>
-                    ) : (
-                      <span>{source.outlet || source.title}</span>
-                    )}
-                  </span>
-                ))}
+                {item.sources.map((source, j) => {
+                  // An unsafe url renders the outlet as text, never as a link.
+                  const href = withRef(safeExternalHref(source.url));
+                  return (
+                    <span key={j}>
+                      {j > 0 && <span className={styles.sourceSep}> · </span>}
+                      {href ? (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.sourceLink}
+                        >
+                          {source.outlet || source.title || source.url}
+                        </a>
+                      ) : (
+                        <span>{source.outlet || source.title}</span>
+                      )}
+                    </span>
+                  );
+                })}
               </div>
             )}
           </div>

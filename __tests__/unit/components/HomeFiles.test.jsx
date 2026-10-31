@@ -52,7 +52,7 @@ const ISSUE = {
   byline: "Hector Luis Alamo",
   title: { en: "Four times AI failed", es: "Cuatro veces que la IA falló" },
   subtitle: { en: "Issue dek", es: "Subtítulo del número" },
-  reading: { en: words(460), es: words(460) },
+  nicosTransmission: { en: words(460), es: words(460) },
 };
 const COLUMN = {
   _id: "c1",

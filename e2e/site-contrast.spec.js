@@ -170,6 +170,8 @@ for (const locale of LOCALES) {
     const failures = [];
     let nodesChecked = 0;
     let elementsChecked = 0;
+    let hoversTotal = 0;
+    let skippedTotal = 0;
     for (const route of routes) {
       await page.goto(route, { waitUntil: "load" });
       let rest = await page.evaluate(scan, { label: route });
@@ -208,14 +210,18 @@ for (const locale of LOCALES) {
         return out;
       }, HOVER_SAMPLES_PER_CLASS);
       nodesChecked += targets.length;
+      let hoversDone = 0;
+      const skipped = [];
       for (const i of targets) {
         const handle = page.locator(`[data-cx="${i}"]`);
         try {
           await handle.scrollIntoViewIfNeeded({ timeout: 2000 });
           await handle.hover({ timeout: 2000 });
         } catch {
-          continue; // covered, moved or detached: nothing to hover
+          skipped.push(i); // covered, moved or detached: nothing to hover
+          continue;
         }
+        hoversDone++;
         await settleStyles(page);
         const hovered = await page.evaluate(scan, {
           scopeSelector: `[data-cx="${i}"]`,
@@ -223,12 +229,25 @@ for (const locale of LOCALES) {
         });
         failures.push(...hovered.failures);
       }
+      // A guard that skipped every target looks green and checked nothing.
+      hoversTotal += hoversDone;
+      if (skipped.length) {
+        skippedTotal += skipped.length;
+        test.info().annotations.push({
+          type: "hover-skipped",
+          description: `${route}: ${skipped.length} of ${targets.length} targets could not be hovered`,
+        });
+      }
+      expect(
+        hoversDone,
+        `${route}: ${targets.length} hover targets found, ${skipped.length} skipped, none hovered`
+      ).toBeGreaterThan(0);
     }
     await context.close();
     const unique = [...new Set(failures.map(format))];
     expect(
       unique,
-      `${routes.length} routes, ${elementsChecked} text elements, ${nodesChecked} hover targets`
+      `${routes.length} routes, ${elementsChecked} text elements, ${nodesChecked} hover targets, ${hoversTotal} hovered, ${skippedTotal} skipped`
     ).toEqual([]);
   });
 }
