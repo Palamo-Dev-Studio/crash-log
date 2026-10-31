@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { getPracticalBySlug, getAllPracticalSlugs } from "@/lib/queries";
 import { t, LOCALES, LOCALE_OG, hasFullTranslation } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
-import { getByline, getJsonLdAuthor } from "@/lib/series";
+import { getByline, getFileCode, getJsonLdAuthor } from "@/lib/series";
 import { getReadingMinutes } from "@/lib/readingTime";
 import { SERIES_INDEX_LABELS } from "@/lib/articleLabels";
 import ArticleLayout from "@/components/ArticleLayout";
@@ -22,7 +22,8 @@ export async function generateMetadata({ params }) {
     return { title: "Practical Not Found" };
   }
 
-  const title = t(doc.title, locale) || `FIX-${doc.practicalNumber}`;
+  const title =
+    t(doc.title, locale) || getFileCode({ ...doc, _type: "practical" });
   const description =
     t(doc.metaDescription, locale) ||
     t(doc.subtitle, locale) ||
