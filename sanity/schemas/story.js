@@ -44,7 +44,45 @@ export default {
       description: "Shared — source links stay in their original language",
     },
 
+    {
+      name: "image",
+      title: "Image",
+      type: "image",
+      group: "meta",
+      description: "Shared across both languages. Optional.",
+      options: { hotspot: true },
+    },
+    {
+      name: "imageAlt",
+      title: "Image Alt",
+      type: "localizedString",
+      group: "meta",
+    },
+    {
+      name: "imageCredit",
+      title: "Image Credit",
+      type: "string",
+      group: "meta",
+      description: 'Credit line shown under the image, e.g. "Image: Anthropic"',
+    },
+
     // Localized
+    {
+      name: "verdict",
+      title: "Verdict",
+      type: "localizedString",
+      group: "english",
+      description:
+        'Short plain-English verdict stamped on the case card: caps, a few words, e.g. "BILLED TO YOU"',
+    },
+    {
+      name: "summary",
+      title: "Summary",
+      type: "localizedText",
+      group: "english",
+      description:
+        "Case card summary, about 60-75 words. Optional: older stories fall back to the first paragraph of the body.",
+    },
     {
       name: "headline",
       title: "Headline",

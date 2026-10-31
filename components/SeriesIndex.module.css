@@ -1,0 +1,90 @@
+/* ABOUTME: Styles for the Practical and Nico's Notes series indexes: serif H1 and dek, ruled list, empty state.
+   ABOUTME: Same scale as the Off the Rails index so the three series pages read as one family. */
+
+.head {
+  padding: 34px 0 28px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 58px;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.dek {
+  margin: 14px 0 0;
+  max-width: 46ch;
+  font-size: 21px;
+  line-height: 1.45;
+  color: #463c32;
+  text-wrap: pretty;
+}
+
+.list {
+  padding-bottom: 56px;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 400;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.empty {
+  margin: 20px 0 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.empty p {
+  margin: 0;
+}
+
+.emptyCta {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  color: var(--terra-ink);
+  border-bottom: 2px solid var(--terra);
+  padding: 2px 0 1px;
+}
+
+.emptyCta:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+@media (max-width: 700px) {
+  .head {
+    padding-top: 24px;
+  }
+
+  .title {
+    font-size: 42px;
+  }
+
+  .dek {
+    font-size: 19px;
+  }
+
+  .list {
+    padding-bottom: 36px;
+  }
+
+  .emptyCta {
+    padding: 12px 0 4px;
+  }
+}

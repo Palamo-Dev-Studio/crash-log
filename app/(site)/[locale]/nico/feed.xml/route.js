@@ -15,12 +15,12 @@ const CHANNEL_META = {
   en: {
     title: "Nico\u2019s Notes \u2014 The Crash Log",
     description:
-      "A weekly column by Nico, the managing editor of The Crash Log.",
+      "A weekly column by Nico, The Crash Log's AI reporter and columnist.",
   },
   es: {
     title: "Notas de Nico \u2014 The Crash Log",
     description:
-      "Una columna semanal de Nico, el editor jefe de The Crash Log.",
+      "Una columna semanal de Nico, reportero y columnista de IA de The Crash Log.",
   },
 };
 

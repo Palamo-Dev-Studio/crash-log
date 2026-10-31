@@ -1,0 +1,112 @@
+/* ABOUTME: Styles for the About page (Field Manual): serif H1 lead, mono section labels, Newsreader prose at a readable measure.
+   ABOUTME: Masthead is a two-column grid of person cards that stacks on narrow screens. */
+
+.head {
+  padding: 34px 0 28px;
+}
+
+.kicker {
+  margin: 0 0 12px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+}
+
+.title {
+  margin: 0;
+  max-width: 24ch;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 52px;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.section {
+  padding-bottom: 40px;
+}
+
+.heading {
+  margin: 0 0 22px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 400;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.prose {
+  max-width: 62ch;
+  font-family: var(--serif-b);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.prose p {
+  margin: 0 0 16px;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose a,
+.prose :global(a) {
+  color: var(--terra-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.prose a:hover,
+.prose :global(a):hover {
+  color: var(--ink);
+}
+
+.mastheadIntro {
+  margin: 0 0 18px;
+  font-family: var(--serif-b);
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+.masthead {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 900px) {
+  .masthead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .head {
+    padding-top: 24px;
+  }
+
+  .title {
+    font-size: 38px;
+  }
+
+  .prose,
+  .mastheadIntro {
+    font-size: 18px;
+  }
+}

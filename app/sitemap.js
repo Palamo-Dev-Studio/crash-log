@@ -5,16 +5,18 @@ import {
   getAllIssuesSummary,
   getAllCategories,
   getAllColumnsSummary,
+  getAllPracticalSummary,
 } from "@/lib/queries";
 import { LOCALES } from "@/lib/locale";
 
 const BASE_URL = "https://crashlog.ai";
 
 export default async function sitemap() {
-  const [issues, categories, columns] = await Promise.all([
+  const [issues, categories, columns, practicals] = await Promise.all([
     getAllIssuesSummary(),
     getAllCategories(),
     getAllColumnsSummary(),
+    getAllPracticalSummary(),
   ]);
 
   // Use the most recent issue's publish date for content-driven static pages,
@@ -24,7 +26,16 @@ export default async function sitemap() {
     issues?.[0]?.publishDate ||
     new Date().toISOString();
 
-  const staticPages = ["", "/about", "/archive", "/beats", "/nico", "/support"];
+  const staticPages = [
+    "",
+    "/about",
+    "/archive",
+    "/beats",
+    "/nico",
+    "/practical",
+    "/off-the-rails",
+    "/support",
+  ];
   const staticEntries = staticPages.flatMap((path) =>
     LOCALES.map((locale) => ({
       url: `${BASE_URL}/${locale}${path}`,
@@ -91,5 +102,28 @@ export default async function sitemap() {
     }))
   );
 
-  return [...staticEntries, ...issueEntries, ...columnEntries, ...beatEntries];
+  const practicalEntries = practicals.flatMap((doc) =>
+    LOCALES.map((locale) => ({
+      url: `${BASE_URL}/${locale}/practical/${doc.slug}`,
+      lastModified:
+        doc._updatedAt || doc.publishDate || new Date().toISOString(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+      alternates: {
+        languages: {
+          "en-US": `${BASE_URL}/en/practical/${doc.slug}`,
+          "es-ES": `${BASE_URL}/es/practical/${doc.slug}`,
+          "x-default": `${BASE_URL}/en/practical/${doc.slug}`,
+        },
+      },
+    }))
+  );
+
+  return [
+    ...staticEntries,
+    ...issueEntries,
+    ...columnEntries,
+    ...practicalEntries,
+    ...beatEntries,
+  ];
 }

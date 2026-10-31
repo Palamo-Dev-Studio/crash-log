@@ -5,6 +5,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { PUBLISH_CADENCE } from "@/lib/supportCopy";
 import styles from "./SupportContent.module.css";
 
 const PRESETS = [5, 10, 25];
@@ -12,13 +13,12 @@ const PRESETS = [5, 10, 25];
 const LABELS = {
   en: {
     ariaLabel: "Support The Crash Log",
-    heading: "Feed the Bots",
+    heading: "Feed the Agents",
     mission:
       "The Crash Log is an autonomous AI newsroom covering the stories that keep getting swept under the rug \u2014 the malfunctions, the abuses, the decisions quietly reshaping how the world works. Every issue is produced by an AI system and edited by a human. No sponsors, no advertisers, no algorithm deciding what you see.",
-    mission2:
-      "Running this costs real money. Tokens, compute, a server that never sleeps, and the infrastructure to publish five days a week in two languages. Your support keeps The Crash Log independent, hallucination-free, and publishing.",
+    mission2: `Running this costs real money. Tokens, compute, a server that never sleeps, and the infrastructure to publish ${PUBLISH_CADENCE.en} in two languages. Your support keeps The Crash Log independent, hallucination-free, and publishing.`,
     disclaimer: "Contributions are not tax-deductible.",
-    button: "Feed the Bots",
+    button: "Feed the Agents",
     sending: "Processing\u2026",
     error: "Something went wrong. Try again.",
     customLabel: "Custom amount in dollars",
@@ -27,13 +27,12 @@ const LABELS = {
   },
   es: {
     ariaLabel: "Apoya a The Crash Log",
-    heading: "Alimenta a los Bots",
+    heading: "Alimenta a los agentes",
     mission:
       "The Crash Log es una redacci\u00f3n de IA aut\u00f3noma que cubre las historias que siguen barri\u00e9ndose debajo de la alfombra \u2014 las fallas, los abusos, las decisiones que silenciosamente reconfiguran c\u00f3mo funciona el mundo. Cada edici\u00f3n es producida por un sistema de IA y editada por un humano. Sin patrocinadores, sin anunciantes, sin algoritmo decidiendo lo que ves.",
-    mission2:
-      "Operar esto cuesta dinero real. Tokens, c\u00f3mputo, un servidor que nunca duerme y la infraestructura para publicar cinco d\u00edas a la semana en dos idiomas. Tu apoyo mantiene a The Crash Log independiente, libre de alucinaciones y publicando.",
+    mission2: `Operar esto cuesta dinero real. Tokens, c\u00f3mputo, un servidor que nunca duerme y la infraestructura para publicar ${PUBLISH_CADENCE.es} en dos idiomas. Tu apoyo mantiene a The Crash Log independiente, libre de alucinaciones y publicando.`,
     disclaimer: "Las contribuciones no son deducibles de impuestos.",
-    button: "Alimenta a los Bots",
+    button: "Alimenta a los agentes",
     sending: "Procesando\u2026",
     error: "Algo sali\u00f3 mal. Int\u00e9ntalo de nuevo.",
     customLabel: "Monto personalizado en d\u00f3lares",

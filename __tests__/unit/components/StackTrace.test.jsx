@@ -78,7 +78,10 @@ describe("StackTrace", () => {
   it("renders source links underneath body text", () => {
     render(<StackTrace locale="en" items={items} />);
     const link = screen.getByRole("link", { name: "TechCrunch" });
-    expect(link).toHaveAttribute("href", "https://techcrunch.com/article");
+    expect(link).toHaveAttribute(
+      "href",
+      "https://techcrunch.com/article?ref=crashlog.ai"
+    );
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
@@ -87,11 +90,11 @@ describe("StackTrace", () => {
     render(<StackTrace locale="en" items={items} />);
     expect(screen.getByRole("link", { name: "Wired" })).toHaveAttribute(
       "href",
-      "https://wired.com/article"
+      "https://wired.com/article?ref=crashlog.ai"
     );
     expect(screen.getByRole("link", { name: "Reuters" })).toHaveAttribute(
       "href",
-      "https://reuters.com/article"
+      "https://reuters.com/article?ref=crashlog.ai"
     );
   });
 

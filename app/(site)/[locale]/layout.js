@@ -1,31 +1,40 @@
 // ABOUTME: Root layout for the public site. Owns <html> with dynamic lang attribute.
 // ABOUTME: Loads Google Fonts, global CSS, validates locale, wraps pages in shared chrome.
 
-import { Space_Grotesk, Source_Serif_4, IBM_Plex_Mono } from "next/font/google";
+import { Instrument_Serif, Newsreader, DM_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import "@/app/globals.css";
 import { LOCALES, LOCALE_LABELS, LOCALE_OG } from "@/lib/locale";
 import Header from "@/components/Header";
 import LanguageToggle from "@/components/LanguageToggle";
 import SiteNav from "@/components/SiteNav";
-import SiteBottom from "@/components/SiteBottom";
+import Footer from "@/components/Footer";
+import { SAME_AS } from "@/lib/social";
+import JsonLd from "@/components/JsonLd";
+import DonatePrompt from "@/components/DonatePrompt";
+import DonationThanks from "@/components/DonationThanks";
 
-const spaceGrotesk = Space_Grotesk({
+const instrumentSerif = Instrument_Serif({
   variable: "--font-display",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
-const sourceSerif4 = Source_Serif_4({
+const newsreader = Newsreader({
   variable: "--font-body",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
+  weight: "variable",
+  style: ["normal", "italic"],
+  axes: ["opsz"],
   display: "swap",
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
+const dmMono = DM_Mono({
   variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -65,7 +74,6 @@ export async function generateMetadata({ params }) {
     },
     twitter: {
       card: "summary_large_image",
-      site: "@crashLogNews",
     },
     robots: {
       index: true,
@@ -101,20 +109,12 @@ function WebSiteJsonLd() {
       "@type": "Organization",
       name: "The Crash Log",
       url: "https://crashlog.ai",
-      sameAs: [
-        "https://x.com/crashLogNews",
-        "https://www.instagram.com/crashlognews",
-      ],
+      sameAs: SAME_AS,
     },
     inLanguage: ["en-US", "es-ES"],
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLd data={jsonLd} />;
 }
 
 export default async function SiteLayout({ children, params }) {
@@ -122,14 +122,15 @@ export default async function SiteLayout({ children, params }) {
   if (!LOCALES.includes(locale)) notFound();
 
   return (
-    <html lang={locale}>
+    <html
+      lang={locale}
+      className={`${instrumentSerif.variable} ${newsreader.variable} ${dmMono.variable}`}
+    >
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <WebSiteJsonLd />
       </head>
-      <body
-        className={`${spaceGrotesk.variable} ${sourceSerif4.variable} ${ibmPlexMono.variable}`}
-      >
+      <body>
         <a href="#main-content" className="skip-to-content">
           {locale === "es" ? "Saltar al contenido" : "Skip to content"}
         </a>
@@ -138,9 +139,13 @@ export default async function SiteLayout({ children, params }) {
             <LanguageToggle locale={locale} />
           </Header>
           <SiteNav locale={locale} />
-          <div id="main-content">{children}</div>
-          <SiteBottom locale={locale} />
+          <div id="main-content" tabIndex={-1}>
+            {children}
+          </div>
+          <DonatePrompt locale={locale} />
+          <Footer locale={locale} />
         </div>
+        <DonationThanks locale={locale} />
       </body>
     </html>
   );

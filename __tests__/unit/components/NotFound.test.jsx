@@ -1,46 +1,79 @@
-// ABOUTME: Unit tests for the 404 not-found page component.
-// ABOUTME: Validates locale-aware text rendering and navigation links.
+// ABOUTME: Unit tests for the branded 404 page and the locale catch-all that feeds it.
+// ABOUTME: Validates the kicker, locale resolution (params or URL), nav links and that the catch-all calls notFound().
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { setMockPathname, resetMocks } from "../../mocks/next-navigation";
+
+vi.mock("next/navigation", async () => ({
+  ...(await import("../../mocks/next-navigation")),
+  notFound: vi.fn(() => {
+    throw new Error("NEXT_NOT_FOUND");
+  }),
+}));
+
 import NotFound from "@/app/(site)/[locale]/not-found";
+import CatchAll from "@/app/(site)/[locale]/[...rest]/page";
+import { notFound } from "next/navigation";
 
 describe("NotFound", () => {
-  it("renders 404 heading", () => {
+  beforeEach(() => resetMocks());
+
+  it("renders the mono FILE NOT FOUND kicker", () => {
     render(<NotFound params={{ locale: "en" }} />);
-    expect(screen.getByText("404")).toBeInTheDocument();
+    expect(screen.getByText(/404 · File not found/)).toBeInTheDocument();
   });
 
-  it("renders English text by default", () => {
+  it("renders English text and links", () => {
     render(<NotFound params={{ locale: "en" }} />);
-    expect(screen.getByText("Page not found")).toBeInTheDocument();
-    expect(screen.getByText("Go to latest issue")).toBeInTheDocument();
-    expect(screen.getByText("Browse the archive")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "That page isn't in the file."
+    );
+    expect(screen.getByText("Latest").closest("a")).toHaveAttribute(
+      "href",
+      "/en"
+    );
+    expect(screen.getByText("Archive").closest("a")).toHaveAttribute(
+      "href",
+      "/en/archive"
+    );
   });
 
-  it("renders Spanish text for es locale", () => {
+  it("renders Spanish text for the es locale", () => {
     render(<NotFound params={{ locale: "es" }} />);
-    expect(screen.getByText("Página no encontrada")).toBeInTheDocument();
-    expect(screen.getByText("Ir a la última edición")).toBeInTheDocument();
-    expect(screen.getByText("Explorar el archivo")).toBeInTheDocument();
+    expect(screen.getByText(/Archivo no encontrado/)).toBeInTheDocument();
+    expect(screen.getByText("Lo último").closest("a")).toHaveAttribute(
+      "href",
+      "/es"
+    );
+    expect(screen.getByText("Archivo").closest("a")).toHaveAttribute(
+      "href",
+      "/es/archive"
+    );
   });
 
-  it("renders h1 heading", () => {
-    render(<NotFound params={{ locale: "en" }} />);
-    const h1 = screen.getByRole("heading", { level: 1 });
-    expect(h1).toHaveTextContent("Page not found");
-  });
-
-  it("renders navigation links with correct paths", () => {
-    render(<NotFound params={{ locale: "en" }} />);
-    const homeLink = screen.getByText("Go to latest issue");
-    const archiveLink = screen.getByText("Browse the archive");
-    expect(homeLink.closest("a")).toHaveAttribute("href", "/en");
-    expect(archiveLink.closest("a")).toHaveAttribute("href", "/en/archive");
-  });
-
-  it("falls back to English when no params provided", () => {
+  it("takes the locale from the URL when no params arrive (Next gives not-found none)", () => {
+    setMockPathname("/es/nonexistent");
     render(<NotFound />);
-    expect(screen.getByText("Page not found")).toBeInTheDocument();
+    expect(screen.getByText("Archivo").closest("a")).toHaveAttribute(
+      "href",
+      "/es/archive"
+    );
+  });
+
+  it("falls back to English for an unknown locale in the URL", () => {
+    setMockPathname("/xx/nope");
+    render(<NotFound />);
+    expect(screen.getByText("Latest").closest("a")).toHaveAttribute(
+      "href",
+      "/en"
+    );
+  });
+});
+
+describe("catch-all route", () => {
+  it("calls notFound() so the branded 404 renders", () => {
+    expect(() => CatchAll()).toThrow("NEXT_NOT_FOUND");
+    expect(notFound).toHaveBeenCalled();
   });
 });

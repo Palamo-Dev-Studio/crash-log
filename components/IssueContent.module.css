@@ -1,10 +1,5 @@
-/* ABOUTME: Styles for the IssueContent component.
-   ABOUTME: Handles the empty state when no issues are published. */
-
-.content {
-  max-width: var(--max-width-narrow);
-  margin: 0 auto;
-}
+/* ABOUTME: Styles for IssueContent: the case-file grid, the "full files" section and the empty state.
+   ABOUTME: Grid is two columns above 980px and one below (mockups/styles.css ".cases"); prose is capped at a reading width. */
 
 .empty {
   display: flex;
@@ -14,36 +9,126 @@
 }
 
 .emptyText {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
   text-align: center;
 }
 
-.subscribeBanner {
-  text-align: center;
-  padding: 32px 0;
-  border-top: 1px solid var(--border);
-  margin-top: 32px;
+.cases {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 26px 0 56px;
 }
 
-.subscribeBannerLabel {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  margin-bottom: 12px;
+.files {
+  padding-bottom: 24px;
 }
 
-.subscribeBannerLink {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 1.5px;
+.filesHeading {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 400;
+  line-height: 1.5;
   text-transform: uppercase;
-  color: var(--severity-error);
-  text-decoration: none;
-  border: 1.5px solid var(--severity-error);
-  padding: 10px 24px;
-  border-radius: 2px;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.file {
+  max-width: 720px;
+  padding: 32px 0 8px;
+  scroll-margin-top: 16px;
+}
+
+.fileTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.fileNumber {
+  font-family: var(--mono);
+  font-size: var(--label);
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 4px;
+}
+
+.fileTitle {
+  margin: 14px 0 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.1;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.fileTags {
+  margin: 10px 0 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.prose {
+  margin-top: 16px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.prose p {
+  margin: 0 0 1em;
+}
+
+.prose a {
+  color: var(--terra-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose a:hover {
+  color: var(--ink);
+}
+
+.prose h2,
+.prose h3 {
+  font-family: var(--serif-d);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.prose blockquote {
+  margin: 0 0 1em;
+  padding-left: 16px;
+  border-left: 2px solid var(--terra);
+}
+
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
+@media (max-width: 980px) {
+  .cases {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .cases {
+    gap: 16px;
+    padding-top: 20px;
+  }
+
+  .fileTitle {
+    font-size: 30px;
+  }
 }

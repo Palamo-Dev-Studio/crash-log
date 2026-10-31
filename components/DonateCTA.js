@@ -1,36 +1,34 @@
-// ABOUTME: Donate call-to-action card with amount input and "Feed the Bots" button.
+// ABOUTME: Donate call-to-action panel (Field Manual card) with frequency toggle, amount input and "Feed the Agents" button.
 // ABOUTME: Client component that POSTs to /api/donate and redirects to Stripe Checkout.
 
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import styles from "./DonateCTA.module.css";
 
 const LABELS = {
   en: {
     ariaLabel: "Donate",
-    copy: "Nico and the AI team burn through tokens like human newsrooms burn through coffee. Your donation keeps The Crash Log hallucination-free and independent \u2014 and Nico\u2019s context window wide open.",
+    label: "Support the Log",
+    copy: "No ads, no paywall. Reader gifts keep the files coming.",
     disclaimer: "Contributions are not tax-deductible.",
-    button: "Feed the Bots",
+    button: "Feed the Agents",
     sending: "Processing\u2026",
     error: "Something went wrong. Try again.",
-    thanks: "Thank you for your donation!",
     amountLabel: "Donation amount in dollars",
-    closeToast: "Close",
     once: "One-time",
     monthly: "Monthly",
   },
   es: {
     ariaLabel: "Donar",
-    copy: "Nico y el equipo de IA queman tokens como las redacciones humanas queman caf\u00e9. Tu donaci\u00f3n mantiene a The Crash Log libre de alucinaciones e independiente \u2014 y la ventana de contexto de Nico bien abierta.",
+    label: "Apoya el Log",
+    copy: "Sin anuncios ni muro de pago. Tu aporte mantiene los archivos en marcha.",
     disclaimer: "Las contribuciones no son deducibles de impuestos.",
-    button: "Alimenta a los Bots",
+    button: "Alimenta a los agentes",
     sending: "Procesando\u2026",
     error: "Algo sali\u00f3 mal. Int\u00e9ntalo de nuevo.",
-    thanks: "\u00a1Gracias por tu donaci\u00f3n!",
     amountLabel: "Monto de donaci\u00f3n en d\u00f3lares",
-    closeToast: "Cerrar",
     once: "Una vez",
     monthly: "Mensual",
   },
@@ -43,38 +41,19 @@ export default function DonateCTA({ locale = "en" }) {
     return null;
   }
 
-  return (
-    <Suspense fallback={null}>
-      <DonateCTAInner locale={locale} />
-    </Suspense>
-  );
+  return <DonateCTAInner locale={locale} />;
 }
 
+// The ?donated=true thank-you toast lives in DonationThanks (site layout).
 function DonateCTAInner({ locale }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const donated = searchParams.get("donated") === "true";
 
-  const [showToast, setShowToast] = useState(donated);
   const [amount, setAmount] = useState("5");
   const [frequency, setFrequency] = useState("once");
   const [status, setStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   const labels = LABELS[locale] || LABELS.en;
-
-  function dismissToast() {
-    setShowToast(false);
-    router.replace(pathname, { scroll: false });
-  }
-
-  useEffect(() => {
-    if (!showToast) return;
-    const timer = setTimeout(dismissToast, 10000);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showToast]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -125,65 +104,60 @@ function DonateCTAInner({ locale }) {
 
   return (
     <>
-      {showToast && (
-        <div className={styles.toastOverlay} role="status" aria-live="polite">
-          <div className={styles.toast}>
-            <p className={styles.thanks}>{labels.thanks}</p>
+      <section className={styles.card} aria-label={labels.ariaLabel}>
+        <div className={styles.intro}>
+          <p className={styles.label}>{labels.label}</p>
+          <p className={styles.copy}>{labels.copy}</p>
+          <p className={styles.disclaimer}>{labels.disclaimer}</p>
+        </div>
+        <div className={styles.controls}>
+          <div className={styles.frequencyToggle} role="group">
             <button
-              className={styles.toastClose}
-              onClick={dismissToast}
-              aria-label={labels.closeToast}
+              type="button"
+              className={`${styles.freqButton} ${frequency === "once" ? styles.freqActive : ""}`}
+              aria-pressed={frequency === "once"}
+              onClick={() => setFrequency("once")}
             >
-              &times;
+              {labels.once}
+            </button>
+            <button
+              type="button"
+              className={`${styles.freqButton} ${frequency === "monthly" ? styles.freqActive : ""}`}
+              aria-pressed={frequency === "monthly"}
+              onClick={() => setFrequency("monthly")}
+            >
+              {labels.monthly}
             </button>
           </div>
-        </div>
-      )}
-      <section className={styles.card} aria-label={labels.ariaLabel}>
-        <p className={styles.copy}>{labels.copy}</p>
-        <p className={styles.disclaimer}>{labels.disclaimer}</p>
-        <div className={styles.frequencyToggle} role="group">
-          <button
-            type="button"
-            className={`${styles.freqButton} ${frequency === "once" ? styles.freqActive : ""}`}
-            aria-pressed={frequency === "once"}
-            onClick={() => setFrequency("once")}
-          >
-            {labels.once}
-          </button>
-          <button
-            type="button"
-            className={`${styles.freqButton} ${frequency === "monthly" ? styles.freqActive : ""}`}
-            aria-pressed={frequency === "monthly"}
-            onClick={() => setFrequency("monthly")}
-          >
-            {labels.monthly}
-          </button>
-        </div>
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.amountWrapper}>
-            <span className={styles.currencySymbol}>$</span>
-            <input
-              type="number"
-              className={styles.amountInput}
-              min="3"
-              max="999"
-              step="1"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+          <form className={styles.form} onSubmit={handleSubmit}>
+            <div className={styles.amountWrapper}>
+              <span className={styles.currencySymbol}>$</span>
+              <input
+                type="number"
+                className={styles.amountInput}
+                min="3"
+                max="999"
+                step="1"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                disabled={isLoading}
+                aria-label={labels.amountLabel}
+              />
+            </div>
+            <button
+              type="submit"
+              className={styles.button}
               disabled={isLoading}
-              aria-label={labels.amountLabel}
-            />
-          </div>
-          <button type="submit" className={styles.button} disabled={isLoading}>
-            {isLoading ? labels.sending : labels.button}
-          </button>
-        </form>
-        {status === "error" && (
-          <div className={styles.error} role="alert">
-            {errorMessage}
-          </div>
-        )}
+            >
+              {isLoading ? labels.sending : labels.button}
+            </button>
+          </form>
+          {status === "error" && (
+            <div className={styles.error} role="alert">
+              {errorMessage}
+            </div>
+          )}
+        </div>
       </section>
     </>
   );

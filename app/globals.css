@@ -1,54 +1,25 @@
 /* ABOUTME: Global CSS with design tokens (custom properties) for The Crash Log.
-   ABOUTME: Defines colors, fonts, severity tokens, agent accents, and base reset styles. */
+   ABOUTME: Defines the Field Manual tokens and base reset styles. */
 
 :root {
-  /* Surfaces */
-  --bg: #0a0a0a;
-  --surface: #1e1e22;
-  --border: #333338;
-  --border-accent: #44444a;
+  /* Field Manual tokens (source of truth: docs/reference/field-manual/mockups/styles.css) */
+  --cream: #f4ecdd; /* page background */
+  --card: #fbf7ee; /* cards and panels */
+  --ink: #2a2420; /* text, rules, outlines */
+  --rule: #cfc3ae; /* hairlines, dashed separators */
+  --terra: #a83f24; /* fills, borders, roundel */
+  --terra-ink: #8f3219; /* terracotta used as text: 6.8:1 on cream */
+  --teal: #1f6f6b; /* fills, borders */
+  --teal-ink: #17615d; /* teal used as text: 6.2:1 on cream */
+  --muted: #5c5043; /* secondary text: 6.7:1 on cream */
+  --label: 13px; /* mono micro-labels (14px on mobile) */
+  --wrap: 1120px;
+  --gutter: 32px;
 
-  /* Text */
-  --text-primary: #f2f2f7;
-  --text-secondary: #d1d1d6;
-  --text-tertiary: #a1a1a6;
-  --text-muted: #7c7c80;
-  --text-faint: #767676;
-  --text-dek: #9aa0aa; /* article subtitle / dek — italic, muted; distinct from body */
-
-  /* Severity */
-  --severity-error: #e8453e;
-  --severity-override: #e8a030;
-  --severity-terminate: #e8453e;
-  --severity-warning: #e8c832;
-  --severity-critical: #c43030;
-  --severity-breach: #30c8e8;
-
-  /* Severity Glows */
-  --severity-error-glow: rgba(232, 69, 62, 0.12);
-  --severity-override-glow: rgba(232, 160, 48, 0.12);
-  --severity-terminate-glow: rgba(232, 69, 62, 0.12);
-  --severity-warning-glow: rgba(232, 200, 50, 0.12);
-  --severity-critical-glow: rgba(196, 48, 48, 0.15);
-  --severity-breach-glow: rgba(48, 200, 232, 0.12);
-
-  /* Agent Accents */
-  --agent-nico: #e8453e;
-  --agent-scoop: #30c8e8;
-  --agent-root: #8e8e93;
-  --agent-gabo: #e8a030;
-  --agent-lupe: #ff6ead;
-  --agent-hector: #30d158;
-
-  /* Font Stacks */
-  --font-display: "Space Grotesk", sans-serif;
-  --font-body: "Source Serif 4", Georgia, serif;
-  --font-mono: "IBM Plex Mono", monospace;
-
-  /* Layout */
-  --max-width: 1044px;
-  --max-width-narrow: 680px;
-  --content-padding: 24px;
+  /* Field Manual font aliases; --font-* are supplied by next/font in the site layout */
+  --serif-d: var(--font-display), Georgia, serif;
+  --serif-b: var(--font-body), Georgia, serif;
+  --mono: var(--font-mono), ui-monospace, monospace;
 }
 
 /* Reset */
@@ -61,20 +32,38 @@
 }
 
 body {
-  background: var(--bg);
-  color: var(--text-primary);
+  background: var(--cream);
+  color: var(--ink);
   font-family: var(--font-body);
-  font-size: 16.5px;
-  line-height: 1.72;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* Mobile: larger labels, tighter gutter (mirrors the mockup's 700px breakpoint) */
+@media (max-width: 700px) {
+  :root {
+    --label: 14px;
+    --gutter: 20px;
+  }
+
+  body {
+    font-size: 17px;
+  }
 }
 
 ::selection {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--ink);
+  color: var(--cream);
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* :where() keeps specificity at zero so component modules still win */
+:where(a:hover) {
+  color: var(--terra-ink);
 }
 
 img {
@@ -88,8 +77,8 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--text-tertiary);
-  outline-offset: 2px;
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
 }
 
 /* Skip to content */
@@ -111,7 +100,7 @@ button {
   height: auto;
   overflow: visible;
   padding: 12px 24px;
-  background: var(--severity-error);
+  background: var(--terra-ink);
   color: #fff;
   font-family: var(--font-mono);
   font-size: 13px;
@@ -124,9 +113,9 @@ button {
 
 /* Wrapper utility */
 .wrapper {
-  max-width: var(--max-width);
+  max-width: calc(var(--wrap) + var(--gutter) * 2);
   margin: 0 auto;
-  padding: 0 var(--content-padding);
+  padding: 0 var(--gutter);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -138,4 +127,9 @@ button {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Skip-link target: focused by script only (skip link, toast close), never a tab stop. */
+#main-content:focus {
+  outline: none;
 }

@@ -1,5 +1,5 @@
-// ABOUTME: Masthead agent card for the about page.
-// ABOUTME: Shows avatar placeholder with accent dot, name, role, and agent type tag.
+// ABOUTME: Masthead person card for the about page: photo (or initial), name, role, type tag and short bio.
+// ABOUTME: Field Manual styling; the Sanity accent color is not used as text so contrast stays AA on cream.
 
 import Image from "next/image";
 import { t } from "@/lib/locale";
@@ -7,7 +7,7 @@ import { urlFor } from "@/lib/sanity";
 import styles from "./AgentCard.module.css";
 
 const TYPE_LABELS = {
-  lead_agent: "LEAD AGENT",
+  lead_agent: "AI COLLABORATOR",
   sub_agent: "SUB-AGENT",
   human: "HUMAN IN THE LOOP",
 };
@@ -17,7 +17,6 @@ export default function AgentCard({
   role,
   agentType,
   model,
-  color,
   bio,
   image,
   locale,
@@ -32,8 +31,10 @@ export default function AgentCard({
 
   return (
     <div className={styles.card}>
-      <div className={styles.avatar} style={{ borderColor: `${color}33` }}>
+      <div className={styles.avatar}>
         {image ? (
+          // alt repeats the adjacent name on purpose: the photo identifies the
+          // person and tests find the avatar by it; the duplicate read is brief.
           <Image
             src={urlFor(image).width(240).height(240).url()}
             alt={name}
@@ -42,20 +43,14 @@ export default function AgentCard({
             className={styles.avatarImage}
           />
         ) : (
-          <div
-            className={styles.dot}
-            style={{
-              background: color,
-              boxShadow: `0 0 12px ${color}66`,
-            }}
-          />
+          <span className={styles.monogram} aria-hidden="true">
+            {name?.trim().charAt(0).toUpperCase()}
+          </span>
         )}
       </div>
       <div className={styles.info}>
         <h3 className={styles.name}>{name}</h3>
-        <p className={styles.role} style={{ color }}>
-          {roleText}
-        </p>
+        <p className={styles.role}>{roleText}</p>
         <p className={styles.tag}>{tag}</p>
         {bioText && <p className={styles.bio}>{bioText}</p>}
       </div>

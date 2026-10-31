@@ -23,6 +23,12 @@ vi.mock("@/lib/queries", async (importOriginal) => ({
     metaDescription: { en: "desc", es: "desc" },
     publishDate: "2026-01-01",
   })),
+  getPracticalBySlug: vi.fn(async () => ({
+    practicalNumber: 1,
+    title: { en: "Practical", es: "Práctico" },
+    metaDescription: { en: "desc", es: "desc" },
+    publishDate: "2026-01-01",
+  })),
   getCategoryWithStories: vi.fn(async () => ({
     category: {
       name: { en: "Beat", es: "Sección" },

@@ -38,8 +38,10 @@
     "eslint-config-next": "^16.1.6",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.4.0",
+    "groq-js": "^1.27.1",
     "jsdom": "^28.1.0",
     "prettier": "^3.8.1",
+    "sharp": "0.34.5",
     "vitest": "^4.0.18"
   }
 }

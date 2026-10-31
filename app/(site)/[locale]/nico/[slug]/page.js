@@ -1,12 +1,15 @@
-// ABOUTME: Individual column page — renders a specific Nico's Notes column by slug.
+// ABOUTME: Individual column page — renders a specific Nico's Notes column by slug with the shared article template.
 // ABOUTME: Provides dynamic metadata, JSON-LD schemas, and static params for all columns.
 
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import { getColumnBySlug, getAllColumnSlugs } from "@/lib/queries";
-import { t, LOCALES, LOCALE_OG } from "@/lib/locale";
+import { t, LOCALES, LOCALE_OG, hasFullTranslation } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
-import ColumnContent from "@/components/ColumnContent";
+import { getJsonLdAuthor } from "@/lib/series";
+import { getReadingMinutes } from "@/lib/readingTime";
+import ArticleLayout from "@/components/ArticleLayout";
+import JsonLd from "@/components/JsonLd";
 
 const getCachedColumnBySlug = cache(getColumnBySlug);
 
@@ -75,18 +78,10 @@ function ArticleJsonLd({ column, locale, slug }) {
       name: "The Crash Log",
       url: "https://crashlog.ai",
     },
-    author: {
-      "@type": "Person",
-      name: "Nico",
-    },
+    author: getJsonLdAuthor(column),
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLd data={jsonLd} />;
 }
 
 function BreadcrumbJsonLd({ column, locale, slug }) {
@@ -115,12 +110,7 @@ function BreadcrumbJsonLd({ column, locale, slug }) {
     ],
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLd data={jsonLd} />;
 }
 
 export default async function ColumnPage({ params }) {
@@ -133,7 +123,21 @@ export default async function ColumnPage({ params }) {
     <>
       <ArticleJsonLd column={column} locale={locale} slug={slug} />
       <BreadcrumbJsonLd column={column} locale={locale} slug={slug} />
-      <ColumnContent column={column} locale={locale} />
+      <ArticleLayout
+        doc={{ ...column, _type: "column" }}
+        locale={locale}
+        title={t(column.title, locale)}
+        subtitle={t(column.subtitle, locale)}
+        body={t(column.body, locale)}
+        minutes={getReadingMinutes(column, locale)}
+        coverImage={column.coverImage}
+        coverImageAlt={t(column.coverImageAlt, locale)}
+        showSubscribe
+        showFallback={
+          locale === "es" &&
+          !hasFullTranslation(column, locale, { bodyField: "body" })
+        }
+      />
     </>
   );
 }

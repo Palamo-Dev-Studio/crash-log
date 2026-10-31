@@ -1,5 +1,5 @@
 // ABOUTME: Unit tests for AgentCard component.
-// ABOUTME: Validates localized role text, agent type labels, model tag, bio, and avatar rendering.
+// ABOUTME: Validates localized role text, agent type labels, model tag, bio, and avatar or monogram rendering.
 
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
@@ -51,7 +51,7 @@ describe("AgentCard", () => {
 
   it("renders type label for lead_agent", () => {
     render(<AgentCard {...baseProps} />);
-    expect(screen.getByText(/LEAD AGENT/)).toBeInTheDocument();
+    expect(screen.getByText(/AI COLLABORATOR/)).toBeInTheDocument();
   });
 
   it("renders type label for sub_agent", () => {
@@ -88,7 +88,7 @@ describe("AgentCard", () => {
 
   it("omits model from tag when model is absent", () => {
     render(<AgentCard {...baseProps} model={undefined} />);
-    const tag = screen.getByText("LEAD AGENT");
+    const tag = screen.getByText("AI COLLABORATOR");
     expect(tag.textContent).not.toContain("·");
   });
 
@@ -123,10 +123,16 @@ describe("AgentCard", () => {
     );
   });
 
-  it("renders colored dot when image prop is absent", () => {
+  it("renders an initial monogram when image prop is absent", () => {
     const { container } = render(<AgentCard {...baseProps} />);
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
-    const dot = container.querySelector("[class*='dot']");
-    expect(dot).toBeInTheDocument();
+    const mono = container.querySelector("[class*='monogram']");
+    expect(mono).toHaveTextContent("N");
+    expect(mono).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("does not paint the Sanity accent color onto text", () => {
+    render(<AgentCard {...baseProps} />);
+    expect(screen.getByText("Managing Editor")).not.toHaveAttribute("style");
   });
 });

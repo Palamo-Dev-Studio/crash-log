@@ -8,6 +8,10 @@ import { setMockPathname, resetMocks } from "../../mocks/next-navigation";
 
 vi.mock("next/navigation", () => import("../../mocks/next-navigation"));
 
+vi.mock("@/lib/supportCopy", () => ({
+  PUBLISH_CADENCE: { en: "SENTINEL-EN-CADENCE", es: "SENTINEL-ES-CADENCE" },
+}));
+
 import SupportContent from "@/components/SupportContent";
 
 describe("SupportContent", () => {
@@ -22,10 +26,28 @@ describe("SupportContent", () => {
   });
 
   describe("page structure", () => {
+    it("never calls the audience bots in the heading", () => {
+      render(<SupportContent locale="en" />);
+      expect(screen.getByRole("heading", { level: 1 })).not.toHaveTextContent(
+        /bots/i
+      );
+    });
+
+    it.each(["en", "es"])(
+      "mission copy takes its publishing cadence from PUBLISH_CADENCE [%s]",
+      (locale) => {
+        setMockPathname(`/${locale}/support`);
+        const { container } = render(<SupportContent locale={locale} />);
+        expect(container.textContent).toContain(
+          `SENTINEL-${locale.toUpperCase()}-CADENCE`
+        );
+      }
+    );
+
     it("renders the page heading", () => {
       render(<SupportContent locale="en" />);
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-        "Feed the Bots"
+        "Feed the Agents"
       );
     });
 
@@ -181,7 +203,7 @@ describe("SupportContent", () => {
       render(<SupportContent locale="en" />);
 
       // Default is $5, one-time
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       expect(global.fetch).toHaveBeenCalledWith("/api/donate", {
         method: "POST",
@@ -216,7 +238,7 @@ describe("SupportContent", () => {
 
       await user.click(screen.getByRole("button", { name: "Monthly" }));
       await user.click(screen.getByRole("button", { name: "$10" }));
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       const callBody = JSON.parse(global.fetch.mock.calls[0][1].body);
       expect(callBody.frequency).toBe("monthly");
@@ -236,7 +258,7 @@ describe("SupportContent", () => {
       const user = userEvent.setup();
       render(<SupportContent locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       expect(screen.getByText("Processing\u2026")).toBeInTheDocument();
 
@@ -255,7 +277,7 @@ describe("SupportContent", () => {
       const user = userEvent.setup();
       render(<SupportContent locale="en" />);
 
-      await user.click(screen.getByRole("button", { name: "Feed the Bots" }));
+      await user.click(screen.getByRole("button", { name: "Feed the Agents" }));
 
       await waitFor(() => {
         expect(screen.getByRole("alert")).toHaveTextContent(
@@ -273,7 +295,7 @@ describe("SupportContent", () => {
       await user.type(input, "2");
 
       const form = screen
-        .getByRole("button", { name: "Feed the Bots" })
+        .getByRole("button", { name: "Feed the Agents" })
         .closest("form");
       fireEvent.submit(form);
 
@@ -288,7 +310,7 @@ describe("SupportContent", () => {
     it("renders Spanish heading", () => {
       render(<SupportContent locale="es" />);
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-        "Alimenta a los Bots"
+        "Alimenta a los agentes"
       );
     });
 
@@ -305,7 +327,7 @@ describe("SupportContent", () => {
     it("renders Spanish submit button", () => {
       render(<SupportContent locale="es" />);
       expect(
-        screen.getByRole("button", { name: "Alimenta a los Bots" })
+        screen.getByRole("button", { name: "Alimenta a los agentes" })
       ).toBeInTheDocument();
     });
 

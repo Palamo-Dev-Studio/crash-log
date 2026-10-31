@@ -12,3 +12,6 @@ package-lock.json
 # that check and 401s the review action's token exchange, so it's excluded
 # from Prettier's scope entirely.
 .github/workflows/claude-review.yml
+
+# Steam handoff reference (mockups, renders, spec): kept byte-identical to the source bundle.
+docs/reference/field-manual/

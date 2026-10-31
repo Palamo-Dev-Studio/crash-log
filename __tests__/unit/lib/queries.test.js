@@ -32,6 +32,10 @@ const nullFallbackWrappers = [
     name: "getColumnBySlug",
     fn: () => queries.getColumnBySlug("test-slug"),
   },
+  {
+    name: "getPracticalBySlug",
+    fn: () => queries.getPracticalBySlug("test-slug"),
+  },
 ];
 
 // --- Wrappers that return [] on failure ---
@@ -52,8 +56,14 @@ const arrayFallbackWrappers = [
   },
   { name: "getColumnsForFeed", fn: () => queries.getColumnsForFeed() },
   { name: "getAllColumnsSummary", fn: () => queries.getAllColumnsSummary() },
-  { name: "getHomeFeed", fn: () => queries.getHomeFeed() },
+  { name: "getAllPracticalSlugs", fn: () => queries.getAllPracticalSlugs() },
+  { name: "getPracticalIndex", fn: () => queries.getPracticalIndex() },
+  {
+    name: "getAllPracticalSummary",
+    fn: () => queries.getAllPracticalSummary(),
+  },
 ];
+// getHomeFeed returns a merged list, so it has its own describe below.
 
 describe("null-fallback wrappers", () => {
   for (const { name, fn } of nullFallbackWrappers) {
@@ -111,6 +121,14 @@ describe("parameter passing", () => {
     );
   });
 
+  it("getPracticalBySlug passes slug param via sanityFetch", async () => {
+    mockSanityFetch.mockResolvedValueOnce(null);
+    await queries.getPracticalBySlug("2026-11-04");
+    expect(mockSanityFetch).toHaveBeenCalledWith(
+      expect.objectContaining({ params: { slug: "2026-11-04" } })
+    );
+  });
+
   it("getColumnBySlug passes slug param via sanityFetch", async () => {
     mockSanityFetch.mockResolvedValueOnce(null);
     await queries.getColumnBySlug("2026-03-07");
@@ -159,6 +177,44 @@ describe("null client fallback", () => {
   });
 });
 
+describe("Off the Rails queries", () => {
+  it("issue projection carries the series type, byline and the case-card story fields", () => {
+    const q = queries.ISSUE_BY_SLUG_QUERY;
+    for (const field of [
+      "_type",
+      "byline",
+      "verdict",
+      "summary",
+      "imageAlt",
+      "imageCredit",
+      "image,",
+      "sources[]",
+    ]) {
+      expect(q).toContain(field);
+    }
+  });
+
+  it("projects the source date on story sources", () => {
+    expect(queries.ISSUE_BY_SLUG_QUERY).toMatch(
+      /sources\[\]\{[^}]*\bdate\b[^}]*\}/
+    );
+  });
+
+  it("the index query is published issues newest first with code and byline fields", () => {
+    const q = queries.ISSUES_INDEX_QUERY;
+    expect(q).toContain('status == "published"');
+    expect(q).toContain("order(publishDate desc)");
+    for (const field of ["_type", "issueNumber", "byline", "title", "slug"]) {
+      expect(q).toContain(field);
+    }
+  });
+
+  it("getIssuesIndex returns [] on a failed fetch", async () => {
+    mockSanityFetch.mockRejectedValueOnce(new Error("boom"));
+    expect(await queries.getIssuesIndex()).toEqual([]);
+  });
+});
+
 describe("query string exports", () => {
   it("exports all query constants", () => {
     expect(queries.LATEST_ISSUE_QUERY).toContain('_type == "issue"');
@@ -179,20 +235,117 @@ describe("query string exports", () => {
     expect(queries.ALL_COLUMNS_FOR_ARCHIVE_SEARCH_QUERY).toContain("body");
     expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("nicosTransmission");
     expect(queries.ALL_ISSUES_FOR_ARCHIVE_QUERY).toContain("category");
-    expect(queries.HOME_FEED_QUERY).toContain('_type in ["issue","column"]');
+    expect(queries.HOME_FEED_QUERY).toContain(
+      '_type in ["issue","column","practical"]'
+    );
+    expect(queries.HOME_FEED_QUERY).toContain("order(publishDate desc)");
+    expect(queries.HOME_FEED_QUERY).toContain('status == "published"');
+    for (const type of ["issue", "column", "practical"]) {
+      expect(queries.HOME_FEED_QUERY).toContain(`_type == "${type}"`);
+    }
+    expect(queries.HOME_FEED_QUERY).toContain("practicalNumber");
+    expect(queries.HOME_FEED_QUERY).toContain("byline");
+  });
+
+  it("HOME_FEED_QUERY projects locale-specific reading text and orders each latest by newest", () => {
+    const q = queries.HOME_FEED_QUERY;
+    // Columns and practicals read from body, per locale; issues read through the
+    // transmission / stories / stackTrace projections (see readingTime.test.js).
+    for (const locale of ["en", "es"]) {
+      expect(q).toContain(
+        `"${locale}": select(_type != "issue" => pt::text(body.${locale}))`
+      );
+    }
+    // Reading text never falls back to a bare (object) body.
+    expect(q).not.toMatch(/pt::text\(body\)/);
+    // Practical bodies carry custom blocks pt::text drops; project them (minus code) for the shared extractor.
+    expect(q).toContain(
+      '"body": select(_type == "practical" => { "en": body.en[_type != "codeBlock"], "es": body.es[_type != "codeBlock"] })'
+    );
+    // recent + one latest per series, every one newest-first.
+    expect(q.split("order(publishDate desc)[0]").length - 1).toBe(3);
+    // The recent slice itself is ordered by publish date, newest first.
+    expect(q).toMatch(/"recent": [^\n]*\| order\(publishDate desc\)\[0\.\.\./);
+    expect(q).not.toContain("order(publishDate asc)");
   });
 });
 
 describe("getHomeFeed", () => {
-  it("returns unified issue/column items when sanityFetch resolves", async () => {
-    const data = [
-      { _id: "issue-1", _type: "issue", number: 27 },
-      { _id: "column-1", _type: "column", number: 9 },
-    ];
-    mockSanityFetch.mockResolvedValueOnce(data);
-    expect(await queries.getHomeFeed()).toEqual(data);
+  it("merges the recent slice and per-series latest, de-duplicated and newest first", async () => {
+    mockSanityFetch.mockResolvedValueOnce({
+      recent: [
+        { _id: "issue-1", _type: "issue", publishDate: "2026-10-20" },
+        { _id: "column-1", _type: "column", publishDate: "2026-10-27" },
+      ],
+      latest: [
+        { _id: "issue-1", _type: "issue", publishDate: "2026-10-20" },
+        { _id: "practical-1", _type: "practical", publishDate: "2026-10-01" },
+        null,
+      ],
+    });
+    const feed = await queries.getHomeFeed();
+    expect(feed.map((d) => d._id)).toEqual([
+      "column-1",
+      "issue-1",
+      "practical-1",
+    ]);
     expect(mockSanityFetch).toHaveBeenCalledWith(
       expect.objectContaining({ query: queries.HOME_FEED_QUERY })
     );
+  });
+
+  it("sorts a doc with no publishDate last and keeps valid dates newest first", async () => {
+    mockSanityFetch.mockResolvedValueOnce({
+      recent: [
+        { _id: "a", _type: "issue", publishDate: "2026-10-20" },
+        { _id: "undated", _type: "column" },
+        { _id: "b", _type: "column", publishDate: "2026-10-27" },
+        { _id: "c", _type: "practical", publishDate: "2026-10-01" },
+      ],
+      latest: [],
+    });
+    const feed = await queries.getHomeFeed();
+    expect(feed.map((d) => d._id)).toEqual(["b", "a", "c", "undated"]);
+  });
+
+  it("returns [] when sanityFetch throws or returns null", async () => {
+    mockSanityFetch.mockRejectedValueOnce(new Error("Network error"));
+    expect(await queries.getHomeFeed()).toEqual([]);
+    mockSanityFetch.mockResolvedValueOnce(null);
+    expect(await queries.getHomeFeed()).toEqual([]);
+  });
+
+  it("returns [] when the result has no lists", async () => {
+    mockSanityFetch.mockResolvedValueOnce({});
+    expect(await queries.getHomeFeed()).toEqual([]);
+  });
+});
+
+describe("ALL_CATEGORIES_QUERY storyCount", () => {
+  it("counts only stories that belong to a published issue", async () => {
+    const { parse, evaluate } = await import("groq-js");
+    const dataset = [
+      { _id: "cat1", _type: "category", slug: { current: "beat" } },
+      { _id: "s-live", _type: "story", category: { _ref: "cat1" } },
+      { _id: "s-draft", _type: "story", category: { _ref: "cat1" } },
+      { _id: "s-orphan", _type: "story", category: { _ref: "cat1" } },
+      {
+        _id: "i-pub",
+        _type: "issue",
+        status: "published",
+        stories: [{ _ref: "s-live" }],
+      },
+      {
+        _id: "i-draft",
+        _type: "issue",
+        status: "draft",
+        stories: [{ _ref: "s-draft" }],
+      },
+    ];
+    const result = await (
+      await evaluate(parse(queries.ALL_CATEGORIES_QUERY), { dataset })
+    ).get();
+    expect(result).toHaveLength(1);
+    expect(result[0].storyCount).toBe(1);
   });
 });

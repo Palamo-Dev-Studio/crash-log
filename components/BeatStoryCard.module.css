@@ -1,40 +1,60 @@
-/* ABOUTME: Styles for the beat story card component.
-   ABOUTME: Severity badge, headline, and issue meta link with hover accent. */
+/* ABOUTME: Styles for a beat story row (same grid as the file rows): code, date, serif headline, mono label.
+   ABOUTME: Stacks to one column at 700px and below; the label never wraps mid-word. */
 
-.card {
-  display: block;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--surface);
-  border-left: 2px solid transparent;
-  transition:
-    padding-left 0.2s,
-    border-left-color 0.2s;
-  text-decoration: none;
-  color: inherit;
+.row {
+  display: grid;
+  grid-template-columns: 96px 120px minmax(0, 1fr) auto;
+  gap: 8px 20px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
 }
 
-.card:hover {
-  padding-left: 12px;
-  border-left-color: var(--severity-error);
+.when,
+.label {
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
 }
 
-.top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-.issueMeta {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-faint);
+.label {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  max-width: 22ch;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .headline {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
+  margin: 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.row:hover .headline {
+  color: var(--terra-ink);
+}
+
+.row:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .headline {
+    font-size: 25px;
+  }
+
+  .label {
+    text-align: left;
+    max-width: none;
+  }
 }

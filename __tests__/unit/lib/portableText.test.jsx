@@ -93,10 +93,10 @@ describe("mark renderers", () => {
     expect(a).toHaveAttribute("href", "/about");
   });
 
-  it("link falls back to # when href is missing", () => {
+  it("link without an href renders its text without a link", () => {
     const LinkMark = marks.link;
     render(<LinkMark value={{}}>No href</LinkMark>);
-    expect(screen.getByText("No href")).toHaveAttribute("href", "#");
+    expect(screen.getByText("No href").closest("a")).toBeNull();
   });
 });
 

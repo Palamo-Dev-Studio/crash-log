@@ -45,6 +45,15 @@ export default {
       initialValue: "draft",
     },
     {
+      name: "byline",
+      title: "Byline",
+      type: "string",
+      group: "meta",
+      description:
+        'Author display name, shown after By / Por. Issues without one show Hector Luis Alamo. Enter "newsroom" to show the Crash Log newsroom instead (used for the early AI-written issues).',
+      initialValue: "Hector Luis Alamo",
+    },
+    {
       name: "coverImage",
       title: "Cover Image",
       type: "image",

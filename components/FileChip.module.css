@@ -1,0 +1,45 @@
+/* ABOUTME: Series colours for file codes: terracotta (otr), teal (fix), ink (note), as chip or plain text.
+   ABOUTME: Text uses the -ink tokens so every variant clears WCAG AA on cream. */
+
+.chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: var(--label);
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  color: var(--terra-ink);
+  border: 1.5px solid var(--terra);
+  padding: 3px 9px;
+  border-radius: 2px;
+}
+
+.plain {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: var(--label);
+}
+
+.otr {
+  color: var(--terra-ink);
+}
+
+.fix {
+  color: var(--teal-ink);
+}
+
+.note {
+  color: var(--ink);
+}
+
+.chip.otr {
+  border-color: var(--terra);
+}
+
+.chip.fix {
+  border-color: var(--teal);
+}
+
+.chip.note {
+  border-color: var(--ink);
+}
