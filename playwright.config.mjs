@@ -20,7 +20,9 @@ const PROD = process.env.E2E_PROD === "1";
 
 export default defineConfig({
   testDir: "e2e",
-  timeout: 30000,
+  timeout: PROD ? 60000 : 30000,
+  // Production runs are crawl-heavy: two workers keep first-wave timeouts from host load away.
+  ...(PROD ? { workers: 2 } : {}),
   retries: 0,
   use: {
     baseURL: `http://localhost:${PORT}`,
@@ -37,7 +39,8 @@ export default defineConfig({
       ? `npm run build && npm run start -- -p ${PORT}`
       : `npm run dev -- -p ${PORT}`,
     port: PORT,
-    reuseExistingServer: true,
+    // Under E2E_PROD a leftover dev server on the port would be silently tested instead of the build.
+    reuseExistingServer: !PROD,
     timeout: PROD ? 600000 : 60000,
   },
 });
