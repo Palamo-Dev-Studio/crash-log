@@ -31,7 +31,9 @@ vi.mock("@/lib/queries", () => ({
             es: "Sacar al humano",
           },
           publishDate: "2026-06-11",
-          stories: [{}, {}, {}],
+          // slug "with-nulls" carries unresolved references: raw length (5) differs from the filtered count (3).
+          stories:
+            slug === "with-nulls" ? [{}, null, {}, null, {}] : [{}, {}, {}],
         }
   ),
   getColumnBySlug: vi.fn(async () => ({
@@ -127,6 +129,15 @@ describe("OG image routes", () => {
       title: "Cutting Humans Out of the Loop",
     });
     expect(element.props.meta).toEqual(["3 CASES", "June 11, 2026"]);
+  });
+
+  it("issue route counts only resolved stories, not null references", async () => {
+    const { element } = await render(
+      `${R}/issue/[slug]/opengraph-image.js`,
+      "en",
+      "with-nulls"
+    );
+    expect(element.props.meta[0]).toBe("3 CASES");
   });
 
   it("issue route renders Spanish copy", async () => {

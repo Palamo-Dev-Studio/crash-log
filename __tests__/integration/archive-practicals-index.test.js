@@ -67,6 +67,26 @@ describe("buildArchiveIndex with Practicals", () => {
     });
   });
 
+  it("finds words that live only inside custom blocks and image alt", () => {
+    const rich = {
+      ...practical,
+      _id: "practical-3",
+      body: {
+        en: [
+          { _type: "steps", items: [{ title: "Pin", text: "stepsonlyword" }] },
+          { _type: "callout", text: "calloutonlyword" },
+          { _type: "image", alt: "altonlyword" },
+        ],
+      },
+    };
+    const index = buildArchiveIndex([], [], "en", [rich]);
+    for (const q of ["stepsonlyword", "calloutonlyword", "altonlyword"]) {
+      expect(searchArchive(index, { query: q }).map((r) => r.id)).toEqual([
+        "practical-3",
+      ]);
+    }
+  });
+
   it("still works with the original three-argument call", () => {
     expect(buildArchiveIndex([issue], [column], "en")).toHaveLength(2);
   });

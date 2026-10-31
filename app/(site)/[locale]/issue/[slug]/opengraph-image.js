@@ -30,7 +30,10 @@ export default async function OgImage({ params }) {
       code={getFileCode(doc)}
       kicker={labels.seriesName}
       title={t(doc.title, locale)}
-      meta={[labels.cases(doc.stories?.length ?? 0), date].filter(Boolean)}
+      meta={[
+        labels.cases((doc.stories || []).filter(Boolean).length),
+        date,
+      ].filter(Boolean)}
     />
   );
 }

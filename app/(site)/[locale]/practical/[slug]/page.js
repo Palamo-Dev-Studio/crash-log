@@ -64,7 +64,9 @@ function PracticalJsonLd({ doc, locale, slug }) {
   const imageUrl = doc.coverImage
     ? urlFor(doc.coverImage).width(1200).height(675).format("webp").url()
     : undefined;
-  const indexLabel = SERIES_INDEX_LABELS.practical[locale].title;
+  const indexLabel = (
+    SERIES_INDEX_LABELS.practical[locale] || SERIES_INDEX_LABELS.practical.en
+  ).title;
 
   const article = {
     "@context": "https://schema.org",

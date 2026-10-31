@@ -141,8 +141,7 @@ to a file in the scratchpad; the dry run truncates values to 70 characters and t
 - **Machine-load stalls:** the test runner occasionally stalls ~84s on this iMac under heavy parallel load;
   not a code defect.
 - **Content cleanup (Sanity, not code):** ES category names show in English on archive pills; "44%of" headline typo.
-- **Product follow-ups:** no RSS feed for Practical yet; one index-head pattern across Archive/Beats (kicker + count
-  - rule) vs series indexes (H1 + "ALL FILES") — accepted as is for this PR.
+- **Product follow-ups:** no RSS feed for Practical yet; one index-head pattern across Archive/Beats (kicker, count and rule) vs series indexes (H1 and "ALL FILES") — accepted as is for this PR.
 
 ## Declined findings (for the PR body)
 

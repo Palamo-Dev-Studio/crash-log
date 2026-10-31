@@ -36,7 +36,7 @@ const LABELS = {
   es: {
     blurb:
       "Informes de incidentes de IA, leídos con atención, y qué hacer después. Para quienes dirigen un negocio.",
-    subscribeLine: "Archivos nuevos cada semana. Gratis.",
+    subscribeLine: "Expedientes nuevos cada semana. Gratis.",
     subscribe: "Suscr\u00edbete",
     seriesHeading: "Las series",
     elsewhereHeading: "Más",

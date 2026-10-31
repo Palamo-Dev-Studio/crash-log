@@ -10,6 +10,7 @@ import {
 } from "@/lib/queries";
 import { t, LOCALE_OG, hasFullTranslation } from "@/lib/locale";
 import { portableTextToPlain } from "@/lib/portableTextToPlain";
+import { practicalSearchText } from "@/lib/practicalSearchText";
 import ArchiveSearch from "@/components/ArchiveSearch";
 import { ARCHIVE_LABELS } from "@/lib/archiveLabels";
 import styles from "./archive.module.css";
@@ -137,7 +138,7 @@ function buildColumnIndexEntry(column, locale) {
 function buildPracticalIndexEntry(practical, locale) {
   const title = t(practical.title, locale) || "";
   const subtitle = t(practical.subtitle, locale) || "";
-  const body = portableTextToPlain(t(practical.body, locale));
+  const body = practicalSearchText(t(practical.body, locale));
 
   const fields = {
     titleSubtitle: lower([title, subtitle].join(" ")),
