@@ -57,9 +57,9 @@ function valueFor(field, owner, path, tokens) {
     };
   }
   if (field.type === "array") {
-    return (field.of || []).map((member, i) =>
-      memberFixture(member, `${path}[${i}]`, tokens)
-    );
+    return (field.of || [])
+      .map((member, i) => memberFixture(member, `${path}[${i}]`, tokens))
+      .filter((v) => v !== undefined);
   }
   if (field.type === "object") {
     return fixtureFor(field, owner, path, tokens);
@@ -70,8 +70,50 @@ function valueFor(field, owner, path, tokens) {
 }
 
 function memberFixture(member, path, tokens) {
-  const def = registry[member.type] || member;
-  return fixtureFor(def, def.name || member.name, path, tokens);
+  if (member.type === "string" || member.type === "text") {
+    return valueFor(member, member.name, path, tokens);
+  }
+  if (NON_TEXT_TYPES.has(member.type)) return undefined;
+  if (member.type === "image") {
+    return valueFor(member, member.name || "image", path, tokens);
+  }
+  const def = registry[member.type];
+  if (!def && member.type !== "object") {
+    throw new Error(
+      `Unhandled array member type "${member.type}" at ${path}: classify it as text or add it to NON_TEXT_TYPES`
+    );
+  }
+  const resolved = def || member;
+  return fixtureFor(resolved, resolved.name || member.name, path, tokens);
+}
+
+// Builds a portable-text block that carries a token in its text, in every annotation
+// field (as a mark definition) and in every inline `of` member, as the schema defines them.
+function blockFixture(member, tokens) {
+  const textToken = `tok${tokens.size}x`;
+  tokens.set(textToken, "block.children.text");
+  const markDefs = [];
+  const marks = [];
+  for (const annotation of member.marks?.annotations || []) {
+    const key = `mark${markDefs.length}`;
+    markDefs.push({
+      _key: key,
+      ...fixtureFor(
+        annotation,
+        annotation.name,
+        `block.annotations.${annotation.name}`,
+        tokens
+      ),
+      _type: annotation.name,
+    });
+    marks.push(key);
+  }
+  const children = [{ _type: "span", text: textToken, marks }];
+  for (const [i, inline] of (member.of || []).entries()) {
+    const fixture = memberFixture(inline, `block.of[${i}]`, tokens);
+    if (fixture !== undefined) children.push(fixture);
+  }
+  return { _type: "block", style: "normal", markDefs, children };
 }
 
 // Builds the whole-body fixture from the real schema's `of` list.
@@ -80,23 +122,10 @@ function buildBodyFixture() {
   const body = [];
   for (const member of practicalBlockContent.of) {
     if (member.type === "block") {
-      const token = `tok${tokens.size}x`;
-      tokens.set(token, "block.children.text");
-      body.push({
-        _type: "block",
-        style: "normal",
-        markDefs: [],
-        children: [{ _type: "span", text: token, marks: [] }],
-      });
+      body.push(blockFixture(member, tokens));
     } else if (member.type === "image") {
-      // A top-level image carries its own `alt` field (see blockContent.js).
-      const token = `tok${tokens.size}x`;
-      tokens.set(token, "image.alt");
-      body.push({
-        _type: "image",
-        asset: { _ref: "image-abc-1x1-png" },
-        alt: token,
-      });
+      // Walk the body image's real schema fields (alt, and anything added later).
+      body.push(valueFor(member, "image", "image", tokens));
     } else {
       if (!registry[member.type]) {
         throw new Error(
