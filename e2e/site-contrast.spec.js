@@ -135,8 +135,22 @@ async function pickRoutes(request) {
   return [...new Set(routes.filter(Boolean))];
 }
 
-// Serial: each file holds one worker so the crawl does not starve the dev server for the rest of the suite.
-test.describe.configure({ mode: "serial" });
+// Default mode: one failing locale must not skip the other. Failures are collected inside each test.
+test.describe.configure({ mode: "default" });
+
+// Hover samples per distinct button/link class.
+const HOVER_SAMPLES_PER_CLASS = 6;
+const IS_PROD = process.env.E2E_PROD === "1";
+
+// globals.css gives every element a 0.01ms transition under reduced motion, which still commits on a
+// later frame: reading computed style straight after hover() sees the pre-hover colour. Two frames settle it.
+const settleStyles = (page) =>
+  page.evaluate(
+    () =>
+      new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve))
+      )
+  );
 
 for (const locale of LOCALES) {
   test(`text meets WCAG AA at rest and on hover (${locale})`, async ({
@@ -160,7 +174,12 @@ for (const locale of LOCALES) {
       await page.goto(route, { waitUntil: "load" });
       let rest = await page.evaluate(scan, { label: route });
       // A dev server that is still compiling can serve an empty shell: retry before judging.
-      for (let retry = 0; retry < 3 && rest.checked <= 5; retry++) {
+      // Production builds never do, so there an empty page is a real failure.
+      for (let retry = 0; !IS_PROD && retry < 3 && rest.checked <= 5; retry++) {
+        test.info().annotations.push({
+          type: "retry-empty-shell",
+          description: route,
+        });
         await page.waitForTimeout(1500);
         await page.reload({ waitUntil: "load" });
         rest = await page.evaluate(scan, { label: route });
@@ -169,8 +188,8 @@ for (const locale of LOCALES) {
       elementsChecked += rest.checked;
       expect(rest.checked, `${route} had no text to scan`).toBeGreaterThan(5);
 
-      // Hover states: first three of each distinct button/link class.
-      const targets = await page.evaluate(() => {
+      // Hover states: first few of each distinct button/link class.
+      const targets = await page.evaluate((limit) => {
         const perClass = new Map();
         const out = [];
         document
@@ -181,13 +200,13 @@ for (const locale of LOCALES) {
             if (rect.width < 2 || rect.height < 2 || rect.left < 0) return;
             const key = el.tagName + el.className;
             const n = perClass.get(key) ?? 0;
-            if (n >= 3) return;
+            if (n >= limit) return;
             perClass.set(key, n + 1);
             el.setAttribute("data-cx", String(i));
             out.push(i);
           });
         return out;
-      });
+      }, HOVER_SAMPLES_PER_CLASS);
       nodesChecked += targets.length;
       for (const i of targets) {
         const handle = page.locator(`[data-cx="${i}"]`);
@@ -197,6 +216,7 @@ for (const locale of LOCALES) {
         } catch {
           continue; // covered, moved or detached: nothing to hover
         }
+        await settleStyles(page);
         const hovered = await page.evaluate(scan, {
           scopeSelector: `[data-cx="${i}"]`,
           label: `${route} :hover`,
