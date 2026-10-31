@@ -16,8 +16,8 @@ async function crawlRoutes(request) {
   return [...new Set([...paths, ...EXTRA_ROUTES])];
 }
 
-// Serial: each file holds one worker so the crawl does not starve the dev server for the rest of the suite.
-test.describe.configure({ mode: "serial" });
+// Default mode: a failure at one width must not skip the others; failures are collected inside each test.
+test.describe.configure({ mode: "default" });
 
 for (const width of WIDTHS) {
   test(`no horizontal overflow at ${width}px on every route`, async ({
@@ -34,6 +34,11 @@ for (const width of WIDTHS) {
     const failures = [];
     for (const route of routes) {
       await page.goto(route, { waitUntil: "load" });
+      // An empty shell would trivially "not overflow": require the page landmark first.
+      await expect(
+        page.locator("main").first(),
+        `${route} rendered no main`
+      ).toBeVisible();
       const { scrollWidth, innerWidth } = await page.evaluate(() => ({
         scrollWidth: document.documentElement.scrollWidth,
         innerWidth: window.innerWidth,
