@@ -1,5 +1,5 @@
 // ABOUTME: Playwright configuration for end-to-end tests.
-// ABOUTME: Uses webServer to auto-start the Next.js dev server on E2E_PORT (default 3000).
+// ABOUTME: Auto-starts Next.js on E2E_PORT (default 3000): the dev server, or a production build with E2E_PROD=1.
 
 import { defineConfig } from "@playwright/test";
 
@@ -13,6 +13,10 @@ if (!Number.isInteger(PORT) || PORT < 1024 || PORT > 65535) {
     `E2E_PORT must be an integer from 1024 to 65535, got "${rawPort}"`
   );
 }
+
+// E2E_PROD=1 runs the suite against `next build && next start`: no on-demand
+// compilation, so full runs don't time out under load the way the dev server does.
+const PROD = process.env.E2E_PROD === "1";
 
 export default defineConfig({
   testDir: "e2e",
@@ -29,9 +33,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npm run dev -- -p ${PORT}`,
+    command: PROD
+      ? `npm run build && npm run start -- -p ${PORT}`
+      : `npm run dev -- -p ${PORT}`,
     port: PORT,
     reuseExistingServer: true,
-    timeout: 60000,
+    timeout: PROD ? 600000 : 60000,
   },
 });
