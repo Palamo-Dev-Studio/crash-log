@@ -44,7 +44,7 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **Steam handoff must say: every Off the Rails and Practical post ships with a cover image.** The home hero
   without art ends above the rail (accepted by Hector 2026-10-30, not designed for).
 - **Steam handoff must say: set `byline` explicitly.** `issue.byline`'s `initialValue` applies only to
-  documents created in Studio; API-created issues get no byline and render "The Crash Log newsroom".
+  documents created in Studio; an API-created issue without a byline renders as Hector's (see the byline flip).
 
 - **Subscribe is a plain link to Substack** (masthead button and rail box), not an inline-expanding form
   (Hector, 2026-10-30, after two review rounds of masthead layout bugs from the inline form).
@@ -57,7 +57,7 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
 - **Donation prompt on every page** (Hector, 2026-10-30): restyle `DonateCTA` in Field Manual tokens and render
   it site-wide above the footer, still gated by `NEXT_PUBLIC_DONATIONS_ENABLED`.
 - **Footer "Follow" column** (Hector, 2026-10-30): Bluesky `@hectoralamo.bsky.social`, Instagram
-  `@hectoralamo.ai`, TikTok `@hectorluislamo` (spelling being confirmed). X dropped everywhere, including JSON-LD
+  `@hectoralamo.ai`, TikTok `@hectorluisalamo` (Hector, confirmed). X dropped everywhere, including JSON-LD
   `sameAs` and twitter `site`; `sameAs` = the Follow-column URLs from one shared constant. "A Palamo publication" → palamo.ai, listed in the Elsewhere column.
 - **Wordmark stays "The Crash Log"** (Hector, 2026-10-30).
 - **Byline flip approved** (Hector, 2026-10-30): `getByline` treats a missing issue byline as "Hector Luis Alamo"
@@ -79,10 +79,8 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
   issue without a byline to Hector ("Reported with Nico"); deployed first, all 26 archive issues would be
   misattributed live until the write lands. The current production code ignores `byline`, so writing it early is
   invisible. Same for archive `verdict`s if approved.
-- **Archive backfills are Nico's (Ice), at ship time, attended:** the `byline: "newsroom"` write, and (proposed,
-  awaiting Hector) plain-English `verdict` EN/ES for the ~80 archive stories, drafted by Nico as one table for
-  Hector's approval and written by a guarded script like the byline one. Needs `SANITY_API_TOKEN` or a
-  re-authenticated Sanity MCP.
+- **Ship-time Sanity writes are Nico's (Ice), attended, with Hector's go on each:** see § Ship runbook. Needs
+  `SANITY_API_TOKEN` in the environment for the run.
 - **Card summaries (Hector, 2026-10-30, after two review rounds on sentence detection):** no code-side
   truncation. Authored `summary` when present; otherwise the body's first paragraph, capped visually at 5 lines
   with CSS line-clamp. The sentence splitter is deleted.
@@ -99,96 +97,73 @@ rubber-stamp roundel, file codes. Same brand and content, calm instead of menaci
   `--apply --expect=88`, `ifRevisionId`, never overwrite a non-empty verdict), run before deploy.
 - **Nico's Notes pages show the cover image**, between byline and body (Hector, 2026-10-30).
 - **Columns end with the "New files every week. Free." subscribe box** (Hector, 2026-10-30).
-- **Reading time has one implementation** (Hector, 2026-10-30, after two review rounds): home feed projects
-  Practical body text and uses the same extractor as the article page.
+- **Reading time has one implementation per series** (Hector, 2026-10-30, after two review rounds): the home
+  feed and the file's own page use the same function and projection (Practical: custom blocks counted, code
+  excluded; issues: aligned in the final-review fix round).
 - **Heading anchors renumber only for repeated titles; accepted.** Steam handoff: no repeated H2 titles in a
   Practical post.
 - **Newsletter move** (Hector, 2026-10-30): after the restyle ships, write a short plan for Ghost(Pro) on
   `newsletter.crashlog.ai` as the sender (email-only posts pushed from Sanity). Substack has no subscribers yet,
   so there's nothing to migrate. `newsletter.palamo.ai` is not needed: palamo.ai links to crashlog.ai.
 
-## Phase 1 follow-ups (Opus PASS 2026-10-30 on `4aa6c51`, branch `field-manual-phase1`; merge after phase 2 fix)
+## Ship runbook (attended; each Sanity write needs Hector's go)
 
-- `getFileCode`: require a non-negative integer (today -3 → `OTR-0-3`, 1.5 → `OTR-1.5`); test the trailing-`?` branch of `withRef`.
-- `exhibit` block: add optional `from` sub-header and `rows[]` of `{lead, text}` (mockup `article.html:75-84`).
-- `replyAsk` block: add `buttonUrl`.
-- Byline default (asked Hector): pin the archive explicitly and default missing bylines to the future case.
-- `sharp` is imported by `scripts/build-favicons.mjs` and `__tests__/unit/favicon.test.js` but is only a
-  transitive dep of `next`: add it as an explicit devDependency (`sharp@0.34.5`, the installed version).
+Order matters — verified by the final review. Production today (`origin/main` @ `a08b403`) ignores `byline` and
+`verdict`, so steps 1–2 are invisible on the live site and safe even if the deploy later fails. The About payload
+uses H2 blocks the OLD About page would render as doubled headings, so it goes in only AFTER the deploy (the new
+code renders today's About copy correctly through its legacy path).
 
-**Status:** follow-ups built on `field-manual-phase1b` (`a4beb75`, worktree `.claude/worktrees/agent-a22ef2594b9757de5`), Opus PASS; merge after phase 3 lands. Byline default still open.
+1. Dry run, then `node scripts/backfill-newsroom-bylines.mjs --apply --expect=26` (issues #1–27; #5 doesn't exist).
+2. Dry run, then `node scripts/backfill-archive-verdicts.mjs --apply --expect=88`.
+3. Merge the PR (Hector, by hand) → Vercel deploys. Verify live: home, one archive issue (byline "The Crash Log
+   newsroom", plain-English stamps), a column, About (legacy copy, restyled), Support, a 404.
+4. Dry run, then `node scripts/write-about-copy.mjs --apply --expect=3` (aboutPage + two agents; refuses if the
+   About intro already has H2s). Verify `/en/about` and `/es/about`.
+5. Steam handoff note: new `story` fields (`verdict`, `summary`, `image`, `imageAlt`, `imageCredit`), source `date`,
+   explicit `byline`, cover image on every OTR/Practical post, no repeated H2 titles in a Practical post.
 
-**Declined for the PR body:** the lockfile's `node_modules/sharp`, `@img/colour` and `detect-libc` entries stay `"optional": true` rather than `"devOptional": true`. Only `npm ci --omit=optional` drops sharp, and neither CI nor Vercel uses that mode; the site build doesn't import sharp.
+Rollback: the deploy reverts in Vercel. Steps 1–2 need no rollback (old code ignores the fields). Step 4: re-run
+with the previous field values (the dry run prints them) if the new About must be undone.
 
-**Declined NITs for the PR body (Opus PASS on `320fb31`):** `E2E_PORT=0x0BB8` parses as 3000 (hex input, nobody
-types it); the Support/Subscribe test checks parity, not absolute height (Chromium's border rounding already makes
-a both-shrink mutant fail).
+## Known issues (open)
 
-**Waiting on Hector (2026-10-30):** lint rule — stop iterating (ban simple forms, list exotic ones as accepted
-risk)? Backfill script — keep, one final test round (count `<` mutant, `main()` guards as pure functions, exclude
-`versions.**`, dry-run note on drafts, partial-run summary), then close?
-
-## Known issues
-
-- **`main`'s e2e suite is red before this branch:** 7 Playwright failures at `1f133a3` (archive-search ×2,
-  nicos-notes ×4, locale-switching ×1), same 7 on the branch. SPEC criterion 10 needs e2e green; fix before PR.
-- **Contrast test is a list, not a rule** (`__tests__/unit/contrast.test.js` checks named tokens against fixed
-  cream/card). Phase 7: replace with a scan of every CSS rule that sets a colour and a background (incl. `:hover`).
-- **Practical "subscribe line exactly once" e2e always skips** until a Practical post exists in Sanity; it
-  proves nothing in the meantime. Un-skip it (or seed a fixture) when the first Practical post is published.
+- **Practical "subscribe line exactly once" e2e always skips** until a Practical post exists in Sanity. Un-skip
+  (or seed a fixture) when the first Practical post is published.
 - **Next 16.1.6 dev-server manifest race:** under parallel load `next-dev-server.js` can corrupt
-  `.next/dev/prerender-manifest.json`, which is the cause of the earlier intermittent JSON parse errors. Use
-  `E2E_PROD=1` (build + start, 60s per-test timeout, 2 workers) for full Playwright runs.
-- **Final gate before the PR** includes a full `E2E_PROD=1 npx playwright test` run, green, besides `scripts/verify.sh`.
-  The static CSS contrast unit test is a partial guard (same-rule pairs only); the e2e contrast scan is the full check.
-- **Date formatting is duplicated 7×** (FeedCard, ColumnContent, IssueContent, ArchiveCard, ColumnCard,
-  BeatStoryCard, issue OG image); only FeedCard and the OG image pin `timeZone: "UTC"`, so the others can show a
-  date one day early depending on server timezone. Consolidate into one helper (UTC) when Phases 4–6 touch these.
-- **Sideways scroll on `/es/issue/crash-log-009`** (9px at 390, 79px at 320): a bare Bloomberg URL in Stack Trace
-  text can't wrap. Phase 7: a crawl test that loads EVERY route at 320/360/390 (EN/ES) and asserts no horizontal
-  overflow (SPEC criterion 8), plus `overflow-wrap: anywhere` on long-URL text. Declined NITs from the Phase 5
-  review: e2e stamp markup is synthetic (unit test covers the component); source date not wrapped in `<time>`.
-- **Carried into Phase 7 (Phase 6 PASS minors):** `e2e/article-template.spec.js:173-182` counts the subscribe line
-  page-wide (footer has a copy) and accepts zero — scope to `main article`, expect exactly 1;
-  `components/ArticleLayout.js:95` `sizes` uses `68ch` (≈544px) for a 673px column — use `680px`.
-- 🔴 **Token leak in the backfill scripts (found by the 7d review, 2026-10-30):** `main().catch((err) =>
-console.error(err))` prints @sanity/client network errors whole, and `err.request` carries the raw
-  `authorization: Bearer <token>` header. Present in the merged byline script too (its review missed it). Fix on
-  `field-manual-p7d` for both scripts (safe formatter + leak test); 7b's retire-agents script warned before
-  shipping. Lesson: any script that holds a token gets a test that drives its top-level error handler with a
-  token-bearing error and asserts the token never prints.
-- **Flaky gate: `__tests__/unit/eslintDateRule.test.js` times out (5s) under load**, 1–2 failures per
-  `verify.sh` run, already at `07dd7b6`. Each case boots a full ESLint with the Next config. Phase 7 site-wide
-  pass: share one ESLint instance per file (`beforeAll`) and/or raise that file's timeout; a gate that flakes gets
-  read as noise.
-- **Carried into 7e from the 7a PASS:** beat detail kicker counts `stories.length` but rows drop stories with no
-  published issue — filter once, use for both; `lib/matchedInLabel.js:11` EN "file body" → "practical body";
-  ES "despliegues rotos" → "despliegues fallidos"; final review: one index-head pattern (Archive/Beats use
-  kicker+count+rule, Off the Rails index uses H1 + "ALL FILES"). Content cleanup (Sanity, not code): ES category
-  names show in English on archive pills; "44%of" headline typo.
-- **Carried into 7e from the 7c PASS:** `twitter-image-parity.test.js:14` should match
-  `/^opengraph-image\.(js|jsx|tsx|png)$/`; `ogTemplate.test.js:142` assert the 40-char word renders as one line
-  below 104px (pins shrink-before-break directly). Declined: wide-caps no-space strings, 90-char no-space orphan.
-- **Carried into 7e from the 7b PASS:** `components/AboutSections.js:182-183` drops `workflow.preamble` /
-  `contact.preamble` (blocks before a field's first H2) — render them; test the cards-at-end path (~233);
-  payload `agents[].role` add `_type: "localizedString"`; intro opening with an H2 → fall back to the title as H1.
-  Known (pre-existing): 404s server-render an empty error shell; ES 404 `<title>` is English in server HTML.
-- **Unmatched URLs serve Next's bare 404** (no masthead/footer). Phase 7: add a `[locale]/[...rest]` catch-all
-  that calls `notFound()` so the branded 404 renders.
-- Nav links to `/[locale]/off-the-rails` and `/[locale]/practical` 404 until Phases 5 and 6 add those indexes.
+  `.next/dev/prerender-manifest.json` (the cause of the intermittent JSON parse errors). Full Playwright runs use
+  `E2E_PROD=1` (build + start).
+- **Final gate before the PR:** `scripts/verify.sh` AND a full `E2E_PROD=1 npx playwright test`, both green. The
+  static CSS contrast unit test is a partial guard; the e2e contrast scan is the full check.
+- **404s server-render an empty error shell** (the branded page appears after client JS; the ES 404 `<title>` is
+  English in server HTML). Pre-existing behaviour of `notFound()` here; follow-up after ship.
+- **Machine-load stalls:** the test runner occasionally stalls ~84s on this iMac under heavy parallel load;
+  not a code defect.
+- **Content cleanup (Sanity, not code):** ES category names show in English on archive pills; "44%of" headline typo.
+- **Product follow-ups:** no RSS feed for Practical yet; one index-head pattern across Archive/Beats (kicker + count
+  - rule) vs series indexes (H1 + "ALL FILES") — accepted as is for this PR.
+
+## Declined findings (for the PR body)
+
+- Lockfile: `node_modules/sharp`, `@img/colour`, `detect-libc` stay `"optional": true` (only `--omit=optional`
+  drops sharp; neither CI nor Vercel uses it).
+- `E2E_PORT=0x0BB8` parses as 3000; Support/Subscribe height test checks parity (Chromium border rounding covers
+  the both-shrink case).
+- Date-lint residual risk documented in `eslint.config.mjs` (runtime-computed keys, `Reflect.get`, coercion).
+- e2e stamp markup is synthetic (the unit test covers the component); source date not wrapped in `<time>`.
+- OG: wide-caps no-space strings; 90-char no-space title orphan line.
 
 ## Phases
 
-| #   | Phase                                                                                       | Status                             |
-| --- | ------------------------------------------------------------------------------------------- | ---------------------------------- |
-| 1   | Schema: `story.verdict`, `story.summary`, `story.image` (+credit), author, `practical` type | merged `e2532e3`                   |
-| 2   | Tokens, fonts (`next/font`), roundel SVGs, favicon set                                      | PASS `1e65711`                     |
-| 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | PASS `320fb31`; lint + p3b pending |
-| 4   | Home: cover hero, rail, recent files                                                        | merged `86ec32d`                   |
-| 5   | Off the Rails issue page: case cards, verdict stamps                                        | merged                             |
-| 6   | Practical article template + Nico's Notes column page                                       | merged                             |
-| 7   | Every other page (archive, beats, about, support, 404, OG images) + legacy token removal    | building                           |
-| 8   | Whole-branch Fable review → CodeRabbit → PR                                                 | —                                  |
+| #   | Phase                                                                                       | Status           |
+| --- | ------------------------------------------------------------------------------------------- | ---------------- |
+| 1   | Schema: `story.verdict`, `story.summary`, `story.image` (+credit), author, `practical` type | merged           |
+| 2   | Tokens, fonts (`next/font`), roundel SVGs, favicon set                                      | merged           |
+| 3   | Global chrome: masthead + blinking bar, nav, EN/ES toggle, footer                           | merged           |
+| 4   | Home: cover hero, rail, recent files                                                        | merged           |
+| 5   | Off the Rails issue page: case cards, verdict stamps                                        | merged           |
+| 6   | Practical article template + Nico's Notes column page                                       | merged           |
+| 7   | Archive, beats, about, support, 404, OG images, site-wide crawl/contrast, legacy tokens     | merged `6f1b23b` |
+| 8   | Whole-branch Fable review (REVISE 2026-10-31) → fixes → re-review → CodeRabbit → PR         | in progress      |
 
 ## Acceptance criteria
 
