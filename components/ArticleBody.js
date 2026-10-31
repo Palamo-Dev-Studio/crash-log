@@ -5,22 +5,13 @@ import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity";
 import { withRef } from "@/lib/series";
+import { safeExternalHref } from "@/lib/safeHref";
 import { ARTICLE_LABELS } from "@/lib/articleLabels";
 import styles from "./ArticleBody.module.css";
 
-const SAFE_BUTTON_SCHEMES = ["mailto:", "https:", "http:"];
-
 // Only mailto/http(s) become a button; anything else (javascript:, data:) is dropped.
 export function safeButtonHref(url) {
-  if (typeof url !== "string") return null;
-  const trimmed = url.trim();
-  try {
-    const { protocol } = new URL(trimmed);
-    if (!SAFE_BUTTON_SCHEMES.includes(protocol)) return null;
-  } catch {
-    return null;
-  }
-  return withRef(trimmed);
+  return withRef(safeExternalHref(url));
 }
 
 function buildComponents(locale) {
@@ -38,7 +29,8 @@ function buildComponents(locale) {
       em: ({ children }) => <em>{children}</em>,
       code: ({ children }) => <code>{children}</code>,
       link: ({ value, children }) => {
-        const href = value?.href || "#";
+        const href = safeExternalHref(value?.href, { allowRelative: true });
+        if (!href) return <>{children}</>;
         const external = /^https?:/i.test(href);
         return (
           <a
