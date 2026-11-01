@@ -163,6 +163,11 @@ to a file in the scratchpad; the dry run truncates values to 70 characters and t
   reader-visible field reaches search, not that hidden values (URLs, `_key`, language hints) stay out — the helper
   indexes none today; `nestedBlockText` covers rich text inside custom blocks, which today's schema doesn't use.
 - `practical.body` required is Studio validation only; API writes (Steam's uploader) bypass it.
+- Byline "no avatar" tests match known avatar markup; a one-letter element with a neutral class would pass. No
+  avatar code remains to come back, and Hector ruled against chasing edge cases.
+- Rail legend one-line e2e test doesn't await `document.fonts.ready`; `goto` waits for `load`, which fonts
+  requested at first render hold. ES has ~7px of slack at 1280, so a wider DM Mono rendering on another platform
+  could wrap it, between series only.
 
 ## Phases
 
