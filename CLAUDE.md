@@ -94,7 +94,7 @@ Execution plans: `docs/plans/active/` (in progress) and `docs/plans/completed/` 
 
 ## Current State
 
-The "Field Manual" restyle is on `feature/field-manual-restyle` (living plan and ship runbook: `docs/plans/active/field-manual-restyle.md`). Subscribe buttons are plain links to Substack's subscribe page; Substack handles confirmation and delivery. Stripe donations (prompt on every page except `/support`), on-demand revalidation, RSS feeds and per-route OG/Twitter images are in place. Ship-time Sanity writes use guarded scripts in `scripts/` (dry run by default). Deployed to Vercel at `crashlog.ai`.
+The "Field Manual" restyle is live (shipped 2026-11-01; plan, decisions and ship runbook: `docs/plans/completed/field-manual-restyle.md`). Archive issues #1–27 carry `byline: "newsroom"` and archive stories carry `verdict`; the About copy in Sanity comes from `docs/plans/active/about-page-sanity.json`. Subscribe buttons are plain links to Substack's subscribe page; Substack handles confirmation and delivery. Stripe donations (prompt on every page except `/support`), on-demand revalidation, RSS feeds and per-route OG/Twitter images are in place. Ship-time Sanity writes use guarded scripts in `scripts/` (dry run by default). Deployed to Vercel at `crashlog.ai`.
 
 ## Testing
 

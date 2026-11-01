@@ -1,5 +1,7 @@
 # Field Manual restyle — living plan
 
+**Status: shipped 2026-11-01.** PR #24 (restyle), #25 (legend, series-name colour, plain bylines) and #26 (tagline, legend spread) merged; the ship runbook ran 2026-11-01 (26 bylines, 88 verdicts, About copy, each with Hector's go). Steam handoff: claude-workspace PR #347.
+
 Branch: `feature/field-manual-restyle` (cut from `origin/main` @ `a08b403`, 2026-10-30).
 Input: `docs/reference/field-manual/SPEC.md` + `mockups/` + `renders/` (Steam's handoff, approved by Hector 2026-10-30).
 The mockup CSS (`mockups/styles.css`) is the source of truth for tokens and sizes.
@@ -180,7 +182,7 @@ to a file in the scratchpad; the dry run truncates values to 70 characters and t
 | 5   | Off the Rails issue page: case cards, verdict stamps                                        | merged           |
 | 6   | Practical article template + Nico's Notes column page                                       | merged           |
 | 7   | Archive, beats, about, support, 404, OG images, site-wide crawl/contrast, legacy tokens     | merged `6f1b23b` |
-| 8   | Whole-branch Fable review (REVISE 2026-10-31) → fixes → re-review → CodeRabbit → PR         | PR open          |
+| 8   | Whole-branch Fable review (REVISE 2026-10-31) → fixes → re-review → CodeRabbit → PR         | merged #24–#26   |
 
 ## Acceptance criteria
 
