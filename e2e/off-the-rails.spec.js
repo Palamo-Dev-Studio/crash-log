@@ -77,6 +77,28 @@ test.describe("Off the Rails issue page", () => {
     }
   }
 
+  test("kicker series name is terracotta while the rest of the kicker keeps its colour", async ({
+    page,
+  }) => {
+    await page.goto(ISSUE_PATH("en"));
+    const name = page.locator("[data-series-name='offTheRails']").first();
+    await expect(name).toHaveText(/off the rails/i);
+    const colours = await name.evaluate((el) => ({
+      name: getComputedStyle(el).color,
+      rest: getComputedStyle(el.parentElement).color,
+      terra: (() => {
+        const probe = document.createElement("i");
+        probe.style.color = "var(--terra-ink)";
+        document.body.appendChild(probe);
+        const c = getComputedStyle(probe).color;
+        probe.remove();
+        return c;
+      })(),
+    }));
+    expect(colours.name).toBe(colours.terra);
+    expect(colours.rest).not.toBe(colours.terra);
+  });
+
   test("kicker row renders in caps, date included", async ({ page }) => {
     await page.goto(ISSUE_PATH("en"));
     const kicker = page

@@ -1,5 +1,5 @@
 /* ABOUTME: Off the Rails page head styles (ported from mockups/styles.css ".page-head", ".byline-line", ".legend").
-   ABOUTME: Kicker rule, 58px serif H1 (42px mobile), mono byline and legend lines. */
+   ABOUTME: Kicker rule, 58px serif H1 (42px mobile) and legend line; the byline is the shared Byline component. */
 
 .head {
   padding: 34px 0 8px;
@@ -18,8 +18,7 @@
   border-bottom: 1px solid var(--ink);
 }
 
-.segs,
-.byline {
+.segs {
   display: inline-flex;
   flex-wrap: wrap;
 }
@@ -49,18 +48,6 @@
   line-height: 1.45;
   color: #463c32;
   text-wrap: pretty;
-}
-
-.byline {
-  margin: 16px 0 0;
-  font-family: var(--mono);
-  font-size: var(--label);
-  color: var(--muted);
-}
-
-.byline strong {
-  font-weight: 500;
-  color: var(--ink);
 }
 
 .legend {
@@ -93,15 +80,6 @@
   }
 
   .segs .seg + .seg::before {
-    display: none;
-  }
-
-  /* Byline and credit stack instead of wrapping with a stranded dot. */
-  .byline {
-    flex-direction: column;
-  }
-
-  .byline .seg + .seg::before {
     display: none;
   }
 

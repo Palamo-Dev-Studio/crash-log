@@ -1,0 +1,35 @@
+/* ABOUTME: Byline styles (moved from the issue header): one mono line, name in ink, credit muted beside it.
+   ABOUTME: At 700px and below the credit stacks under the name instead of wrapping with a stranded dot. */
+
+.byline {
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin: 16px 0 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.byline strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.seg {
+  white-space: nowrap;
+}
+
+.seg + .seg::before {
+  content: "·";
+  margin: 0 0.6em 0 0.5em;
+}
+
+@media (max-width: 700px) {
+  .byline {
+    flex-direction: column;
+  }
+
+  .byline .seg + .seg::before {
+    display: none;
+  }
+}

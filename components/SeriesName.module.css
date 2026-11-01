@@ -1,0 +1,14 @@
+/* ABOUTME: Series name label colours: terracotta (otr), teal (fix), ink (note), always the text-safe -ink tokens.
+   ABOUTME: One source for every place a series name is shown as a label; clears WCAG AA on cream. */
+
+.otr {
+  color: var(--terra-ink);
+}
+
+.fix {
+  color: var(--teal-ink);
+}
+
+.note {
+  color: var(--ink);
+}

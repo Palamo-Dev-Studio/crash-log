@@ -57,6 +57,30 @@ test.describe("Home page", () => {
     );
   });
 
+  for (const locale of ["en", "es"]) {
+    test(`/${locale} rail legend sits on one line at desktop width, no prefix`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.goto(`/${locale}`);
+      const legend = page.locator("aside ul[aria-label]").first();
+      await expect(legend).toBeVisible();
+      await expect(legend).not.toContainText(/colou?r\s*=/i);
+      const tops = await legend
+        .locator("li")
+        .evaluateAll((els) => els.map((e) => Math.round(e.offsetTop)));
+      expect(new Set(tops).size).toBe(1);
+      // The legend keeps the mono label size token; fitting it on one line is the gap's job.
+      const { size, label } = await legend.evaluate((el) => ({
+        size: getComputedStyle(el).fontSize,
+        label: getComputedStyle(document.documentElement)
+          .getPropertyValue("--label")
+          .trim(),
+      }));
+      expect(size).toBe(label);
+    });
+  }
+
   test("recent files rows carry code, date, title and byline", async ({
     page,
   }) => {

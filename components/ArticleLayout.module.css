@@ -96,47 +96,6 @@
   text-wrap: pretty;
 }
 
-.byline {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 22px 0 0;
-  padding: 14px 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  font-family: var(--mono);
-  font-size: var(--label);
-}
-
-.byline strong {
-  font-weight: 500;
-}
-
-.bylineText {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 14px;
-  color: var(--muted);
-}
-
-.bylineText strong {
-  color: var(--ink);
-}
-
-.avatar {
-  flex: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--cream);
-  display: grid;
-  place-items: center;
-  font-family: var(--serif-d);
-  font-size: 20px;
-  line-height: 1;
-}
-
 /* Cover: fills the prose column, never wider; the 16:9 box reserves its height before load. */
 .cover {
   margin: 28px 0 0;
