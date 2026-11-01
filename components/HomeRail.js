@@ -23,15 +23,14 @@ export default function HomeRail({ rail, locale }) {
     <aside className={styles.rail} aria-label={labels.railHeading}>
       <div className={styles.heading}>
         {labels.railHeading}
-        <div className={styles.key}>
-          <span>{labels.railKey}</span>
+        <ul className={styles.key} aria-label={labels.railKey}>
           {KEY_ORDER.map(([series, cls]) => (
-            <span key={series} className={styles[cls]}>
+            <li key={series} className={styles[cls]}>
               <i aria-hidden="true" />
               {seriesName(series, locale)}
-            </span>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
 
       {rail.map(({ series, doc, onCover }) => (

@@ -2,6 +2,7 @@
 // ABOUTME: Fixtures hold several docs per series with distinct dates; bylines compare against getByline, never a hard-coded fallback.
 
 import { describe, it, expect, vi } from "vitest";
+import { readFileSync } from "node:fs";
 import { render, screen, within } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
@@ -254,6 +255,24 @@ describe("HomeRail", () => {
     expect(screen.getByText("Nico’s Notes")).toBeInTheDocument();
   });
 
+  it("shows the legend without a 'Colour = series' prefix, as a list with an accessible name", () => {
+    render(<HomeRail rail={selection.rail} locale="en" />);
+    expect(screen.queryByText(/Colour = series/)).toBeNull();
+    const legend = screen.getByRole("list", { name: "Series colours" });
+    const items = within(legend).getAllByRole("listitem");
+    expect(items.map((i) => i.textContent)).toEqual([
+      "Off the Rails",
+      "Practical",
+      "Nico’s Notes",
+    ]);
+  });
+
+  it("keeps each legend item unbreakable so the row wraps only between items", () => {
+    const css = readFileSync("components/HomeRail.module.css", "utf8");
+    const rule = css.match(/\.key li\s*\{[^}]*\}/)[0];
+    expect(rule).toMatch(/white-space:\s*nowrap/);
+  });
+
   it("marks only the cover's entry 'On the cover'", () => {
     render(<HomeRail rail={selection.rail} locale="en" />);
     const marks = screen.getAllByText("On the cover");
@@ -265,7 +284,10 @@ describe("HomeRail", () => {
   it("renders Spanish heading, key, marker and subscribe copy", () => {
     render(<HomeRail rail={selection.rail} locale="es" />);
     expect(screen.getByText("Últimos expedientes")).toBeInTheDocument();
-    expect(screen.getByText("Color = serie:")).toBeInTheDocument();
+    expect(screen.queryByText(/Color = serie/)).toBeNull();
+    expect(
+      screen.getByRole("list", { name: "Colores por serie" })
+    ).toBeInTheDocument();
     expect(screen.getByText("Fuera de las vías")).toBeInTheDocument();
     expect(screen.getByText("En la portada")).toBeInTheDocument();
     expect(

@@ -19,13 +19,15 @@
 .key {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 14px;
-  margin-top: 6px;
+  gap: 4px 10px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
   letter-spacing: 0;
   text-transform: none;
 }
 
-.key span {
+.key li {
   white-space: nowrap;
 }
 
@@ -33,7 +35,7 @@
   display: inline-block;
   width: 9px;
   height: 9px;
-  margin-right: 6px;
+  margin-right: 5px;
 }
 
 .keyOtr {
@@ -156,6 +158,13 @@
 .item:focus-visible {
   outline: 3px solid var(--teal);
   outline-offset: 3px;
+}
+
+/* The side rail is narrow at desktop widths: a smaller legend keeps all three series on one line, EN and ES. */
+@media (min-width: 981px) {
+  .key {
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 980px) {

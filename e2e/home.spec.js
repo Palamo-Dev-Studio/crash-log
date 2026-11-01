@@ -57,6 +57,22 @@ test.describe("Home page", () => {
     );
   });
 
+  for (const locale of ["en", "es"]) {
+    test(`/${locale} rail legend sits on one line at desktop width, no prefix`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.goto(`/${locale}`);
+      const legend = page.locator("aside ul[aria-label]").first();
+      await expect(legend).toBeVisible();
+      await expect(legend).not.toContainText(/colou?r\s*=/i);
+      const tops = await legend
+        .locator("li")
+        .evaluateAll((els) => els.map((e) => Math.round(e.offsetTop)));
+      expect(new Set(tops).size).toBe(1);
+    });
+  }
+
   test("recent files rows carry code, date, title and byline", async ({
     page,
   }) => {
