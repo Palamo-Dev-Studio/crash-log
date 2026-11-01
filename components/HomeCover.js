@@ -4,7 +4,8 @@
 import { useId } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import FileChip, { seriesName } from "@/components/FileChip";
+import FileChip from "@/components/FileChip";
+import SeriesName from "@/components/SeriesName";
 import { t } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
 import { formatDate } from "@/lib/formatDate";
@@ -59,7 +60,7 @@ export default function HomeCover({ doc, locale }) {
           <FileChip doc={doc} />
           <span className={styles.segs}>
             <span className={styles.seg}>
-              {seriesName(getSeries(doc), locale)}
+              <SeriesName series={getSeries(doc)} locale={locale} />
             </span>
             {byline && (
               <span className={styles.seg}>

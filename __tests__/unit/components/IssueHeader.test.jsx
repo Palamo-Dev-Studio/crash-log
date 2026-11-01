@@ -31,16 +31,16 @@ describe("IssueHeader", () => {
 
   it("shows the series and case-file code in the kicker", () => {
     render(<IssueHeader {...defaultProps} />);
-    expect(
-      screen.getByText("OFF THE RAILS · CASE FILE OTR-014")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Off the Rails").parentElement.textContent).toBe(
+      "Off the Rails · CASE FILE OTR-014"
+    );
   });
 
   it("shows the Spanish kicker", () => {
     render(<IssueHeader {...defaultProps} locale="es" />);
     expect(
-      screen.getByText("FUERA DE LAS VÍAS · EXPEDIENTE OTR-014")
-    ).toBeInTheDocument();
+      screen.getByText("Fuera de las vías").parentElement.textContent
+    ).toBe("Fuera de las vías · EXPEDIENTE OTR-014");
   });
 
   it("shows date, case count and reading time", () => {

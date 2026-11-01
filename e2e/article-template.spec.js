@@ -98,6 +98,10 @@ test.describe("Nico's Notes column page (article template)", () => {
     await expect(page.locator("main article h1")).toBeVisible();
     await expect(page.locator("main article")).toContainText(/NOTE-\d{3}/);
     await expect(page.locator("main article")).toContainText("By Nico von Bot");
+    // The kicker's series name is ink-coloured through the shared SeriesName mechanism.
+    await expect(
+      page.locator("main article [data-series-name='nicosNotes']")
+    ).toHaveText("Nico’s Notes");
     await expect(page.locator("main article")).not.toContainText(
       "Reported with Nico"
     );

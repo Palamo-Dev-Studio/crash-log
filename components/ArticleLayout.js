@@ -2,7 +2,8 @@
 // ABOUTME: The TOC column exists only when the body has two or more H2s; without it the 68ch prose column centres on the page.
 
 import Image from "next/image";
-import FileChip, { seriesName } from "@/components/FileChip";
+import FileChip from "@/components/FileChip";
+import SeriesName from "@/components/SeriesName";
 import ArticleBody from "@/components/ArticleBody";
 import FallbackBanner from "@/components/FallbackBanner";
 import { prepareArticleBody } from "@/lib/articleBody";
@@ -56,7 +57,9 @@ export default function ArticleLayout({
             <FileChip doc={doc} />
             <span className={styles.segs}>
               {series && (
-                <span className={styles.seg}>{seriesName(series, locale)}</span>
+                <span className={styles.seg}>
+                  <SeriesName series={series} locale={locale} />
+                </span>
               )}
               {date && <span className={styles.seg}>{date}</span>}
               {minutes && (
