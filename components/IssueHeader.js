@@ -1,6 +1,7 @@
 // ABOUTME: Off the Rails page head: file-code kicker with date, case count and reading time, H1, dek, byline + credit, stamp legend.
 // ABOUTME: Ported from mockups/off-the-rails.html ".page-head"; the legend stamp uses the page's shared SVG filter.
 
+import Byline from "@/components/Byline";
 import SeriesName from "@/components/SeriesName";
 import VerdictStamp from "@/components/VerdictStamp";
 import { OTR_LABELS } from "@/lib/offTheRailsLabels";
@@ -39,14 +40,7 @@ export default function IssueHeader({
       </div>
       <h1 className={styles.title}>{title}</h1>
       {subtitle && <p className={styles.dek}>{subtitle}</p>}
-      {byline && (
-        <p className={styles.byline}>
-          <span className={styles.seg}>
-            {labels.byPrefix} <strong>{byline}</strong>
-          </span>
-          {credit && <span className={styles.seg}>{credit}</span>}
-        </p>
-      )}
+      <Byline locale={locale} byline={byline} credit={credit} />
       <p className={styles.legend}>
         <VerdictStamp
           text={labels.legendStamp}

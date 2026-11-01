@@ -98,6 +98,10 @@ test.describe("Nico's Notes column page (article template)", () => {
     await expect(page.locator("main article h1")).toBeVisible();
     await expect(page.locator("main article")).toContainText(/NOTE-\d{3}/);
     await expect(page.locator("main article")).toContainText("By Nico von Bot");
+    // The byline is one plain text line: no avatar or initial element beside it.
+    const byline = page.locator("main article [data-byline]");
+    await expect(byline).toHaveText("By Nico von Bot");
+    await expect(page.locator("main article [class*='avatar']")).toHaveCount(0);
     // The kicker's series name is ink-coloured through the shared SeriesName mechanism.
     await expect(
       page.locator("main article [data-series-name='nicosNotes']")

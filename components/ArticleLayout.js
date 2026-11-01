@@ -4,6 +4,7 @@
 import Image from "next/image";
 import FileChip from "@/components/FileChip";
 import SeriesName from "@/components/SeriesName";
+import Byline from "@/components/Byline";
 import ArticleBody from "@/components/ArticleBody";
 import FallbackBanner from "@/components/FallbackBanner";
 import { prepareArticleBody } from "@/lib/articleBody";
@@ -69,19 +70,7 @@ export default function ArticleLayout({
           </div>
           <h1 className={styles.title}>{title}</h1>
           {subtitle && <p className={styles.dek}>{subtitle}</p>}
-          {byline && (
-            <div className={styles.byline}>
-              <span className={styles.avatar} aria-hidden="true">
-                {byline.trim().charAt(0).toUpperCase()}
-              </span>
-              <span className={styles.bylineText}>
-                <span>
-                  {labels.byPrefix} <strong>{byline}</strong>
-                </span>
-                {credit && <span className={styles.credit}>{credit}</span>}
-              </span>
-            </div>
-          )}
+          <Byline locale={locale} byline={byline} credit={credit} />
         </header>
 
         {coverImage && (
