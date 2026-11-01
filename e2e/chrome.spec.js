@@ -382,3 +382,47 @@ test.describe("masthead buttons", () => {
     });
   }
 });
+
+// Beside the tools (701px and up) the masthead must never wrap its tagline
+// or let the brand run into the tools; the short tagline takes over where
+// the full one would not fit.
+for (const locale of ["en", "es"]) {
+  test(`/${locale} masthead tagline stays on one line and clear of the tools, 701-1280px`, async ({
+    page,
+  }) => {
+    for (const width of [701, 760, 820, 880, 940, 1024, 1280]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`/${locale}/about`);
+      const m = await page.evaluate(() => {
+        const brand = document.querySelector("header a");
+        const tools = brand.nextElementSibling;
+        const shown = Array.from(
+          brand.querySelectorAll("[class*='tag'] > span")
+        ).filter((el) => getComputedStyle(el).display !== "none");
+        const tag = shown[0];
+        const lh =
+          parseFloat(getComputedStyle(tag).lineHeight) ||
+          parseFloat(getComputedStyle(tag).fontSize) * 1.5;
+        const b = brand.getBoundingClientRect();
+        const t = tools.getBoundingClientRect();
+        const sameRow = t.top < b.bottom && b.top < t.bottom;
+        return {
+          shownCount: shown.length,
+          tagHeight: tag.getBoundingClientRect().height,
+          lh,
+          gap: sameRow ? t.left - b.right : null,
+        };
+      });
+      expect(m.shownCount, `${width}px: one tagline variant`).toBe(1);
+      expect(m.tagHeight, `${width}px: tagline on one line`).toBeLessThan(
+        m.lh * 1.5
+      );
+      if (m.gap !== null) {
+        expect(
+          m.gap,
+          `${width}px: brand clear of tools`
+        ).toBeGreaterThanOrEqual(16);
+      }
+    }
+  });
+}

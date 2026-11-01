@@ -137,6 +137,17 @@
   color: var(--cream);
 }
 
+/* Beside the tools, the full tagline wraps below about 880px (ES); the short one fits. */
+@media (max-width: 900px) {
+  .tagFull {
+    display: none;
+  }
+
+  .tagShort {
+    display: inline;
+  }
+}
+
 @media (max-width: 700px) {
   .header {
     padding-top: 20px;
@@ -166,14 +177,6 @@
 
   .tag {
     margin-top: 4px;
-  }
-
-  .tagFull {
-    display: none;
-  }
-
-  .tagShort {
-    display: inline;
   }
 
   .tools {
