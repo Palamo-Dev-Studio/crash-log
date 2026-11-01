@@ -64,6 +64,27 @@ describe("AgentCard", () => {
     expect(screen.getByText(/HUMAN IN THE LOOP/)).toBeInTheDocument();
   });
 
+  it.each([
+    ["lead_agent", "COLABORADOR DE IA"],
+    ["sub_agent", "SUBAGENTE"],
+    ["human", "HUMANO AL MANDO"],
+  ])("renders the Spanish type label for %s", (agentType, label) => {
+    render(
+      <AgentCard
+        {...baseProps}
+        agentType={agentType}
+        model={undefined}
+        locale="es"
+      />
+    );
+    expect(screen.getByText(label)).toBeInTheDocument();
+  });
+
+  it("falls back to English type labels for an unknown locale", () => {
+    render(<AgentCard {...baseProps} model={undefined} locale="fr" />);
+    expect(screen.getByText("AI COLLABORATOR")).toBeInTheDocument();
+  });
+
   it("shows model tag when model is present (en)", () => {
     render(<AgentCard {...baseProps} />);
     expect(screen.getByText(/CLAUDE-3\.5/)).toBeInTheDocument();
