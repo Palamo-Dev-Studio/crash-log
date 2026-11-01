@@ -19,6 +19,7 @@
 .key {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   gap: 4px 10px;
   margin: 6px 0 0;
   padding: 0;
