@@ -256,13 +256,13 @@ describe("cards", () => {
     expect(wordmark.props.children).toBe("The Crash Log");
     expect(wordmark.props.style.fontSize).toBeLessThanOrEqual(128);
     expect(texts(SiteCard({ locale: "en" })).join(" ")).toContain(
-      "Incident reports on AI"
+      "Incident reports on AI and what to do next"
     );
     expect(texts(SiteCard({ locale: "es" })).join(" ")).toContain(
-      "Incidentes de IA"
+      "Informes de incidentes de IA y qué hacer después"
     );
     expect(texts(SiteCard({ locale: "xx" })).join(" ")).toContain(
-      "Incident reports on AI"
+      "Incident reports on AI and what to do next"
     );
   });
 });

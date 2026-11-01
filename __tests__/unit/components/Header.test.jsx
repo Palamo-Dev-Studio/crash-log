@@ -63,14 +63,14 @@ describe("Header", () => {
   it("renders the English tagline", () => {
     render(<Header locale="en" />);
     expect(
-      screen.getByText(/Incident reports on AI · Read closely/)
+      screen.getByText("Incident reports on AI and what to do next")
     ).toBeInTheDocument();
   });
 
   it("renders the Spanish tagline for es locale", () => {
     render(<Header locale="es" />);
     expect(
-      screen.getByText(/Incidentes de IA · Lectura atenta/)
+      screen.getByText("Informes de incidentes de IA y qué hacer después")
     ).toBeInTheDocument();
   });
 

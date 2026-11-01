@@ -168,6 +168,13 @@
   }
 }
 
+/* From here the legend fits on one line in EN and ES, so spread it across the rail; narrower rails wrap and stay packed left. */
+@media (min-width: 1180px) {
+  .key {
+    justify-content: space-between;
+  }
+}
+
 @media (max-width: 980px) {
   .onCover::after {
     content: " ↑";
