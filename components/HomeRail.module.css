@@ -19,7 +19,6 @@
 .key {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   gap: 4px 10px;
   margin: 6px 0 0;
   padding: 0;
@@ -166,6 +165,13 @@
 @media (min-width: 981px) {
   .key {
     column-gap: 6px;
+  }
+}
+
+/* From here the legend fits on one line in EN and ES, so spread it across the rail; narrower rails wrap and stay packed left. */
+@media (min-width: 1180px) {
+  .key {
+    justify-content: space-between;
   }
 }
 
