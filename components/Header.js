@@ -4,18 +4,19 @@
 import Link from "next/link";
 import Roundel from "./Roundel";
 import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
+import { TAGLINE } from "@/lib/tagline";
 import styles from "./Header.module.css";
 
 // Placeholder copy (SPEC): tweak the strings here.
 const LABELS = {
   en: {
-    tagline: "Incident reports on AI · Read closely · What to do next",
+    tagline: TAGLINE.en,
     taglineShort: "Incident reports on AI",
     support: "Support",
     subscribe: "Subscribe",
   },
   es: {
-    tagline: "Incidentes de IA · Lectura atenta · Qué hacer después",
+    tagline: TAGLINE.es,
     taglineShort: "Incidentes de IA",
     support: "Apoyar",
     subscribe: "Suscríbete",
