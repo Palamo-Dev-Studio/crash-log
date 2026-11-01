@@ -1,5 +1,5 @@
 /* ABOUTME: Off the Rails page head styles (ported from mockups/styles.css ".page-head", ".byline-line", ".legend").
-   ABOUTME: Kicker rule, 58px serif H1 (42px mobile), mono byline and legend lines. */
+   ABOUTME: Kicker rule, 58px serif H1 (42px mobile) and legend line; the byline is the shared Byline component. */
 
 .head {
   padding: 34px 0 8px;

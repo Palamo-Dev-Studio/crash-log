@@ -70,6 +70,14 @@ test.describe("Home page", () => {
         .locator("li")
         .evaluateAll((els) => els.map((e) => Math.round(e.offsetTop)));
       expect(new Set(tops).size).toBe(1);
+      // The legend keeps the mono label size token; fitting it on one line is the gap's job.
+      const { size, label } = await legend.evaluate((el) => ({
+        size: getComputedStyle(el).fontSize,
+        label: getComputedStyle(document.documentElement)
+          .getPropertyValue("--label")
+          .trim(),
+      }));
+      expect(size).toBe(label);
     });
   }
 

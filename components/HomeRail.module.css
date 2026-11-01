@@ -160,10 +160,11 @@
   outline-offset: 3px;
 }
 
-/* The side rail is narrow at desktop widths: a smaller legend keeps all three series on one line, EN and ES. */
+/* The side rail is narrow at desktop widths: a tighter gap keeps all three series on one line at the 13px
+   label size from about 1180px up, EN and ES; narrower rails wrap between series, never inside one. */
 @media (min-width: 981px) {
   .key {
-    font-size: 12px;
+    column-gap: 6px;
   }
 }
 
