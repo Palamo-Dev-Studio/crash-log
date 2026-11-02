@@ -2,83 +2,73 @@
 
 ## Current State
 
-- **Branch:** `main`
-- **Build:** `verify.sh` passes (549 tests + 41 static pages)
-- **Tests:** 549 unit/component/integration tests (Vitest, 45 files) + 20 e2e tests (Playwright, 5 files) = 569 total
-- **Components:** 24 total (22 previous + SupportContent) + branded 404 page
-- **Routes:** All previous routes + `/[locale]/support` (dedicated donation page)
-- **Sanity:** Project `msr24cg4`, dataset `production`. All schemas deployed. 4 issues, 15 stories, 6 agents, 7 categories published. 1 draft (Nico's Notes column `nicos-notes-2026-03-15`).
-
-## Recently Completed
-
-**Sanity Data Recovery** (2026-03-17):
-
-- A bad upsert (likely off-by-one ID mapping bug) wrote Issue #3's content into the `crash-log-004` document ID and deleted `crash-log-003` entirely
-- Recovered Issue #3: recreated `crash-log-003` + 3 stories (`crash-log-003-story-01/02/03`) using content preserved in the stale published `crash-log-004`
-- Published Issue #4: resolved circular draft-reference dependency (draft issue → draft stories) by temporarily removing story refs, publishing stories, re-adding refs with published IDs, then publishing the issue
-- All 4 issues now correctly published with proper IDs and content
-
-**Agent Model Updates** (prior session):
-
-- Nico von Bot: Sonnet 4.6 → Opus 4.6 (model field, bio EN/ES)
-- Sub-agents (Scoop, Root, Gabo, Lupe): GPT-5.3-Codex → GPT-5.4-Codex
-- Updated in: Sanity agent docs (5), aboutPage Portable Text (intro + workflow, EN/ES), fallback masthead code, schema description
-- All 6 Sanity documents published
-- 549 tests still passing
-
-**Support Page + Recurring Donations** (prior session):
-
-- `/api/donate` now accepts `frequency` param: `"once"` (default) or `"monthly"`
-- Monthly creates Stripe Checkout `subscription` session with `recurring: { interval: "month" }`
-- `SupportContent` component: full-page "Feed the Bots" landing with preset amounts, frequency toggle, bilingual
-- Header: green "Fund"/"Apoya" button linking to `/[locale]/support`
-- 38 new tests (511 → 549)
-
-**Stack Trace Rich Text + Issue #002** (prior session):
-
-- `stackTraceHit.text`: `localizedText` → `localizedBlockContent` (rich text with hyperlinks in Studio)
-- `sourceUrl` + `sourceOutlet` → `sources[]` array of `sourceLink` (multiple sources per hit)
-- StackTrace component redesigned: body text first, sources underneath as "Source: Outlet1 · Outlet2"
-- Email template updated: Portable Text to HTML for stack trace, sources array
-- Issue #002 "Deployed. Unaccountable. Everywhere." published — 4 stories, 3 stack trace hits
-- Beehiiv draft creation tested — blocked by Enterprise plan requirement
-
-## Deployment
-
-- **Domain:** `crashlog.ai` (Vercel)
-- **Sanity CORS:** `https://crashlog.ai` and `http://localhost:3001` with credentials
-- All canonical/OG/JSON-LD URLs point to `https://crashlog.ai`
-- **Env vars on Vercel:** `SEND_NEWSLETTER_SECRET` + `NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` — set (same value for both). **As of 2026-09-25, no code reads these** (the newsletter-send routes and Studio actions that used them were removed). Still present in Vercel — Hector should delete them there; not deleted as of this note.
-- **Beehiiv:** `locale` custom field created, EN/ES audience segments created. **As of 2026-09-25, unused** — the newsletter moved to Substack, `BEEHIIV_API_KEY` and `BEEHIIV_PUBLICATION_ID` are no longer read by any code. Still present in Vercel — Hector should delete them there; not deleted as of this note.
-- **Sanity schema:** All schemas deployed (including column + updated stackTraceHit)
+- **Branch:** `main` @ `e68756e` (merge of #28). Live on Vercel at `crashlog.ai`.
+- **Design:** the "Field Manual" redesign is live (PRs #24–#28, merged 2026-10-31 to 2026-11-01). Plan, decisions and ship
+  runbook: `docs/plans/completed/field-manual-restyle.md`.
+- **Tests:** `scripts/verify.sh` passes: 1324 Vitest tests in 80 files. Playwright has 16 spec files; full runs use
+  `E2E_PROD=1` (185 passed, 1 skipped on the #28 branch, 2026-11-01). Get live counts from the commands, not from here.
+- **Sanity** (project `msr24cg4`, dataset `production`): 26 published issues (#1–27, no #5), 89 published stories,
+  2 agents (Hector, displayOrder 1; Nico, 2), 0 Practical posts. 71 unpublished story drafts (OpenClaw leftovers).
+  Archive issues carry `byline: "newsroom"`; 88 archive stories carry `verdict` (EN/ES); the About copy is the
+  approved 2026-10-30 text (written 2026-11-01).
+- **Newsletter:** Subscribe links still go to Substack (no subscribers). Moving to Ghost(Pro) is planned, not
+  started: `docs/plans/active/newsletter-ghost.md`.
 
 ## Immediate Next Step
 
-- Review Issue #4 content on site (now published)
-- Publish Nico's Notes column draft (`nicos-notes-2026-03-15`) when ready
-- Deploy latest to Vercel
+1. Hector decides the Ghost(Pro) plan (rec: Publisher) and creates the account. Then Ice prepares the DNS records
+   (step 2 of `docs/plans/active/newsletter-ghost.md`) for Hector's approval and swaps the Subscribe URL.
+2. Steam picks up `handoffs/to-steam/2026-11-01-crash-log-new-fields.md` (claude-workspace PR #347, merged; it
+   was labelled `for-steam` only after it merged). If Steam hasn't acted, nudge it.
 
-## Pending
+## Blocked on Hector
 
-- [ ] Push latest commits to remote / deploy to Vercel
-- [ ] Manual end-to-end test: Stripe monthly subscription (support page)
-- [x] ~~Manual end-to-end test: Issue Studio action → Beehiiv draft creation~~ (blocked: Beehiiv requires Enterprise plan for Post API)
-- [x] ~~Manual end-to-end test: Column Studio action → Beehiiv draft creation~~ (same blocker)
-- [x] ~~Activate Beehiiv Recommendations widget when available~~ (moot: newsletter moved to Substack, Beehiiv removed entirely 2026-09-25)
-- [ ] Move Nico's Notes ExecPlan to `docs/plans/completed/`
-- [ ] Push Spanish role translations to agent documents in Sanity (bio.es done, model.es set for Hector, role.es still missing)
+1. Ghost(Pro) plan choice and account (it costs money).
+2. The 71 story drafts: he said to delete them "another time". No agent deletes them without his go.
+3. Content fixes in Sanity: ES category names show in English on archive pills; one headline has the typo "44%of".
 
-## Known Issues / Deferred Items
+## Recently Completed
 
-- ~~`NEXT_PUBLIC_SEND_NEWSLETTER_SECRET` exposes newsletter auth secret to client bundle — both issue and column actions use this pattern. Consider server-side session validation in a future security pass.~~ (moot: the newsletter-send Studio actions and their secret were removed entirely 2026-09-25, newsletter moved to Substack)
-- `FallbackAbout` component + `FALLBACK_MASTHEAD` array still exist in code — now redundant since Sanity has full ES content. Can be removed in a cleanup pass.
-- Agent `role.es` fields not yet populated in Sanity — Spanish roles still come from `FallbackAbout` or are empty in `SanityAbout`.
-- `@sanity/image-url` deprecation warning: default export deprecated, use named `createImageUrlBuilder` instead. Non-blocking.
-- Next.js 16 deprecation warning: middleware file convention deprecated in favor of "proxy". Functional, monitor.
-- Sanity workspace name is `the-crash-log` (not `default`) — must pass `workspaceName` to MCP tools.
-- OG images use Inter font instead of Space Grotesk — ImageResponse edge runtime limits font loading.
-- No rate limiting on API routes — Vercel baseline DDoS protection covers it.
-- 5-item nav on mobile — verify nav wrapping doesn't break at small widths after deploy.
-- ~~Server-side idempotency for newsletter sending not implemented — Studio action warns but doesn't prevent duplicate sends.~~ (moot: removed 2026-09-25)
-- Content pipeline (Claude Code CLI on Mac Mini) sets `status: "draft"` on issue documents — must manually set to `"published"` after publishing in Sanity. Story refs may use `drafts.*` prefix — must fix to direct refs before publishing.
-- ~~Beehiiv Post API requires Enterprise plan (`SEND_API_NOT_ENTERPRISE_PLAN`). Code is ready, manual copy-paste for newsletters until plan is upgraded.~~ (moot: removed 2026-09-25)
+- **2026-11-01, follow-ups (#26–#28):** new tagline "Incident reports on AI and what to do next" with one source
+  (`lib/tagline.js`) for the masthead and OG images; rail legend spread only where it fits on one line (≥1180px);
+  Spanish masthead tags ("HUMANO AL MANDO", "COLABORADOR DE IA"); short tagline below 900px because the full one
+  wrapped and crowded the tools between 700 and 880px. Each passed a Sonnet or Opus review plus CodeRabbit.
+- **2026-11-01, ship runbook:** with Hector's go on each write, ran `backfill-newsroom-bylines` (26 patched),
+  `backfill-archive-verdicts` (88), and `write-about-copy` (3; a full snapshot was saved first). Hector merged #24
+  before the backfills, so archive issues credited him for a few hours; the runbook order (backfills first) was right.
+- **2026-10-31/11-01, Hector's design changes (#25):** rail legend on one line, series name in its series colour in kickers
+  (`components/SeriesName.js`), one plain-text byline for every series (`components/Byline.js`, no avatar).
+- **2026-10-30/31, Field Manual restyle (#24):** seven phases, each reviewed; whole-branch Fable review (REVISE),
+  fixes re-reviewed; Hector's copy calls; CodeRabbit by directory. Details in the completed plan.
+- **2026-10-30, Beehiiv removed:** Subscribe became a plain Substack link; Hector deleted the Beehiiv and
+  newsletter-secret env vars from Vercel.
+
+## Verified / Refuted
+
+- ✅ Sanity MCP must authenticate as Hector's **Google** account; his "sanity" email-login account is not a project
+  member ("project user not found"). After `mcp configure`, reconnect through `/mcp`. (2026-11-01)
+- ✅ The ship scripts read `SANITY_API_TOKEN` from `.env.local` themselves; their dry runs read without a token and
+  so cannot see drafts (`--apply` checks for them). (2026-11-01)
+- ✅ crashlog.ai DNS is on Vercel and is locked as a non-sending domain: null MX, SPF `-all`, DMARC `p=reject`
+  with strict alignment; subdomains inherit `p=reject`. `newsletter.crashlog.ai` currently resolves to Vercel. (2026-11-01)
+- ✅ Ghost(Pro): a custom sending domain needs Publisher or higher, a custom publication domain first and a DMARC
+  record; warm-up takes about 6 weeks. The Admin API's member creation documents no confirmation email. (ghost.org, 2026-11-01)
+- ❌ "CodeRabbit can review the whole branch in one run": two whole-branch runs (285 files) dropped their WebSocket
+  mid-review; splitting with `--dir` worked, and an `--agent` whole-branch run later completed. The CLI allows 5
+  reviews per rolling hour. (2026-10-31)
+- ✅ Next 16.1.6 dev server corrupts `.next/dev/prerender-manifest.json` under parallel load; full Playwright runs
+  use `E2E_PROD=1`. Memory pressure on the iMac (swap near full) causes 60s e2e timeouts; `--workers=1` avoids them.
+- ✅ Sanity workspace name is `the-crash-log` (not `default`); pass it to MCP tools.
+
+## Known Issues / Deferred
+
+- **404 pages** server-render an empty error shell (the branded page appears after client JS); the ES 404 `<title>`
+  is English in server HTML. Predates the restyle.
+- **Practical:** no RSS feed yet; the "subscribe line once" e2e check skips until a Practical post exists.
+- **Rail legend (ES):** about 7px of slack at 1280px; a wider DM Mono rendering could wrap it (between items only).
+- **Orphan story** `S9mF1lBwsv6MdFz667WGZf` is published but listed by no issue, so it has no verdict.
+- **Content pipeline quirk:** the uploader sets `status: "draft"` on issue documents and may leave `drafts.*` story
+  refs; fix both before publishing.
+- `@sanity/image-url` default export is deprecated (use `createImageUrlBuilder`). Non-blocking.
+- Next.js 16 warns that the middleware file convention is deprecated in favour of "proxy". Functional.
+- No rate limiting on API routes; Vercel's baseline protection covers it.
