@@ -16,7 +16,7 @@ import DonationThanks from "@/components/DonationThanks";
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-display",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   weight: "400",
   style: ["normal", "italic"],
   display: "swap",
@@ -24,7 +24,7 @@ const instrumentSerif = Instrument_Serif({
 
 const newsreader = Newsreader({
   variable: "--font-body",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   weight: "variable",
   style: ["normal", "italic"],
   axes: ["opsz"],
@@ -33,7 +33,7 @@ const newsreader = Newsreader({
 
 const dmMono = DM_Mono({
   variable: "--font-mono",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   weight: ["400", "500"],
   display: "swap",
 });

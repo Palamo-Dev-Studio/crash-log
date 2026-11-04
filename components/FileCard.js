@@ -50,6 +50,12 @@ export default function FileCard({
   const alt = t(doc.coverImageAlt, locale) || "";
   const subtitle = keepDashAttached(t(doc.subtitle, locale));
 
+  const byline = showByline && (
+    <p className={styles.by}>
+      {labels.byPrefix} {getByline(doc, locale)}
+    </p>
+  );
+
   return (
     <article className={`${styles.card} ${styles[variant] || ""}`.trim()}>
       <Link
@@ -81,12 +87,11 @@ export default function FileCard({
           <h3 id={titleId} className={styles.title}>
             {t(doc.title, locale)}
           </h3>
+          {/* The lead puts its byline above the subtitle: the subtitle is set in a late-loading
+              font and re-wraps when it arrives, and a byline below it would move with it (CLS). */}
+          {variant === "lead" && byline}
           {subtitle && <p className={styles.sub}>{subtitle}</p>}
-          {showByline && (
-            <p className={styles.by}>
-              {labels.byPrefix} {getByline(doc, locale)}
-            </p>
-          )}
+          {variant !== "lead" && byline}
         </div>
       </Link>
     </article>

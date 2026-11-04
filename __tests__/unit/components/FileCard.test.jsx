@@ -187,6 +187,28 @@ describe("FileCard with a cover that has no asset", () => {
   });
 });
 
+describe("FileCard byline placement", () => {
+  const order = (container) => {
+    const sub = container.querySelector("p[class*='sub']");
+    const by = container.querySelector("p[class*='by']");
+    return sub.compareDocumentPosition(by) & Node.DOCUMENT_POSITION_FOLLOWING
+      ? "sub-then-by"
+      : "by-then-sub";
+  };
+
+  it("the lead puts its byline above the subtitle (the late-font subtitle re-wraps; a byline below it would shift)", () => {
+    const { container } = render(
+      <FileCard doc={doc(2)} locale="en" variant="lead" />
+    );
+    expect(order(container)).toBe("by-then-sub");
+  });
+
+  it("a card keeps its byline below the subtitle", () => {
+    const { container } = render(<FileCard doc={doc(2)} locale="en" />);
+    expect(order(container)).toBe("sub-then-by");
+  });
+});
+
 describe("FileCard text polish", () => {
   it("keeps a spaced dash in the subtitle attached to the word before it", () => {
     const d = doc(2, { subtitle: { en: "my week — showed why", es: "x" } });

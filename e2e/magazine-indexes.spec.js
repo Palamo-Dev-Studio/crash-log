@@ -308,3 +308,77 @@ test("no subtitle line starts with a dash", async ({ browser }) => {
   expect(dashes).toEqual([]);
   await page.close();
 });
+
+// Slow-4G budget run (same conditions as the web-build floor harness): 150 ms RTT, 1.6 Mbps, 4x CPU.
+const throttled = async (browser, viewport, url) => {
+  const mobile = viewport.width < 600;
+  const ctx = await browser.newContext({
+    viewport,
+    isMobile: mobile,
+    hasTouch: mobile,
+    deviceScaleFactor: 1,
+  });
+  await ctx.addInitScript(() => {
+    window.__m = { lcp: 0, lcpTag: "", cls: 0 };
+    new PerformanceObserver((l) =>
+      l.getEntries().forEach((e) => {
+        window.__m.lcp = e.startTime;
+        window.__m.lcpTag = e.element ? e.element.tagName : "";
+      })
+    ).observe({ type: "largest-contentful-paint", buffered: true });
+    new PerformanceObserver((l) =>
+      l.getEntries().forEach((e) => {
+        if (!e.hadRecentInput) window.__m.cls += e.value;
+      })
+    ).observe({ type: "layout-shift", buffered: true });
+  });
+  const page = await ctx.newPage();
+  const cdp = await ctx.newCDPSession(page);
+  await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
+  await cdp.send("Network.enable");
+  await cdp.send("Network.emulateNetworkConditions", {
+    offline: false,
+    latency: 150,
+    downloadThroughput: (1.6 * 1024 * 1024) / 8,
+    uploadThroughput: (750 * 1024) / 8,
+  });
+  await page.goto(url, { waitUntil: "load" });
+  await page.waitForTimeout(4500);
+  const m = await page.evaluate(() => window.__m);
+  await ctx.close();
+  return m;
+};
+
+test("only the Latin subset of each font is preloaded, so fonts do not queue ahead of the lead image", async ({
+  page,
+}) => {
+  await page.goto("/en/off-the-rails");
+  const fonts = await page.$$eval(
+    "link[rel=preload][as=font]",
+    (els) => els.length
+  );
+  // 3 families: Instrument Serif and Newsreader (normal + italic) and DM Mono (400 + 500), Latin only.
+  expect(fonts).toBeGreaterThan(0);
+  expect(fonts).toBeLessThanOrEqual(6);
+});
+
+test("mobile LCP on the Off the Rails index stays within the 2.5 s budget on throttled slow 4G", async ({
+  browser,
+}) => {
+  test.setTimeout(60000);
+  const m = await throttled(
+    browser,
+    { width: 390, height: 844 },
+    "/en/off-the-rails"
+  );
+  expect(m.lcpTag).toBe("IMG");
+  expect(m.lcp).toBeLessThan(2500);
+});
+
+test("the /en/nico lead adds no layout shift when fonts arrive on throttled desktop", async ({
+  browser,
+}) => {
+  test.setTimeout(60000);
+  const m = await throttled(browser, { width: 1440, height: 900 }, "/en/nico");
+  expect(m.cls).toBeLessThan(0.0005);
+});

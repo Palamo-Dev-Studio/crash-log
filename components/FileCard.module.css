@@ -87,7 +87,7 @@
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   gap: 32px;
-  align-items: center;
+  align-items: start;
 }
 
 .lead .title {
@@ -108,6 +108,7 @@
 
 .lead .by {
   margin-top: 0;
+  padding-top: 0;
 }
 
 @media (max-width: 980px) {
