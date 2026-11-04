@@ -121,14 +121,21 @@ describe("SelfImprovementLoop", () => {
     );
   });
 
-  it("parks pseudo-element animations along with the rest while ready", () => {
-    for (const sel of [
-      '.loop[data-motion="ready"] *',
-      '.loop[data-motion="ready"] *::before',
-      '.loop[data-motion="ready"] *::after',
-    ]) {
-      expect(rule(LOOP_CSS, sel), sel).toMatch(
-        /animation-play-state:\s*paused/
+  it("parks through --loop-play, and every animation rule re-states play-state from it", () => {
+    // The `animation` shorthand resets play-state to running, so a parking rule that
+    // only sets animation-play-state loses to it; each rule must read --loop-play.
+    expect(rule(LOOP_CSS, '.loop[data-motion="ready"]')).toMatch(
+      /--loop-play:\s*paused/
+    );
+    const stripped = LOOP_CSS.replace(/\/\*[\s\S]*?\*\//g, "");
+    const animated = [...stripped.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(
+      ([, sel, body]) =>
+        sel.trim().startsWith(".loop[data-motion]") && /\banimation:/.test(body)
+    );
+    expect(animated.length).toBeGreaterThanOrEqual(14);
+    for (const [, sel, body] of animated) {
+      expect(body, sel.trim()).toMatch(
+        /animation-play-state:\s*var\(--loop-play,\s*running\)/
       );
     }
   });
@@ -137,6 +144,13 @@ describe("SelfImprovementLoop", () => {
     const print = LOOP_CSS.match(/@media[^{]*print[^{]*\{([\s\S]*?)\n\}/);
     expect(print).not.toBeNull();
     expect(print[1]).toMatch(/animation:\s*none\s*!important/);
+    const selectors = print[1]
+      .split("{")[0]
+      .split(",")
+      .map((x) => x.trim());
+    for (const sel of [".loop *", ".loop *::before", ".loop *::after"]) {
+      expect(selectors, "print/reduced-motion selector list").toContain(sel);
+    }
   });
 
   it.each(["en", "es"])(

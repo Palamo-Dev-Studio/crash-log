@@ -138,9 +138,15 @@ describe("every var() reference is declared", () => {
     const used = new Set(
       [...css.matchAll(/var\(\s*(--[\w-]+)/g)].map((m) => m[1])
     );
+    // A module may also declare a custom property for its own rules, e.g.
+    // `.loop[data-motion="ready"] { --loop-play: paused; }` read as var(--loop-play, running).
+    const ownDeclared = new Set(
+      [...css.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1])
+    );
     const undeclared = [...used].filter(
       (name) =>
         !declared.has(name) &&
+        !ownDeclared.has(name) &&
         !nextFontVars.includes(name) &&
         !inlineStyleVars.has(name)
     );

@@ -285,3 +285,77 @@ test("with JavaScript disabled all five steps and the stamp show, in the final s
   }
   await context.close();
 });
+
+// Every animation in the graphic, pseudo-elements included.
+const loopAnimations = (page) =>
+  page.evaluate(() =>
+    document
+      .querySelector('[data-testid="self-improvement-loop"]')
+      .getAnimations({ subtree: true })
+      .map((a) => ({ state: a.playState, t: a.currentTime }))
+  );
+
+test("below the fold the graphic stays parked, plays when scrolled to, and never restarts", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+  });
+  const page = await context.newPage();
+  await page.goto("/en/about");
+  const loop = page.getByTestId("self-improvement-loop");
+  await expect(loop).toHaveAttribute("data-motion", "ready");
+  expect(
+    await loop.evaluate((e) => e.getBoundingClientRect().top)
+  ).toBeGreaterThan(900);
+  await page.waitForTimeout(6500); // longer than the whole ~5.2 s run
+  const parked = await loopAnimations(page);
+  expect(parked.length, "animations exist").toBeGreaterThan(10);
+  for (const a of parked) {
+    expect(a.state).toBe("paused");
+    expect(a.t).toBe(0);
+  }
+  await loop.scrollIntoViewIfNeeded();
+  await expect(loop).toHaveAttribute("data-motion", "play");
+  await expect
+    .poll(
+      async () =>
+        (await loopAnimations(page)).every((a) => a.state === "finished"),
+      {
+        timeout: 9000,
+      }
+    )
+    .toBe(true);
+  await expect(page.getByTestId("loop-stamp")).toHaveCSS("opacity", "1");
+  // Away and back: no restart.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(300);
+  await loop.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  await expect(loop).toHaveAttribute("data-motion", "play");
+  for (const a of await loopAnimations(page)) expect(a.state).toBe("finished");
+  await context.close();
+});
+
+test("with the graphic already in view at load it plays once, to the final state", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    viewport: { width: 1440, height: 3600 },
+  });
+  const page = await context.newPage();
+  await page.goto("/en/about");
+  const loop = page.getByTestId("self-improvement-loop");
+  await expect(loop).toHaveAttribute("data-motion", "play");
+  await expect
+    .poll(
+      async () =>
+        (await loopAnimations(page)).every((a) => a.state === "finished"),
+      {
+        timeout: 9000,
+      }
+    )
+    .toBe(true);
+  await expect(page.getByTestId("loop-stamp")).toHaveCSS("opacity", "1");
+  await context.close();
+});
