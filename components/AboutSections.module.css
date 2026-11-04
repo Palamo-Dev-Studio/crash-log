@@ -104,6 +104,16 @@
   margin-bottom: 28px;
 }
 
+/* Wide enough for two cards (each text column holds "Hector Luis Alamo" on one line),
+   the block is wider than the 41rem text column and centred on the same axis. Below
+   960px the cards stack inside the column. */
+@media (min-width: 960px) {
+  .masthead {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-inline: calc((100% - 52rem) / 2);
+  }
+}
+
 @media (max-width: 700px) {
   .head {
     padding-top: 24px;

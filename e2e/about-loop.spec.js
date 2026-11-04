@@ -188,3 +188,63 @@ for (const [width, locale, word] of [
     await context.close();
   });
 }
+
+for (const width of [1440, 1024]) {
+  for (const locale of ["en", "es"]) {
+    test(`/${locale}/about at ${width}px: two masthead cards share a row, names on one line, block centred on the text axis`, async ({
+      browser,
+    }) => {
+      const context = await browser.newContext({
+        viewport: { width, height: 900 },
+      });
+      const page = await context.newPage();
+      await page.goto(`/${locale}/about`);
+      const mast = page.getByTestId("masthead");
+      const [a, b] = await mast.locator("> *").all();
+      const ba = await a.boundingBox();
+      const bb = await b.boundingBox();
+      expect(Math.abs(ba.y - bb.y), "cards share one row").toBeLessThanOrEqual(
+        1
+      );
+      expect(bb.x, "second card sits right of the first").toBeGreaterThan(
+        ba.x + ba.width - 1
+      );
+      for (const h3 of await mast.locator("h3").all()) {
+        const { h, lh } = await h3.evaluate((e) => ({
+          h: e.getBoundingClientRect().height,
+          lh: parseFloat(getComputedStyle(e).lineHeight),
+        }));
+        expect(h, "name wraps").toBeLessThan(lh * 1.5);
+      }
+      const m = await mast.boundingBox();
+      const col = await page.locator("main > section").first().boundingBox();
+      expect(m.width, "masthead is wider than the text column").toBeGreaterThan(
+        col.width + 100
+      );
+      expect(
+        Math.abs(m.x + m.width / 2 - (col.x + col.width / 2)),
+        "masthead centre vs column centre"
+      ).toBeLessThanOrEqual(2);
+      await context.close();
+    });
+  }
+}
+
+test("at 390px the masthead cards stack inside the text column", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 900 },
+  });
+  const page = await context.newPage();
+  await page.goto("/en/about");
+  const mast = page.getByTestId("masthead");
+  const [a, b] = await mast.locator("> *").all();
+  const ba = await a.boundingBox();
+  const bb = await b.boundingBox();
+  expect(Math.abs(ba.x - bb.x)).toBeLessThanOrEqual(1);
+  expect(bb.y).toBeGreaterThan(ba.y + ba.height - 1);
+  const col = await page.locator("main > section").first().boundingBox();
+  expect(Math.abs(ba.width - col.width)).toBeLessThanOrEqual(1);
+  await context.close();
+});
