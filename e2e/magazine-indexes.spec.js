@@ -1,29 +1,33 @@
 // ABOUTME: E2E tests for the magazine layout: lead + card grid on the three series indexes (EN and ES), the home "Recent files" trio and the unchanged archive rows.
-// ABOUTME: Needs live Sanity data (every published file has a cover and subtitle); checks grid columns at 1440/768/390 and no horizontal overflow at 390.
+// ABOUTME: Needs live Sanity data (every published file has a cover and subtitle); checks grid columns at 1440/1024/768/390 and no horizontal overflow at 390.
+// ABOUTME: Counts are read from the page (Practical may hold one file or many), never pinned to today's data.
 
 import { test, expect } from "@playwright/test";
 
+// Off the Rails and Nico's Notes always have several files; Practical may have one or many.
 const INDEXES = [
-  { path: "off-the-rails", href: "issue", grid: true },
-  { path: "nico", href: "nico", grid: true },
-  { path: "practical", href: "practical", grid: false },
+  { path: "off-the-rails", href: "issue", several: true },
+  { path: "nico", href: "nico", several: true },
+  { path: "practical", href: "practical", several: false },
 ];
 
 const columnsAt = async (browser, url, width) => {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   await page.goto(url);
-  const cols = await page
-    .locator("[data-file-grid]")
-    .first()
-    .evaluate(
-      (el) => getComputedStyle(el).gridTemplateColumns.split(" ").length
-    );
+  const grid = page.locator("[data-file-grid]").first();
+  // No grid at all (a series with a single file) has no columns to count.
+  const cols =
+    (await grid.count()) === 0
+      ? null
+      : await grid.evaluate(
+          (el) => getComputedStyle(el).gridTemplateColumns.split(" ").length
+        );
   await page.close();
   return cols;
 };
 
 for (const locale of ["en", "es"]) {
-  for (const { path, href, grid } of INDEXES) {
+  for (const { path, href, several } of INDEXES) {
     test.describe(`/${locale}/${path}`, () => {
       test("shows a lead with image and subtitle, and cards with images and subtitles", async ({
         page,
@@ -42,15 +46,15 @@ for (const locale of ["en", "es"]) {
           lead.locator(`a[href^='/${locale}/${href}/']`)
         ).toHaveCount(1);
 
-        if (!grid) {
-          // One item today: the lead stands alone, with no empty grid.
-          expect(n).toBe(1);
+        if (several) expect(n).toBeGreaterThan(1);
+        if (n === 1) {
+          // A lone file: the lead stands alone, with no empty grid.
           await expect(page.locator("[data-file-grid]")).toHaveCount(0);
           return;
         }
+        // More than one file: the lead plus a grid of the other n - 1.
         const cards = page.locator("[data-file-grid] article");
         expect(await cards.count()).toBe(n - 1);
-        expect(n).toBeGreaterThan(1);
         for (let i = 0; i < n - 1; i++) {
           const card = cards.nth(i);
           await expect(card.locator("img")).toHaveCount(1);
@@ -65,10 +69,12 @@ for (const locale of ["en", "es"]) {
 test("grid columns are 3 at 1440 and 1024, 2 at 768 and 1 at 390", async ({
   browser,
 }) => {
-  for (const { path, grid } of INDEXES) {
-    if (!grid) continue;
+  for (const { path, several } of INDEXES) {
     const url = `/en/${path}`;
-    expect(await columnsAt(browser, url, 1440), `${path} @1440`).toBe(3);
+    const wide = await columnsAt(browser, url, 1440);
+    // A series with a single file has no grid to measure.
+    if (!several && wide === null) continue;
+    expect(wide, `${path} @1440`).toBe(3);
     expect(await columnsAt(browser, url, 1024), `${path} @1024`).toBe(3);
     expect(await columnsAt(browser, url, 768), `${path} @768`).toBe(2);
     expect(await columnsAt(browser, url, 390), `${path} @390`).toBe(1);
@@ -242,7 +248,17 @@ test("a lone lead leaves no extra space below it, a lead with a grid keeps it", 
         .first()
         .evaluate((el) => getComputedStyle(el.parentElement).paddingBottom)
     );
-  expect(await pad("/en/practical")).toBe("0px");
+  const fileCount = async (url) => {
+    await page.goto(url);
+    return page.locator("main article").count();
+  };
+  // Practical may hold one file or many: the lead's bottom padding follows the count.
+  const practicalPad = await pad("/en/practical");
+  if ((await fileCount("/en/practical")) === 1) {
+    expect(practicalPad).toBe("0px");
+  } else {
+    expect(practicalPad).not.toBe("0px");
+  }
   expect(await pad("/en/off-the-rails")).not.toBe("0px");
 });
 
