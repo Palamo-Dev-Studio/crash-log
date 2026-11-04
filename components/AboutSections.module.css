@@ -1,5 +1,13 @@
 /* ABOUTME: Styles for the About page (Field Manual): serif H1 lead, mono section labels, Newsreader prose at a readable measure.
-   ABOUTME: Masthead is a two-column grid of person cards that stacks on narrow screens. */
+   ABOUTME: Masthead is a single column of person cards inside a centered 41rem column. */
+
+/* The page is one centered column (41rem, about the 62ch prose measure): head,
+   sections and standalone prose share auto margins; paragraphs stay left-aligned. */
+.head,
+.section {
+  max-width: 41rem;
+  margin-inline: auto;
+}
 
 .head {
   padding: 34px 0 28px;
@@ -44,6 +52,7 @@
 
 .prose {
   max-width: 62ch;
+  margin-inline: auto;
   font-family: var(--serif-b);
   font-size: 19px;
   line-height: 1.6;
@@ -85,15 +94,9 @@
 
 .masthead {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
   margin-bottom: 28px;
-}
-
-@media (max-width: 900px) {
-  .masthead {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 @media (max-width: 700px) {

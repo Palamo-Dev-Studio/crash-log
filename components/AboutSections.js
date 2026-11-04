@@ -12,12 +12,17 @@ import {
   FALLBACK_MASTHEAD,
 } from "@/lib/aboutFallback";
 import AgentCard from "@/components/AgentCard";
+import SelfImprovementLoop from "@/components/SelfImprovementLoop";
 import styles from "./AboutSections.module.css";
 
 const SANITY_HEADINGS = {
   en: { masthead: "Masthead", workflow: "How it works", contact: "Contact" },
   es: { masthead: "Redacción", workflow: "Cómo funciona", contact: "Contacto" },
 };
+
+// The loop graphic belongs to this section; Sanity sections are matched by heading text.
+const isBetterHeading = (heading) =>
+  Object.values(ABOUT_COPY).some((c) => c.betterHeading === heading.trim());
 
 // Renders the copy file's inline markup: **bold** and [text](url).
 const INLINE = /\*\*(.+?)\*\*|\[(.+?)\]\((.+?)\)/g;
@@ -97,6 +102,7 @@ export function FallbackAbout({ locale, about }) {
         <div className={styles.prose}>
           <Paragraphs items={copy.better} />
         </div>
+        <SelfImprovementLoop locale={lang} />
       </section>
 
       <section className={styles.section}>
@@ -227,6 +233,9 @@ export function SanityAbout({ about, locale }) {
               </>
             ) : (
               <Prose blocks={section.body} />
+            )}
+            {isBetterHeading(section.heading) && (
+              <SelfImprovementLoop locale={locale} />
             )}
           </section>
         );
