@@ -60,6 +60,11 @@
   overflow-wrap: anywhere;
 }
 
+/* Inside a section the prose lines up with the label and rule above it. */
+.section .prose {
+  margin-inline: 0;
+}
+
 .prose p {
   margin: 0 0 16px;
 }

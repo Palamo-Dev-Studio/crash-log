@@ -55,8 +55,10 @@ const T = {
 const labelDelay = (k) => `${(T.node[k] + 0.12).toFixed(2)}s`;
 const s = (n) => `${n}s`;
 
-// Draws the loop's tally corner: three ticks beside step 4, the third becomes the red rule stamp.
-const TICK_X = [30, 44, 58];
+// The tally sits inside the ring, above-right of step 4: three ticks, then the "rule" stamp.
+const TICK_X = [100, 112, 124];
+const TICK_Y = [162, 192];
+const STAMP = { x: 140, y: 162, w: 68, h: 34 };
 
 export default function SelfImprovementLoop({ locale }) {
   const copy = LOOP_COPY[locale] || LOOP_COPY.en;
@@ -91,6 +93,7 @@ export default function SelfImprovementLoop({ locale }) {
       ref={ref}
       className={styles.loop}
       data-testid="self-improvement-loop"
+      style={{ "--stamp": s(T.stamp) }}
     >
       <div className={styles.ring}>
         <svg viewBox="0 0 300 300" className={styles.svg} aria-hidden="true">
@@ -121,7 +124,7 @@ export default function SelfImprovementLoop({ locale }) {
           {NODES.map(([x, y], k) => (
             <g
               key={k}
-              className={styles.node}
+              className={k < 3 ? `${styles.node} ${styles.early}` : styles.node}
               data-step={k + 1}
               style={{ "--delay": s(T.node[k]) }}
             >
@@ -141,16 +144,18 @@ export default function SelfImprovementLoop({ locale }) {
               key={x}
               x1={x}
               x2={x}
-              y1="258"
-              y2="282"
+              y1={TICK_Y[0]}
+              y2={TICK_Y[1]}
               className={styles[`tick${i + 1}`]}
               style={{ "--delay": s(T.tick[i]) }}
             />
           ))}
-          <circle
-            cx={TICK_X[2]}
-            cy="270"
-            r="22"
+          <rect
+            x={STAMP.x}
+            y={STAMP.y}
+            width={STAMP.w}
+            height={STAMP.h}
+            rx="3"
             className={styles.pulse}
             style={{ "--delay": s(T.stamp) }}
           />
@@ -159,18 +164,25 @@ export default function SelfImprovementLoop({ locale }) {
             data-testid="loop-stamp"
             style={{ "--delay": s(T.stamp) }}
           >
-            <rect x="47" y="252" width="22" height="36" rx="3" />
-            <line x1="52" x2="64" y1="264" y2="264" />
-            <line x1="52" x2="64" y1="270" y2="270" />
-            <line x1="52" x2="64" y1="276" y2="276" />
+            <rect
+              x={STAMP.x}
+              y={STAMP.y}
+              width={STAMP.w}
+              height={STAMP.h}
+              rx="3"
+            />
+            <text x={STAMP.x + STAMP.w / 2} y={STAMP.y + STAMP.h / 2}>
+              {copy.stamp}
+            </text>
           </g>
         </svg>
       </div>
-      <ol className={styles.steps} aria-label={copy.label}>
+      <ol className={styles.steps} role="list" aria-label={copy.label}>
         {copy.steps.map((label, k) => (
           <li
             key={label}
-            className={styles.step}
+            className={k < 3 ? `${styles.step} ${styles.early}` : styles.step}
+            data-step={k + 1}
             data-rule={k === 3 ? "true" : undefined}
             style={{ "--delay": labelDelay(k) }}
           >

@@ -29,7 +29,7 @@ const STEPS = {
     "Nico escribe el borrador",
     "Hector edita y publica",
     "Un script semanal registra cada cambio",
-    "Tres repeticiones forman una regla",
+    "A la tercera, se vuelve regla.",
     "Nico lee las reglas antes de escribir",
   ],
 };
@@ -52,6 +52,19 @@ describe("SelfImprovementLoop", () => {
     render(<SelfImprovementLoop locale={locale} />);
     expect(stepTexts()).toEqual(STEPS[locale]);
     expect(LOOP_COPY[locale].steps).toEqual(STEPS[locale]);
+  });
+
+  it.each([
+    ["en", "RULE"],
+    ["es", "REGLA"],
+  ])("carries the stamp word in the locale's language [%s]", (locale, word) => {
+    render(<SelfImprovementLoop locale={locale} />);
+    expect(screen.getByTestId("loop-stamp")).toHaveTextContent(word);
+  });
+
+  it("keeps list semantics explicit for VoiceOver", () => {
+    render(<SelfImprovementLoop locale="en" />);
+    expect(screen.getByRole("list")).toHaveAttribute("role", "list");
   });
 
   it("keeps the ring and tally in aria-hidden SVG", () => {
@@ -143,6 +156,40 @@ describe("loop graphic in both About render paths", () => {
     expect(stepTexts(screen.getByTestId("self-improvement-loop"))).toEqual(
       STEPS[locale]
     );
+  });
+
+  it.each([
+    ["en", "en-workflow-h1"],
+    ["es", "es-workflow-h1"],
+  ])(
+    "Sanity path places it by the H2 block key even if the heading text changed [%s]",
+    (locale, key) => {
+      const renamed = { ...block("Some renamed heading", "h2"), _key: key };
+      const about = {
+        introParagraph: {
+          [locale]: [block("Lead"), block("What we publish", "h2"), block("A")],
+        },
+        workflowSection: { [locale]: [renamed, block("Prose")] },
+        masthead: [],
+      };
+      render(<SanityAbout about={about} locale={locale} />);
+      expect(stepTexts(screen.getByTestId("self-improvement-loop"))).toEqual(
+        STEPS[locale]
+      );
+    }
+  );
+
+  it("Sanity path does not place it under an unrelated heading with another key", () => {
+    const other = { ...block("Some other heading", "h2"), _key: "x-h9" };
+    const about = {
+      introParagraph: {
+        en: [block("Lead"), block("What we publish", "h2"), block("A")],
+      },
+      workflowSection: { en: [other, block("Prose")] },
+      masthead: [],
+    };
+    render(<SanityAbout about={about} locale="en" />);
+    expect(screen.queryByTestId("self-improvement-loop")).toBeNull();
   });
 
   it("Sanity path shows no graphic when the section is absent", () => {

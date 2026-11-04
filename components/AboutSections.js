@@ -13,6 +13,7 @@ import {
 } from "@/lib/aboutFallback";
 import AgentCard from "@/components/AgentCard";
 import SelfImprovementLoop from "@/components/SelfImprovementLoop";
+import { LOOP_HEADING_KEYS } from "@/lib/aboutLoop";
 import styles from "./AboutSections.module.css";
 
 const SANITY_HEADINGS = {
@@ -20,9 +21,13 @@ const SANITY_HEADINGS = {
   es: { masthead: "Redacción", workflow: "Cómo funciona", contact: "Contacto" },
 };
 
-// The loop graphic belongs to this section; Sanity sections are matched by heading text.
-const isBetterHeading = (heading) =>
-  Object.values(ABOUT_COPY).some((c) => c.betterHeading === heading.trim());
+// The loop graphic belongs to the "How it gets better" section. A Sanity section is
+// matched by its H2's Portable Text _key, or, if that changed, by the heading text.
+const isBetterSection = (section, locale) =>
+  (section.key !== undefined && section.key === LOOP_HEADING_KEYS[locale]) ||
+  Object.values(ABOUT_COPY).some(
+    (c) => c.betterHeading === section.heading.trim()
+  );
 
 // Renders the copy file's inline markup: **bold** and [text](url).
 const INLINE = /\*\*(.+?)\*\*|\[(.+?)\]\((.+?)\)/g;
@@ -130,7 +135,7 @@ function splitSections(blocks) {
   const sections = [];
   for (const block of blocks || []) {
     if (isHeading(block)) {
-      sections.push({ heading: blockText(block), body: [] });
+      sections.push({ heading: blockText(block), key: block._key, body: [] });
     } else if (sections.length) {
       sections[sections.length - 1].body.push(block);
     } else {
@@ -234,7 +239,7 @@ export function SanityAbout({ about, locale }) {
             ) : (
               <Prose blocks={section.body} />
             )}
-            {isBetterHeading(section.heading) && (
+            {isBetterSection(section, locale) && (
               <SelfImprovementLoop locale={locale} />
             )}
           </section>
