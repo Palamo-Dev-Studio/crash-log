@@ -1,10 +1,9 @@
 // ABOUTME: E2E tests for the magazine layout: lead + card grid on the three series indexes (EN and ES), the home "Recent files" trio and the unchanged archive rows.
 // ABOUTME: Needs live Sanity data (every published file has a cover and subtitle); checks grid columns at 1440/1024/768/390 and no horizontal overflow at 390.
-// ABOUTME: Counts are read from the page (Practical may hold one file or many), never pinned to today's data.
 
 import { test, expect } from "@playwright/test";
 
-// Off the Rails and Nico's Notes always have several files; Practical may have one or many.
+// Counts are read from the page, never pinned to today's data: Off the Rails and Nico's Notes always have several files; Practical may have one or many.
 const INDEXES = [
   { path: "off-the-rails", href: "issue", several: true },
   { path: "nico", href: "nico", several: true },
