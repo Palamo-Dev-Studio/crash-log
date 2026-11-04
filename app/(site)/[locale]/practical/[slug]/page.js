@@ -129,6 +129,8 @@ export default async function PracticalPage({ params }) {
         locale={locale}
         title={t(doc.title, locale)}
         subtitle={t(doc.subtitle, locale)}
+        coverImage={doc.coverImage}
+        coverImageAlt={t(doc.coverImageAlt, locale)}
         body={t(doc.body, locale)}
         minutes={getReadingMinutes(doc, locale)}
         showFallback={
