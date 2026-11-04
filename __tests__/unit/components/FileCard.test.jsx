@@ -27,19 +27,24 @@ vi.mock("next/image", () => ({
 }));
 const requested = vi.hoisted(() => ({ widths: [] }));
 vi.mock("@/lib/sanity", () => ({
-  urlFor: () => ({
-    width(w) {
-      requested.widths.push(w);
-      return this;
-    },
-    height() {
-      return this;
-    },
-    format() {
-      return this;
-    },
-    url: () => "https://cdn.sanity.io/test.webp",
-  }),
+  // Like @sanity/image-url, throw on a source with no asset.
+  urlFor: (source) => {
+    if (!source?.asset)
+      throw new Error("Unable to resolve image URL from source");
+    return {
+      width(w) {
+        requested.widths.push(w);
+        return this;
+      },
+      height() {
+        return this;
+      },
+      format() {
+        return this;
+      },
+      url: () => "https://cdn.sanity.io/test.webp",
+    };
+  },
 }));
 
 import FileCard from "@/components/FileCard";
@@ -166,6 +171,19 @@ describe("FileCard polish", () => {
   it("does not clamp the card subtitle", () => {
     const css = readFileSync("components/FileCard.module.css", "utf8");
     expect(css).not.toMatch(/line-clamp/);
+  });
+});
+
+describe("FileCard with a cover that has no asset", () => {
+  it.each([
+    ["an image object with no asset", { _type: "image" }],
+    ["a null asset", { _type: "image", asset: null }],
+  ])("renders the card without an image for %s", (_name, coverImage) => {
+    const { container } = render(
+      <FileCard doc={doc(1, { coverImage })} locale="en" />
+    );
+    expect(container.querySelector("img")).toBeNull();
+    expect(screen.getByRole("link", { name: "Title 1" })).toBeInTheDocument();
   });
 });
 

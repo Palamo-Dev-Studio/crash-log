@@ -62,13 +62,14 @@ for (const locale of ["en", "es"]) {
   }
 }
 
-test("grid columns are 3 at 1440, 2 at 768 and 1 at 390", async ({
+test("grid columns are 3 at 1440 and 1024, 2 at 768 and 1 at 390", async ({
   browser,
 }) => {
   for (const { path, grid } of INDEXES) {
     if (!grid) continue;
     const url = `/en/${path}`;
     expect(await columnsAt(browser, url, 1440), `${path} @1440`).toBe(3);
+    expect(await columnsAt(browser, url, 1024), `${path} @1024`).toBe(3);
     expect(await columnsAt(browser, url, 768), `${path} @768`).toBe(2);
     expect(await columnsAt(browser, url, 390), `${path} @390`).toBe(1);
   }

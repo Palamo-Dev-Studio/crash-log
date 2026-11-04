@@ -44,7 +44,7 @@ export default function FileCard({
     variant === "card" && layout === "trio" ? TRIO_SIZES : variantSizes;
   const showByline = variant === "lead" || !hasDefaultByline(doc);
 
-  const imageUrl = doc.coverImage
+  const imageUrl = doc.coverImage?.asset
     ? urlFor(doc.coverImage).width(width).height(height).format("webp").url()
     : null;
   const alt = t(doc.coverImageAlt, locale) || "";
