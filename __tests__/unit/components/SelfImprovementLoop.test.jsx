@@ -2,6 +2,8 @@
 // ABOUTME: IntersectionObserver is stubbed; jsdom has none, which doubles as the no-observer (final state) case.
 
 import { describe, it, expect, vi, afterEach } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 
 vi.mock("next/image", () => ({
@@ -16,6 +18,22 @@ vi.mock("@/lib/sanity", () => ({
 import SelfImprovementLoop from "@/components/SelfImprovementLoop";
 import { FallbackAbout, SanityAbout } from "@/components/AboutSections";
 import { LOOP_COPY } from "@/lib/aboutLoop";
+import { FALLBACK_MASTHEAD } from "@/lib/aboutFallback";
+
+const LOOP_CSS = readFileSync(
+  join(process.cwd(), "components/SelfImprovementLoop.module.css"),
+  "utf8"
+);
+// The declarations of the first rule whose selector list contains `selector` exactly.
+const rule = (css, selector) => {
+  for (const m of css
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const selectors = m[1].split(",").map((x) => x.trim());
+    if (selectors.includes(selector)) return m[2];
+  }
+  return null;
+};
 
 const STEPS = {
   en: [
@@ -29,7 +47,7 @@ const STEPS = {
     "Nico escribe el borrador",
     "Hector edita y publica",
     "Un script semanal registra cada cambio",
-    "A la tercera, se vuelve regla.",
+    "A la tercera, se vuelve regla",
     "Nico lee las reglas antes de escribir",
   ],
 };
@@ -60,6 +78,64 @@ describe("SelfImprovementLoop", () => {
   ])("carries the stamp word in the locale's language [%s]", (locale, word) => {
     render(<SelfImprovementLoop locale={locale} />);
     expect(screen.getByTestId("loop-stamp")).toHaveTextContent(word);
+  });
+
+  it("rests on three ticks crossed by one stamp that sits beside step 4, not at the ring centre", () => {
+    const { container } = render(<SelfImprovementLoop locale="en" />);
+    const svg = container.querySelector("svg");
+    const ticks = [...svg.querySelectorAll("line")];
+    expect(ticks).toHaveLength(3);
+    const stamp = screen.getByTestId("loop-stamp").querySelector("rect");
+    const sx = +stamp.getAttribute("x") + +stamp.getAttribute("width") / 2;
+    const sy = +stamp.getAttribute("y") + +stamp.getAttribute("height") / 2;
+    expect(
+      Math.hypot(sx - 150, sy - 150),
+      "stamp off the ring centre"
+    ).toBeGreaterThan(40);
+    // Each tick runs past both the top and the bottom edge of the stamp.
+    const top = +stamp.getAttribute("y");
+    const bottom = top + +stamp.getAttribute("height");
+    for (const t of ticks) {
+      expect(Math.min(t.getAttribute("y1"), t.getAttribute("y2"))).toBeLessThan(
+        top
+      );
+      expect(
+        Math.max(t.getAttribute("y1"), t.getAttribute("y2"))
+      ).toBeGreaterThan(bottom);
+    }
+  });
+
+  it("draws the stamp as a tilted outline, not a filled chip", () => {
+    const box = rule(LOOP_CSS, ".stamp rect");
+    expect(box).toMatch(/fill:\s*var\(--card\)/);
+    expect(box).toMatch(/stroke:\s*var\(--terra-ink\)/);
+    expect(box).not.toMatch(/fill:\s*var\(--terra/);
+    expect(rule(LOOP_CSS, ".stamp text")).toMatch(/fill:\s*var\(--terra-ink\)/);
+    expect(rule(LOOP_CSS, ".stamp")).toMatch(/rotate\(-6deg\)/);
+  });
+
+  it("makes step 1 a solid disc so it reads as settled", () => {
+    expect(rule(LOOP_CSS, '.node[data-step="1"] .disc')).toMatch(
+      /fill:\s*var\(--ink\)/
+    );
+  });
+
+  it("parks pseudo-element animations along with the rest while ready", () => {
+    for (const sel of [
+      '.loop[data-motion="ready"] *',
+      '.loop[data-motion="ready"] *::before',
+      '.loop[data-motion="ready"] *::after',
+    ]) {
+      expect(rule(LOOP_CSS, sel), sel).toMatch(
+        /animation-play-state:\s*paused/
+      );
+    }
+  });
+
+  it("shows the final state in print", () => {
+    const print = LOOP_CSS.match(/@media[^{]*print[^{]*\{([\s\S]*?)\n\}/);
+    expect(print).not.toBeNull();
+    expect(print[1]).toMatch(/animation:\s*none\s*!important/);
   });
 
   it("keeps list semantics explicit for VoiceOver", () => {
@@ -116,6 +192,21 @@ describe("SelfImprovementLoop motion trigger", () => {
     obs.cb([{ isIntersecting: true }]);
     expect(el.dataset.motion).toBe("play");
     expect(obs.disconnect).toHaveBeenCalled();
+  });
+
+  it("triggers on a small visible share so tall or zoomed graphics still play", () => {
+    const seen = [];
+    class Spy {
+      constructor(cb, options) {
+        seen.push(options);
+        this.observe = vi.fn();
+        this.disconnect = vi.fn();
+      }
+    }
+    vi.stubGlobal("IntersectionObserver", Spy);
+    vi.stubGlobal("matchMedia", () => ({ matches: false }));
+    render(<SelfImprovementLoop locale="en" />);
+    expect(seen[0].threshold).toBeLessThanOrEqual(0.2);
   });
 
   it("never starts the motion under prefers-reduced-motion", () => {
@@ -178,6 +269,52 @@ describe("loop graphic in both About render paths", () => {
       );
     }
   );
+
+  it("Sanity path places it on a Spanish page whose content fell back to the English key", () => {
+    const about = {
+      introParagraph: {
+        es: [block("Lead"), block("Lo que publicamos", "h2"), block("A")],
+      },
+      workflowSection: {
+        es: [
+          { ...block("Titular cambiado", "h2"), _key: "en-workflow-h1" },
+          block("Prose"),
+        ],
+      },
+      masthead: [],
+    };
+    render(<SanityAbout about={about} locale="es" />);
+    expect(stepTexts(screen.getByTestId("self-improvement-loop"))).toEqual(
+      STEPS.es
+    );
+  });
+
+  it("Sanity path keeps prose before the first heading in the text column", () => {
+    const about = {
+      introParagraph: {
+        en: [
+          block("Lead"),
+          block("Before the first heading"),
+          block("What we publish", "h2"),
+          block("A"),
+        ],
+      },
+      masthead: [],
+    };
+    render(<SanityAbout about={about} locale="en" />);
+    const heading = screen.getByRole("heading", { name: "What we publish" });
+    const pre = screen.getByText("Before the first heading");
+    expect(pre.closest("section, div[class*='section']")).not.toBeNull();
+    expect(pre.closest("[class*='section']").className).toBe(
+      heading.closest("section").className
+    );
+  });
+
+  it("ES fallback masthead role fits one line beside the photo", () => {
+    const nico = FALLBACK_MASTHEAD.find((p) => p.name === "Nico von Bot");
+    expect(nico.role.es).toBe("Reportero y columnista");
+    expect(nico.role.en).toBe("AI reporter and columnist");
+  });
 
   it("Sanity path does not place it under an unrelated heading with another key", () => {
     const other = { ...block("Some other heading", "h2"), _key: "x-h9" };

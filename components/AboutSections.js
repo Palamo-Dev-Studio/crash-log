@@ -22,9 +22,10 @@ const SANITY_HEADINGS = {
 };
 
 // The loop graphic belongs to the "How it gets better" section. A Sanity section is
-// matched by its H2's Portable Text _key, or, if that changed, by the heading text.
-const isBetterSection = (section, locale) =>
-  (section.key !== undefined && section.key === LOOP_HEADING_KEYS[locale]) ||
+// matched by its H2's Portable Text _key (either locale's: a Spanish page that falls back
+// to English content carries the English key), or, if that changed, by the heading text.
+const isBetterSection = (section) =>
+  Object.values(LOOP_HEADING_KEYS).includes(section.key) ||
   Object.values(ABOUT_COPY).some(
     (c) => c.betterHeading === section.heading.trim()
   );
@@ -217,7 +218,14 @@ export function SanityAbout({ about, locale }) {
         )}
       </header>
       {items.map((item, i) => {
-        if (!item.section) return <Prose key={i} blocks={item.prose} />;
+        if (!item.section) {
+          if (!item.prose.length) return null;
+          return (
+            <div key={i} className={styles.section}>
+              <Prose blocks={item.prose} />
+            </div>
+          );
+        }
         const { section, withCards } = item;
         const [first, ...rest] = section.body;
         return (
@@ -239,7 +247,7 @@ export function SanityAbout({ about, locale }) {
             ) : (
               <Prose blocks={section.body} />
             )}
-            {isBetterSection(section, locale) && (
+            {isBetterSection(section) && (
               <SelfImprovementLoop locale={locale} />
             )}
           </section>

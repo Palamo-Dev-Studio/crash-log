@@ -69,6 +69,15 @@
   stroke: var(--terra-ink);
 }
 
+/* Step 1 is where the loop starts and ends: a solid disc, so it reads as settled. */
+.node[data-step="1"] .disc {
+  fill: var(--ink);
+}
+
+.node[data-step="1"] .digit {
+  fill: var(--card);
+}
+
 .digit {
   fill: var(--ink);
   font-family: var(--mono);
@@ -85,15 +94,6 @@
   stroke-linecap: round;
 }
 
-.tick1,
-.tick2 {
-  opacity: 0.75;
-}
-
-.tick3 {
-  opacity: 0;
-}
-
 .pulse {
   fill: none;
   stroke: var(--terra);
@@ -101,21 +101,27 @@
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
+  transform: rotate(-6deg);
 }
 
+/* An outlined rubber stamp, not a filled chip: card-coloured inside (so the ticks it
+   crosses stay hidden behind its text), red outline, red mono word. */
 .stamp {
   transform-box: fill-box;
   transform-origin: center;
+  transform: rotate(-6deg);
 }
 
 .stamp rect {
-  fill: var(--terra);
+  fill: var(--card);
+  stroke: var(--terra-ink);
+  stroke-width: 2;
 }
 
 .stamp text {
-  fill: var(--card);
+  fill: var(--terra-ink);
   font-family: var(--mono);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-anchor: middle;
@@ -209,15 +215,11 @@
 
 .loop[data-motion] .tick1,
 .loop[data-motion] .tick2 {
-  animation:
-    drop 0.16s ease-out var(--delay) both,
-    dim 0.2s linear var(--stamp) forwards;
+  animation: drop 0.16s ease-out var(--delay) both;
 }
 
 .loop[data-motion] .tick3 {
-  animation:
-    dropOvershoot 0.16s ease-out var(--delay) both,
-    vanish 0.09s linear var(--stamp) forwards;
+  animation: dropOvershoot 0.16s ease-out var(--delay) both;
 }
 
 .loop[data-motion] .stamp {
@@ -228,7 +230,9 @@
   animation: ping 0.18s ease-out var(--delay) both;
 }
 
-.loop[data-motion="ready"] * {
+.loop[data-motion="ready"] *,
+.loop[data-motion="ready"] *::before,
+.loop[data-motion="ready"] *::after {
   animation-play-state: paused;
 }
 
@@ -345,46 +349,28 @@
   }
 }
 
-@keyframes dim {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0.75;
-  }
-}
-
-@keyframes vanish {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
 @keyframes snap {
   from {
     opacity: 0;
-    transform: scale(1.35);
+    transform: rotate(-6deg) scale(1.35);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: rotate(-6deg) scale(1);
   }
 }
 
 @keyframes ping {
   0% {
     opacity: 0;
-    transform: scale(1);
+    transform: rotate(-6deg) scale(1);
   }
   30% {
     opacity: 0.6;
   }
   100% {
     opacity: 0;
-    transform: scale(1.3);
+    transform: rotate(-6deg) scale(1.3);
   }
 }
 
@@ -426,10 +412,13 @@
   }
 }
 
-/* Reduced motion: the final state, with no animation at all. (The component also never
-   sets data-motion in that case; this covers a preference that changes mid-session.) */
-@media (prefers-reduced-motion: reduce) {
-  .loop * {
+/* Reduced motion and print: the final state, with no animation at all. (The component
+   also never sets data-motion under reduced motion; this covers a preference that
+   changes mid-session, and a page printed while the graphic is parked.) */
+@media (prefers-reduced-motion: reduce), print {
+  .loop *,
+  .loop *::before,
+  .loop *::after {
     animation: none !important;
   }
 }

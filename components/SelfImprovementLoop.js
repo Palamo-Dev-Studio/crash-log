@@ -55,10 +55,11 @@ const T = {
 const labelDelay = (k) => `${(T.node[k] + 0.12).toFixed(2)}s`;
 const s = (n) => `${n}s`;
 
-// The tally sits inside the ring, above-right of step 4: three ticks, then the "rule" stamp.
-const TICK_X = [100, 112, 124];
-const TICK_Y = [162, 192];
-const STAMP = { x: 140, y: 162, w: 68, h: 34 };
+// The tally sits inside the ring, above-right of step 4: three ticks that run past the
+// edges of an outlined, slightly tilted "rule" stamp, which lands over them last.
+const TICK_X = [106, 128, 150];
+const TICK_Y = [178, 222];
+const STAMP = { x: 92, y: 186, w: 72, h: 28 };
 
 export default function SelfImprovementLoop({ locale }) {
   const copy = LOOP_COPY[locale] || LOOP_COPY.en;
@@ -79,7 +80,7 @@ export default function SelfImprovementLoop({ locale }) {
         el.dataset.motion = "play";
         observer.disconnect();
       },
-      { threshold: 0.4 }
+      { threshold: 0.15 }
     );
     observer.observe(el);
     return () => {

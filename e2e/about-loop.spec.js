@@ -15,7 +15,7 @@ const STEPS = {
     "Nico escribe el borrador",
     "Hector edita y publica",
     "Un script semanal registra cada cambio",
-    "A la tercera, se vuelve regla.",
+    "A la tercera, se vuelve regla",
     "Nico lee las reglas antes de escribir",
   ],
 };
