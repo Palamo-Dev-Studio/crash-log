@@ -39,7 +39,11 @@ for (const locale of ["en", "es"]) {
     await loop.scrollIntoViewIfNeeded();
     await expect(loop).not.toHaveAttribute("data-motion", /.*/);
     await expect(page.getByTestId("loop-stamp")).toHaveCSS("opacity", "1");
-    await expect(page.getByTestId("loop-stamp")).toHaveCSS("transform", "none");
+    // Rest transform is the stamp's -6deg tilt at scale 1 (a 1.35 scale would read 1.34).
+    await expect(page.getByTestId("loop-stamp")).toHaveCSS(
+      "transform",
+      /^matrix\(0\.99\d*, -0\.10\d*, 0\.10\d*, 0\.99\d*, 0, 0\)$/
+    );
     for (const li of await loop.locator("ol > li").all()) {
       await expect(li).toHaveCSS("opacity", "1");
     }
