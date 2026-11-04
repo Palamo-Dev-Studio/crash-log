@@ -2,6 +2,7 @@
 // ABOUTME: Covers image alt, chip, date, title, subtitle, byline, one link named by the title, eager lead image, locale fallback and the single-item case.
 
 import { describe, it, expect, vi } from "vitest";
+import { readFileSync } from "node:fs";
 import { render, screen, within } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
@@ -24,9 +25,11 @@ vi.mock("next/image", () => ({
     />
   ),
 }));
+const requested = vi.hoisted(() => ({ widths: [] }));
 vi.mock("@/lib/sanity", () => ({
   urlFor: () => ({
-    width() {
+    width(w) {
+      requested.widths.push(w);
       return this;
     },
     height() {
@@ -116,6 +119,56 @@ describe("FileCard", () => {
   });
 });
 
+describe("FileCard polish", () => {
+  const house = { byline: "newsroom" };
+
+  it("hides the byline on a card when it is the series default, keeps it on the lead", () => {
+    const { rerender } = render(<FileCard doc={doc(2, house)} locale="en" />);
+    expect(screen.queryByText(/The Crash Log newsroom/)).toBeNull();
+    rerender(<FileCard doc={doc(2, house)} locale="en" variant="lead" />);
+    expect(screen.getByText("By The Crash Log newsroom")).toBeInTheDocument();
+  });
+
+  it("hides the default Nico's Notes byline on a card but keeps a guest byline", () => {
+    const note = { _type: "column", columnNumber: 3, byline: undefined };
+    const { rerender } = render(<FileCard doc={doc(3, note)} locale="en" />);
+    expect(screen.queryByText(/Nico von Bot/)).toBeNull();
+    rerender(
+      <FileCard doc={doc(3, { ...note, byline: "Ana Ruiz" })} locale="en" />
+    );
+    expect(screen.getByText("By Ana Ruiz")).toBeInTheDocument();
+  });
+
+  it("keeps Hector's byline on a card", () => {
+    render(<FileCard doc={doc(2)} locale="en" />);
+    expect(screen.getByText("By Hector Luis Alamo")).toBeInTheDocument();
+  });
+
+  it("requests a 1200px source for cards as well as the lead", () => {
+    requested.widths.length = 0;
+    render(<FileCard doc={doc(1)} locale="en" />);
+    expect(requested.widths).toEqual([1200]);
+  });
+
+  it("sizes the home trio by its own breakpoints: full width below 1024px", () => {
+    const { container, rerender } = render(
+      <FileCard doc={doc(1)} locale="en" layout="trio" />
+    );
+    expect(container.querySelector("img").getAttribute("sizes")).toBe(
+      "(max-width: 1023px) 100vw, 360px"
+    );
+    rerender(<FileCard doc={doc(1)} locale="en" layout="grid" />);
+    expect(container.querySelector("img").getAttribute("sizes")).toMatch(
+      /50vw/
+    );
+  });
+
+  it("does not clamp the card subtitle", () => {
+    const css = readFileSync("components/FileCard.module.css", "utf8");
+    expect(css).not.toMatch(/line-clamp/);
+  });
+});
+
 describe("FileMagazine", () => {
   it("splits the newest file into a lead and the rest into a card grid", () => {
     const docs = [doc(4), doc(3), doc(2), doc(1)];
@@ -156,6 +209,11 @@ describe("RecentFiles", () => {
     }
     expect(screen.getByText("Subtitle 2")).toBeInTheDocument();
     expect(screen.getByText(/See the full archive/)).toBeInTheDocument();
+    for (const img of container.querySelectorAll("img")) {
+      expect(img.getAttribute("sizes")).toBe(
+        "(max-width: 1023px) 100vw, 360px"
+      );
+    }
   });
 });
 

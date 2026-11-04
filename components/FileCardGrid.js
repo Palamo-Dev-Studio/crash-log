@@ -12,7 +12,7 @@ export default function FileCardGrid({ docs, locale, layout = "grid" }) {
       data-file-grid
     >
       {docs.map((doc) => (
-        <FileCard key={doc._id} doc={doc} locale={locale} />
+        <FileCard key={doc._id} doc={doc} locale={locale} layout={layout} />
       ))}
     </div>
   );

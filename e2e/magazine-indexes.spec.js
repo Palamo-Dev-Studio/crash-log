@@ -136,3 +136,111 @@ test("archive search results are still rows, not cards", async ({ page }) => {
   expect(await rows.count()).toBeGreaterThan(0);
   await expect(page.locator("main article img")).toHaveCount(0);
 });
+
+// A lazy or optimized image can be in the DOM and still be empty: wait for real pixels.
+const loaded = (img) =>
+  img.evaluate(
+    (el) =>
+      new Promise((resolve) => {
+        const done = () => resolve(el.complete && el.naturalWidth > 0);
+        if (el.complete) return done();
+        el.addEventListener("load", done, { once: true });
+        el.addEventListener("error", done, { once: true });
+      })
+  );
+
+test("the lead image on each index has really loaded at 1440", async ({
+  browser,
+}) => {
+  const page = await browser.newPage({
+    viewport: { width: 1440, height: 900 },
+  });
+  for (const { path } of INDEXES) {
+    await page.goto(`/en/${path}`);
+    const img = page.locator("main article img").first();
+    await expect(img, path).toBeVisible();
+    expect(await loaded(img), `${path} lead loaded`).toBe(true);
+  }
+  await page.close();
+});
+
+test("card subtitles are not clamped and card bodies fill their card, so bylines can sit on the bottom edge", async ({
+  browser,
+}) => {
+  const page = await browser.newPage({
+    viewport: { width: 1440, height: 900 },
+  });
+  await page.goto("/en/off-the-rails");
+  const cards = page.locator("[data-file-grid] article");
+  const rowEnd = await cards.evaluateAll((els) => {
+    const firstTop = els[0].getBoundingClientRect().top;
+    return els
+      .filter((el) => Math.abs(el.getBoundingClientRect().top - firstTop) < 2)
+      .map((el) => {
+        const card = el.getBoundingClientRect();
+        const body = el
+          .querySelector("h3")
+          .parentElement.getBoundingClientRect();
+        const sub = el.querySelector("p");
+        return {
+          cardBottom: card.bottom,
+          bodyBottom: body.bottom,
+          clamp: sub ? getComputedStyle(sub).webkitLineClamp : null,
+          cut: sub ? sub.scrollHeight > sub.clientHeight : false,
+        };
+      });
+  });
+  expect(rowEnd.length).toBe(3);
+  for (const c of rowEnd) {
+    expect(c.clamp).toBe("none");
+    expect(c.cut).toBe(false);
+    expect(Math.abs(c.cardBottom - c.bodyBottom)).toBeLessThan(2);
+  }
+  await page.close();
+});
+
+test("cards drop the series-default byline; the lead keeps it", async ({
+  page,
+}) => {
+  await page.goto("/en/off-the-rails");
+  await expect(page.locator("main article").first()).toContainText(/By \S/);
+  const cards = page.locator("[data-file-grid] article");
+  const n = await cards.count();
+  for (let i = 0; i < n; i++) {
+    await expect(cards.nth(i)).not.toContainText("newsroom");
+  }
+  await page.goto("/en/nico");
+  const notes = page.locator("[data-file-grid] article");
+  expect(await notes.count()).toBeGreaterThan(0);
+  for (let i = 0; i < (await notes.count()); i++) {
+    await expect(notes.nth(i)).not.toContainText("Nico von Bot");
+  }
+});
+
+test("home trio images are sized full width below 1024px", async ({ page }) => {
+  await page.goto("/en");
+  const imgs = page
+    .locator("section", { hasText: /recent files/i })
+    .locator("article img");
+  expect(await imgs.count()).toBe(3);
+  for (let i = 0; i < 3; i++) {
+    await expect(imgs.nth(i)).toHaveAttribute(
+      "sizes",
+      "(max-width: 1023px) 100vw, 360px"
+    );
+  }
+});
+
+test("a lone lead leaves no extra space below it, a lead with a grid keeps it", async ({
+  page,
+}) => {
+  const pad = (url) =>
+    page.goto(url).then(() =>
+      page
+        .locator("main article")
+        .first()
+        .evaluate((el) => getComputedStyle(el.parentElement).paddingBottom)
+    );
+  expect(await pad("/en/practical")).toBe("0px");
+  expect(await pad("/en/off-the-rails")).not.toBe("0px");
+});

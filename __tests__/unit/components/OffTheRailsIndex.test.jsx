@@ -56,10 +56,16 @@ describe("OffTheRailsIndex", () => {
     expect(within(links[1]).getByText("OTR-027")).toBeInTheDocument();
   });
 
-  it("bylines follow getByline: Hector, or the newsroom name for the sentinel", () => {
-    render(<OffTheRailsIndex issues={ISSUES} locale="en" />);
+  it("bylines follow getByline: Hector on the lead; a newsroom card drops the default byline, the newsroom lead keeps it", () => {
+    const { unmount } = render(
+      <OffTheRailsIndex issues={ISSUES} locale="en" />
+    );
     expect(screen.getByText("By Hector Luis Alamo")).toBeInTheDocument();
+    expect(screen.queryByText("By The Crash Log newsroom")).toBeNull();
+    unmount();
+    render(<OffTheRailsIndex issues={[ISSUES[1], ISSUES[0]]} locale="en" />);
     expect(screen.getByText("By The Crash Log newsroom")).toBeInTheDocument();
+    expect(screen.getByText("By Hector Luis Alamo")).toBeInTheDocument();
   });
 
   it("shows an empty message with no issues", () => {

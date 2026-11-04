@@ -321,7 +321,9 @@ describe("RecentFiles", () => {
     expect(
       screen.getByText("Three agents acted early").closest("a")
     ).toHaveAttribute("href", "/en/issue/otr-43");
-    expect(screen.getByText("By Nico von Bot")).toBeInTheDocument();
+    // Nico von Bot is the Notes default byline: cards leave it out.
+    expect(screen.queryByText("By Nico von Bot")).toBeNull();
+    expect(screen.getByText("By Hector Luis Alamo")).toBeInTheDocument();
   });
 
   it("keeps the archive link (EN and ES) even with no rows", () => {

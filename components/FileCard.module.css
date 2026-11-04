@@ -1,15 +1,17 @@
-/* ABOUTME: Styles for the magazine file card: 16:9 cover reserved by aspect-ratio, mono meta, serif title, 3-line subtitle.
+/* ABOUTME: Styles for the magazine file card: 16:9 cover reserved by aspect-ratio, mono meta, serif title, full subtitle.
    ABOUTME: The lead variant puts a large cover beside its text from 981px up and stacks below; no motion. */
 
 .card {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .link {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  height: 100%;
+  flex: 1;
 }
 
 .art {
@@ -32,6 +34,7 @@
   flex-direction: column;
   gap: 8px;
   min-width: 0;
+  flex: 1;
 }
 
 .meta {
@@ -59,15 +62,11 @@
   line-height: 1.4;
   color: var(--muted);
   overflow-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  overflow: hidden;
 }
 
 .by {
-  margin: 0;
+  margin: auto 0 0;
+  padding-top: 4px;
   font-family: var(--mono);
   font-size: var(--label);
   color: var(--muted);
@@ -82,13 +81,12 @@
   outline-offset: 3px;
 }
 
-/* Lead: the full subtitle, no clamp, and a larger title. */
+/* Lead: a larger title and subtitle. Cards show the full subtitle too: it is a written dek, and a clamp cut it mid-word. */
 .lead .link {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   gap: 32px;
   align-items: center;
-  height: auto;
 }
 
 .lead .title {
@@ -100,12 +98,15 @@
 .lead .sub {
   font-size: 21px;
   line-height: 1.45;
-  display: block;
-  overflow: visible;
 }
 
 .lead .body {
   gap: 12px;
+  flex: none;
+}
+
+.lead .by {
+  margin-top: 0;
 }
 
 @media (max-width: 980px) {
