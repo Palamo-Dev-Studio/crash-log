@@ -61,9 +61,43 @@ describe("selectHomeFiles", () => {
     ]);
   });
 
-  it("recent excludes the cover and rail docs, newest first, capped at 3", () => {
+  it("recent holds the next file of each series, not already on the cover or rail, newest first", () => {
+    const { recent } = selectHomeFiles([
+      ...DOCS,
+      d("practical", "p1", "2026-10-28"),
+      d("practical", "p2", "2026-10-21"),
+    ]);
+    // Cover c1 (column), rail i1, p1, c1. Next per series: c2 (10-30), i2 (10-26), p2 (10-21).
+    expect(recent.map((x) => x._id)).toEqual(["c2", "i2", "p2"]);
+  });
+
+  it("a series with nothing left is filled by the next newest file of any series", () => {
+    // Practical's only file is the cover. The issue pick (i2) is older than three columns,
+    // so a plain newest-first list would be c2, c3, c4; one-per-series gives i2 and c2, then fills with c3.
+    const docs = [
+      d("practical", "p1", "2026-11-09"),
+      d("column", "c1", "2026-11-06"),
+      d("issue", "i1", "2026-11-02"),
+      d("column", "c2", "2026-10-30"),
+      d("column", "c3", "2026-10-29"),
+      d("column", "c4", "2026-10-28"),
+      d("issue", "i2", "2026-10-01"),
+    ];
+    const { recent } = selectHomeFiles(docs);
+    expect(recent.map((x) => x._id)).toEqual(["c2", "c3", "i2"]);
+  });
+
+  it("recent order is newest first and stable whatever the input order", () => {
+    const docs = [...DOCS, d("practical", "p1", "2026-10-28")];
+    const a = selectHomeFiles(docs).recent.map((x) => x._id);
+    const b = selectHomeFiles([...docs].reverse()).recent.map((x) => x._id);
+    expect(b).toEqual(a);
+  });
+
+  it("recent never repeats a file and never exceeds three", () => {
     const { recent } = selectHomeFiles(DOCS);
-    expect(recent.map((x) => x._id)).toEqual(["c2", "i2", "c3"]);
+    expect(new Set(recent.map((x) => x._id)).size).toBe(recent.length);
+    expect(recent.length).toBeLessThanOrEqual(3);
   });
 
   it("handles a single doc: cover only, empty recent", () => {

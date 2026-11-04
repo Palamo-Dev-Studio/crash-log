@@ -276,8 +276,8 @@ describe("query string exports", () => {
     expect(q).toContain(
       '"body": select(_type == "practical" => { "en": body.en[_type != "codeBlock"], "es": body.es[_type != "codeBlock"] })'
     );
-    // recent + one latest per series, every one newest-first.
-    expect(q.split("order(publishDate desc)[0]").length - 1).toBe(3);
+    // recent + the newest two per series, every one newest-first.
+    expect(q.split("order(publishDate desc)[0...2]").length - 1).toBe(3);
     // The recent slice itself is ordered by publish date, newest first.
     expect(q).toMatch(/"recent": [^\n]*\| order\(publishDate desc\)\[0\.\.\./);
     expect(q).not.toContain("order(publishDate asc)");
@@ -306,6 +306,22 @@ describe("getHomeFeed", () => {
     expect(mockSanityFetch).toHaveBeenCalledWith(
       expect.objectContaining({ query: queries.HOME_FEED_QUERY })
     );
+  });
+
+  it("takes each series' two newest files from the per-series latest lists", async () => {
+    mockSanityFetch.mockResolvedValueOnce({
+      recent: [],
+      latest: [
+        [
+          { _id: "i-new", _type: "issue", publishDate: "2026-06-11" },
+          { _id: "i-next", _type: "issue", publishDate: "2026-06-09" },
+        ],
+        [{ _id: "p-1", _type: "practical", publishDate: "2026-11-04" }],
+        [],
+      ],
+    });
+    const feed = await queries.getHomeFeed();
+    expect(feed.map((d) => d._id)).toEqual(["p-1", "i-new", "i-next"]);
   });
 
   it("sorts a doc with no publishDate last and keeps valid dates newest first", async () => {
