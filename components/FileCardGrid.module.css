@@ -1,0 +1,24 @@
+/* ABOUTME: Grid columns for FileCardGrid: 3 / 2 / 1 for a series index, 3 / 1 for the home trio.
+   ABOUTME: Breakpoints: 3 columns at 1024px and up, 2 from 700px, 1 below. */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 36px 28px;
+}
+
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 699px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

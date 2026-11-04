@@ -1,7 +1,7 @@
-// ABOUTME: Off the Rails series index: page head with a one-line description, then every issue as a file row, newest first.
-// ABOUTME: Rows are the same FileRow the home "Recent files" list uses.
+// ABOUTME: Off the Rails series index: page head with a one-line description, then the newest issue as a lead and the rest as cards.
+// ABOUTME: Lead and cards are the same FileCard the Practical and Nico's Notes indexes use.
 
-import FileRow from "@/components/FileRow";
+import FileMagazine from "@/components/FileMagazine";
 import { OTR_LABELS } from "@/lib/offTheRailsLabels";
 import styles from "./OffTheRailsIndex.module.css";
 
@@ -21,13 +21,10 @@ export default function OffTheRailsIndex({ issues, locale }) {
         {issues.length === 0 && (
           <p className={styles.empty}>{labels.indexEmpty}</p>
         )}
-        {issues.map((issue) => (
-          <FileRow
-            key={issue._id}
-            doc={{ ...issue, _type: "issue" }}
-            locale={locale}
-          />
-        ))}
+        <FileMagazine
+          docs={issues.map((issue) => ({ ...issue, _type: "issue" }))}
+          locale={locale}
+        />
       </section>
     </main>
   );

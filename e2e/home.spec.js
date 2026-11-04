@@ -81,7 +81,7 @@ test.describe("Home page", () => {
     });
   }
 
-  test("recent files rows carry code, date, title and byline", async ({
+  test("recent files cards carry code, date, title and byline", async ({
     page,
   }) => {
     await page.goto("/en");

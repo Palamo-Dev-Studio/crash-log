@@ -209,6 +209,20 @@ describe("Off the Rails queries", () => {
     }
   });
 
+  it.each([
+    "ISSUES_INDEX_QUERY",
+    "ALL_COLUMNS_FOR_ARCHIVE_QUERY",
+    "PRACTICAL_INDEX_QUERY",
+  ])(
+    "%s projects the subtitle and cover image with its alt for the magazine cards",
+    (name) => {
+      const q = queries[name];
+      for (const field of ["subtitle", "coverImage,", "coverImageAlt"]) {
+        expect(q).toContain(field);
+      }
+    }
+  );
+
   it("getIssuesIndex returns [] on a failed fetch", async () => {
     mockSanityFetch.mockRejectedValueOnce(new Error("boom"));
     expect(await queries.getIssuesIndex()).toEqual([]);

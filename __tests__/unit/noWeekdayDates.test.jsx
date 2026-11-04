@@ -42,6 +42,7 @@ import IssueContent from "@/components/IssueContent";
 import ArticleLayout from "@/components/ArticleLayout";
 import RecentFiles from "@/components/RecentFiles";
 import FileRow from "@/components/FileRow";
+import FileCard from "@/components/FileCard";
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -150,6 +151,19 @@ const RENDERERS = {
   ),
   FileRow: (date, locale) => (
     <FileRow
+      locale={locale}
+      doc={{
+        _id: "i",
+        _type: "issue",
+        slug: "s",
+        issueNumber: 1,
+        title: { en: "T", es: "T" },
+        publishDate: date,
+      }}
+    />
+  ),
+  FileCard: (date, locale) => (
+    <FileCard
       locale={locale}
       doc={{
         _id: "i",

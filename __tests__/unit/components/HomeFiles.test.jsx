@@ -306,7 +306,7 @@ describe("HomeRail", () => {
 });
 
 describe("RecentFiles", () => {
-  it("renders a row per doc with code, date, title and byline, linked by series", () => {
+  it("renders a card per doc with code, date, title and byline, linked by series", () => {
     render(<RecentFiles docs={OLDER} locale="en" />);
     expect(screen.getByText("Recent files")).toBeInTheDocument();
     expect(screen.getByText("NOTE-021")).toBeInTheDocument();

@@ -61,9 +61,9 @@ describe("selectHomeFiles", () => {
     ]);
   });
 
-  it("recent excludes the cover and rail docs, newest first, capped at 5", () => {
+  it("recent excludes the cover and rail docs, newest first, capped at 3", () => {
     const { recent } = selectHomeFiles(DOCS);
-    expect(recent.map((x) => x._id)).toEqual(["c2", "i2", "c3", "i3", "c4"]);
+    expect(recent.map((x) => x._id)).toEqual(["c2", "i2", "c3"]);
   });
 
   it("handles a single doc: cover only, empty recent", () => {

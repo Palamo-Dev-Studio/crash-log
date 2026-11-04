@@ -1,0 +1,131 @@
+/* ABOUTME: Styles for the magazine file card: 16:9 cover reserved by aspect-ratio, mono meta, serif title, 3-line subtitle.
+   ABOUTME: The lead variant puts a large cover beside its text from 981px up and stacks below; no motion. */
+
+.card {
+  min-width: 0;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+}
+
+.art {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--rule);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.sub {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+.by {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.link:hover .title {
+  color: var(--terra-ink);
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+}
+
+/* Lead: the full subtitle, no clamp, and a larger title. */
+.lead .link {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 32px;
+  align-items: center;
+  height: auto;
+}
+
+.lead .title {
+  font-size: 44px;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.lead .sub {
+  font-size: 21px;
+  line-height: 1.45;
+  display: block;
+  overflow: visible;
+}
+
+.lead .body {
+  gap: 12px;
+}
+
+@media (max-width: 980px) {
+  .lead .link {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .lead .title {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 700px) {
+  .lead .title {
+    font-size: 30px;
+  }
+
+  .lead .sub {
+    font-size: 19px;
+  }
+}
