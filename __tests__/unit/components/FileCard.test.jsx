@@ -188,24 +188,32 @@ describe("FileCard with a cover that has no asset", () => {
 });
 
 describe("FileCard byline placement", () => {
-  const order = (container) => {
-    const sub = container.querySelector("p[class*='sub']");
-    const by = container.querySelector("p[class*='by']");
-    return sub.compareDocumentPosition(by) & Node.DOCUMENT_POSITION_FOLLOWING
-      ? "sub-then-by"
-      : "by-then-sub";
-  };
-
-  it("the lead puts its byline above the subtitle (the late-font subtitle re-wraps; a byline below it would shift)", () => {
+  it("the lead's byline is in the mono meta row, before the title and subtitle", () => {
     const { container } = render(
       <FileCard doc={doc(2)} locale="en" variant="lead" />
     );
-    expect(order(container)).toBe("by-then-sub");
+    const meta = container.querySelector("div[class*='meta']");
+    const title = container.querySelector("h3");
+    const sub = container.querySelector("p[class*='sub']");
+    expect(meta).toHaveTextContent("By Hector Luis Alamo");
+    expect(meta.compareDocumentPosition(title)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
+    // No separate byline paragraph after the subtitle: nothing sits below the late-font text.
+    expect(container.querySelector("p[class*='by']")).toBeNull();
+    expect(sub.nextElementSibling).toBeNull();
   });
 
-  it("a card keeps its byline below the subtitle", () => {
+  it("a card keeps its byline as the last line, below the subtitle", () => {
     const { container } = render(<FileCard doc={doc(2)} locale="en" />);
-    expect(order(container)).toBe("sub-then-by");
+    const sub = container.querySelector("p[class*='sub']");
+    const by = container.querySelector("p[class*='by']");
+    expect(sub.compareDocumentPosition(by)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
+    expect(container.querySelector("div[class*='meta']")).not.toHaveTextContent(
+      "By"
+    );
   });
 });
 

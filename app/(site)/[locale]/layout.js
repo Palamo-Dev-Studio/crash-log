@@ -14,21 +14,43 @@ import JsonLd from "@/components/JsonLd";
 import DonatePrompt from "@/components/DonatePrompt";
 import DonationThanks from "@/components/DonationThanks";
 
+// Italic faces are separate, non-preloaded calls: only article prose and pull quotes use them, and a
+// preload on every page costs bandwidth the lead image needs (see the LCP checks in e2e/perf-budget.spec.js).
+// Text that is italic points at --font-body-italic / --font-display-italic (globals.css, ArticleBody).
 const instrumentSerif = Instrument_Serif({
   variable: "--font-display",
   subsets: ["latin"],
   weight: "400",
-  style: ["normal", "italic"],
+  style: "normal",
   display: "swap",
+});
+
+const instrumentSerifItalic = Instrument_Serif({
+  variable: "--font-display-italic",
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  display: "swap",
+  preload: false,
 });
 
 const newsreader = Newsreader({
   variable: "--font-body",
   subsets: ["latin"],
   weight: "variable",
-  style: ["normal", "italic"],
+  style: "normal",
   axes: ["opsz"],
   display: "swap",
+});
+
+const newsreaderItalic = Newsreader({
+  variable: "--font-body-italic",
+  subsets: ["latin"],
+  weight: "variable",
+  style: "italic",
+  axes: ["opsz"],
+  display: "swap",
+  preload: false,
 });
 
 const dmMono = DM_Mono({
@@ -124,7 +146,7 @@ export default async function SiteLayout({ children, params }) {
   return (
     <html
       lang={locale}
-      className={`${instrumentSerif.variable} ${newsreader.variable} ${dmMono.variable}`}
+      className={`${instrumentSerif.variable} ${instrumentSerifItalic.variable} ${newsreader.variable} ${newsreaderItalic.variable} ${dmMono.variable}`}
     >
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />

@@ -112,10 +112,12 @@ describe("every var() reference is declared", () => {
     )
   );
 
-  it("treats exactly --font-display, --font-body and --font-mono as next/font-provided", () => {
+  it("treats exactly the next/font families (display, body, mono and the two italics) as next/font-provided", () => {
     expect([...nextFontVars].sort()).toEqual([
       "--font-body",
+      "--font-body-italic",
       "--font-display",
+      "--font-display-italic",
       "--font-mono",
     ]);
   });

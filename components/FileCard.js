@@ -18,7 +18,7 @@ const SIZES = {
   lead: {
     width: 1200,
     height: 675,
-    sizes: "(max-width: 980px) 100vw, 680px",
+    sizes: "(max-width: 1023px) 100vw, 680px",
   },
   card: {
     width: 1200,
@@ -50,11 +50,7 @@ export default function FileCard({
   const alt = t(doc.coverImageAlt, locale) || "";
   const subtitle = keepDashAttached(t(doc.subtitle, locale));
 
-  const byline = showByline && (
-    <p className={styles.by}>
-      {labels.byPrefix} {getByline(doc, locale)}
-    </p>
-  );
+  const bylineText = `${labels.byPrefix} ${getByline(doc, locale)}`;
 
   return (
     <article className={`${styles.card} ${styles[variant] || ""}`.trim()}>
@@ -83,15 +79,17 @@ export default function FileCard({
               variant={variant === "lead" ? "chip" : "plain"}
             />
             <span>{formatDate(doc.publishDate, locale, "short")}</span>
+            {/* The lead's byline sits in the mono meta row, above the title: the subtitle below it re-wraps
+                when its late-loading font arrives, and nothing under the subtitle may move with it (CLS). */}
+            {variant === "lead" && <span>{bylineText}</span>}
           </div>
           <h3 id={titleId} className={styles.title}>
             {t(doc.title, locale)}
           </h3>
-          {/* The lead puts its byline above the subtitle: the subtitle is set in a late-loading
-              font and re-wraps when it arrives, and a byline below it would move with it (CLS). */}
-          {variant === "lead" && byline}
           {subtitle && <p className={styles.sub}>{subtitle}</p>}
-          {variant !== "lead" && byline}
+          {variant !== "lead" && showByline && (
+            <p className={styles.by}>{bylineText}</p>
+          )}
         </div>
       </Link>
     </article>
