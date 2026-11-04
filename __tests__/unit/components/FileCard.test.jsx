@@ -326,3 +326,26 @@ describe("series indexes use the lead + grid layout", () => {
     expect(screen.getByText("FIX-001")).toBeInTheDocument();
   });
 });
+
+describe("FileCard stacked lead CSS", () => {
+  const css = readFileSync("components/FileCard.module.css", "utf8");
+  const stacked = css.match(/@media \(max-width: 1099px\) \{([\s\S]*?)\n\}/)[1];
+
+  it("keeps the 44px lead title when stacked (no smaller override above 700px)", () => {
+    expect(stacked).not.toMatch(/\.lead \.title/);
+    expect(css).toMatch(/\.lead \.title \{[^}]*font-size: 44px/);
+  });
+
+  it("limits the stacked lead's text to a readable measure", () => {
+    expect(stacked).toMatch(/\.lead \.body \{[^}]*max-width: 46rem/);
+  });
+
+  it("separates the lead byline from the date with a wider gap", () => {
+    expect(css).toMatch(/\.leadBy \{[^}]*margin-left: 12px/);
+    const { container } = render(
+      <FileCard doc={doc(2)} locale="en" variant="lead" />
+    );
+    const by = container.querySelector("span[class*='leadBy']");
+    expect(by).toHaveTextContent("By Hector Luis Alamo");
+  });
+});

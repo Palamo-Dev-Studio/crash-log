@@ -62,7 +62,13 @@ async function best(browser, viewport, url, key) {
 
 const MOBILE = { width: 390, height: 844 };
 
-for (const path of ["/en", "/en/off-the-rails", "/en/nico", "/en/practical"]) {
+for (const path of [
+  "/en",
+  "/en/off-the-rails",
+  "/es/off-the-rails",
+  "/en/nico",
+  "/en/practical",
+]) {
   test(`mobile LCP on ${path} is an image and under 2.5 s`, async ({
     browser,
   }) => {
@@ -78,9 +84,12 @@ for (const path of ["/en", "/en/off-the-rails", "/en/nico", "/en/practical"]) {
 // cap of 0, so a page whose baseline is 0 must stay under 0.00005 (a 0.0002 shift is a failure there).
 // The article limits come from the same method run on origin/main (a526f14): 0.00196 at 1440, 0 at 390.
 const CLS_LIMITS = {
-  "/en/nico": { desktop: 0.00021, mobile: 0.00007 },
-  "/en/off-the-rails": { desktop: 0.00021, mobile: 0.00007 },
-  "/en/practical": { desktop: 0.00005, mobile: 0.00007 },
+  "/en/nico": { desktop: 0.00021, mobile: 0.00005 },
+  "/en/off-the-rails": { desktop: 0.00021, mobile: 0.00005 },
+  // /es/off-the-rails has a baseline mobile CLS of 0.0147 (the page head's dek re-wraps in ES, on origin/main too):
+  // the limit is the 4-decimal rounding boundary above it, so the branch must not add to it.
+  "/es/off-the-rails": { desktop: 0.00021, mobile: 0.01475 },
+  "/en/practical": { desktop: 0.00005, mobile: 0.00005 },
   "/en/issue/crash-log-023": { desktop: 0.00201, mobile: 0.00005 },
 };
 

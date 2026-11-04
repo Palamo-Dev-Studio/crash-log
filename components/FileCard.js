@@ -81,7 +81,9 @@ export default function FileCard({
             <span>{formatDate(doc.publishDate, locale, "short")}</span>
             {/* The lead's byline sits in the mono meta row, above the title: the subtitle below it re-wraps
                 when its late-loading font arrives, and nothing under the subtitle may move with it (CLS). */}
-            {variant === "lead" && <span>{bylineText}</span>}
+            {variant === "lead" && (
+              <span className={styles.leadBy}>{bylineText}</span>
+            )}
           </div>
           <h3 id={titleId} className={styles.title}>
             {t(doc.title, locale)}

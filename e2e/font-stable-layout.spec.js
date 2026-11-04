@@ -28,14 +28,23 @@ async function heights(browser, width, url, blockFonts) {
       ),
       // Offset of each article that starts in the first viewport from the list heading above the lead.
       // The page head's dek (outside this layout) can re-wrap and move the heading, so measure against it.
+      // Offsets from the list heading above the lead, for each article that starts in the first viewport:
+      // [article, meta row, title, dek]. The page head's dek (outside this layout) can re-wrap and move the
+      // heading, so measure against it. A missing child is -1.
       firstViewport: (() => {
         const h2 = document
           .querySelector("main h2")
           .getBoundingClientRect().top;
+        const off = (el) =>
+          el ? round(el.getBoundingClientRect().top - h2) : -1;
         return [...document.querySelectorAll("main article")]
-          .map((a) => a.getBoundingClientRect())
-          .filter((r) => r.top < window.innerHeight)
-          .map((r) => round(r.top - h2));
+          .filter((a) => a.getBoundingClientRect().top < window.innerHeight)
+          .map((a) => [
+            off(a),
+            off(a.querySelector("[class*='meta']")),
+            off(a.querySelector("h3")),
+            off(a.querySelector("p")),
+          ]);
       })(),
     };
   });
@@ -57,13 +66,29 @@ for (const locale of ["en", "es"]) {
         expect(loaded.firstViewport.length, `${url} @${width}`).toBeGreaterThan(
           0
         );
-        loaded.firstViewport.forEach((offset, i) => {
-          if (Math.abs(offset - (fallback.firstViewport[i] ?? NaN)) > 0.5) {
+        // An article in the first viewport in one render and not in the other is a shift too: compare every index.
+        const count = Math.max(
+          loaded.firstViewport.length,
+          fallback.firstViewport.length
+        );
+        const parts = ["article", "meta row", "title", "dek"];
+        for (let i = 0; i < count; i++) {
+          const l = loaded.firstViewport[i];
+          const f = fallback.firstViewport[i];
+          if (!l || !f) {
             diffs.push(
-              `@${width} article ${i}: ${fallback.firstViewport[i]} -> ${offset} below the list heading`
+              `@${width} article ${i}: in the first viewport with ${l ? "the font" : "the fallback"} only`
             );
+            continue;
           }
-        });
+          l.forEach((offset, k) => {
+            if (Math.abs(offset - f[k]) > 0.5) {
+              diffs.push(
+                `@${width} article ${i} ${parts[k]}: ${f[k]} -> ${offset} below the list heading`
+              );
+            }
+          });
+        }
       }
       expect(diffs, `${url}`).toEqual([]);
     });
