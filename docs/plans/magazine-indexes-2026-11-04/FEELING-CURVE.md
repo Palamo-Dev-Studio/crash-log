@@ -7,6 +7,6 @@ ABOUTME: Every device maps to a row.
 |---|---|---|---|
 | Quiet | page title + dek | orientation | static type |
 | Peak | lead story | "this is the one to read" | scale: large image + full subtitle |
-| Close | card grid, then archive link | browse and choose | even grid, no motion |
+| Close | card grid | browse and choose | even grid; the archive link lives on the home page only |
 
 - Scrub acts: none. Reduced motion: no change (nothing moves).

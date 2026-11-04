@@ -169,6 +169,30 @@ describe("FileCard polish", () => {
   });
 });
 
+describe("FileCard text polish", () => {
+  it("keeps a spaced dash in the subtitle attached to the word before it", () => {
+    const d = doc(2, { subtitle: { en: "my week — showed why", es: "x" } });
+    const { rerender } = render(<FileCard doc={d} locale="en" />);
+    expect(screen.getByText(/showed why/).textContent).toBe(
+      "my week\u00A0\u2014 showed why"
+    );
+    rerender(<FileCard doc={d} locale="en" variant="lead" />);
+    expect(screen.getByText(/showed why/).textContent).toBe(
+      "my week\u00A0\u2014 showed why"
+    );
+  });
+
+  it("balances card titles and sizes the phone lead title at 34px", () => {
+    const css = readFileSync("components/FileCard.module.css", "utf8");
+    const title = css.match(/\n\.title \{[^}]*\}/)[0];
+    expect(title).toMatch(/text-wrap: balance/);
+    const phone = css.match(
+      /@media \(max-width: 700px\) \{[\s\S]*?\.lead \.title \{([^}]*)\}/
+    );
+    expect(phone[1]).toMatch(/font-size: 34px/);
+  });
+});
+
 describe("FileMagazine", () => {
   it("splits the newest file into a lead and the rest into a card grid", () => {
     const docs = [doc(4), doc(3), doc(2), doc(1)];

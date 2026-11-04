@@ -8,6 +8,7 @@ import FileChip from "@/components/FileChip";
 import { t } from "@/lib/locale";
 import { urlFor } from "@/lib/sanity";
 import { formatDate } from "@/lib/formatDate";
+import { keepDashAttached } from "@/lib/keepDashAttached";
 import { getByline, hasDefaultByline } from "@/lib/series";
 import { HOME_LABELS, fileHref } from "@/lib/homeLabels";
 import styles from "./FileCard.module.css";
@@ -47,7 +48,7 @@ export default function FileCard({
     ? urlFor(doc.coverImage).width(width).height(height).format("webp").url()
     : null;
   const alt = t(doc.coverImageAlt, locale) || "";
-  const subtitle = t(doc.subtitle, locale);
+  const subtitle = keepDashAttached(t(doc.subtitle, locale));
 
   return (
     <article className={`${styles.card} ${styles[variant] || ""}`.trim()}>

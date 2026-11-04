@@ -244,3 +244,51 @@ test("a lone lead leaves no extra space below it, a lead with a grid keeps it", 
   expect(await pad("/en/practical")).toBe("0px");
   expect(await pad("/en/off-the-rails")).not.toBe("0px");
 });
+
+test("card titles balance their lines; the lead title is 34px on a phone and cards stay 26px", async ({
+  browser,
+}) => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 800 } });
+  await page.goto("/en/off-the-rails");
+  const sizes = await page.evaluate(() => {
+    const lead = document.querySelector("main article h3");
+    const card = document.querySelector("[data-file-grid] article h3");
+    return {
+      lead: getComputedStyle(lead).fontSize,
+      card: getComputedStyle(card).fontSize,
+      wrap: getComputedStyle(card).textWrap,
+    };
+  });
+  expect(sizes.lead).toBe("34px");
+  expect(sizes.card).toBe("26px");
+  expect(sizes.wrap).toContain("balance");
+  await page.close();
+});
+
+test("no subtitle line starts with a dash", async ({ browser }) => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 800 } });
+  await page.goto("/en/nico");
+  const dashes = await page.evaluate(() => {
+    const out = [];
+    for (const p of document.querySelectorAll("main article p")) {
+      const w = document.createTreeWalker(p, NodeFilter.SHOW_TEXT);
+      for (let n = w.nextNode(); n; n = w.nextNode()) {
+        const t = n.textContent;
+        for (let i = 0; i < t.length; i++) {
+          if (t[i] !== "–" && t[i] !== "—") continue;
+          const r = document.createRange();
+          r.setStart(n, i);
+          r.setEnd(n, i + 1);
+          const dash = r.getBoundingClientRect();
+          const box = p.getBoundingClientRect();
+          // A dash that begins a line sits at the paragraph's left edge.
+          if (dash.left - box.left < 2)
+            out.push(t.slice(Math.max(0, i - 15), i + 10));
+        }
+      }
+    }
+    return out;
+  });
+  expect(dashes).toEqual([]);
+  await page.close();
+});

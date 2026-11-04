@@ -54,6 +54,7 @@
   font-size: 26px;
   line-height: 1.15;
   overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .sub {
@@ -123,7 +124,7 @@
 
 @media (max-width: 700px) {
   .lead .title {
-    font-size: 30px;
+    font-size: 34px;
   }
 
   .lead .sub {
