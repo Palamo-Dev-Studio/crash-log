@@ -92,6 +92,8 @@
   color: var(--ink);
 }
 
+.prose h2 em,
+.prose h3 em,
 .prose .pull em {
   font-family: var(--serif-d-italic);
 }

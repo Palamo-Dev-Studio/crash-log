@@ -107,6 +107,6 @@ The "Field Manual" restyle is live (shipped 2026-11-01; plan, decisions and ship
 - Unit tests: `__tests__/unit/lib/` (series, formatDate, readingTime, queries, …), `__tests__/unit/` (token/contrast/lint-rule property tests, backfill script guards)
 - Component tests: `__tests__/unit/components/`
 - Integration tests: `__tests__/integration/` — middleware, robots, rss-feed, donate, revalidate, OG/twitter image coverage and parity
-- E2E tests: `e2e/` — page specs per route family, plus site-wide crawls: `site-overflow.spec.js` (every sitemap route at 320/360/390) and `site-contrast.spec.js` (WCAG AA on rendered text and hover states)
+- E2E tests: `e2e/` — page specs per route family, plus site-wide crawls: `site-overflow.spec.js` (every sitemap route at 320/360/390) and `site-contrast.spec.js` (WCAG AA on rendered text and hover states). `perf-budget.spec.js` holds the throttled slow-4G LCP and CLS budgets: run it with `npm run test:perf` (production build, 1 worker; it skips otherwise)
 
 **JSX in .js files:** The project uses JSX in `.js` files (Next.js convention). A custom Vite plugin in `vitest.config.mjs` (`jsxInJsPlugin`) transforms these via esbuild before Vite's import analysis.

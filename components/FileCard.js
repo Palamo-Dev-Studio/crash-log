@@ -18,7 +18,7 @@ const SIZES = {
   lead: {
     width: 1200,
     height: 675,
-    sizes: "(max-width: 1023px) 100vw, 680px",
+    sizes: "(max-width: 1099px) 100vw, 680px",
   },
   card: {
     width: 1200,
@@ -68,7 +68,7 @@ export default function FileCard({
               height={height}
               className={styles.image}
               sizes={sizes}
-              {...(priority ? { priority: true } : {})}
+              {...(priority ? { preload: true, fetchPriority: "high" } : {})}
             />
           </div>
         )}

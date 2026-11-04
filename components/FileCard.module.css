@@ -1,5 +1,5 @@
 /* ABOUTME: Styles for the magazine file card: 16:9 cover reserved by aspect-ratio, mono meta, serif title, full subtitle.
-   ABOUTME: The lead variant puts a large cover beside its text from 1024px up and stacks below; no motion. */
+   ABOUTME: The lead variant puts a large cover beside its text from 1100px up and stacks below; no motion. */
 
 .card {
   min-width: 0;
@@ -106,20 +106,10 @@
   flex: none;
 }
 
-/* Side by side only from 1024px. Between 1024px and 1099px the text column is nearly as tall as the cover,
-   so its type is a step smaller: with the fallback face (before the web font arrives) the text must stay
-   shorter than the cover, or the lead row shrinks when the font swaps and the grid below it moves. */
-@media (min-width: 1024px) and (max-width: 1099px) {
-  .lead .title {
-    font-size: 38px;
-  }
-
-  .lead .sub {
-    font-size: 19px;
-  }
-}
-
-@media (max-width: 1023px) {
+/* Side by side only from 1100px; below that the lead stacks (cover on top, text under). Beside the cover a
+   text column can be taller than the cover in the fallback face and shorter in the web font, so the row would
+   change height when the font arrives and move the grid below it. Stacked, the text is the last thing in the lead. */
+@media (max-width: 1099px) {
   .lead .link {
     display: flex;
     flex-direction: column;

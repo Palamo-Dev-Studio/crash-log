@@ -13,7 +13,16 @@ vi.mock("next/link", () => ({
   ),
 }));
 vi.mock("next/image", () => ({
-  default: ({ src, alt, priority, sizes, width, height, className }) => (
+  default: ({
+    src,
+    alt,
+    preload,
+    fetchPriority,
+    sizes,
+    width,
+    height,
+    className,
+  }) => (
     <img
       src={src}
       alt={alt}
@@ -21,7 +30,8 @@ vi.mock("next/image", () => ({
       width={width}
       height={height}
       className={className}
-      data-priority={priority ? "true" : "false"}
+      data-priority={preload ? "true" : "false"}
+      data-fetchpriority={fetchPriority || ""}
     />
   ),
 }));
@@ -117,10 +127,13 @@ describe("FileCard", () => {
     const card = container.querySelector("img");
     expect(card.getAttribute("sizes")).toMatch(/50vw/);
     expect(card.dataset.priority).toBe("false");
+    expect(card.dataset.fetchpriority).toBe("");
     rerender(<FileCard doc={doc(1)} locale="en" variant="lead" priority />);
     const lead = container.querySelector("img");
     expect(lead.getAttribute("sizes")).toMatch(/680px/);
     expect(lead.dataset.priority).toBe("true");
+    // Next 16's `priority` only adds a preload; the high fetch priority has to be asked for.
+    expect(lead.dataset.fetchpriority).toBe("high");
   });
 });
 

@@ -10,6 +10,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "test:perf": "E2E_PROD=1 playwright test e2e/perf-budget.spec.js --workers=1",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

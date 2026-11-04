@@ -73,15 +73,33 @@ for (const path of ["/en", "/en/off-the-rails", "/en/nico", "/en/practical"]) {
   });
 }
 
-// The floor harness rounds CLS to 4 decimals against the baseline with a cap of 0; stay under 0.00025.
-for (const width of [1440, 1100, 1024]) {
-  for (const path of ["/en/nico", "/en/off-the-rails", "/en/practical"]) {
-    test(`CLS on ${path} at ${width}px stays under 0.00025`, async ({
+// CLS limits per page: the web-build harness' origin/main baseline for the page (from the first floor run,
+// wb-mag-run1 report.json "baseline") plus 0.00005. The harness rounds CLS to 4 decimals against the baseline with a
+// cap of 0, so a page whose baseline is 0 must stay under 0.00005 (a 0.0002 shift is a failure there).
+// The article limits come from the same method run on origin/main (a526f14): 0.00196 at 1440, 0 at 390.
+const CLS_LIMITS = {
+  "/en/nico": { desktop: 0.00021, mobile: 0.00007 },
+  "/en/off-the-rails": { desktop: 0.00021, mobile: 0.00007 },
+  "/en/practical": { desktop: 0.00005, mobile: 0.00007 },
+  "/en/issue/crash-log-023": { desktop: 0.00201, mobile: 0.00005 },
+};
+
+for (const [path, limit] of Object.entries(CLS_LIMITS)) {
+  const widths = path.startsWith("/en/issue/") ? [1440] : [1440, 1100, 1024];
+  for (const width of widths) {
+    test(`CLS on ${path} at ${width}px stays under ${limit.desktop}`, async ({
       browser,
     }) => {
       test.setTimeout(90000);
       const m = await best(browser, { width, height: 900 }, path, "cls");
-      expect(m.cls).toBeLessThan(0.00025);
+      expect(m.cls).toBeLessThan(limit.desktop);
     });
   }
+  test(`CLS on ${path} at 390px stays under ${limit.mobile}`, async ({
+    browser,
+  }) => {
+    test.setTimeout(90000);
+    const m = await best(browser, MOBILE, path, "cls");
+    expect(m.cls).toBeLessThan(limit.mobile);
+  });
 }

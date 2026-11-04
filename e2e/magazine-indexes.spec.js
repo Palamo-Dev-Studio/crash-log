@@ -322,7 +322,7 @@ test("only the Latin, upright (non-italic) font faces are preloaded, so fonts do
   expect(fonts).toBeLessThanOrEqual(4);
 });
 
-test("article emphasis still renders in the real Newsreader italic face, not a fallback or a synthesized slant", async ({
+test("article emphasis renders in the real Newsreader italic face (a loaded custom face, not a fallback or a synthesized slant)", async ({
   page,
 }) => {
   let found = false;
