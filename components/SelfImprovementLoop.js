@@ -1,9 +1,7 @@
 // ABOUTME: The About page's self-improvement loop graphic: five labelled steps (real HTML list) beside an inline-SVG ring.
-// ABOUTME: Plays its ~5 s motion once when scrolled into view, then rests; with no JS or reduced motion it shows the final state.
+// ABOUTME: Server component: the markup is in the HTML before hydration; LoopMotion (client) plays the ~5 s motion once on entering view.
 
-"use client";
-
-import { useEffect, useRef } from "react";
+import LoopMotion from "@/components/LoopMotion";
 import { LOOP_COPY } from "@/lib/aboutLoop";
 import styles from "./SelfImprovementLoop.module.css";
 
@@ -63,35 +61,9 @@ const STAMP = { x: 92, y: 186, w: 72, h: 28 };
 
 export default function SelfImprovementLoop({ locale }) {
   const copy = LOOP_COPY[locale] || LOOP_COPY.en;
-  const ref = useRef(null);
-
-  // Without JS, or under reduced motion, nothing here runs and the final state shows.
-  // Otherwise: park the graphic at its first frame, then play once on entering view.
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof IntersectionObserver === "undefined") return undefined;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return undefined;
-    }
-    el.dataset.motion = "ready";
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((e) => e.isIntersecting)) return;
-        el.dataset.motion = "play";
-        observer.disconnect();
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      delete el.dataset.motion;
-    };
-  }, []);
 
   return (
-    <figure
-      ref={ref}
+    <LoopMotion
       className={styles.loop}
       data-testid="self-improvement-loop"
       style={{ "--stamp": s(T.stamp) }}
@@ -191,6 +163,6 @@ export default function SelfImprovementLoop({ locale }) {
           </li>
         ))}
       </ol>
-    </figure>
+    </LoopMotion>
   );
 }

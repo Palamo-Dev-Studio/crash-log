@@ -252,3 +252,36 @@ test("at 390px the masthead cards stack inside the text column", async ({
   expect(Math.abs(ba.width - col.width)).toBeLessThanOrEqual(1);
   await context.close();
 });
+
+test("the graphic is in the server HTML before any JS runs", async ({
+  request,
+}) => {
+  for (const [locale, word] of [
+    ["en", "RULE"],
+    ["es", "REGLA"],
+  ]) {
+    const html = await (await request.get(`/${locale}/about`)).text();
+    for (const label of STEPS[locale]) expect(html).toContain(label);
+    expect(html).toContain(word);
+    expect(html).not.toContain('data-motion="');
+  }
+});
+
+test("with JavaScript disabled all five steps and the stamp show, in the final state", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 1440, height: 900 },
+  });
+  const page = await context.newPage();
+  await page.goto("/en/about");
+  const loop = page.getByTestId("self-improvement-loop");
+  await expect(loop.locator("ol > li")).toHaveText(STEPS.en);
+  await expect(page.getByTestId("loop-stamp")).toContainText("RULE");
+  await expect(page.getByTestId("loop-stamp")).toHaveCSS("opacity", "1");
+  for (const li of await loop.locator("ol > li").all()) {
+    await expect(li).toHaveCSS("opacity", "1");
+  }
+  await context.close();
+});

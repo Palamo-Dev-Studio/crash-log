@@ -4,6 +4,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { renderToString } from "react-dom/server";
 import { render, screen, within } from "@testing-library/react";
 
 vi.mock("next/image", () => ({
@@ -136,6 +137,24 @@ describe("SelfImprovementLoop", () => {
     const print = LOOP_CSS.match(/@media[^{]*print[^{]*\{([\s\S]*?)\n\}/);
     expect(print).not.toBeNull();
     expect(print[1]).toMatch(/animation:\s*none\s*!important/);
+  });
+
+  it.each(["en", "es"])(
+    "server-renders every step and the stamp into the HTML, with no effect run [%s]",
+    (locale) => {
+      const html = renderToString(<SelfImprovementLoop locale={locale} />);
+      for (const label of STEPS[locale]) expect(html).toContain(label);
+      expect(html).toContain(LOOP_COPY[locale].stamp);
+      expect(html).not.toContain("data-motion");
+    }
+  );
+
+  it("keeps the graphic's markup in a server component and only the wrapper on the client", () => {
+    const read = (f) => readFileSync(join(process.cwd(), f), "utf8");
+    expect(read("components/SelfImprovementLoop.js")).not.toMatch(
+      /^\s*["']use client["']/m
+    );
+    expect(read("components/LoopMotion.js")).toMatch(/^\s*["']use client["']/m);
   });
 
   it("keeps list semantics explicit for VoiceOver", () => {
