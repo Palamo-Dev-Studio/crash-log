@@ -22,6 +22,22 @@
   --serif-b-italic: var(--font-body-italic), Georgia, serif;
   --serif-d-italic: var(--font-display-italic), Georgia, serif;
   --mono: var(--font-mono), ui-monospace, monospace;
+  /* Page-head dek: Newsreader, then a fallback sized to it (see the "Newsreader Dek Fallback" face below). */
+  --serif-dek: Newsreader, "Newsreader Dek Fallback", Georgia, serif;
+}
+
+/* next/font sizes its "Newsreader Fallback" (Times New Roman at 105.48%) from average glyph width. For the dek's
+   sentences that runs about 7% wider than Newsreader itself (a Spanish dek: 1181px in the fallback, 1104px loaded), so the
+   dek wrapped differently before and after the web font loaded and moved everything below it. This face is Times New
+   Roman at 99.6%: the middle of the 99.3% to 100.0% range in which every index and home dek (ES and EN, 390 to 1440px)
+   has the same line count in both faces. Only the deks use it (--serif-dek). */
+@font-face {
+  font-family: "Newsreader Dek Fallback";
+  src: local("Times New Roman");
+  size-adjust: 99.6%;
+  ascent-override: 69.68%;
+  descent-override: 25.12%;
+  line-gap-override: 0%;
 }
 
 /* Reset */

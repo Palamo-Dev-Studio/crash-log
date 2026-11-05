@@ -57,6 +57,7 @@
 
 .dek {
   margin: 0;
+  font-family: var(--serif-dek);
   font-size: 21px;
   line-height: 1.45;
   color: #463c32;

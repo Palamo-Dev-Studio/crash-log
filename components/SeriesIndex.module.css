@@ -16,7 +16,10 @@
 
 .dek {
   margin: 14px 0 0;
-  max-width: 46ch;
+  /* 46ch of the loaded Newsreader at 21px (19px under 700px), as fixed lengths: ch changes with the face, so 46ch
+     was 25px narrower in the fallback and re-wrapped the dek when the font loaded. */
+  max-width: 533.96875px;
+  font-family: var(--serif-dek);
   font-size: 21px;
   line-height: 1.45;
   color: #463c32;
@@ -77,6 +80,7 @@
   }
 
   .dek {
+    max-width: 481.5px;
     font-size: 19px;
   }
 

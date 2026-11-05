@@ -101,31 +101,18 @@ const CLS_LIMITS = {
   "/en/issue/crash-log-023": { desktop: 0.00201, mobile: 0.00005 },
 };
 
-// HEAD is above main's baseline on /es/practical at 1440 (+0.0021) and 1100 (+0.0005): the lead adds its own title
-// re-wrap shift at 1440 (0.00194: the long ES title takes 3 lines in the fallback face and 2 in Instrument Serif) and
-// more content under the page head's dek reflow, which raises the shift's impact area. Not under the strict-heights
-// refusal: these are in the first viewport and counted by CLS. Hector ruled to ship it disclosed (#crash-log 1567702842754736140, 2026-11-05, option A); the pre-existing ES page-head dek re-wrap gets a separate fix. Left as fixme until then.
-const KNOWN_ABOVE_BASELINE = new Set([
-  "/es/practical@1440",
-  "/es/practical@1100",
-]);
-
 for (const [path, limit] of Object.entries(CLS_LIMITS)) {
   const widths = path.startsWith("/en/issue/") ? [1440] : [1440, 1100, 1024];
   for (const width of widths) {
     const max =
       typeof limit.desktop === "number" ? limit.desktop : limit.desktop[width];
-    const define = KNOWN_ABOVE_BASELINE.has(`${path}@${width}`)
-      ? test.fixme
-      : test;
-    define(
-      `CLS on ${path} at ${width}px stays under ${max}`,
-      async ({ browser }) => {
-        test.setTimeout(90000);
-        const m = await best(browser, { width, height: 900 }, path, "cls");
-        expect(m.cls).toBeLessThan(max);
-      }
-    );
+    test(`CLS on ${path} at ${width}px stays under ${max}`, async ({
+      browser,
+    }) => {
+      test.setTimeout(90000);
+      const m = await best(browser, { width, height: 900 }, path, "cls");
+      expect(m.cls).toBeLessThan(max);
+    });
   }
   test(`CLS on ${path} at 390px stays under ${limit.mobile}`, async ({
     browser,
