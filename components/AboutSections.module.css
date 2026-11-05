@@ -1,5 +1,13 @@
 /* ABOUTME: Styles for the About page (Field Manual): serif H1 lead, mono section labels, Newsreader prose at a readable measure.
-   ABOUTME: Masthead is a two-column grid of person cards that stacks on narrow screens. */
+   ABOUTME: Text sits in a centered 41rem column; the masthead is a 52rem block of two cards from 960px up, stacked below. */
+
+/* The page is one centered column (41rem, about the 62ch prose measure): head,
+   sections and standalone prose share auto margins; paragraphs stay left-aligned. */
+.head,
+.section {
+  max-width: 41rem;
+  margin-inline: auto;
+}
 
 .head {
   padding: 34px 0 28px;
@@ -44,11 +52,17 @@
 
 .prose {
   max-width: 62ch;
+  margin-inline: auto;
   font-family: var(--serif-b);
   font-size: 19px;
   line-height: 1.6;
   color: var(--ink);
   overflow-wrap: anywhere;
+}
+
+/* Inside a section the prose lines up with the label and rule above it. */
+.section .prose {
+  margin-inline: 0;
 }
 
 .prose p {
@@ -85,14 +99,18 @@
 
 .masthead {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
   margin-bottom: 28px;
 }
 
-@media (max-width: 900px) {
+/* Wide enough for two cards (each text column holds "Hector Luis Alamo" on one line),
+   the block is wider than the 41rem text column and centred on the same axis. Below
+   960px the cards stack inside the column. */
+@media (min-width: 960px) {
   .masthead {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-inline: calc((100% - 52rem) / 2);
   }
 }
 

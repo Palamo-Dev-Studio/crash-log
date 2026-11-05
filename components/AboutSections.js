@@ -12,12 +12,23 @@ import {
   FALLBACK_MASTHEAD,
 } from "@/lib/aboutFallback";
 import AgentCard from "@/components/AgentCard";
+import SelfImprovementLoop from "@/components/SelfImprovementLoop";
+import { LOOP_HEADING_KEYS } from "@/lib/aboutLoop";
 import styles from "./AboutSections.module.css";
 
 const SANITY_HEADINGS = {
   en: { masthead: "Masthead", workflow: "How it works", contact: "Contact" },
   es: { masthead: "Redacción", workflow: "Cómo funciona", contact: "Contacto" },
 };
+
+// The loop graphic belongs to the "How it gets better" section. A Sanity section is
+// matched by its H2's Portable Text _key (either locale's: a Spanish page that falls back
+// to English content carries the English key), or, if that changed, by the heading text.
+const isBetterSection = (section) =>
+  Object.values(LOOP_HEADING_KEYS).includes(section.key) ||
+  Object.values(ABOUT_COPY).some(
+    (c) => c.betterHeading === section.heading.trim()
+  );
 
 // Renders the copy file's inline markup: **bold** and [text](url).
 const INLINE = /\*\*(.+?)\*\*|\[(.+?)\]\((.+?)\)/g;
@@ -97,6 +108,7 @@ export function FallbackAbout({ locale, about }) {
         <div className={styles.prose}>
           <Paragraphs items={copy.better} />
         </div>
+        <SelfImprovementLoop locale={lang} />
       </section>
 
       <section className={styles.section}>
@@ -124,7 +136,7 @@ function splitSections(blocks) {
   const sections = [];
   for (const block of blocks || []) {
     if (isHeading(block)) {
-      sections.push({ heading: blockText(block), body: [] });
+      sections.push({ heading: blockText(block), key: block._key, body: [] });
     } else if (sections.length) {
       sections[sections.length - 1].body.push(block);
     } else {
@@ -206,7 +218,14 @@ export function SanityAbout({ about, locale }) {
         )}
       </header>
       {items.map((item, i) => {
-        if (!item.section) return <Prose key={i} blocks={item.prose} />;
+        if (!item.section) {
+          if (!item.prose.length) return null;
+          return (
+            <div key={i} className={styles.section}>
+              <Prose blocks={item.prose} />
+            </div>
+          );
+        }
         const { section, withCards } = item;
         const [first, ...rest] = section.body;
         return (
@@ -227,6 +246,9 @@ export function SanityAbout({ about, locale }) {
               </>
             ) : (
               <Prose blocks={section.body} />
+            )}
+            {isBetterSection(section) && (
+              <SelfImprovementLoop locale={locale} />
             )}
           </section>
         );

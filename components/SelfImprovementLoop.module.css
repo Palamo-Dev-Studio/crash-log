@@ -1,0 +1,452 @@
+/* ABOUTME: Styles and one-shot motion for the About page loop graphic: ring, nodes, tally ticks, red rule stamp, step list.
+   ABOUTME: The base styles ARE the final state; [data-motion] (set by the component) parks and plays the animation. */
+
+.loop {
+  margin: 36px 0 0;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--rule);
+}
+
+.ring {
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 1 / 1;
+  margin-inline: auto;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.track {
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 5;
+}
+
+.segment {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.head {
+  fill: var(--terra);
+}
+
+.marker {
+  fill: var(--terra);
+  opacity: 0;
+  transform-origin: 150px 150px;
+}
+
+.node {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.disc,
+.discRule {
+  fill: var(--card);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.discRule {
+  stroke: var(--terra-ink);
+}
+
+/* Step 1 is where the loop starts and ends: a solid disc, so it reads as settled. */
+.node[data-step="1"] .disc {
+  fill: var(--ink);
+}
+
+.node[data-step="1"] .digit {
+  fill: var(--card);
+}
+
+.digit {
+  fill: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.tick1,
+.tick2,
+.tick3 {
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.pulse {
+  fill: none;
+  stroke: var(--terra);
+  stroke-width: 2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-6deg);
+}
+
+/* An outlined rubber stamp, not a filled chip: card-coloured inside (so the ticks it
+   crosses stay hidden behind its text), red outline, red mono word. */
+.stamp {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-6deg);
+}
+
+.stamp rect {
+  fill: var(--card);
+  stroke: var(--terra-ink);
+  stroke-width: 2;
+}
+
+.stamp text {
+  fill: var(--terra-ink);
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  gap: 14px;
+}
+
+.step {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: baseline;
+  font-family: var(--serif-b);
+  font-size: 18px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.step::before {
+  content: counter(step);
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.step[data-rule="true"] {
+  color: var(--terra-ink);
+}
+
+.step[data-rule="true"]::before {
+  color: var(--terra-ink);
+}
+
+/* Motion: parked at the first frame while ready, running once while play.
+   Each element holds its from-state through its delay (fill both). The `animation`
+   shorthand resets play-state to running, so every rule re-states it from --loop-play:
+   [data-motion="ready"] sets --loop-play: paused, [data-motion="play"] leaves it
+   unset (running). Custom properties inherit, so pseudo-elements follow too. */
+.loop[data-motion="ready"] {
+  --loop-play: paused;
+}
+
+.loop[data-motion] .segment {
+  animation: draw 0.54s linear var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .head {
+  animation: fadeIn 0.09s linear var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .marker {
+  animation: travel 5.2s linear 0s both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .node {
+  animation: pop 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .node[data-step="1"] .disc {
+  animation: pulse1 0.3s ease-in-out 4.86s both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .step {
+  animation: rise 0.24s ease-out var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+/* Steps 1-3 wait in muted ink before the run (the beat before), then light up. */
+.loop[data-motion] .node.early {
+  animation: lightUp 0.28s ease-out var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .step.early {
+  animation: lightUp 0.24s ease-out var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+/* Step 4 stays plain until the stamp lands, then turns red with it. */
+.loop[data-motion] .discRule {
+  animation: ringRed 0.22s ease-out var(--stamp) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .step[data-rule="true"] {
+  animation:
+    rise 0.24s ease-out var(--delay) both,
+    inkRed 0.22s ease-out var(--stamp) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .step[data-rule="true"]::before {
+  animation: numRed 0.22s ease-out var(--stamp) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .tick1,
+.loop[data-motion] .tick2 {
+  animation: drop 0.16s ease-out var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .tick3 {
+  animation: dropOvershoot 0.16s ease-out var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .stamp {
+  animation: snap 0.22s cubic-bezier(0.3, 1.4, 0.5, 1) var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+.loop[data-motion] .pulse {
+  animation: ping 0.18s ease-out var(--delay) both;
+  animation-play-state: var(--loop-play, running);
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse1 {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+    stroke: var(--terra);
+  }
+}
+
+@keyframes lightUp {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ringRed {
+  from {
+    stroke: var(--ink);
+  }
+  to {
+    stroke: var(--terra-ink);
+  }
+}
+
+@keyframes inkRed {
+  from {
+    color: var(--ink);
+  }
+  to {
+    color: var(--terra-ink);
+  }
+}
+
+@keyframes numRed {
+  from {
+    color: var(--muted);
+  }
+  to {
+    color: var(--terra-ink);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropOvershoot {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes snap {
+  from {
+    opacity: 0;
+    transform: rotate(-6deg) scale(1.35);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-6deg) scale(1);
+  }
+}
+
+@keyframes ping {
+  0% {
+    opacity: 0;
+    transform: rotate(-6deg) scale(1);
+  }
+  30% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-6deg) scale(1.3);
+  }
+}
+
+/* The marker rides the ring: 72 degrees per step, holding at step 4 while the tally lands. */
+@keyframes travel {
+  0% {
+    opacity: 0;
+    transform: rotate(0deg);
+  }
+  3.46% {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  13.85% {
+    transform: rotate(72deg);
+  }
+  24.23% {
+    transform: rotate(144deg);
+  }
+  34.62% {
+    transform: rotate(216deg);
+  }
+  65.77% {
+    transform: rotate(216deg);
+  }
+  76.15% {
+    transform: rotate(288deg);
+  }
+  83.08% {
+    transform: rotate(288deg);
+  }
+  93.46% {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(360deg);
+  }
+}
+
+/* Reduced motion and print: the final state, with no animation at all. (The component
+   also never sets data-motion under reduced motion; this covers a preference that
+   changes mid-session, and a page printed while the graphic is parked.) */
+@media (prefers-reduced-motion: reduce), print {
+  .loop *,
+  .loop *::before,
+  .loop *::after {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .loop {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    padding: 18px 16px;
+  }
+
+  .step {
+    font-size: 17px;
+  }
+}
