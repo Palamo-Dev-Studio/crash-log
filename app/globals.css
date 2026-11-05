@@ -22,6 +22,24 @@
   --serif-b-italic: var(--font-body-italic), Georgia, serif;
   --serif-d-italic: var(--font-display-italic), Georgia, serif;
   --mono: var(--font-mono), ui-monospace, monospace;
+  /* Page-head dek: Newsreader, then a fallback sized to it (see the "Newsreader Dek Fallback" face below). */
+  --serif-dek: Newsreader, "Newsreader Dek Fallback", Georgia, serif;
+}
+
+/* next/font sizes its "Newsreader Fallback" (Times New Roman at 105.48%) from average glyph width, which runs wider than
+   Newsreader on the page-head dek's sentences, so the dek wrapped differently before and after the web font loaded and
+   moved everything below it. This face is Times New Roman (or a metric-compatible clone) scaled to track Newsreader at
+   the dek's measure; only the deks use it (--serif-dek). The ascent and descent overrides are next/font's, rescaled:
+   the browser applies size-adjust to them, so each is override * 1.0548 / size-adjust. One scale cannot match two
+   faces at every measure: e2e/dek-stable-layout.spec.js sweeps the viewport range and lists the widths that still
+   wrap differently. */
+@font-face {
+  font-family: "Newsreader Dek Fallback";
+  src: local("Times New Roman"), local("Tinos"), local("Liberation Serif");
+  size-adjust: 98.7%;
+  ascent-override: 74.47%;
+  descent-override: 26.85%;
+  line-gap-override: 0%;
 }
 
 /* Reset */
