@@ -1,5 +1,5 @@
 // ABOUTME: Property tests: whether the web fonts load or are blocked, nothing the magazine layout puts in the first viewport moves.
-// ABOUTME: Deterministic (no throttling). The stricter "every card keeps its height" property is a known failure, kept as test.fixme.
+// ABOUTME: No throttling, but it runs on live Sanity data: a new title near a line break can flip a page. The strict heights property is a known failure (test.fixme).
 
 import { test, expect } from "@playwright/test";
 
@@ -26,8 +26,6 @@ async function heights(browser, width, url, blockFonts) {
       main: round(
         document.querySelector("main").getBoundingClientRect().height
       ),
-      // Offset of each article that starts in the first viewport from the list heading above the lead.
-      // The page head's dek (outside this layout) can re-wrap and move the heading, so measure against it.
       // Offsets from the list heading above the lead, for each article that starts in the first viewport:
       // [article, meta row, title, dek]. The page head's dek (outside this layout) can re-wrap and move the
       // heading, so measure against it. A missing child is -1.
@@ -41,9 +39,9 @@ async function heights(browser, width, url, blockFonts) {
           .filter((a) => a.getBoundingClientRect().top < window.innerHeight)
           .map((a) => [
             off(a),
-            off(a.querySelector("[class*='meta']")),
+            off(a.querySelector("[class*='__meta']")),
             off(a.querySelector("h3")),
-            off(a.querySelector("p")),
+            off(a.querySelector("p[class*='__sub']")),
           ]);
       })(),
     };
@@ -55,9 +53,13 @@ async function heights(browser, width, url, blockFonts) {
 for (const locale of ["en", "es"]) {
   for (const series of SERIES) {
     for (const width of WIDTHS) {
-      // Title and dek line breaks in the fallback face differ from the loaded face on /es/practical at 390 and 1440:
-      // the same class as the strict-heights refusal, confirmed in review-outcomes.jsonl (task "crashlog magazine
-      // indexes perf round-3 re-review"). Only clamping, reserving lines or font-display: optional would remove it.
+      // /es/practical's lead title takes 3 lines in the fallback face and 2 in Instrument Serif at 390 and 1440, which
+      // moves the dek inside the first viewport. This is NOT covered by the strict-heights refusal (that was about
+      // cards below the fold). At 390 it shows only with fonts blocked: throttled CLS there is 0 on main and on HEAD.
+      // At 1440 it is a measured regression (perf-budget.spec.js: /es/practical HEAD 0.01125 vs main 0.0091).
+      // Hector ruled to ship it disclosed (#crash-log 1567702842754736140, 2026-11-05, option A); the pre-existing ES
+      // page-head dek re-wrap gets a separate fix. Only clamping, reserving lines or font-display: optional would
+      // remove the title re-wrap itself.
       const knownTitleRewrap =
         locale === "es" &&
         series === "practical" &&
@@ -90,7 +92,28 @@ for (const locale of ["en", "es"]) {
               );
               continue;
             }
+            // The lead's meta row and title must exist in both renderings (a dek may be absent on a page without one).
+            if (i === 0) {
+              for (const [render, name] of [
+                [l, "the font"],
+                [f, "the fallback"],
+              ]) {
+                for (const k of [1, 2]) {
+                  if (render[k] === -1) {
+                    diffs.push(`lead ${parts[k]} missing with ${name}`);
+                  }
+                }
+              }
+            }
             l.forEach((offset, k) => {
+              // A child present in one rendering and missing in the other is a difference, not a pass.
+              if ((offset === -1) !== (f[k] === -1)) {
+                diffs.push(
+                  `article ${i} ${parts[k]}: present with ${offset === -1 ? "the fallback" : "the font"} only`
+                );
+                return;
+              }
+              if (offset === -1) return;
               if (Math.abs(offset - f[k]) > 0.5) {
                 diffs.push(
                   `article ${i} ${parts[k]}: ${f[k]} -> ${offset} below the list heading`

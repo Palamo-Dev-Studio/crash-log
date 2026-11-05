@@ -340,7 +340,9 @@ describe("FileCard stacked lead CSS", () => {
     expect(stacked).toMatch(/\.lead \.body \{[^}]*max-width: 46rem/);
   });
 
-  it("gives the lead byline its own line in the meta block, so its width cannot change the line count", () => {
+  it("gives the lead byline its own line in the meta block", () => {
+    // The byline takes a whole line, so DM Mono versus its fallback cannot move it onto or off the date's line.
+    // (A very long guest byline could still wrap onto a second line at 390 px.)
     expect(css).toMatch(/\.leadBy \{[^}]*flex-basis: 100%/);
     const { container } = render(
       <FileCard doc={doc(2)} locale="en" variant="lead" />
