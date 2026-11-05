@@ -26,17 +26,19 @@
   --serif-dek: Newsreader, "Newsreader Dek Fallback", Georgia, serif;
 }
 
-/* next/font sizes its "Newsreader Fallback" (Times New Roman at 105.48%) from average glyph width. For the dek's
-   sentences that runs about 7% wider than Newsreader itself (a Spanish dek: 1181px in the fallback, 1104px loaded), so the
-   dek wrapped differently before and after the web font loaded and moved everything below it. This face is Times New
-   Roman at 99.6%: the middle of the 99.3% to 100.0% range in which every index and home dek (ES and EN, 390 to 1440px)
-   has the same line count in both faces. Only the deks use it (--serif-dek). */
+/* next/font sizes its "Newsreader Fallback" (Times New Roman at 105.48%) from average glyph width, which runs wider than
+   Newsreader on the page-head dek's sentences, so the dek wrapped differently before and after the web font loaded and
+   moved everything below it. This face is Times New Roman (or a metric-compatible clone) scaled to track Newsreader at
+   the dek's measure; only the deks use it (--serif-dek). The ascent and descent overrides are next/font's, rescaled:
+   the browser applies size-adjust to them, so each is override * 1.0548 / size-adjust. One scale cannot match two
+   faces at every measure: e2e/dek-stable-layout.spec.js sweeps the viewport range and lists the widths that still
+   wrap differently. */
 @font-face {
   font-family: "Newsreader Dek Fallback";
-  src: local("Times New Roman");
-  size-adjust: 99.6%;
-  ascent-override: 69.68%;
-  descent-override: 25.12%;
+  src: local("Times New Roman"), local("Tinos"), local("Liberation Serif");
+  size-adjust: 98.7%;
+  ascent-override: 74.47%;
+  descent-override: 26.85%;
   line-gap-override: 0%;
 }
 

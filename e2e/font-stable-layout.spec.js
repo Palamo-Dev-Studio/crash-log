@@ -56,10 +56,10 @@ for (const locale of ["en", "es"]) {
       // /es/practical's lead title takes 3 lines in the fallback face and 2 in Instrument Serif at 390 and 1440, which
       // moves the dek inside the first viewport. This is NOT covered by the strict-heights refusal (that was about
       // cards below the fold). At 390 it shows only with fonts blocked: throttled CLS there is 0 on main and on HEAD.
-      // At 1440 it is a measured regression (perf-budget.spec.js: /es/practical HEAD 0.01125 vs main 0.0091).
-      // Hector ruled to ship it disclosed (#crash-log 1567702842754736140, 2026-11-05, option A); the pre-existing ES
-      // page-head dek re-wrap gets a separate fix. Only clamping, reserving lines or font-display: optional would
-      // remove the title re-wrap itself.
+      // At 1440 it was a measured regression (perf-budget.spec.js: /es/practical 0.01125 vs main 0.0091).
+      // Hector ruled to ship it disclosed (#crash-log 1567702842754736140, 2026-11-05, option A). The page-head dek
+      // re-wrap has its own fix, guarded by dek-stable-layout.spec.js. Only clamping, reserving lines or
+      // font-display: optional would remove the title re-wrap itself.
       const knownTitleRewrap =
         locale === "es" &&
         series === "practical" &&

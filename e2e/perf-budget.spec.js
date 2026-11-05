@@ -86,14 +86,14 @@ for (const path of [
 const CLS_LIMITS = {
   "/en/nico": { desktop: 0.00021, mobile: 0.00005 },
   "/en/off-the-rails": { desktop: 0.00021, mobile: 0.00005 },
-  // /es/off-the-rails has a baseline mobile CLS of 0.0147 (the page head's dek re-wraps in ES, on origin/main too):
-  // the limit is the 4-decimal rounding boundary above it, so the branch must not add to it.
+  // /es/off-the-rails had a baseline mobile CLS of 0.0147 on origin/main, where the page head's dek re-wrapped in ES
+  // when Newsreader loaded: the limit is the 4-decimal rounding boundary above it, so the branch must not add to it.
   "/es/off-the-rails": { desktop: 0.00021, mobile: 0.01475 },
   "/en/practical": { desktop: 0.00005, mobile: 0.00005 },
   // /es/practical on origin/main (a526f14, 3 runs): mobile 0; desktop 0.0091 at 1440 (0.00897-0.00912), 0.0145 at
-  // 1100 (0.01422-0.01448), 0.0158 at 1024 (0.01579). The ES page head's dek re-wraps when Newsreader loads and moves
-  // everything below it (the same cause as /es/off-the-rails above). Limits are the 4-decimal rounding boundary above
-  // those. HEAD (3 runs): mobile 0; 0.01125 at 1440, 0.01478 at 1100, 0.01582 at 1024.
+  // 1100 (0.01422-0.01448), 0.0158 at 1024 (0.01579). There the ES page head's dek re-wrapped when Newsreader loaded and
+  // moved everything below it (the same cause as /es/off-the-rails above); e2e/dek-stable-layout.spec.js guards
+  // that. Limits are the 4-decimal rounding boundary above the origin/main figures.
   "/es/practical": {
     desktop: { 1440: 0.00915, 1100: 0.01455, 1024: 0.01585 },
     mobile: 0.00005,
