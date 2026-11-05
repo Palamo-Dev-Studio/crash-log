@@ -112,10 +112,12 @@ describe("every var() reference is declared", () => {
     )
   );
 
-  it("treats exactly --font-display, --font-body and --font-mono as next/font-provided", () => {
+  it("treats exactly the next/font families (display, body, mono and the two italics) as next/font-provided", () => {
     expect([...nextFontVars].sort()).toEqual([
       "--font-body",
+      "--font-body-italic",
       "--font-display",
+      "--font-display-italic",
       "--font-mono",
     ]);
   });
@@ -151,5 +153,23 @@ describe("every var() reference is declared", () => {
         !inlineStyleVars.has(name)
     );
     expect(undeclared).toEqual([]);
+  });
+});
+
+describe("italic font routing", () => {
+  const globals = readFileSync(resolve(root, "app/globals.css"), "utf8");
+  const articleBody = readFileSync(
+    resolve(root, "components/ArticleBody.module.css"),
+    "utf8"
+  );
+
+  it("emphasis uses the Newsreader italic variable", () => {
+    expect(globals).toMatch(/\nem \{[^}]*font-family: var\(--serif-b-italic\)/);
+  });
+
+  it("emphasis inside Instrument Serif headings and pull quotes keeps the display italic", () => {
+    expect(articleBody).toMatch(
+      /\.prose h2 em,\s*\.prose h3 em,\s*\.prose \.pull em \{[^}]*var\(--serif-d-italic\)/
+    );
   });
 });

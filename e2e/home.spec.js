@@ -81,7 +81,7 @@ test.describe("Home page", () => {
     });
   }
 
-  test("recent files rows carry code, date, title and byline", async ({
+  test("recent files cards carry code, date and title, and drop the series-default byline", async ({
     page,
   }) => {
     await page.goto("/en");
@@ -90,7 +90,14 @@ test.describe("Home page", () => {
       hasText: /(OTR|FIX|NOTE)-\d{3}/,
     });
     expect(await rows.count()).toBeGreaterThan(0);
-    await expect(rows.first()).toContainText(/(By|Por) \S/);
+    await expect(rows.first()).toContainText(/[A-Z][a-z]{2} \d{1,2}, \d{4}/);
+    await expect(rows.first()).not.toContainText("Nico von Bot");
+    // One file per series where the series has one left, so the row is not all one series.
+    const codes = (await section.locator("article").allInnerTexts()).map(
+      (t) => t.match(/(OTR|FIX|NOTE)-\d{3}/)[0]
+    );
+    expect(new Set(codes).size).toBe(codes.length);
+    expect(new Set(codes.map((c) => c.split("-")[0])).size).toBeGreaterThan(1);
     await expect(
       page.getByRole("link", { name: /see the full archive/i })
     ).toBeVisible();

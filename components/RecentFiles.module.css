@@ -1,5 +1,5 @@
 /* ABOUTME: Styles for the home "Recent files" section shell: heading rule and the archive link.
-   ABOUTME: Row styles live in FileRow.module.css. */
+   ABOUTME: Card styles live in FileCard.module.css. */
 
 .recent {
   padding: 4px 0 52px;
@@ -16,6 +16,10 @@
   letter-spacing: 0.03em;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--ink);
+}
+
+.cards {
+  padding-top: 24px;
 }
 
 .archive:focus-visible {

@@ -1,7 +1,7 @@
-// ABOUTME: Series index (Practical, Nico's Notes): page head with a one-line description, then every file as a FileRow, newest first.
+// ABOUTME: Series index (Practical, Nico's Notes): page head with a one-line description, then the newest file as a lead and the rest as cards.
 // ABOUTME: With no files it shows an intentional empty state, plus a Subscribe link when the series has one.
 
-import FileRow from "@/components/FileRow";
+import FileMagazine from "@/components/FileMagazine";
 import { SERIES_INDEX_LABELS } from "@/lib/articleLabels";
 import { SUBSTACK_SUBSCRIBE_URL } from "@/lib/substack";
 import styles from "./SeriesIndex.module.css";
@@ -33,13 +33,10 @@ export default function SeriesIndex({ series, docs, locale }) {
             )}
           </div>
         )}
-        {docs.map((doc) => (
-          <FileRow
-            key={doc._id}
-            doc={{ ...doc, _type: DOC_TYPES[series] }}
-            locale={locale}
-          />
-        ))}
+        <FileMagazine
+          docs={docs.map((doc) => ({ ...doc, _type: DOC_TYPES[series] }))}
+          locale={locale}
+        />
       </section>
     </main>
   );

@@ -1,4 +1,4 @@
-// ABOUTME: One file row: code, date, serif title and byline, linking to the file; shared by home "Recent files", the series indexes and archive results.
+// ABOUTME: One file row: code, date, serif title and byline, linking to the file; used by the archive search results (the series indexes and home "Recent files" use FileCard).
 // ABOUTME: Archive results pass a highlighted title, subtitle and matched-in line; rows stack (code, date, title, byline) at 700px and below.
 
 import Link from "next/link";

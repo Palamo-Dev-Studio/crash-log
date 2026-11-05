@@ -7,6 +7,7 @@ import {
   getSeries,
   getFileCode,
   getByline,
+  hasDefaultByline,
   getCredit,
   withRef,
 } from "@/lib/series";
@@ -230,5 +231,37 @@ describe("getCredit", () => {
   it("returns null for a non-series doc", () => {
     expect(getCredit({ _type: "story" }, "en")).toBeNull();
     expect(getCredit(null, "en")).toBeNull();
+  });
+});
+
+describe("hasDefaultByline", () => {
+  it("is true for the newsroom sentinel on any series, case-insensitively", () => {
+    expect(hasDefaultByline({ _type: "issue", byline: "newsroom" })).toBe(true);
+    expect(hasDefaultByline({ _type: "issue", byline: " Newsroom " })).toBe(
+      true
+    );
+  });
+
+  it("is true for Nico's Notes with no byline or Nico von Bot", () => {
+    expect(hasDefaultByline({ _type: "column" })).toBe(true);
+    expect(hasDefaultByline({ _type: "column", byline: "Nico von Bot" })).toBe(
+      true
+    );
+  });
+
+  it("is false for a named author, Hector included, and for a guest on Notes", () => {
+    expect(hasDefaultByline({ _type: "practical" })).toBe(false);
+    expect(
+      hasDefaultByline({ _type: "issue", byline: "Hector Luis Alamo" })
+    ).toBe(false);
+    expect(hasDefaultByline({ _type: "column", byline: "Ana Ruiz" })).toBe(
+      false
+    );
+  });
+
+  it("is false for an unknown type", () => {
+    expect(hasDefaultByline({ _type: "story", byline: "newsroom" })).toBe(
+      false
+    );
   });
 });

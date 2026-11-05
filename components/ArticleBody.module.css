@@ -85,11 +85,17 @@
   margin: 1.6em 0;
   padding: 6px 0 6px 24px;
   border-left: 4px solid var(--terra);
-  font-family: var(--serif-d);
+  font-family: var(--serif-d-italic);
   font-size: 34px;
   line-height: 1.18;
   font-style: italic;
   color: var(--ink);
+}
+
+.prose h2 em,
+.prose h3 em,
+.prose .pull em {
+  font-family: var(--serif-d-italic);
 }
 
 .callout {

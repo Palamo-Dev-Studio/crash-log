@@ -18,18 +18,23 @@ vi.mock("next/image", () => ({
   ),
 }));
 vi.mock("@/lib/sanity", () => ({
-  urlFor: () => ({
-    width() {
-      return this;
-    },
-    height() {
-      return this;
-    },
-    format() {
-      return this;
-    },
-    url: () => "https://cdn.sanity.io/test.webp",
-  }),
+  // Like @sanity/image-url, throw on a source with no asset.
+  urlFor: (source) => {
+    if (!source?.asset)
+      throw new Error("Unable to resolve image URL from source");
+    return {
+      width() {
+        return this;
+      },
+      height() {
+        return this;
+      },
+      format() {
+        return this;
+      },
+      url: () => "https://cdn.sanity.io/test.webp",
+    };
+  },
 }));
 
 import FileChip from "@/components/FileChip";
@@ -129,6 +134,24 @@ describe("FileChip", () => {
       <FileChip doc={{ _type: "issue", issueNumber: null }} />
     );
     expect(c2).toBeEmptyDOMElement();
+  });
+});
+
+describe("HomeCover with a cover that has no asset", () => {
+  it.each([
+    ["an image object with no asset", { _type: "image" }],
+    ["a null asset", { _type: "image", asset: null }],
+  ])("renders the text without an image for %s", (_name, coverImage) => {
+    const { container } = render(
+      <HomeCover doc={{ ...COLUMN, coverImage }} locale="en" />
+    );
+    expect(container.querySelector("img")).toBeNull();
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "All the Powers of an Owner",
+      })
+    ).toBeInTheDocument();
   });
 });
 
@@ -306,7 +329,7 @@ describe("HomeRail", () => {
 });
 
 describe("RecentFiles", () => {
-  it("renders a row per doc with code, date, title and byline, linked by series", () => {
+  it("renders a card per doc with code, date, title and byline, linked by series", () => {
     render(<RecentFiles docs={OLDER} locale="en" />);
     expect(screen.getByText("Recent files")).toBeInTheDocument();
     expect(screen.getByText("NOTE-021")).toBeInTheDocument();
@@ -321,7 +344,9 @@ describe("RecentFiles", () => {
     expect(
       screen.getByText("Three agents acted early").closest("a")
     ).toHaveAttribute("href", "/en/issue/otr-43");
-    expect(screen.getByText("By Nico von Bot")).toBeInTheDocument();
+    // Nico von Bot is the Notes default byline: cards leave it out.
+    expect(screen.queryByText("By Nico von Bot")).toBeNull();
+    expect(screen.getByText("By Hector Luis Alamo")).toBeInTheDocument();
   });
 
   it("keeps the archive link (EN and ES) even with no rows", () => {

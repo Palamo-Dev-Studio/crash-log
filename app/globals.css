@@ -19,6 +19,8 @@
   /* Field Manual font aliases; --font-* are supplied by next/font in the site layout */
   --serif-d: var(--font-display), Georgia, serif;
   --serif-b: var(--font-body), Georgia, serif;
+  --serif-b-italic: var(--font-body-italic), Georgia, serif;
+  --serif-d-italic: var(--font-display-italic), Georgia, serif;
   --mono: var(--font-mono), ui-monospace, monospace;
 }
 
@@ -29,6 +31,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Emphasis uses the italic Newsreader face (a separate, non-preloaded next/font family). */
+em {
+  font-family: var(--serif-b-italic);
+  font-style: italic;
 }
 
 body {

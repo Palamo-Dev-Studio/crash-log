@@ -1,0 +1,139 @@
+/* ABOUTME: Styles for the magazine file card: 16:9 cover reserved by aspect-ratio, mono meta, serif title, full subtitle.
+   ABOUTME: The lead variant puts a large cover beside its text from 1100px up and stacks below; no motion. */
+
+.card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.art {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--rule);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif-d);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.sub {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.by {
+  margin: auto 0 0;
+  padding-top: 4px;
+  font-family: var(--mono);
+  font-size: var(--label);
+  color: var(--muted);
+}
+
+.link:hover .title {
+  color: var(--terra-ink);
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+}
+
+/* Lead: a larger title and subtitle. Cards show the full subtitle too: it is a written dek, and a clamp cut it mid-word. */
+.lead .link {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.lead .title {
+  font-size: 44px;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.lead .sub {
+  font-size: 21px;
+  line-height: 1.45;
+}
+
+.lead .body {
+  gap: 12px;
+  flex: none;
+}
+
+/* The lead's byline has its own line in the meta block (chip and date on the first): the byline's width differs
+   between DM Mono and its fallback, so inline it could wrap in one and not the other and move the title below. */
+.leadBy {
+  flex-basis: 100%;
+}
+
+/* Side by side only from 1100px; below that the lead stacks (cover on top, text under). Beside the cover a
+   text column can be taller than the cover in the fallback face and shorter in the web font, so the row would
+   change height when the font arrives and move the grid below it. Stacked, the text is the last thing in the lead. */
+@media (max-width: 1099px) {
+  .lead .link {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* The cover spans the column; keep the text to a readable measure (about 75 characters a line). */
+  .lead .body {
+    max-width: 46rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .lead .title {
+    font-size: 34px;
+  }
+
+  .lead .sub {
+    font-size: 19px;
+  }
+}

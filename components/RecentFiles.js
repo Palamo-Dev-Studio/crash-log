@@ -1,8 +1,8 @@
-// ABOUTME: Home "Recent files" list: one FileRow per file, then a link to the archive.
-// ABOUTME: Row layout and its mobile stacking live in FileRow.
+// ABOUTME: Home "Recent files": a row of three file cards, then a link to the archive.
+// ABOUTME: Card layout lives in FileCard; the three-then-one column layout in FileCardGrid.
 
 import Link from "next/link";
-import FileRow from "@/components/FileRow";
+import FileCardGrid from "@/components/FileCardGrid";
 import { HOME_LABELS } from "@/lib/homeLabels";
 import styles from "./RecentFiles.module.css";
 
@@ -19,9 +19,9 @@ export default function RecentFiles({ docs, locale }) {
           <h2 id="recent-files-heading" className={styles.heading}>
             {labels.recentHeading}
           </h2>
-          {docs.map((doc) => (
-            <FileRow key={doc._id} doc={doc} locale={locale} />
-          ))}
+          <div className={styles.cards}>
+            <FileCardGrid docs={docs} locale={locale} layout="trio" />
+          </div>
         </>
       )}
       <div className={styles.archiveWrap}>

@@ -27,7 +27,7 @@ export default function HomeCover({ doc, locale }) {
   const minutes = getReadingMinutes(doc, locale);
   const byline = getByline(doc, locale);
 
-  const imageUrl = doc.coverImage
+  const imageUrl = doc.coverImage?.asset
     ? urlFor(doc.coverImage)
         .width(IMAGE_WIDTH)
         .height(IMAGE_HEIGHT)

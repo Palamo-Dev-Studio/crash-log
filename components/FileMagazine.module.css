@@ -1,0 +1,25 @@
+/* ABOUTME: Spacing for the lead story above the card grid on a series index.
+   ABOUTME: A hairline under the lead separates it from the grid; a lone lead keeps no trailing rule. */
+
+.lead {
+  padding: 28px 0 36px;
+}
+
+.lead:last-child {
+  padding-bottom: 0;
+}
+
+.lead:not(:last-child) {
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 36px;
+}
+
+@media (max-width: 700px) {
+  .lead {
+    padding: 22px 0 28px;
+  }
+
+  .lead:not(:last-child) {
+    margin-bottom: 28px;
+  }
+}
