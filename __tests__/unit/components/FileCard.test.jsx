@@ -340,8 +340,8 @@ describe("FileCard stacked lead CSS", () => {
     expect(stacked).toMatch(/\.lead \.body \{[^}]*max-width: 46rem/);
   });
 
-  it("separates the lead byline from the date with a wider gap", () => {
-    expect(css).toMatch(/\.leadBy \{[^}]*margin-left: 12px/);
+  it("gives the lead byline its own line in the meta block, so its width cannot change the line count", () => {
+    expect(css).toMatch(/\.leadBy \{[^}]*flex-basis: 100%/);
     const { container } = render(
       <FileCard doc={doc(2)} locale="en" variant="lead" />
     );

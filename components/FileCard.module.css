@@ -106,9 +106,10 @@
   flex: none;
 }
 
-/* The lead's byline sits in the meta row; a wider gap keeps it from reading as part of the date. */
+/* The lead's byline has its own line in the meta block (chip and date on the first): the byline's width differs
+   between DM Mono and its fallback, so inline it could wrap in one and not the other and move the title below. */
 .leadBy {
-  margin-left: 12px;
+  flex-basis: 100%;
 }
 
 /* Side by side only from 1100px; below that the lead stacks (cover on top, text under). Beside the cover a
