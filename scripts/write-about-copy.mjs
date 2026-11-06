@@ -277,7 +277,7 @@ export async function applyWrites(
   return failures;
 }
 
-function loadToken() {
+export function loadToken() {
   if (process.env.SANITY_API_TOKEN) return process.env.SANITY_API_TOKEN;
   try {
     const content = readFileSync(resolve(__dirname, "../.env.local"), "utf-8");

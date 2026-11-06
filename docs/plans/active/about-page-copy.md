@@ -27,8 +27,6 @@ Everything runs in English and Spanish.
 
 ### Who makes it
 
-Two of us.
-
 **Hector Luis Alamo** is a journalist and editor, and a co-founder of Palamo. He edits everything, decides what
 runs, and signs Off the Rails and Practical.
 
@@ -76,8 +74,6 @@ trabajo que Hector y yo hacemos en Palamo, el estudio que publica The Crash Log.
 Todo sale en inglés y en español.
 
 ### Quién lo hace
-
-Somos dos.
 
 **Hector Luis Alamo** es periodista y editor, y cofundador de Palamo. Edita todo, decide qué se publica y firma
 Fuera de las vías y Práctico.
