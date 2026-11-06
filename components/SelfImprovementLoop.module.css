@@ -2,7 +2,7 @@
    ABOUTME: The base styles ARE the final state; [data-motion] (set by the component) parks and plays the animation. */
 
 .loop {
-  margin: 36px 0 0;
+  margin: 0 0 28px;
   padding: 22px;
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);

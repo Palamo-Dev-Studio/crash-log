@@ -90,13 +90,6 @@
   color: var(--ink);
 }
 
-.mastheadIntro {
-  margin: 0 0 18px;
-  font-family: var(--serif-b);
-  font-size: 19px;
-  line-height: 1.5;
-}
-
 .masthead {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -123,8 +116,7 @@
     font-size: 38px;
   }
 
-  .prose,
-  .mastheadIntro {
+  .prose {
     font-size: 18px;
   }
 }

@@ -266,20 +266,6 @@
         },
         {
           "_type": "block",
-          "_key": "en-workflow-h0p0",
-          "style": "normal",
-          "markDefs": [],
-          "children": [
-            {
-              "_type": "span",
-              "_key": "en-workflow-h0p0s0",
-              "text": "Two of us.",
-              "marks": []
-            }
-          ]
-        },
-        {
-          "_type": "block",
           "_key": "en-workflow-h0p1",
           "style": "normal",
           "markDefs": [],
@@ -426,20 +412,6 @@
               "_type": "span",
               "_key": "es-workflow-h0s0",
               "text": "Quién lo hace",
-              "marks": []
-            }
-          ]
-        },
-        {
-          "_type": "block",
-          "_key": "es-workflow-h0p0",
-          "style": "normal",
-          "markDefs": [],
-          "children": [
-            {
-              "_type": "span",
-              "_key": "es-workflow-h0p0s0",
-              "text": "Somos dos.",
               "marks": []
             }
           ]

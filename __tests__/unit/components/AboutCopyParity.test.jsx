@@ -16,6 +16,7 @@ vi.mock("@/lib/sanity", () => ({
 }));
 
 import { FallbackAbout, SanityAbout } from "@/components/AboutSections";
+import { ABOUT_COPY } from "@/lib/aboutFallback";
 
 const ROOT = process.cwd();
 const COPY = fs.readFileSync(
@@ -108,6 +109,76 @@ describe.each(["en", "es"])("About copy parity [%s]", (locale) => {
       ).toBeGreaterThanOrEqual(from);
       from = at + item.text.length;
     }
+  });
+});
+
+// The first element after a section's H2 (siblings, so prose wrappers count as content).
+const afterHeading = (container, text) => {
+  const h2 = [...container.querySelectorAll("h2")].find(
+    (h) => h.textContent === text
+  );
+  expect(h2, `no H2 "${text}"`).toBeTruthy();
+  return h2.nextElementSibling;
+};
+
+// The live Sanity content still opens the masthead section with "Two of us." until it is
+// removed; the page must place the cards right after the H2 either way.
+const withIntroLine = (about, locale) => {
+  const line = {
+    _type: "block",
+    _key: `${locale}-workflow-intro-line`,
+    style: "normal",
+    markDefs: [],
+    children: [
+      {
+        _type: "span",
+        _key: `${locale}-workflow-intro-line-s`,
+        text: locale === "en" ? "Two of us." : "Somos dos.",
+        marks: [],
+      },
+    ],
+  };
+  const blocks = [...about.workflowSection[locale]];
+  blocks.splice(1, 0, line);
+  return {
+    ...about,
+    workflowSection: { ...about.workflowSection, [locale]: blocks },
+  };
+};
+
+describe.each(["en", "es"])("About page order [%s]", (locale) => {
+  const copy = ABOUT_COPY[locale];
+  const renders = {
+    fallback: () => render(<FallbackAbout locale={locale} about={null} />),
+    sanity: () => render(<SanityAbout about={payloadAbout} locale={locale} />),
+    "sanity before the intro line is removed": () =>
+      render(
+        <SanityAbout
+          about={withIntroLine(payloadAbout, locale)}
+          locale={locale}
+        />
+      ),
+  };
+
+  describe.each(Object.keys(renders))("%s", (name) => {
+    it("opens the masthead section with the cards", () => {
+      const { container } = renders[name]();
+      expect(
+        afterHeading(container, copy.whoHeading).getAttribute("data-testid")
+      ).toBe("masthead");
+    });
+
+    it("opens the better section with the loop graphic", () => {
+      const { container } = renders[name]();
+      expect(
+        afterHeading(container, copy.betterHeading).getAttribute("data-testid")
+      ).toBe("self-improvement-loop");
+    });
+  });
+
+  it.each(["fallback", "sanity"])("shows no 'Two of us.' line [%s]", (name) => {
+    const { container } = renders[name]();
+    expect(container.textContent).not.toMatch(/Two of us\.|Somos dos\./);
   });
 });
 

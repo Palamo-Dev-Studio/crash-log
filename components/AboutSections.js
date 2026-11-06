@@ -80,7 +80,6 @@ export function FallbackAbout({ locale, about }) {
 
       <section className={styles.section}>
         <h2 className={styles.heading}>{copy.whoHeading}</h2>
-        <p className={styles.mastheadIntro}>{copy.whoIntro}</p>
         <div className={styles.masthead} data-testid="masthead">
           {FALLBACK_MASTHEAD.map((person) => {
             const sanityAgent = about?.masthead?.find(
@@ -105,10 +104,10 @@ export function FallbackAbout({ locale, about }) {
 
       <section className={styles.section}>
         <h2 className={styles.heading}>{copy.betterHeading}</h2>
+        <SelfImprovementLoop locale={lang} />
         <div className={styles.prose}>
           <Paragraphs items={copy.better} />
         </div>
-        <SelfImprovementLoop locale={lang} />
       </section>
 
       <section className={styles.section}>
@@ -175,7 +174,7 @@ function Masthead({ people, locale }) {
 // Sanity-driven page in the fallback's structure. Mapping:
 //   introParagraph:  first plain block = lead (H1); each H2 opens a section
 //   workflowSection: each H2 opens a section; the masthead cards sit after the
-//                    first block of the first section ("Two of us.")
+//                    first content after the first section's H2, whatever blocks follow
 //   contactCTA:      each H2 opens a section
 // An intro with no H2 is older content and renders as LegacySanityAbout.
 export function SanityAbout({ about, locale }) {
@@ -227,29 +226,14 @@ export function SanityAbout({ about, locale }) {
           );
         }
         const { section, withCards } = item;
-        const [first, ...rest] = section.body;
         return (
           <section key={i} className={styles.section}>
             <h2 className={styles.heading}>{section.heading}</h2>
-            {withCards ? (
-              <>
-                {first && (
-                  <div className={styles.mastheadIntro}>
-                    <PortableText
-                      value={[first]}
-                      components={portableTextComponents}
-                    />
-                  </div>
-                )}
-                <Masthead people={people} locale={locale} />
-                <Prose blocks={rest} />
-              </>
-            ) : (
-              <Prose blocks={section.body} />
-            )}
+            {withCards && <Masthead people={people} locale={locale} />}
             {isBetterSection(section) && (
               <SelfImprovementLoop locale={locale} />
             )}
+            <Prose blocks={section.body} />
           </section>
         );
       })}

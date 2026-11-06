@@ -359,3 +359,28 @@ test("with the graphic already in view at load it plays once, to the final state
   await expect(page.getByTestId("loop-stamp")).toHaveCSS("opacity", "1");
   await context.close();
 });
+
+const HEADINGS = {
+  en: { who: "Who makes it", better: "How it gets better" },
+  es: { who: "Quién lo hace", better: "Cómo mejora" },
+};
+
+for (const locale of ["en", "es"]) {
+  test(`/${locale}/about opens the masthead section with the cards and the better section with the loop`, async ({
+    page,
+  }) => {
+    await page.goto(`/${locale}/about`);
+    const firstAfter = (name) =>
+      page
+        .getByRole("heading", { level: 2, name, exact: true })
+        .locator("xpath=following-sibling::*[1]");
+    await expect(firstAfter(HEADINGS[locale].who)).toHaveAttribute(
+      "data-testid",
+      "masthead"
+    );
+    await expect(firstAfter(HEADINGS[locale].better)).toHaveAttribute(
+      "data-testid",
+      "self-improvement-loop"
+    );
+  });
+}
