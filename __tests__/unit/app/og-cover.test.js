@@ -1,14 +1,30 @@
-// ABOUTME: The issue, Nico's Notes and Practical OG/twitter image routes render the article's cover when it has one.
-// ABOUTME: No cover, a failed fetch or a non-image reply all fall back to the TitleCard; Sanity, fonts and fetch are mocked.
+// ABOUTME: Guards of the cover OG path, each tested alone: JPEG validation, blank-PNG detection, fetch timeout, eager render.
+// ABOUTME: next/og, Sanity, fonts and fetch are mocked here; the real renderer is exercised in integration/og-cover-render.test.js.
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import {
+  solidJpeg,
+  cmykJpeg,
+  truncatedJpeg,
+  junkBytes,
+  opaquePng,
+  transparentPng,
+  blackRgbPng,
+} from "../../helpers/ogFixtures";
 
-const { imageResponse } = vi.hoisted(() => ({ imageResponse: vi.fn() }));
+// What the mocked renderer hands back as its PNG, and whether it throws while encoding.
+const render = vi.hoisted(() => ({ png: null, throwOnBytes: false }));
+const imageResponse = vi.hoisted(() => vi.fn());
 
 vi.mock("next/og", () => ({
   ImageResponse: class {
     constructor(element, options) {
       imageResponse(element, options);
+      this.headers = new Headers({ "content-type": "image/png" });
+    }
+    async arrayBuffer() {
+      if (render.throwOnBytes) throw new Error("Invalid JPEG");
+      return render.png;
     }
   },
 }));
@@ -34,22 +50,12 @@ vi.mock("@/lib/sanity", () => ({
 }));
 
 const COVER = { asset: { _ref: "image-abc-2400x1600-png" } };
-
-// Cover docs and cover-less docs differ in coverImage only; titles stay the same so the
-// assertions can tell the cover card from the TitleCard by element type, not by text.
 const base = {
   publishDate: "2026-10-30",
   stories: [{}],
   title: { en: "Check the Backups", es: "Revisa las copias" },
-  coverImageAlt: { en: "A backup tape", es: "Una cinta" },
-};
-const docs = {
-  issue: { ...base, _type: "issue", issueNumber: 7 },
-  column: { ...base, _type: "column", columnNumber: 7 },
-  practical: { ...base, _type: "practical", practicalNumber: 7 },
 };
 let current;
-
 vi.mock("@/lib/queries", () => ({
   getIssueBySlug: vi.fn(async () => current.issue),
   getColumnBySlug: vi.fn(async () => current.column),
@@ -57,7 +63,7 @@ vi.mock("@/lib/queries", () => ({
 }));
 
 import { TitleCard } from "@/lib/ogTemplate";
-import { CoverCard } from "@/lib/ogCover";
+import { CoverCard, isRenderableJpeg, isBlankPng } from "@/lib/ogCover";
 import IssueOg from "@/app/(site)/[locale]/issue/[slug]/opengraph-image";
 import ColumnOg from "@/app/(site)/[locale]/nico/[slug]/opengraph-image";
 import PracticalOg from "@/app/(site)/[locale]/practical/[slug]/opengraph-image";
@@ -66,94 +72,211 @@ import ColumnTw from "@/app/(site)/[locale]/nico/[slug]/twitter-image";
 import PracticalTw from "@/app/(site)/[locale]/practical/[slug]/twitter-image";
 
 const ROUTES = [
-  ["issue", "issue", IssueOg, IssueTw],
-  ["column", "column", ColumnOg, ColumnTw],
-  ["practical", "practical", PracticalOg, PracticalTw],
+  ["issue", IssueOg, IssueTw],
+  ["column", ColumnOg, ColumnTw],
+  ["practical", PracticalOg, PracticalTw],
 ];
 
-const JPEG_BYTES = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3, 4]);
-const EXPECTED_SRC = `data:image/jpeg;base64,${JPEG_BYTES.toString("base64")}`;
+const fetchMock = vi.fn();
+let jpeg;
+let opaque;
 
-function okImage() {
-  return new Response(JPEG_BYTES, {
+const reply = (bytes, init = {}) =>
+  new Response(bytes, {
     status: 200,
     headers: { "content-type": "image/jpeg" },
+    ...init,
   });
-}
 
-const fetchMock = vi.fn();
-
-beforeEach(() => {
+beforeEach(async () => {
+  jpeg ??= await solidJpeg();
+  opaque ??= await opaquePng();
   imageResponse.mockClear();
   fetchMock.mockReset();
   vi.stubGlobal("fetch", fetchMock);
+  render.png = opaque;
+  render.throwOnBytes = false;
   current = {
-    issue: { ...docs.issue, coverImage: COVER },
-    column: { ...docs.column, coverImage: COVER },
-    practical: { ...docs.practical, coverImage: COVER },
+    issue: { ...base, _type: "issue", issueNumber: 7, coverImage: COVER },
+    column: { ...base, _type: "column", columnNumber: 7, coverImage: COVER },
+    practical: {
+      ...base,
+      _type: "practical",
+      practicalNumber: 7,
+      coverImage: COVER,
+    },
   };
 });
 afterEach(() => vi.unstubAllGlobals());
 
-async function render(route, locale) {
-  await route({ params: Promise.resolve({ locale, slug: "x" }) });
-  expect(imageResponse).toHaveBeenCalledTimes(1);
-  return imageResponse.mock.calls[0];
-}
+const lastElement = () => imageResponse.mock.calls.at(-1)[0];
 
-describe.each(ROUTES)("%s OG route", (_name, key, og, tw) => {
+describe("isRenderableJpeg", () => {
+  it("accepts a real baseline JPEG", async () => {
+    expect(isRenderableJpeg(await solidJpeg())).toBe(true);
+  });
+  it("rejects bytes that do not start with the JPEG signature", async () => {
+    expect(isRenderableJpeg(junkBytes())).toBe(false);
+    const withBadStart = Buffer.from(await solidJpeg());
+    withBadStart[0] = 0x00;
+    expect(isRenderableJpeg(withBadStart)).toBe(false);
+  });
+  it("rejects a JPEG missing its end marker", async () => {
+    expect(isRenderableJpeg(await truncatedJpeg())).toBe(false);
+  });
+  it("rejects a CMYK (4 component) JPEG", async () => {
+    expect(isRenderableJpeg(await cmykJpeg())).toBe(false);
+  });
+  it("rejects an empty or tiny body", () => {
+    expect(isRenderableJpeg(Buffer.alloc(0))).toBe(false);
+    expect(isRenderableJpeg(Buffer.from([0xff, 0xd8, 0xff]))).toBe(false);
+  });
+  it("rejects a JPEG whose scan starts before any frame header", () => {
+    const bytes = Buffer.from([
+      0xff, 0xd8, 0xff, 0xda, 0x00, 0x02, 0xff, 0xc0, 0x00, 0x11, 0x08, 0x00,
+      0x01, 0x00, 0x01, 0x03, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd9,
+    ]);
+    expect(isRenderableJpeg(bytes)).toBe(false);
+  });
+  it("rejects a frame header with a component count other than 1 or 3", async () => {
+    const odd = Buffer.from(await solidJpeg());
+    const sof = odd.findIndex(
+      (b, i) => b === 0xff && odd[i + 1] >= 0xc0 && odd[i + 1] <= 0xc2
+    );
+    odd[sof + 9] = 2;
+    expect(isRenderableJpeg(odd)).toBe(false);
+  });
+  it("accepts a 1 component (greyscale) JPEG", async () => {
+    const grey = Buffer.from(await solidJpeg());
+    const sof = grey.findIndex(
+      (b, i) => b === 0xff && grey[i + 1] >= 0xc0 && grey[i + 1] <= 0xc2
+    );
+    grey[sof + 9] = 1;
+    expect(isRenderableJpeg(grey)).toBe(true);
+  });
+});
+
+describe("isBlankPng", () => {
+  it("is true for a fully transparent RGBA PNG", async () => {
+    expect(isBlankPng(await transparentPng())).toBe(true);
+  });
+  it("is false for a PNG with pixels", async () => {
+    expect(isBlankPng(await opaquePng())).toBe(false);
+  });
+  it("is false for bytes that are not a PNG, however short", () => {
+    expect(isBlankPng(junkBytes())).toBe(false);
+    expect(isBlankPng(Buffer.from("abc"))).toBe(false);
+  });
+  it("is false for an RGB PNG, a layout it does not inspect, even when every pixel is black", async () => {
+    expect(isBlankPng(await blackRgbPng())).toBe(false);
+  });
+});
+
+describe.each(ROUTES)("%s OG route", (_name, og, tw) => {
+  const key = _name;
   describe.each(["en", "es"])("%s", (locale) => {
-    it("renders the cover full-bleed when the doc has one", async () => {
-      fetchMock.mockResolvedValue(okImage());
-      const [element, options] = await render(og, locale);
-      expect(element.type).toBe(CoverCard);
-      expect(element.props.src).toBe(EXPECTED_SRC);
-      expect(element.props.alt).toBe(base.title[locale]);
-      expect(options).toMatchObject({ width: 1200, height: 630 });
-      const url = fetchMock.mock.calls[0][0];
-      expect(url).toBe(
+    const run = () => og({ params: Promise.resolve({ locale, slug: "x" }) });
+
+    it("returns the eagerly rendered cover PNG", async () => {
+      fetchMock.mockResolvedValue(reply(jpeg));
+      const res = await run();
+      expect(res).toBeInstanceOf(Response);
+      expect(res.headers.get("content-type")).toBe("image/png");
+      expect(Buffer.from(await res.arrayBuffer()).equals(opaque)).toBe(true);
+      expect(lastElement().type).toBe(CoverCard);
+      expect(lastElement().props.src).toBe(
+        `data:image/jpeg;base64,${jpeg.toString("base64")}`
+      );
+      expect(fetchMock.mock.calls[0][0]).toBe(
         "https://cdn.example/image-abc-2400x1600-png?w=1200&h=630&fit=crop&fm=jpg&q=85"
       );
     });
 
     it("renders the TitleCard when the doc has no cover", async () => {
-      current[key] = { ...docs[key] };
-      const [element] = await render(og, locale);
-      expect(element.type).toBe(TitleCard);
+      delete current[key].coverImage;
+      await run();
+      expect(lastElement().type).toBe(TitleCard);
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
-    it("renders the TitleCard when the cover fetch throws", async () => {
+    it("renders the TitleCard when the fetch throws", async () => {
       fetchMock.mockRejectedValue(new Error("network down"));
-      const [element] = await render(og, locale);
-      expect(element.type).toBe(TitleCard);
+      await run();
+      expect(lastElement().type).toBe(TitleCard);
     });
 
-    it("renders the TitleCard when the cover fetch returns an error status", async () => {
-      // An image content type with a 404 status isolates the status check from the type check.
-      fetchMock.mockResolvedValue(
-        new Response(JPEG_BYTES, {
-          status: 404,
-          headers: { "content-type": "image/jpeg" },
-        })
-      );
-      const [element] = await render(og, locale);
-      expect(element.type).toBe(TitleCard);
+    it("renders the TitleCard on an error status that carries image bytes", async () => {
+      fetchMock.mockResolvedValue(reply(jpeg, { status: 404 }));
+      await run();
+      expect(lastElement().type).toBe(TitleCard);
     });
 
-    it("renders the TitleCard when the reply is not an image", async () => {
+    it("renders the TitleCard when the type is image/png, not the JPEG requested", async () => {
       fetchMock.mockResolvedValue(
-        new Response("<html>", {
-          status: 200,
-          headers: { "content-type": "text/html" },
-        })
+        reply(jpeg, { headers: { "content-type": "image/png" } })
       );
-      const [element] = await render(og, locale);
-      expect(element.type).toBe(TitleCard);
+      await run();
+      expect(lastElement().type).toBe(TitleCard);
+    });
+
+    it("renders the TitleCard when the type is not an image", async () => {
+      fetchMock.mockResolvedValue(
+        reply(jpeg, { headers: { "content-type": "text/html" } })
+      );
+      await run();
+      expect(lastElement().type).toBe(TitleCard);
+    });
+
+    it("renders the TitleCard for an empty body", async () => {
+      fetchMock.mockResolvedValue(reply(Buffer.alloc(0)));
+      await run();
+      expect(lastElement().type).toBe(TitleCard);
+    });
+
+    it("renders the TitleCard when the renderer throws while encoding", async () => {
+      fetchMock.mockResolvedValue(reply(jpeg));
+      render.throwOnBytes = true;
+      const res = await run();
+      expect(lastElement().type).toBe(TitleCard);
+    });
+
+    it("renders the TitleCard when the cover renders blank", async () => {
+      fetchMock.mockResolvedValue(reply(jpeg));
+      render.png = await transparentPng();
+      await run();
+      expect(lastElement().type).toBe(TitleCard);
     });
   });
 
   it("twitter image is the same generator as the OG image", () => {
     expect(tw).toBe(og);
+  });
+});
+
+describe("cover fetch timeout", () => {
+  const run = () =>
+    IssueOg({ params: Promise.resolve({ locale: "en", slug: "x" }) });
+
+  it("passes an AbortSignal that is still live", async () => {
+    fetchMock.mockResolvedValue(reply(jpeg));
+    await run();
+    const { signal } = fetchMock.mock.calls[0][1];
+    expect(signal).toBeInstanceOf(AbortSignal);
+    expect(signal.aborted).toBe(false);
+  });
+
+  it("asks for a 5 second timeout and falls back to the TitleCard when it fires", async () => {
+    const timeout = vi
+      .spyOn(AbortSignal, "timeout")
+      .mockReturnValue(AbortSignal.abort());
+    fetchMock.mockImplementation((_url, { signal }) =>
+      signal.aborted
+        ? Promise.reject(signal.reason)
+        : Promise.resolve(reply(jpeg))
+    );
+    await run();
+    expect(timeout).toHaveBeenCalledWith(5000);
+    expect(lastElement().type).toBe(TitleCard);
+    timeout.mockRestore();
   });
 });
