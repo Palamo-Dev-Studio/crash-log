@@ -2,7 +2,7 @@
 // ABOUTME: Shows the file code chip in the series colour, the title and the date; a cover image replaces the card when set, and a missing doc falls back to the site card.
 
 import { renderOgImage, TitleCard, SiteCard } from "@/lib/ogTemplate";
-import { getCoverCard } from "@/lib/ogCover";
+import { renderCoverImage } from "@/lib/ogCover";
 import { getIssueBySlug } from "@/lib/queries";
 import { t } from "@/lib/locale";
 import { getFileCode } from "@/lib/series";
@@ -23,8 +23,8 @@ export default async function OgImage({ params }) {
   const doc = await getIssueBySlug(slug);
   if (!doc) return renderOgImage(<SiteCard locale={locale} />);
 
-  const cover = await getCoverCard(doc, t(doc.title, locale));
-  if (cover) return renderOgImage(cover);
+  const cover = await renderCoverImage(doc);
+  if (cover) return cover;
 
   const date = formatDate(doc.publishDate, locale, "long");
   const labels = OTR_LABELS[locale] || OTR_LABELS.en;

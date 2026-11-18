@@ -1,7 +1,8 @@
-// ABOUTME: E2E check that article pages advertise a social image that really renders: 200, image/png, 1200x630.
-// ABOUTME: Covers the issue, Nico's Notes and Practical routes in EN and ES, and that twitter:image points at the same route family.
+// ABOUTME: E2E checks that article pages advertise a social image that renders (200, image/png, 1200x630) in EN and ES.
+// ABOUTME: A practical page with a Sanity cover must share the cover, not the cream TitleCard, measured by the card's cream pixel share.
 
 import { test, expect } from "@playwright/test";
+import sharp from "sharp";
 
 const SECTIONS = [
   ["issue", "/off-the-rails"],
@@ -50,3 +51,57 @@ for (const locale of ["en", "es"]) {
     });
   }
 }
+
+// Share of pixels within 6 per channel of the TitleCard's cream (#F4ECDD).
+async function creamShare(bytes) {
+  const { data } = await sharp(bytes)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  let cream = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    if (
+      Math.abs(data[i] - 0xf4) <= 6 &&
+      Math.abs(data[i + 1] - 0xec) <= 6 &&
+      Math.abs(data[i + 2] - 0xdd) <= 6
+    )
+      cream += 1;
+  }
+  return cream / (data.length / 4);
+}
+
+async function ogBytes(page, request, path) {
+  await page.goto(path);
+  const og = await page
+    .locator('meta[property="og:image"]')
+    .first()
+    .getAttribute("content");
+  const res = await request.get(new URL(og).pathname);
+  expect(res.status()).toBe(200);
+  return res.body();
+}
+
+test.describe("cover image as the social preview", () => {
+  test("the practical index card is mostly cream, so the share measure tells a TitleCard apart", async ({
+    page,
+    request,
+  }) => {
+    const share = await creamShare(
+      await ogBytes(page, request, "/en/practical")
+    );
+    expect(share).toBeGreaterThan(0.5);
+  });
+
+  for (const locale of ["en", "es"]) {
+    test(`/${locale}/practical/2026-11-18 (has a cover) shares the cover, not the TitleCard`, async ({
+      page,
+      request,
+    }) => {
+      const path = `/${locale}/practical/2026-11-18`;
+      await page.goto(path);
+      await expect(page.locator("figure[class*='cover'] img")).toHaveCount(1);
+      const share = await creamShare(await ogBytes(page, request, path));
+      expect(share).toBeLessThan(0.5);
+    });
+  }
+});
